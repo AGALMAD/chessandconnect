@@ -1,0 +1,6 @@
+@chess4connect_HostAddress = http://localhost:5087
+
+GET {{chess4connect_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

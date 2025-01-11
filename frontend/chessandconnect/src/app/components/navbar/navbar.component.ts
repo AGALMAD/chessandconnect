@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
+  
   onToggle(event: Event) {
     const checkbox = event.target as HTMLInputElement;
     const nav = document.getElementById('nav');

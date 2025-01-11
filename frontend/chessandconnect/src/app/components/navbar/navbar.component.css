@@ -6,9 +6,6 @@ nav li:hover{
     display: none;
 }
 
-#menu-icon { 
-    transition: transform 1s, left 1s ease-in-out;
-}
 
 /*Clases que se utilizan cuando se pulsa el botón para ocultar o mostrar la barra de navegación */
 
@@ -18,6 +15,5 @@ nav li:hover{
 
 .rotate-icon { 
     transform: rotate(90deg);
-    position: fixed;
-    left: 0px;
+
 }

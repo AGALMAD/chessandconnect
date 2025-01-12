@@ -1,3 +1,86 @@
+
 <section>
     <app-navbar></app-navbar>
+    <section class="min-h-screen bg-[#2B1810] text-[#E8D5B5] py-16 px-4">
+        <div class="max-w-4xl mx-auto">
+            <!-- Título principal -->
+            <h1 class="text-center text-6xl md:text-8xl mb-20 font-serif">
+                Chess 4 Connect
+            </h1>
+
+            <!-- Iconos y nombres de los juegos -->
+            <a href="#section1" class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+                <div class="flex flex-col items-center transition-transform duration-300 transform hover:scale-110">
+                    <img src="tablero.png" alt="Chess icon" class="w-32 h-32 object-contain opacity-90 mb-4" />
+                    <h2 class="text-center text-4xl md:text-5xl sans-serif">
+                        Ajedrez
+                    </h2>
+                </div>
+                <a href="#section2" class="flex flex-col items-center transition-transform duration-300 transform hover:scale-110">
+                    <img src="conecta4.png" alt="Connect 4 icon" class="w-32 h-32 object-contain opacity-90 mb-4" />
+                    <h2 class="text-center text-4xl md:text-5xl font-serif">
+                        Conecta 4
+                    </h2>
+                </a>
+            </a>
+        </div>
+    </section>
+
+
+    <!--Seccion1-->
+    <section id="section1" class="min-h-screen bg-[#E8D5B5] text-[#2B1810] py-16 px-4">
+        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <!-- Texto -->
+            <div>
+                <h1 class="text-left text-4xl md:text-5xl mb-8 font-serif">
+                    Ajedrez
+                </h1>
+                <p class="text-left text-lg md:text-xl leading-relaxed text-justify">
+                    El ajedrez es un juego de estrategia en un tablero de 64 casillas donde dos jugadores mueven 16
+                    piezas con diferentes movimientos para dar jaque mate al rey rival. Las piezas incluyen rey, dama,
+                    torres, alfiles, caballos y peones, cada una con reglas específicas. El juego puede terminar en
+                    jaque mate, tablas o rendición, e incluye movimientos especiales como enroque, promoción de peones y
+                    captura al paso.
+                </p>
+            </div>
+            <!-- Imágenes -->
+            <div class="flex flex-col gap-8">
+                <div class="w-full h-64 flex items-center justify-center">
+                    <img src="tablero.png" alt="Imagen 1" class="w-full h-full object-cover" />
+                </div>
+                <div class="w-full h-64 flex items-center justify-center">
+                    <img src="tablero.png" alt="Imagen 2" class="w-full h-full object-cover" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--Seccion2-->
+    <section id="section2" class="min-h-screen bg-[#2B1810] text-[#E8D5B5] py-16 px-4 section2">
+        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <!-- Texto -->
+            <div>
+                <h1 class="text-left text-4xl md:text-5xl mb-8 font-serif">
+                    Conecta 4
+                </h1>
+                <p class="text-left text-lg md:text-xl leading-relaxed text-justify">
+                    Conecta 4 es un juego de estrategia para dos jugadores que se juega en una cuadrícula vertical de 7
+                    columnas y 6 filas. Los jugadores alternan turnos dejando fichas de su color en las columnas, y la
+                    ficha cae a la posición más baja disponible. El objetivo es alinear cuatro fichas consecutivas del
+                    mismo color en horizontal, vertical o diagonal. El juego termina cuando un jugador logra conectar
+                    cuatro fichas o cuando el tablero se llena sin un ganador, resultando en empate.
+                </p>
+            </div>
+            <!-- Imágenes -->
+            <div class="flex flex-col gap-8">
+                <div class="w-full h-64 flex items-center justify-center">
+                    <img src="tablero.png" alt="Imagen 1" class="w-full h-full object-cover" />
+                </div>
+                <div class="w-full h-64 flex items-center justify-center">
+                    <img src="tablero.png" alt="Imagen 2" class="w-full h-full object-cover" />
+                </div>
+            </div>
+        </div>
+    </section>
+
 </section>

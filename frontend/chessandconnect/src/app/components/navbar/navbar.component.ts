@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
@@ -6,7 +6,22 @@ import { Component } from '@angular/core';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
+
+
+  ngOnInit(): void {
+    const checkbox = document.getElementById('check') as HTMLInputElement; 
+  
+    //Si la pantalla es más pequeña que 1350px, se cierra la barra de navegación 
+    if (checkbox && window.matchMedia('(max-width: 1350px)').matches) { 
+      checkbox.checked = true; 
+      this.onToggle({ target: checkbox } as unknown as Event);
+    }
+  }
+  
+
+
+
   
   onToggle(event: Event) {
     const checkbox = event.target as HTMLInputElement;

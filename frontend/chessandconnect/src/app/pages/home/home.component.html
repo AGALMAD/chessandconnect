@@ -1,24 +1,25 @@
 
 <section>
     <app-navbar class="z-[100] relative"></app-navbar>
-    <section class=" z-[0] min-h-screen bg-[#2B1810] text-[#E8D5B5] py-16 px-4">
-        <div class="max-w-4xl mx-auto">
-            <!-- Título principal -->
-            <h1 class="text-center text-6xl md:text-8xl mb-20 font-serif">
+    
+    <section class="z-[100] min-h-screen bg-[#2B1810] text-[#E8D5B5] py-20 px-4 flex flex-col justify-center items-center">
+        <div class="text-center max-w-4xl">
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-8">
                 Chess 4 Connect
             </h1>
-
-            <!-- Iconos y nombres de los juegos -->
+            <p class="text-lg md:text-xl font-light mb-12">
+                La combinación perfecta entre la estrategia del ajedrez y la dinámica del Conecta 4. ¿Estás listo para el desafío?
+            </p>
             <a href="#section1" class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
                 <div class="flex flex-col items-center transition-transform duration-300 transform hover:scale-110">
                     <img src="tablero.png" alt="Chess icon" class="w-32 h-32 object-contain opacity-90 mb-4" />
-                    <h2 class="text-center text-4xl md:text-5xl sans-serif">
+                    <h2 class="text-center text-4xl md:text-5xl font-medium">
                         Ajedrez
                     </h2>
                 </div>
                 <a href="#section2" class="flex flex-col items-center transition-transform duration-300 transform hover:scale-110">
                     <img src="conecta4.png" alt="Connect 4 icon" class="w-32 h-32 object-contain opacity-90 mb-4" />
-                    <h2 class="text-center text-4xl md:text-5xl font-serif">
+                    <h2 class="text-center text-4xl md:text-5xl font-medium">
                         Conecta 4
                     </h2>
                 </a>
@@ -42,6 +43,11 @@
                     jaque mate, tablas o rendición, e incluye movimientos especiales como enroque, promoción de peones y
                     captura al paso.
                 </p>
+                <div class="mt-8 flex justify-start">
+                    <button class="bg-[#fbeee0] border-2 border-[#422800] text-[#422800] font-semibold text-lg px-4 md:px-6 py-2 rounded-full shadow-[4px_4px_0_0_#422800] hover:bg-[#E8D5B5] active:shadow-[2px_2px_0_0_#422800] active:translate-x-[2px] active:translate-y-[2px]">
+                        ¡Jugar ya!
+                    </button>
+                </div>
             </div>
             <!-- Imágenes -->
             <div class="flex flex-col gap-8">
@@ -70,6 +76,12 @@
                     mismo color en horizontal, vertical o diagonal. El juego termina cuando un jugador logra conectar
                     cuatro fichas o cuando el tablero se llena sin un ganador, resultando en empate.
                 </p>
+                <div class="mt-8 flex justify-start">
+                    <button class="bg-[#fbeee0] border-2 border-[#422800] text-[#422800] font-semibold text-lg px-4 md:px-6 py-2 rounded-full shadow-[4px_4px_0_0_#422800] hover:bg-[#E8D5B5] active:shadow-[2px_2px_0_0_#422800] active:translate-x-[2px] active:translate-y-[2px]">
+                        ¡Jugar ya!
+                    </button>
+                    
+                </div>
             </div>
             <!-- Imágenes -->
             <div class="flex flex-col gap-8">

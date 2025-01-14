@@ -71,6 +71,9 @@ namespace chess4connect.Services
             user.Password = passwordService.Hash(receivedUser.Password);
 
             user.Role = "User";
+            user.AvatarImageUrl = "";
+            user.Banned = false;
+
             User newUser = await InsertUser(user);
             return ObtainToken(newUser);
         }

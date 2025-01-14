@@ -1,4 +1,8 @@
 using chess4connect;
+using chess4connect.Mappers;
+using chess4connect.Models;
+using chess4connect.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -37,6 +41,13 @@ builder.Services.AddAuthentication()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+builder.Services.AddScoped<ChessAndConnectContext>();
+builder.Services.AddScoped<UnitOfWork>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<PasswordService>();
+builder.Services.AddScoped<UserMapper>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -55,5 +66,36 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    ChessAndConnectContext dbContext = scope.ServiceProvider.GetService<ChessAndConnectContext>();
+    if (dbContext.Database.EnsureCreated())
+    {
+        PasswordService passwordService = new PasswordService();
+
+        User admin = new User
+        {
+            UserName = "admin",
+            Email = "admin@gmail.com",
+            Password = passwordService.Hash("admin"),
+            Role = "admin",
+            AvatarImageUrl = "",
+            Banned = false,
+        };
+
+        dbContext.Users.Add(admin);
+        dbContext.SaveChanges();
+
+
+    }
+
+
+
+
+
+}
 
 app.Run();

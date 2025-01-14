@@ -74,6 +74,24 @@ namespace chess4connect.Services
             User newUser = await InsertUser(user);
             return ObtainToken(newUser);
         }
+        public async Task<User> GetUserByCredentialAndPassword(string credential, string password)
+        {
+            User user = await _unitOfWork.UserRepository.GetUserByCredential(credential);
+            if (user == null)
+            {
+                return null;
+            }
+
+            PasswordService passwordService = new PasswordService();
+            if (passwordService.IsPasswordCorrect(user.Password, password))
+            {
+                return user;
+            }
+
+
+            return null;
+        }
+
 
     }
 }

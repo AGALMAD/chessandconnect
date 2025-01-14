@@ -14,4 +14,11 @@ public class UserRepository : Repository<User, int>
             .Include(user => user.Plays)
             .FirstOrDefaultAsync(user => user.Id == id);
     }
+
+    public async Task<User> GetUserByCredential(string credential)
+    {
+        return await GetQueryable()
+            .Include(user => user.Plays)
+            .FirstOrDefaultAsync(user => user.Email == credential || user.UserName == credential);
+    }
 }

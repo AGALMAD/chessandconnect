@@ -4,7 +4,7 @@ namespace chess4connect.Models;
 
 public class Play
 {
-
+    public int Id { get; set; }
     public int UserId { get; set; }
     public int opponentId { get; set; }
     public DateTime startDate { get; set; }

@@ -1,6 +1,10 @@
 ﻿using chess4connect.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace chess4connect.Models;
+
+[Index(nameof(Email), IsUnique = true)]
+[Index(nameof(UserName), IsUnique = true)]
 
 public class User
 {

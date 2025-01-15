@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Login } from '../models/dto/login';
 
 @Injectable({
   providedIn: 'root'
@@ -6,4 +7,8 @@ import { Injectable } from '@angular/core';
 export class AuthService {
 
   constructor() { }
+
+  async login(data: Login){
+
+  }
 }

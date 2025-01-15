@@ -7,17 +7,17 @@
         <!-- Título -->
         <h2 class="text-3xl font-bold text-center text-[#422800] mb-6">Iniciar Sesión</h2>
         <!-- Formulario -->
-        <form [formGroup]="myForm">
+        <form [formGroup]="myForm" (submit)="submit()">
             <!-- Correo Electrónico -->
             <div class="mb-4">
-                <label for="email" class="block text-sm font-medium text-[#422800] mb-2">Correo Electrónico / Nombre de Usuario</label>
-                <input type="email" formControlName="name" id="email" placeholder="ejemplo@correo.com / Apodo"
+                <label for="text" class="block text-sm font-medium text-[#422800] mb-2">Correo Electrónico / Nombre de Usuario</label>
+                <input type="text" formControlName="credentials" id="credentials" placeholder="ejemplo@correo.com / Apodo"
                     class="w-full px-4 py-2 border-2 border-[#422800] rounded-lg bg-[#fbeee0] text-[#2B1810] focus:outline-none focus:ring-2 focus:ring-[#D0C6A3]">
             </div>
             <!-- Contraseña -->
             <div class="mb-6">
                 <label for="password" class="block text-sm font-medium text-[#422800] mb-2">Contraseña</label>
-                <input type="password" formControlName="name" id="password" placeholder="********"
+                <input type="password" formControlName="password" id="password" placeholder="********"
                     class="w-full px-4 py-2 border-2 border-[#422800] rounded-lg bg-[#fbeee0] text-[#2B1810] focus:outline-none focus:ring-2 focus:ring-[#D0C6A3]">
             </div>
             <!-- Botón de Inicio -->

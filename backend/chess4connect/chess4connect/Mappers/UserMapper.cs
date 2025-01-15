@@ -1,5 +1,6 @@
 ﻿using chess4connect.DTOs;
 using chess4connect.Models;
+using chess4connect.Services;
 
 namespace chess4connect.Mappers;
 
@@ -44,11 +45,16 @@ public class UserMapper
 
     public User ToEntity(UserSignUpDto userDto)
     {
+        PasswordService passwordService = new PasswordService();
+
         return new User
         {
-            Id = userDto.Id,
             UserName = userDto.UserName,
-            Email = userDto.Email
+            Email = userDto.Email,
+            Password = passwordService.Hash(userDto.Password),
+            Role = "user",
+            AvatarImageUrl = "",
+            Banned = false,
         };
     }
 

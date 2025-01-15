@@ -8,12 +8,6 @@ public class UserRepository : Repository<User, int>
 {
     public UserRepository(ChessAndConnectContext context) : base(context){}
 
-    public async Task<User> GetUserById(int id)
-    {
-        return await GetQueryable()
-            .Include(user => user.Plays)
-            .FirstOrDefaultAsync(user => user.Id == id);
-    }
 
     public async Task<User> GetUserByCredential(string credential)
     {

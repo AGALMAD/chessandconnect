@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace chess4connect.Services
 {
@@ -31,7 +33,7 @@ namespace chess4connect.Services
 
         public async Task<User> GetUserById(int id)
         {
-            return await _unitOfWork.UserRepository.GetUserById(id);
+            return await _unitOfWork.UserRepository.GetByIdAsync(id);
         }
 
         public async Task<User> InsertUser(User user)
@@ -65,14 +67,11 @@ namespace chess4connect.Services
 
         public async Task<string> RegisterUser(UserSignUpDto receivedUser)
         {
+            //Retorna nulo si el usuario es nulo, si introduce un email en el nombre de usuario o si no introduce un email correcto
+            if (receivedUser == null || !IsEmail(receivedUser.Email) || IsEmail(receivedUser.UserName))
+                return null;
+
             User user = _userMapper.ToEntity(receivedUser);
-
-            PasswordService passwordService = new PasswordService();
-            user.Password = passwordService.Hash(receivedUser.Password);
-
-            user.Role = "User";
-            user.AvatarImageUrl = "";
-            user.Banned = false;
 
             User newUser = await InsertUser(user);
             return ObtainToken(newUser);
@@ -93,6 +92,13 @@ namespace chess4connect.Services
 
 
             return null;
+        }
+
+
+        public bool IsEmail(string email)
+        {
+            Regex validateEmailRegex = new Regex("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$");
+            return validateEmailRegex.IsMatch(email);
         }
 
 

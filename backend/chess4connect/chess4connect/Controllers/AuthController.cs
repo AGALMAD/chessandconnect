@@ -3,6 +3,7 @@ using chess4connect.Models;
 using chess4connect.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mail;
 
 namespace chess4connect.Controllers;
 
@@ -26,6 +27,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<string>> LoginUser([FromBody] LoginDto userLogin)
     {
+
         User user = await _authService.GetUserByCredentialAndPassword(userLogin.Credential, userLogin.Password);
         if (user != null)
         {

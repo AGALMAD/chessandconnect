@@ -9,6 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Login } from '../../models/dto/login';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -30,13 +31,13 @@ export class LoginComponent {
     this.myForm = this.createForm();
   }
 
-/*   ngOnInit(): void {
-    const queryParams = this.activatedRoute.snapshot.queryParamMap;
-
-    if (queryParams.has(this.PARAM_KEY)) {
-      this.redirectTo = queryParams.get(this.PARAM_KEY);
-    }
-  } */
+  /*   ngOnInit(): void {
+      const queryParams = this.activatedRoute.snapshot.queryParamMap;
+  
+      if (queryParams.has(this.PARAM_KEY)) {
+        this.redirectTo = queryParams.get(this.PARAM_KEY);
+      }
+    } */
 
   private createForm(): FormGroup {
     return this.formBuilder.group(
@@ -47,13 +48,26 @@ export class LoginComponent {
     );
   }
 
-  async submit(){
+  async submit() {
     const data: Login = {
       credentials: this.myForm.get('credentials')?.value,
       password: this.myForm.get('credentials')?.value
     }
 
     const result = await this.authService.login(data);
+
+    if (result.success) {
+      Swal.fire({
+        icon: 'success',
+        text: 'Registro Correcto',
+        showConfirmButton: false,
+        animation: true,
+        toast: true,
+        position: 'top-right',
+        timer: 1100
+      });
+      this.router.navigate(['/home']);
+    }
 
     // sin esto "await" el location.reload() se recarga antes que el 
     // router cambia de pagina y no funciona 

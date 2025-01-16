@@ -8,12 +8,13 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable, lastValueFrom } from 'rxjs';
 import { Result } from '../models/result';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ApiService {
-  private BASE_URL = "";
+  private BASE_URL = environment.apiUrl;
   jwt: string = '';
 
   constructor(private http: HttpClient) { }

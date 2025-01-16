@@ -32,7 +32,10 @@ public class AuthController : ControllerBase
         if (user != null)
         {
             string stringToken = _authService.ObtainToken(user);
-            return Ok(stringToken);
+            return Ok(new
+            {
+                accesToken = stringToken
+            });
         }
         else
         {

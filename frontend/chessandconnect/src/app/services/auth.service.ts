@@ -13,8 +13,10 @@ export class AuthService {
 
   constructor(private api:ApiService, private router:Router) { }
 
-  async login(data: Login){
+  async login(authLogin: Login): Promise<Result<AuthResponse>>{
+    const result = await this.api.post<AuthResponse>('Auth/login',authLogin)
 
+    return result
   }
 
   async register(authRegister: Register): Promise<Result<AuthResponse>> {

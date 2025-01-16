@@ -39,11 +39,11 @@ export class RegisterComponent {
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', Validators.required]
       },
-      // { validators: this.passwordMatchValidator }
+      { validators: this.passwordMatchValidator }
     );
   }
 
-  /* passwordMatchValidator(form: FormGroup) {
+  passwordMatchValidator(form: FormGroup) {
     const password = form.get('password')?.value;
     const confirmPasswordControl = form.get('confirmPassword');
     const confirmPassword = confirmPasswordControl?.value;
@@ -54,7 +54,7 @@ export class RegisterComponent {
   }
 
   async submit() {
-    const authData: RegisterDto = {
+    const authData: Register = {
       nickname: this.myForm.get('nickname').value,
       email: this.myForm.get('email').value,
       password: this.myForm.get('password').value
@@ -87,5 +87,5 @@ export class RegisterComponent {
         timer: 1100
       });
     }
-  } */
+  }
 }

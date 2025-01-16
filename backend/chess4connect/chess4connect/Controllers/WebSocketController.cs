@@ -51,7 +51,7 @@ public class WebSocketController : ControllerBase
             if (!string.IsNullOrWhiteSpace(message))
             {
                 //El servicio gestiona el mensage
-
+                string outMessage = _socketService.ManageMessage(message);
 
 
 

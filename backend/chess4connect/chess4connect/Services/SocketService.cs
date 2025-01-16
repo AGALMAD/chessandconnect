@@ -8,19 +8,19 @@ namespace chess4connect.Services;
 public class SocketService
 {
 
-    public async Task ManageMessage(string message)
+    public async Task<string> ManageMessage(string message)
     {
         //Paso a Json
-        var messageJson = JsonSerializer.Deserialize<SocketMessage<User>>(message);
+        var messageJson = JsonSerializer.Deserialize<SocketMessage>(message);
 
         //Obtiene el tipo 
-
         SocketComunicationType type = messageJson.Type;
 
         //Lo gestiona su respectivo servicio
         switch (type)
         {
             case SocketComunicationType.GAME:
+
                 break;
 
             case SocketComunicationType.CHAT:

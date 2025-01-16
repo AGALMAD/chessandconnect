@@ -55,6 +55,7 @@ export class LoginComponent {
     }
 
     const result = await this.authService.login(data);
+    console.log(result)
 
     if (result.success) {
       Swal.fire({

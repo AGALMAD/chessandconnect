@@ -14,7 +14,7 @@ import { environment } from '../../environments/environment.development';
   providedIn: 'root'
 })
 export class ApiService {
-  private BASE_URL = environment.apiUrl;
+  private BASE_URL = environment.apiUrl+"api/";
   jwt: string = '';
 
   constructor(private http: HttpClient) { }

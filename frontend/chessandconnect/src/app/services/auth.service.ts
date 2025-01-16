@@ -41,7 +41,7 @@ export class AuthService {
 
 
   async login(authLogin: Login): Promise<Result<AuthResponse>>{
-    const result = await this.api.get<AuthResponse>('Auth/login',authLogin)
+    const result = await this.api.post<AuthResponse>('Auth/login',authLogin)
 
     return result
   }

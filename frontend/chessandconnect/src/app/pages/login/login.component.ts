@@ -50,11 +50,12 @@ export class LoginComponent {
 
   async submit() {
     const data: Login = {
-      credentials: this.myForm.get('credentials')?.value,
+      credential: this.myForm.get('credentials')?.value,
       password: this.myForm.get('credentials')?.value
     }
 
-    const result = await this.authService.login(data);
+    const result = await this.authService.login(data)
+    console.log(result)
 
     if (result.success) {
       Swal.fire({
@@ -66,7 +67,9 @@ export class LoginComponent {
         position: 'top-right',
         timer: 1100
       });
-      this.router.navigate(['/home']);
+      setTimeout(() => {
+        this.router.navigate([''])
+      }, 1000)
     }
 
     // sin esto "await" el location.reload() se recarga antes que el 

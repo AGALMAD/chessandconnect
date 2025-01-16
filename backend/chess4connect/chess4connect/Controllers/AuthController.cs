@@ -18,7 +18,7 @@ public class AuthController : ControllerBase
     }
 
 
-    [HttpPost("signup")]
+    [HttpPost("register")]
     public async Task<string> RegisterUserAsync([FromBody] UserSignUpDto newUser)
     {
         return await _authService.RegisterUser(newUser);
@@ -32,7 +32,10 @@ public class AuthController : ControllerBase
         if (user != null)
         {
             string stringToken = _authService.ObtainToken(user);
-            return Ok(stringToken);
+            return Ok(new
+            {
+                accesToken = stringToken
+            });
         }
         else
         {

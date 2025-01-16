@@ -67,7 +67,7 @@ export class LoginComponent {
         position: 'top-right',
         timer: 1100
       });
-      this.router.navigate(['/home']);
+      this.router.navigate(['']);
     }
 
     // sin esto "await" el location.reload() se recarga antes que el 

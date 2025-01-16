@@ -47,7 +47,7 @@ export class AuthService {
   }
 
   async register(authRegister: Register): Promise<Result<AuthResponse>> {
-    const result = await this.api.post<AuthResponse>('Auth/Register', authRegister);
+    const result = await this.api.post<AuthResponse>('Auth/register', authRegister);
     if (result.success) {
       this.setSession(result.data.accessToken, true);
     } else {

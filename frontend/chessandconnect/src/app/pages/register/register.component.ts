@@ -55,7 +55,7 @@ export class RegisterComponent {
 
   async submit() {
     const authData: Register = {
-      nickname: this.myForm.get('nickname').value,
+      username: this.myForm.get('nickname').value,
       email: this.myForm.get('email').value,
       password: this.myForm.get('password').value
     };
@@ -72,7 +72,7 @@ export class RegisterComponent {
           position: 'top-right',
           timer: 1100
         });
-        this.router.navigate(['/home']);
+        this.router.navigate(['']);
       }
     } else {
       // El formulario no es válido

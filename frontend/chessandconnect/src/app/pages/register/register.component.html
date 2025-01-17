@@ -1,4 +1,6 @@
-<section class="min-h-screen bg-[#2B1810] flex items-center justify-center py-10 px-4">
+<section class="min-h-screen bg-[#301e16] flex items-center justify-center py-20 px-4">
+        <!-- Barra de navegación -->
+        <app-navbar></app-navbar>
     <div class="max-w-lg w-full bg-[#E8D5B5] rounded-lg shadow-lg p-8">
         <!-- Logo -->
         <div class="flex justify-center mb-6">
@@ -72,6 +74,11 @@
                 }
             </div>
             }
+            <!-- Botón Recordar -->
+            <div class="flex items-center mb-6">
+                <input type="checkbox" formControlName="remember" id="remember"  class="mr-2">
+                <label for="remember" class="text-sm text-[#422800]">Recuérdame</label>
+            </div>
             <!-- Botón de Registro -->
             <div class="flex justify-center">
                 <button type="submit"
@@ -83,7 +90,7 @@
         <!-- Enlace de Iniciar Sesión -->
         <div class="mt-6 text-center">
             <p class="text-sm text-[#2B1810]">¿Ya tienes cuenta?
-                <a href="/log" class="text-[#422800] font-medium hover:underline">Inicia sesión aquí</a>
+                <a href="/login" class="text-[#422800] font-medium hover:underline">Inicia sesión aquí</a>
             </p>
         </div>
     </div>

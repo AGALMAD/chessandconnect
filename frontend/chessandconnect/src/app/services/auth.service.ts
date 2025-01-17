@@ -17,7 +17,7 @@ export class AuthService {
   decodedToken: any = null;
 
   constructor(private api: ApiService, private router: Router) {
-    this.loadTokenFromStorage();
+    //this.loadTokenFromStorage();
   }
 
   private loadTokenFromStorage(): void {
@@ -40,16 +40,20 @@ export class AuthService {
   }
 
 
-  async login(authLogin: Login): Promise<Result<AuthResponse>>{
+  async login(authLogin: Login, remember: boolean): Promise<Result<AuthResponse>>{
     const result = await this.api.post<AuthResponse>('Auth/login',authLogin)
-
+    if (result.success) {
+      this.setSession(result.data.accessToken, remember);
+    } else {
+      this.handleError('Ha habido un problema al iniciar sesión.');
+    }
     return result
   }
 
-  async register(authRegister: Register): Promise<Result<AuthResponse>> {
-    const result = await this.api.post<AuthResponse>('Auth/Register', authRegister);
+  async register(authRegister: Register, remember: boolean): Promise<Result<AuthResponse>> {
+    const result = await this.api.post<AuthResponse>('Auth/register', authRegister);
     if (result.success) {
-      this.setSession(result.data.accessToken, true);
+      this.setSession(result.data.accessToken, remember);
     } else {
       this.handleError('Ha habido un problema al registrar el usuario.');
     }
@@ -57,7 +61,7 @@ export class AuthService {
   }
 
   private setSession(token: string, remember: boolean): void {
-    this.api.jwt = token;
+    this.api.jwt = token; 
     this.decodedToken = this.decodeJwt(token);
     if (remember) {
       localStorage.setItem(this.TOKEN_KEY, token);
@@ -65,6 +69,16 @@ export class AuthService {
       sessionStorage.setItem(this.TOKEN_KEY, token);
     }
   }
+
+    // Método para recuperar el token
+    getToken(): string | null {
+      if (localStorage.getItem('token') != "" && localStorage.getItem('token') != null) {
+        return localStorage.getItem('token')
+      } else if (sessionStorage.getItem('token') != "" && sessionStorage.getItem('token') != null) {
+        return sessionStorage.getItem('token')
+      }
+      return null;
+    }
 
   private handleError(message: string): void {
     Swal.fire({
@@ -74,9 +88,12 @@ export class AuthService {
     });
   }
 
-  get isLoggedIn(): boolean {
-    return !!this.decodedToken;
-  }
+    loged(){
+      if (this.getToken()) {
+        return true
+      }
+      return false
+    }
 
   logout(): void {
     this.api.jwt = '';

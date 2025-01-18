@@ -74,6 +74,17 @@
                 }
             </div>
             }
+            <!-- Subir imagen -->
+            <div class="mb-6 text-center">
+                <label for="profile-picture" class="cursor-pointer inline-block">
+                    <i class="fa-solid fa-solid fa-user text-4xl text-[#422800] hover:text-[#D0C6A3] transition"></i>
+                    <input type="file" accept="image/png, image/jpeg, image/jpg" name="Imagen" id="profile-picture" 
+                        (change)="onFileSelected($event)" 
+                        class="hidden">
+                </label>
+                <p class="text-sm text-[#422800] mt-2">Subir foto de perfil</p>
+            </div>
+            
             <!-- Botón Recordar -->
             <div class="flex items-center mb-6">
                 <input type="checkbox" formControlName="remember" id="remember"  class="mr-2">

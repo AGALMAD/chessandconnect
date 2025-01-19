@@ -1,4 +1,4 @@
-﻿using chess4connect.Repositories;
+﻿using chess4connect.Models.Database.Repositories;
 
 namespace chess4connect;
 

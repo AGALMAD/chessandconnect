@@ -1,4 +1,6 @@
-<section class="min-h-screen bg-[#2B1810] flex items-center justify-center py-10 px-4">
+<section class="min-h-screen bg-[#301e16] flex items-center justify-center py-20 px-4">
+        <!-- Barra de navegación -->
+        <app-navbar></app-navbar>
     <div class="max-w-lg w-full bg-[#E8D5B5] rounded-lg shadow-lg p-8">
         <!-- Logo -->
         <div class="flex justify-center mb-6">
@@ -37,7 +39,8 @@
             <!-- Contraseña -->
             <div class="mb-4">
                 <label for="password" class="block text-sm font-medium text-[#422800] mb-2">Contraseña</label>
-                <input type="password" id="password" placeholder="********"
+                <input type="password" formControlName="password" class="form-control"
+                aria-describedby="passwordHelpBlock" placeholder="********"
                     class="w-full px-4 py-2 border-2 border-[#422800] rounded-lg bg-[#fbeee0] text-[#2B1810] focus:outline-none focus:ring-2 focus:ring-[#D0C6A3]">
             </div>
             @if(myForm.get('password').invalid && registerHints){
@@ -58,7 +61,8 @@
             <div class="mb-6">
                 <label for="confirm-password" class="block text-sm font-medium text-[#422800] mb-2">Confirmar
                     Contraseña</label>
-                <input type="password" id="confirm-password" placeholder="********"
+                <input type="password" formControlName="confirmPassword" class="form-control"
+                aria-describedby="passwordHelpBlock" placeholder="********"
                     class="w-full px-4 py-2 border-2 border-[#422800] rounded-lg bg-[#fbeee0] text-[#2B1810] focus:outline-none focus:ring-2 focus:ring-[#D0C6A3]">
             </div>
             @if(myForm.get('confirmPassword').invalid){
@@ -70,6 +74,11 @@
                 }
             </div>
             }
+            <!-- Botón Recordar -->
+            <div class="flex items-center mb-6">
+                <input type="checkbox" formControlName="remember" id="remember"  class="mr-2">
+                <label for="remember" class="text-sm text-[#422800]">Recuérdame</label>
+            </div>
             <!-- Botón de Registro -->
             <div class="flex justify-center">
                 <button type="submit"
@@ -81,7 +90,7 @@
         <!-- Enlace de Iniciar Sesión -->
         <div class="mt-6 text-center">
             <p class="text-sm text-[#2B1810]">¿Ya tienes cuenta?
-                <a href="/log" class="text-[#422800] font-medium hover:underline">Inicia sesión aquí</a>
+                <a href="/login" class="text-[#422800] font-medium hover:underline">Inicia sesión aquí</a>
             </p>
         </div>
     </div>

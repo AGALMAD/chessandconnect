@@ -1,4 +1,6 @@
-<section class="min-h-screen bg-[#2B1810] flex items-center justify-center py-10 px-4">
+<section class="min-h-screen bg-[#301e16] flex items-center justify-center py-10 px-4">
+        <!-- Barra de navegación -->
+        <app-navbar></app-navbar>
     <div class="max-w-md w-full bg-[#E8D5B5] rounded-lg shadow-lg p-8">
         <!-- Logo -->
         <div class="flex justify-center mb-6">
@@ -20,6 +22,11 @@
                 <input type="password" formControlName="password" id="password" placeholder="********"
                     class="w-full px-4 py-2 border-2 border-[#422800] rounded-lg bg-[#fbeee0] text-[#2B1810] focus:outline-none focus:ring-2 focus:ring-[#D0C6A3]">
             </div>
+            <!-- Botón Recordar -->
+            <div class="flex items-center mb-6">
+                <input type="checkbox" formControlName="remember" id="remember"  class="mr-2">
+                <label for="remember" class="text-sm text-[#422800]">Recuérdame</label>
+            </div>
             <!-- Botón de Inicio -->
             <div class="flex justify-center">
                 <button type="submit"
@@ -31,7 +38,7 @@
         <!-- Enlace de Registro -->
         <div class="mt-6 text-center">
             <p class="text-sm text-[#2B1810]">¿No tienes cuenta? 
-                <a href="/reg" class="text-[#422800] font-medium hover:underline">Regístrate aquí</a>
+                <a href="/register" class="text-[#422800] font-medium hover:underline">Regístrate aquí</a>
             </p>
         </div>
     </div>

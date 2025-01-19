@@ -1,32 +1,16 @@
-<section>
-    <nav id="nav"
-        class="fixed top-0 left-0 h-full w-64 bg-[#392303] text-[#fff5d0] text-3xl translate-x-0 transform duration-[1s] ease-in-out">
-        
-        <!--Botón que abre y cierra la navegación-->
-        <div class="flex justify-start ml-64">
-            <input type="checkbox" id="check" (change)="onToggle($event)" />
-            <label for="check" class="icons">
-                <i id="menu-icon" class="fa-solid fa-chess-rook text-5xl text-[#392303] cursor-pointer transform duration-[1s] ease-in-out"></i>
-            </label>
+<nav class="fixed top-0 left-0 w-full bg-[#301e16] text-[#E8D5B5] shadow-lg z-50">
+    <div class="max-w-6xl mx-auto flex justify-between items-center py-4 px-6">
+        <a href="">
+            <h1 class="text-xl font-bold tracking-wide hover:text-[#CBA77B]">
+                Chess 4 Connect
+            </h1>
+        </a>
+        <div class="space-x-6">
+            @if (usuarioToken()) {
+                <a href="" (click)="closeSession()" class="text-sm font-medium hover:text-[#CBA77B]">Cerrar Sesión</a>
+            }@else {
+                <a href="/login" class="text-sm font-medium hover:text-[#CBA77B]">Iniciar Sesión</a>
+            }
         </div>
-
-        <!--Logo-->
-        <img src="" alt="" />
-
-        <!--Navegación-->
-        <ul class="flex flex-col gap-5 ml-8 mt-10">
-            <li>
-                <a href=""><i class="fa-solid fa-user mr-4"></i>Perfil</a>
-            </li>
-            <li>
-                <a href=""> <i class="fa-solid fa-chess mr-4"></i>Ajedrez</a>
-            </li>
-            <li>
-                <a href=""><i class="fa-solid fa-th mr-4"></i>Conecta4</a>
-            </li>
-            <li>
-                <a href=""><i class="fa-solid fa-lock mr-4"></i>Admin</a>
-            </li>
-        </ul>
-    </nav>
-</section>
+    </div>
+</nav>

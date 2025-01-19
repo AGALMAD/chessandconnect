@@ -1,5 +1,5 @@
-﻿using chess4connect.DTOs;
-using chess4connect.Models;
+﻿using chess4connect.Models.Database.DTOs;
+using chess4connect.Models.Database.Entities;
 using chess4connect.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +18,7 @@ public class AuthController : ControllerBase
     }
 
 
-    [HttpPost("signup")]
+    [HttpPost("register")]
     public async Task<string> RegisterUserAsync([FromBody] UserSignUpDto newUser)
     {
         return await _authService.RegisterUser(newUser);
@@ -32,7 +32,10 @@ public class AuthController : ControllerBase
         if (user != null)
         {
             string stringToken = _authService.ObtainToken(user);
-            return Ok(stringToken);
+            return Ok(new
+            {
+                accesToken = stringToken
+            });
         }
         else
         {

@@ -10,11 +10,12 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, NavbarComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
@@ -37,7 +38,8 @@ export class RegisterComponent {
         nickname: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(6)]],
-        confirmPassword: ['', Validators.required]
+        confirmPassword: ['', Validators.required],
+        remember: [false]
       },
       { validators: this.passwordMatchValidator }
     );
@@ -55,13 +57,13 @@ export class RegisterComponent {
 
   async submit() {
     const authData: Register = {
-      nickname: this.myForm.get('nickname').value,
+      username: this.myForm.get('nickname').value,
       email: this.myForm.get('email').value,
       password: this.myForm.get('password').value
     };
 
     if (this.myForm.valid) {
-      const result = await this.authService.register(authData);
+      const result = await this.authService.register(authData, this.myForm.get('remember')?.value);
       if (result.success) {
         Swal.fire({
           icon: 'success',
@@ -72,7 +74,7 @@ export class RegisterComponent {
           position: 'top-right',
           timer: 1100
         });
-        this.router.navigate(['/home']);
+        this.router.navigate(['']);
       }
     } else {
       // El formulario no es válido

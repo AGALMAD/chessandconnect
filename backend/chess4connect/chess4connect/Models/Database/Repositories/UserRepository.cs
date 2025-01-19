@@ -1,12 +1,12 @@
-﻿using chess4connect.Models;
-using chess4connect.Repositories.Base;
+﻿using chess4connect.Models.Database.Entities;
+using chess4connect.Models.Database.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 
-namespace chess4connect.Repositories;
+namespace chess4connect.Models.Database.Repositories;
 
 public class UserRepository : Repository<User, int>
 {
-    public UserRepository(ChessAndConnectContext context) : base(context){}
+    public UserRepository(ChessAndConnectContext context) : base(context) { }
 
 
     public async Task<User> GetUserByCredential(string credential)

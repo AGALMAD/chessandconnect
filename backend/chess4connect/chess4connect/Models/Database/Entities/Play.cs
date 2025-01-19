@@ -1,6 +1,6 @@
 ﻿using chess4connect.Enums;
 
-namespace chess4connect.Models;
+namespace chess4connect.Models.Database.Entities;
 
 public class Play
 {

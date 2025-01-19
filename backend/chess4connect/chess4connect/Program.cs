@@ -46,6 +46,7 @@ builder.Services.AddScoped<ChessAndConnectContext>();
 builder.Services.AddScoped<UnitOfWork>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<PasswordService>();
+builder.Services.AddScoped<FriendshipService>();
 builder.Services.AddScoped<UserMapper>();
 
 var app = builder.Build();

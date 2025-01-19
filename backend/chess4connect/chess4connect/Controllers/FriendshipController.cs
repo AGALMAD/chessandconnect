@@ -1,4 +1,5 @@
-﻿using chess4connect.Services;
+﻿using chess4connect.Models;
+using chess4connect.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace chess4connect.Controllers
@@ -15,6 +16,11 @@ namespace chess4connect.Controllers
         }
 
         [HttpPost ("user")]
+        public async Task<User> getUser(string nickName)
+        {
+            User user = await _friendshipService.GetUserByNickName (nickName);
+            return user;
+        }
     }
 
 }

@@ -1,7 +1,7 @@
 using chess4connect;
 using chess4connect.Mappers;
 using chess4connect.MiddleWares;
-using chess4connect.Models.Database;
+using chess4connect.Models.Database.Entities;
 using chess4connect.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;

@@ -1,4 +1,4 @@
-﻿namespace chess4connect.Models;
+﻿namespace chess4connect.Models.Database;
 
 public class Game
 {

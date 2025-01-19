@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 
-namespace chess4connect.Repositories.Base;
+namespace chess4connect.Models.Database.Repositories.Base;
 
 public abstract class Repository<TEntity, TId> : IRepository<TEntity, TId> where TEntity : class
 {

@@ -1,6 +1,7 @@
 using chess4connect;
 using chess4connect.Mappers;
-using chess4connect.Models;
+using chess4connect.MiddleWares;
+using chess4connect.Models.Database.Entities;
 using chess4connect.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -62,6 +63,10 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<UserMapper>();
 
+//MiddleWare
+builder.Services.AddTransient<WebSocketMiddleWare>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -84,6 +89,10 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+//MiddleWare 
+app.UseMiddleware<WebSocketMiddleWare>();
 
 
 

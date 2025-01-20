@@ -1,15 +1,22 @@
-﻿using chess4connect.Models;
+﻿using chess4connect.Enums;
+using Microsoft.EntityFrameworkCore;
 
-namespace chess4connect.DTOs;
+namespace chess4connect.Models.Database.Entities;
 
-public class UserAfterLoginDto
+[Index(nameof(Email), IsUnique = true)]
+[Index(nameof(UserName), IsUnique = true)]
+
+public class User
 {
     public int Id { get; set; }
     public string UserName { get; set; }
     public string Email { get; set; }
+    public string Password { get; set; }
     public string Role { get; set; }
     public string AvatarImageUrl { get; set; }
     public bool Banned { get; set; }
 
     public List<Play> Plays { get; set; } = new List<Play>();
+
+
 }

@@ -1,4 +1,4 @@
-﻿namespace chess4connect.Repositories.Base;
+﻿namespace chess4connect.Models.Database.Repositories.Base;
 
 public interface IRepository<TEntity, TId> where TEntity : class
 {

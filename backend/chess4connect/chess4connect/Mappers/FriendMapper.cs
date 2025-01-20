@@ -34,21 +34,21 @@ public class FriendMapper
 
     public async Task<User> ToEntity(FriendDto friendDto)
     {
-        User completeUser = await _unitOfWork.UserRepository.GetByIdAsync(friendDto.Id);
-        return completeUser;
+        User completeFriend = await _unitOfWork.UserRepository.GetByIdAsync(friendDto.Id);
+        return completeFriend;
     }
 
     public async Task<IEnumerable<User>> ToEntity(IEnumerable<FriendDto> friendsDto)
     {
-        List<User> users = new List<User>();
+        List<User> friends = new List<User>();
 
         foreach (var friendDto in friendsDto)
         {
-            users.Add(await ToEntity(friendDto));
+            friends.Add(await ToEntity(friendDto));
         }
 
 
-        return users;
+        return friends;
 
     }
 }

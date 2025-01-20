@@ -1,9 +1,11 @@
 ﻿using chess4connect.Models.Database.Entities;
+using chess4connect.Models.SocketComunication;
 using chess4connect.Services;
 using chess4connect.Services.WebSocket;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
@@ -16,10 +18,12 @@ public class WebSocketController : ControllerBase
 {
     MessageHandler _socketService;
     UserService _userService;
+    ConnectionManager _connectionManager;
 
-    public WebSocketController(MessageHandler socketService, UserService userService) { 
+    public WebSocketController(MessageHandler socketService, UserService userService, ConnectionManager connectionManager) { 
         _socketService = socketService;
         _userService = userService;
+        _connectionManager = connectionManager;
     }
 
     [Authorize]
@@ -34,7 +38,7 @@ public class WebSocketController : ControllerBase
 
 
         //Comunica a todos los amigos de la conexión
-
+        await ComcommunicateConnectionToAllFriends();
 
 
         // Si la petición es de tipo websocket la aceptamos
@@ -67,8 +71,7 @@ public class WebSocketController : ControllerBase
             if (!string.IsNullOrWhiteSpace(message))
             {
                 //El servicio gestiona el mensage
-                string outMessage = _socketService.ManageMessage(message);
-
+                string outMessage = await _socketService.ManageMessage(message);
 
 
 
@@ -150,5 +153,32 @@ public class WebSocketController : ControllerBase
         return await _userService.GetUserByStringId(idString);
     }
 
+
+    private async void ComcommunicateConnectionToAllFriends(User user)
+    {
+       
+
+
+        foreach (var friend in user.Friends)
+        {
+            WebSocket socket = _connectionManager.GetSocketByUserId(friend.Id);
+
+            if (socket != null)
+            {
+                var message = new ConnectionSocketMessage<ConnectionModel>
+                {
+                    Data = new ConnectionModel
+                    {
+                        FriendId = user.Id
+                    }
+                };
+
+                string stringMessage = 
+
+                await SendAsync(webSocket,  )
+            }
+        }
+
+    }
 
 }

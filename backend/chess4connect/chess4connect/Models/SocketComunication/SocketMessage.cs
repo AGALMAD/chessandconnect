@@ -18,3 +18,15 @@ public class GameSocketMessage<T> : SocketMessage
     public override SocketComunicationType Type => SocketComunicationType.GAME;
     public T Data { get; set; }
 }
+public class ConnectionSocketMessage<T> : SocketMessage
+{
+    public override SocketComunicationType Type => SocketComunicationType.FRIEND;
+    public T Data { get; set; }
+}
+
+public class ChatSocketMessage<T> : SocketMessage
+{
+    public override SocketComunicationType Type => SocketComunicationType.CHAT;
+    public T Data { get; set; }
+}
+

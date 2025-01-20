@@ -1,4 +1,4 @@
-﻿using chess4connect.Models;
+﻿using chess4connect.Models.Database.Entities;
 using chess4connect.Services;
 using Microsoft.AspNetCore.Mvc;
 

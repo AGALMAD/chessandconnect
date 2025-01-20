@@ -7,12 +7,12 @@ public class Play
     public int Id { get; set; }
     public int UserId { get; set; }
     public User User { get; set; }
-    public int opponentId { get; set; }
-    public User opponent { get; set; }
-    public DateTime startDate { get; set; }
-    public DateTime endDate { get; set; }
+    public int OpponentId { get; set; }
+    public User Opponent { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
     public PlayState PlayState { get; set; }
-    public int gameId { get; set; }
+    public int GameId { get; set; }
     public Game Game { get; set; }
 
 }

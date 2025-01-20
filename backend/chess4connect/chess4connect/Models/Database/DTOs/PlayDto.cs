@@ -7,9 +7,9 @@ public class PlayDto
 {
     public int Id { get; set; }
     public User User { get; set; }
-    public User opponent { get; set; }
-    public DateTime startDate { get; set; }
-    public DateTime endDate { get; set; }
+    public User Opponent { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
     public PlayState PlayState { get; set; }
     public Game Game { get; set; }
 }

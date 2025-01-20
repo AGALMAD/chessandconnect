@@ -1,4 +1,5 @@
 ﻿using chess4connect.Services.WebSocket;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.WebSockets;
@@ -17,7 +18,7 @@ public class WebSocketController : ControllerBase
         _socketService = socketService;
     }
 
-
+    [Authorize]
     [HttpGet]
     public async Task ConnectAsync()
     {

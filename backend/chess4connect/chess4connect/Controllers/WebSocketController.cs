@@ -1,4 +1,6 @@
-﻿using chess4connect.Services.WebSocket;
+﻿using chess4connect.Models.Database.Entities;
+using chess4connect.Services;
+using chess4connect.Services.WebSocket;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +15,28 @@ namespace chess4connect.Controllers;
 public class WebSocketController : ControllerBase
 {
     MessageHandler _socketService;
+    UserService _userService;
 
-    public WebSocketController(MessageHandler socketService) { 
+    public WebSocketController(MessageHandler socketService, UserService userService) { 
         _socketService = socketService;
+        _userService = userService;
     }
 
     [Authorize]
     [HttpGet]
     public async Task ConnectAsync()
     {
+        //Si no es una usuario autorizado termina la ejecución
+        User user = await GetAuthorizedUser();
+
+        if (user == null)
+            HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+
+        //Comunica a todos los amigos de la conexión
+
+
+
         // Si la petición es de tipo websocket la aceptamos
         if (HttpContext.WebSockets.IsWebSocketRequest)
         {
@@ -112,5 +127,28 @@ public class WebSocketController : ControllerBase
         // Enviamos los bytes al cliente marcando que el mensaje es un texto
         return webSocket.SendAsync(bytes, WebSocketMessageType.Text, true, cancellation);
     }
+
+
+    private Task NotifyConnectionAllFriends()
+    {
+
+
+        
+
+
+        return Task.CompletedTask;
+    }
+
+
+    private async Task<User> GetAuthorizedUser()
+    {
+        // Pilla el usuario autenticado según ASP
+        System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+        string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
+
+        // Pilla el usuario de la base de datos
+        return await _userService.GetUserByStringId(idString);
+    }
+
 
 }

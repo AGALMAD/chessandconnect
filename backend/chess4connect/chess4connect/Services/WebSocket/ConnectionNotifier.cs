@@ -17,9 +17,10 @@ public class ConnectionNotifier
     public Task NotifyAllFriends(int userId)
     {
 
-        List<User> friends = _unitOfWork.UserRepository.getAllFriends(userId);
 
         //Notifica a todos los amigos conectados
+
+
 
     }
 

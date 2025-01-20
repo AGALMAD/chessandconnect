@@ -7,8 +7,15 @@ public class WebSocketMiddleWare : IMiddleware
         //Obtiene el jwt de la ruta
         string jwt = context.Request.Query["jwt"].ToString();
 
+        if (string.IsNullOrEmpty(jwt))
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        }
+
+
         //Lo introduce en el header para que el Websocket pueda leerlo 
-        context.Request.Headers.Append("Authorization", jwt);
+        context.Request.Headers["Authorization"] = $"Bearer {jwt}";
+
 
         return Task.CompletedTask;
     }

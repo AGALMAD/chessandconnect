@@ -154,13 +154,13 @@ public class WebSocketController : ControllerBase
     }
 
 
-    private async void ComcommunicateConnectionToAllFriends(User user)
+    private async Task ComcommunicateConnectionToAllFriends(User user)
     {
        
-
-
+        //Comunica a todos los usuarios conectados de nuestra conexión
         foreach (var friend in user.Friends)
         {
+            //Obtenemos el socket de nuestro amigo
             WebSocket socket = _connectionManager.GetSocketByUserId(friend.Id);
 
             if (socket != null)
@@ -173,9 +173,10 @@ public class WebSocketController : ControllerBase
                     }
                 };
 
-                string stringMessage = 
+                //Paso a string
+                string stringMessage = JsonSerializer.Serialize(message);
 
-                await SendAsync(webSocket,  )
+                await SendAsync(socket, stringMessage);
             }
         }
 

@@ -3,9 +3,9 @@ using chess4connect.Models;
 using chess4connect.Models.SocketComunication;
 using System.Text.Json;
 
-namespace chess4connect.Services;
+namespace chess4connect.Services.WebSocket;
 
-public class SocketService
+public class MessageHandler
 {
 
     public async Task<string> ManageMessage(string message)

@@ -1,4 +1,4 @@
-﻿using chess4connect.Services;
+﻿using chess4connect.Services.WebSocket;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.WebSockets;
@@ -11,9 +11,9 @@ namespace chess4connect.Controllers;
 [ApiController]
 public class WebSocketController : ControllerBase
 {
-    SocketService _socketService;
+    MessageHandler _socketService;
 
-    public WebSocketController(SocketService socketService) { 
+    public WebSocketController(MessageHandler socketService) { 
         _socketService = socketService;
     }
 

@@ -19,7 +19,7 @@ public class AuthController : ControllerBase
 
 
     [HttpPost("register")]
-    public async Task<string> RegisterUserAsync([FromBody] UserSignUpDto newUser)
+    public async Task<string> RegisterUserAsync([FromForm] UserSignUpDto newUser)
     {
         return await _authService.RegisterUser(newUser);
     }

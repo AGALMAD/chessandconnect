@@ -19,13 +19,15 @@ namespace chess4connect.Services
         private readonly UnitOfWork _unitOfWork;
         private readonly TokenValidationParameters _tokenParameters;
         private readonly UserMapper _userMapper;
+        private readonly ImageService _imageService;
 
-        public AuthService(UnitOfWork unitOfWork, IOptionsMonitor<JwtBearerOptions> jwtOptions, UserMapper userMapper)
+        public AuthService(UnitOfWork unitOfWork, IOptionsMonitor<JwtBearerOptions> jwtOptions, UserMapper userMapper, ImageService imageService)
         {
             _unitOfWork = unitOfWork;
             _userMapper = userMapper;
             _tokenParameters = jwtOptions.Get(JwtBearerDefaults.AuthenticationScheme)
                     .TokenValidationParameters;
+            _imageService = imageService;
         }
 
 
@@ -74,13 +76,12 @@ namespace chess4connect.Services
             //Retorna nulo si el usuario es nulo, si introduce un email en el nombre de usuario o si no introduce un email correcto
             if (receivedUser == null || !IsEmail(receivedUser.Email) || IsEmail(receivedUser.UserName))
                 return null;
-            string relativePath = "UserProfilePicture/" + $"{Guid.NewGuid()}_{receivedUser.ImagaePath.FileName}";
+                
 
             User user = _userMapper.ToEntity(receivedUser);
 
-            user.AvatarImageUrl = relativePath;
 
-            await StoreImageAsync(relativePath, receivedUser.ImagaePath);
+            user.AvatarImageUrl = await _imageService.InsertAsync(receivedUser.ImagaePath);
 
             User newUser = await InsertUser(user);
             return ObtainToken(newUser);
@@ -108,13 +109,6 @@ namespace chess4connect.Services
         {
             Regex validateEmailRegex = new Regex("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$");
             return validateEmailRegex.IsMatch(email);
-        }
-
-        private async Task StoreImageAsync(string relativePath, IFormFile file)
-        {
-            using Stream stream = file.OpenReadStream();
-
-            await FileHelper.SaveAsync(stream, relativePath);
         }
 
 

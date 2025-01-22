@@ -18,20 +18,13 @@ public class ImageService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<User> InsertAsync(User user, CreateUpdateImageRequest image)
+    public async Task<String> InsertAsync(IFormFile image)
     {
-        string relativePath = $"{IMAGES_FOLDER}/{Guid.NewGuid()}_{image.File.FileName}";
+        string relativePath = $"{IMAGES_FOLDER}/{Guid.NewGuid()}_{image.FileName}";
 
-        user.AvatarImageUrl = relativePath;
+        await StoreImageAsync(relativePath, image);
 
-        await _unitOfWork.UserRepository.InsertAsync(user);
-
-        if (await _unitOfWork.SaveAsync())
-        {
-            await StoreImageAsync(relativePath, image.File);
-        }
-
-        return user;
+        return relativePath;
     }
     public async Task<User> UpdateAsync(int id, CreateUpdateImageRequest image)
     {

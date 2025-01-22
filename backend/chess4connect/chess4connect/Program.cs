@@ -67,7 +67,6 @@ builder.Services.AddScoped<UserMapper>();
 
 //Web Socket Manager
 builder.Services.AddSingleton<WebSocketManager>();
-
 //MiddleWare
 builder.Services.AddTransient<WebSocketMiddleWare>();
 
@@ -85,21 +84,16 @@ if (app.Environment.IsDevelopment()) {
 }
 
 
-// Uso de web sockets
-app.UseWebSockets();
-
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 
 //MiddleWare 
 app.UseMiddleware<WebSocketMiddleWare>();
 
-
+// Uso de web sockets
+app.UseWebSockets();
 
 using (IServiceScope scope = app.Services.CreateScope())
 {

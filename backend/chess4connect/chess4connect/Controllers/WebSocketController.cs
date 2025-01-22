@@ -32,13 +32,13 @@ public class WebSocketController : ControllerBase
     {
         //Si no es una usuario autorizado termina la ejecución
         User user = await GetAuthorizedUser();
-
+        Console.WriteLine(user.ToString());
         if (user == null)
             HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 
 
         //Comunica a todos los amigos de la conexión
-        await ComcommunicateConnectionToAllFriends();
+        await ComcommunicateConnectionToAllFriends(user);
 
 
         // Si la petición es de tipo websocket la aceptamos

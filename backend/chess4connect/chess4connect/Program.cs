@@ -48,6 +48,9 @@ public class Program {
         builder.Services.AddScoped<UserService>();
         builder.Services.AddScoped<ImageService>();
 
+        builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
+        builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);
+
 
 
 
@@ -83,23 +86,17 @@ public class Program {
             options.OperationFilter<SecurityRequirementsOperationFilter>(true, JwtBearerDefaults.AuthenticationScheme);
         });
 
+        // CONFIGURANDO JWT
         builder.Services.AddAuthentication()
             .AddJwtBearer(options =>
             {
-                // Por seguridad guardamos la clave privada en el appsettings.json
-                // La clave debe tener más de 256 bits
-                Settings settings = builder.Configuration.GetSection(Settings.SECTION_NAME).Get<Settings>();
-                string key = settings.JwtKey;
-
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    // Si no nos importa que se valide el emisor del token, lo desactivamos
                     ValidateIssuer = false,
-                    // Si no nos importa que se valide para quién o
-                    // para qué propósito está destinado el token, lo desactivamos
                     ValidateAudience = false,
-                    // Indicamos la clave
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+
+                    // INDICAMOS LA CLAVE
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                 };
             });
 

@@ -30,5 +30,6 @@ public class MessageHandler
                 break;
         }
 
+        return "";
     }
 }

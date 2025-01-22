@@ -50,7 +50,7 @@ namespace chess4connect.Services
                 // EL CONTENIDO DEL JWT
                 Claims = new Dictionary<string, object>
                     {
-                        { "id", user.Id },
+                        { ClaimTypes.NameIdentifier, user.Id },
                         { "name", user.UserName },
                         { ClaimTypes.Role, user.Role }
                     },

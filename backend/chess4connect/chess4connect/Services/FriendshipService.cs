@@ -17,6 +17,14 @@ namespace chess4connect.Services
             return await _unitOfWork.UserRepository.GetUserByUserName(nickName);
         }
 
+        public async Task<List<User>> GetAllFriends(int userId)
+        {
+            User user = await _unitOfWork.UserRepository.GetUserById(userId);
+
+            return user.Friends.ToList();
+            
+        }
+
         public async Task<Friendship> requestFriendship(int userId, string friendNickname)
         {
             User user = await _unitOfWork.UserRepository.GetByIdAsync(userId);

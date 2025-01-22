@@ -21,8 +21,14 @@ public class ChessAndConnectContext : DbContext
 
 
 
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        options.UseSqlite(_settings.DatabaseConnection);
+        #if DEBUG
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            optionsBuilder.UseSqlite($"DataSource={baseDir}{DATABASE_PATH}");
+        #else
+            optionsBuilder.UseMySql(_settings.DatabaseConnection, ServerVersion.AutoDetect(_settings.DatabaseConnection));
+        #endif
     }
+
 }

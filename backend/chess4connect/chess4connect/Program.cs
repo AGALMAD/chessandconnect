@@ -63,10 +63,11 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<FriendshipService>();
 builder.Services.AddScoped<UserMapper>();
+builder.Services.AddScoped <ImageService>();
 
 
 //Web Socket Manager
-builder.Services.AddSingleton<WebSocketManager>();
+builder.Services.AddSingleton<ConnectionManager>();
 //MiddleWare
 builder.Services.AddTransient<WebSocketMiddleWare>();
 

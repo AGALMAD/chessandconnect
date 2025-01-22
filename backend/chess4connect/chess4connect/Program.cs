@@ -21,20 +21,20 @@ public class Program {
         // Configuramos cultura invariante para que al pasar los decimales a texto no tengan comas
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
-        // Configuramos para que el directorio de trabajo sea donde est· el ejecutable
+        // Configuramos para que el directorio de trabajo sea donde est√° el ejecutable
         Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
 
         var builder = WebApplication.CreateBuilder(args);
 
 
-        // *** AÒadimos servicios al contenedor del inyector de dependencias ***
+        // *** A√±adimos servicios al contenedor del inyector de dependencias ***
 
-        // AÒadimos la configuraciÛn guardada en el appsetting.json
+        // A√±adimos la configuraci√≥n guardada en el appsetting.json
         builder.Services.Configure<Settings>(builder.Configuration.GetSection(Settings.SECTION_NAME));
 
 
-        // AÒadimos controladores.
+        // A√±adimos controladores.
         builder.Services.AddControllers();
 
         // Contesto de la base de datos y repositorios
@@ -46,6 +46,8 @@ public class Program {
         builder.Services.AddScoped<PasswordService>();
         builder.Services.AddScoped<FriendshipService>();
         builder.Services.AddScoped<UserService>();
+        builder.Services.AddScoped<ImageService>();
+
 
 
 
@@ -65,7 +67,7 @@ public class Program {
         builder.Services.AddSwaggerGen();
 
 
-        // ConfiguraciÛn para poder usar JWT en las peticiones de Swagger
+        // Configuraci√≥n para poder usar JWT en las peticiones de Swagger
         builder.Services.AddSwaggerGen(options =>
         {
             options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
@@ -85,7 +87,7 @@ public class Program {
             .AddJwtBearer(options =>
             {
                 // Por seguridad guardamos la clave privada en el appsettings.json
-                // La clave debe tener m·s de 256 bits
+                // La clave debe tener m√°s de 256 bits
                 Settings settings = builder.Configuration.GetSection(Settings.SECTION_NAME).Get<Settings>();
                 string key = settings.JwtKey;
 
@@ -93,8 +95,8 @@ public class Program {
                 {
                     // Si no nos importa que se valide el emisor del token, lo desactivamos
                     ValidateIssuer = false,
-                    // Si no nos importa que se valide para quiÈn o
-                    // para quÈ propÛsito est· destinado el token, lo desactivamos
+                    // Si no nos importa que se valide para qui√©n o
+                    // para qu√© prop√≥sito est√° destinado el token, lo desactivamos
                     ValidateAudience = false,
                     // Indicamos la clave
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
@@ -137,19 +139,19 @@ public class Program {
 
         app.UseHttpsRedirection();
 
-        // Indicamos que active el servicio para archivos est·ticos (wwwroot)
+        // Indicamos que active el servicio para archivos est√°ticos (wwwroot)
         app.UseStaticFiles();
 
 
-        // Configuramos Cors para que acepte cualquier peticiÛn de cualquier origen (no es seguro)
+        // Configuramos Cors para que acepte cualquier petici√≥n de cualquier origen (no es seguro)
         app.UseCors(options =>
             options.AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowAnyOrigin());
 
-        // Habilita la autenticaciÛn
+        // Habilita la autenticaci√≥n
         app.UseAuthentication();
-        // Habilita la autorizaciÛn
+        // Habilita la autorizaci√≥n
         app.UseAuthorization();
 
         // Inicializamos la base de datos

@@ -1,4 +1,5 @@
-﻿using chess4connect.Mappers;
+﻿using chess4connect.Helpers;
+using chess4connect.Mappers;
 using chess4connect.Models.Database.DTOs;
 using chess4connect.Models.Database.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -6,8 +7,10 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Mail;
+using System.Net.NetworkInformation;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace chess4connect.Services
 {
@@ -16,13 +19,15 @@ namespace chess4connect.Services
         private readonly UnitOfWork _unitOfWork;
         private readonly TokenValidationParameters _tokenParameters;
         private readonly UserMapper _userMapper;
+        private readonly ImageService _imageService;
 
-        public AuthService(UnitOfWork unitOfWork, IOptionsMonitor<JwtBearerOptions> jwtOptions, UserMapper userMapper)
+        public AuthService(UnitOfWork unitOfWork, IOptionsMonitor<JwtBearerOptions> jwtOptions, UserMapper userMapper, ImageService imageService)
         {
             _unitOfWork = unitOfWork;
             _userMapper = userMapper;
             _tokenParameters = jwtOptions.Get(JwtBearerDefaults.AuthenticationScheme)
                     .TokenValidationParameters;
+            _imageService = imageService;
         }
 
 
@@ -67,11 +72,16 @@ namespace chess4connect.Services
 
         public async Task<string> RegisterUser(UserSignUpDto receivedUser)
         {
+
             //Retorna nulo si el usuario es nulo, si introduce un email en el nombre de usuario o si no introduce un email correcto
             if (receivedUser == null || !IsEmail(receivedUser.Email) || IsEmail(receivedUser.UserName))
                 return null;
+                
 
             User user = _userMapper.ToEntity(receivedUser);
+
+
+            user.AvatarImageUrl = await _imageService.InsertAsync(receivedUser.ImagaePath);
 
             User newUser = await InsertUser(user);
             return ObtainToken(newUser);

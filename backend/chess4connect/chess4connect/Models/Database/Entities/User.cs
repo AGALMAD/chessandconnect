@@ -17,6 +17,7 @@ public class User
     public bool Banned { get; set; }
 
     public List<Play> Plays { get; set; } = new List<Play>();
+    public List<User> Friends { get; set; } = new List<User>();
 
 
 }

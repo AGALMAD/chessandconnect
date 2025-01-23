@@ -51,7 +51,18 @@ export class AuthService {
   }
 
   async register(authRegister: Register, remember: boolean): Promise<Result<AuthResponse>> {
-    const result = await this.api.post<AuthResponse>('Auth/register', authRegister);
+
+    //Paso a formData de los datos del usuario
+    const formData = new FormData();
+    formData.append('username', authRegister.username);
+    formData.append('email', authRegister.email);
+    formData.append('password', authRegister.password);
+    if (authRegister.image) {
+      formData.append('image', authRegister.image);
+    }
+
+    const result = await this.api.post<AuthResponse>('Auth/register', formData);
+
     if (result.success) {
       this.setSession(result.data.accessToken, remember);
     } else {

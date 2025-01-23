@@ -80,8 +80,15 @@ namespace chess4connect.Services
 
             User user = _userMapper.ToEntity(receivedUser);
 
+            try
+            {
+                user.AvatarImageUrl = await _imageService.InsertAsync(receivedUser.ImagaePath);
+            }
+            catch (Exception ex)
+            {
+                user.AvatarImageUrl = null;
 
-            user.AvatarImageUrl = await _imageService.InsertAsync(receivedUser.ImagaePath);
+            }
 
             User newUser = await InsertUser(user);
             return newUser;

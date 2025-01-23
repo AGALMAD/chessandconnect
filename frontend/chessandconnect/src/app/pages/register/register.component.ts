@@ -60,7 +60,8 @@ export class RegisterComponent {
     const authData: Register = {
       username: this.myForm.get('nickname').value,
       email: this.myForm.get('email').value,
-      password: this.myForm.get('password').value
+      password: this.myForm.get('password').value,
+      image: this.image
     };
 
     if (this.myForm.valid) {

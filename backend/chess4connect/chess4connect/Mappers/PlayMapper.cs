@@ -10,12 +10,13 @@ public class PlayMapper
         return new PlayDto
         {
             Id = play.Id,
-            User = play.User,
-            Opponent = play.Opponent,
+            GameId = play.GameId,
             StartDate = play.StartDate,
             EndDate = play.EndDate,
             PlayState = play.PlayState,
             Game = play.Game,
+            Players = play.Players,
+            
 
         };
     }
@@ -31,15 +32,14 @@ public class PlayMapper
         return new Play
         {
             Id = playDto.Id,
-            UserId = playDto.User.Id,
-            User = playDto.User,
-            OpponentId = playDto.Opponent.Id,
-            Opponent = playDto.Opponent,
+            UserId = playDto.Id,
+            OpponentId = playDto.Id,
             StartDate = playDto.StartDate,
             EndDate = playDto.EndDate,
             PlayState = playDto.PlayState,
             GameId = playDto.Game.Id,
             Game = playDto.Game,
+            Players = playDto.Players,
 
         };
     }

@@ -1,4 +1,5 @@
 ﻿using chess4connect.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chess4connect.Models.Database.Entities;
 

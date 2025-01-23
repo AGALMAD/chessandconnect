@@ -30,6 +30,7 @@ export class RegisterComponent {
     this.myForm = this.createForm();
   }
 
+  image: File
   registerHints: Boolean = false;
 
   private createForm(): FormGroup {
@@ -59,9 +60,12 @@ export class RegisterComponent {
     const authData: Register = {
       username: this.myForm.get('nickname').value,
       email: this.myForm.get('email').value,
-      password: this.myForm.get('password').value
+      password: this.myForm.get('password').value,
+      image: this.image
     };
 
+
+    console.log(authData)
     if (this.myForm.valid) {
       const result = await this.authService.register(authData, this.myForm.get('remember')?.value);
       if (result.success) {
@@ -89,5 +93,11 @@ export class RegisterComponent {
         timer: 1100
       });
     }
+  }
+
+  onFileSelected(event: any) {
+    const image = event.target.files[0] as File; // Here we use only the first file (single file)
+    this.image = image
+    console.log(this.image)
   }
 }

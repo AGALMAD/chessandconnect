@@ -19,9 +19,21 @@ public class AuthController : ControllerBase
 
 
     [HttpPost("register")]
-    public async Task<string> RegisterUserAsync([FromBody] UserSignUpDto newUser)
+    public async Task<ActionResult<string>> RegisterUserAsync([FromForm] UserSignUpDto receivedUser)
     {
-        return await _authService.RegisterUser(newUser);
+        User newUser = await _authService.RegisterUser(receivedUser);
+        if (newUser != null)
+        {
+            string stringToken = _authService.ObtainToken(newUser);
+            return Ok(new
+            {
+                accesToken = stringToken
+            });
+        }
+        else
+        {
+            return Unauthorized();
+        }
     }
 
     [HttpPost("login")]

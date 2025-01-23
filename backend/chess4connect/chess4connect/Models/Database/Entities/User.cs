@@ -19,6 +19,7 @@ public class User
     public List<User> Friends { get; set; } = new List<User>();
     public List<Friendship> Requests { get; set; } = new List<Friendship>();
     public List<Play> Plays { get; set; } = new List<Play>();
+    public List<User> Friends { get; set; } = new List<User>();
 
 
 }

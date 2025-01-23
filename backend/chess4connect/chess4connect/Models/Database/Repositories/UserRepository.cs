@@ -15,10 +15,18 @@ public class UserRepository : Repository<User, int>
             .Include(user => user.Plays)
             .FirstOrDefaultAsync(user => user.Email == credential || user.UserName == credential);
     }
+
+    public async Task<User> GetUserById(int userId)
+    {
+        return await GetQueryable()
+            .Include(user => user.Plays)
+            .FirstOrDefaultAsync(user => user.Id == userId || user.Id == userId);
+    }
     public async Task<User> GetUserByUserName(string nickName)
     {
         return await GetQueryable().FirstAsync(user => user.UserName == nickName);
     }
+
     public async Task<User> GetAllInfoButOrdersById(int id)
     {
         return await GetQueryable()

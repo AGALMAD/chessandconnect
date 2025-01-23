@@ -6,6 +6,7 @@ using chess4connect.Models.Database.Entities;
 using chess4connect.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -35,40 +36,10 @@ public class Program {
 
 
         // Añadimos controladores.
-        builder.Services.AddControllers();
-
-        // Contesto de la base de datos y repositorios
-        builder.Services.AddScoped<ChessAndConnectContext>();
-        builder.Services.AddScoped<UnitOfWork>();
-
-        // Servicios
-        builder.Services.AddScoped<AuthService>();
-        builder.Services.AddScoped<PasswordService>();
-        builder.Services.AddScoped<FriendshipService>();
-        builder.Services.AddScoped<UserService>();
-        builder.Services.AddScoped<ImageService>();
-
-        builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
-        builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);
-
-
-
-
-        // Mappers
-        builder.Services.AddTransient<UserMapper>();
-        builder.Services.AddTransient<PlayMapper>();
-        builder.Services.AddTransient<FriendMapper>();
-
-        //Administrador de todos los websockets
-        builder.Services.AddSingleton<ConnectionManager>();
-        //MiddleWare
-        builder.Services.AddTransient<WebSocketMiddleWare>();
-
-
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-
+        builder.Services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });
 
         // Configuración para poder usar JWT en las peticiones de Swagger
         builder.Services.AddSwaggerGen(options =>
@@ -101,31 +72,60 @@ public class Program {
             });
 
 
-        if (builder.Environment.IsDevelopment())
-        {
-            builder.Services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
+        // Contesto de la base de datos y repositorios
+        builder.Services.AddScoped<ChessAndConnectContext>();
+        builder.Services.AddScoped<UnitOfWork>();
+
+        // Servicios
+        builder.Services.AddScoped<AuthService>();
+        builder.Services.AddScoped<PasswordService>();
+        builder.Services.AddScoped<FriendshipService>();
+        builder.Services.AddScoped<UserService>();
+        builder.Services.AddScoped<ImageService>();
+
+        builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
+        builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);
+
+
+        // Mappers
+        builder.Services.AddTransient<UserMapper>();
+        builder.Services.AddTransient<PlayMapper>();
+        builder.Services.AddTransient<FriendMapper>();
+
+        //Administrador de todos los websockets
+        builder.Services.AddSingleton<ConnectionManager>();
+        //MiddleWare
+        builder.Services.AddTransient<WebSocketMiddleWare>();
+
+
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+
+        // Permite CORS
+        builder.Services.AddCors(
+            options =>
+            options.AddDefaultPolicy(
+                builder =>
                 {
-                    builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-            });
-        }
-
-
-
-
+                    builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                    ;
+                })
+            );
 
 
         var app = builder.Build();
+
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseCors();
         }
 
         //MiddleWare 
@@ -140,16 +140,12 @@ public class Program {
         app.UseStaticFiles();
 
 
-        // Configuramos Cors para que acepte cualquier petición de cualquier origen (no es seguro)
-        app.UseCors(options =>
-            options.AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowAnyOrigin());
-
         // Habilita la autenticación
         app.UseAuthentication();
         // Habilita la autorización
         app.UseAuthorization();
+
+        app.MapControllers();
 
         // Inicializamos la base de datos
         await InitDatabaseAsync(app.Services);

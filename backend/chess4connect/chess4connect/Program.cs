@@ -128,11 +128,11 @@ public class Program {
             app.UseCors();
         }
 
-        //MiddleWare 
-        app.UseMiddleware<WebSocketMiddleWare>();
-
         // Habilita el uso de websockets
         app.UseWebSockets();
+
+        //MiddleWare 
+        app.UseMiddleware<WebSocketMiddleWare>();
 
         app.UseHttpsRedirection();
 

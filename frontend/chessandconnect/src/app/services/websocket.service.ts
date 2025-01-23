@@ -36,37 +36,48 @@ export class WebsocketService {
     this.disconnected.next();
   }
 
-  // ========= Usando Websockets nativos =============
+  // ============ Usando Rxjs =============
 
-  private nativeSocket: WebSocket;
+  rxjsSocket: WebSocketSubject<string>;
 
-  isConnectedNative() {
-    return this.nativeSocket
-      && (this.nativeSocket.readyState == WebSocket.CONNECTING || this.nativeSocket.readyState == WebSocket.OPEN);
+  isConnectedRxjs() {
+    return this.rxjsSocket && !this.rxjsSocket.closed;
   }
 
-  connectNative() {
-    this.nativeSocket = new WebSocket(`${environment.socketUrl}/?jwt=${this.api.jwt}`);
+  connectRxjs() {
+    this.rxjsSocket = webSocket({
+      url: environment.socketUrl + "/?jwt=" + this.api.jwt,
 
-    // Evento de apertura de conexión
-    this.nativeSocket.onopen = _ => this.onConnected();
+      // Evento de apertura de conexión
+      openObserver: {
+        next: () => this.onConnected()
+      },
 
-    // Evento de mensaje recibido
-    this.nativeSocket.onmessage = (event) => this.onMessageReceived(event.data);
+      // La versión de Rxjs está configurada por defecto para manejar JSON
+      // Si queremos manejar cadenas de texto en crudo debemos configurarlo
+      serializer: (value: string) => value,
+      deserializer: (event: MessageEvent) => event.data
+    });
 
-    // Evento de error generado
-    this.nativeSocket.onerror = (event) => this.onError(event);
+    this.rxjsSocket.subscribe({
+      // Evento de mensaje recibido
+      next: (message: string) => this.onMessageReceived(message),
 
-    // Evento de cierre de conexión
-    this.nativeSocket.onclose = (event) => this.onDisconnected();
+      // Evento de error generado
+      error: (error) => this.onError(error),
+
+      // Evento de cierre de conexión
+      complete: () => this.onDisconnected()
+    });
   }
 
-  sendNative(message: string) {
-    this.nativeSocket.send(message);
+  sendRxjs(message: string) {
+    this.rxjsSocket.next(message);
   }
 
-  disconnectNative() {
-    this.nativeSocket.close(1000, 'Closed by client');
-    this.nativeSocket = null;
+  disconnectRxjs() {
+    this.rxjsSocket.complete();
+    this.rxjsSocket = null;
+    console.log("Desconectado")
   }
 }

@@ -1,9 +1,9 @@
 ﻿using chess4connect.Enums;
 using chess4connect.Models;
-using chess4connect.Models.SocketComunication;
+using chess4connect.Models.SocketComunication.MessageTypes;
 using System.Text.Json;
 
-namespace chess4connect.Services.WebSocket;
+namespace chess4connect.Models.SocketComunication.Handlers;
 
 public class MessageHandler
 {

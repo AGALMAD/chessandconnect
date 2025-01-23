@@ -1,6 +1,6 @@
 ﻿using chess4connect.Enums;
 
-namespace chess4connect.Models.SocketComunication;
+namespace chess4connect.Models.SocketComunication.MessageTypes;
 
 public class ConnectionModel
 {

@@ -82,7 +82,7 @@ namespace chess4connect.Services
 
             try
             {
-                user.AvatarImageUrl = await _imageService.InsertAsync(receivedUser.ImagaePath);
+                user.AvatarImageUrl = await _imageService.InsertAsync(receivedUser.ImagePath);
             }
             catch (Exception ex)
             {

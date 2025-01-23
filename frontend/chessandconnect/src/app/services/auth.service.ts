@@ -54,11 +54,11 @@ export class AuthService {
 
     //Paso a formData de los datos del usuario
     const formData = new FormData();
-    formData.append('username', authRegister.username);
-    formData.append('email', authRegister.email);
-    formData.append('password', authRegister.password);
+    formData.append('Username', authRegister.username);
+    formData.append('Email', authRegister.email);
+    formData.append('Password', authRegister.password);
     if (authRegister.image) {
-      formData.append('image', authRegister.image);
+      formData.append('ImagePath', authRegister.image);
     }
 
     const result = await this.api.post<AuthResponse>('Auth/register', formData);

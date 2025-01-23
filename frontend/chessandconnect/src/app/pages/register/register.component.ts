@@ -64,6 +64,8 @@ export class RegisterComponent {
       image: this.image
     };
 
+
+    console.log(authData)
     if (this.myForm.valid) {
       const result = await this.authService.register(authData, this.myForm.get('remember')?.value);
       if (result.success) {

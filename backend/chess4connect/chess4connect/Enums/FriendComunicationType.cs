@@ -2,8 +2,10 @@
 
 public enum FriendComunicationType
 {
-    FriendConnected = 1,
-    FriendDisconnected = 2,
-    FriendshipInvitation = 3,
+    UserConnected = 1,
+    UserDisconnected = 2,
+    FriendConnected = 3,
+    FriendDisconnected = 4,
+    FriendshipInvitation = 5,
 
 }

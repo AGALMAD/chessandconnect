@@ -1,6 +1,7 @@
 ﻿
 
 namespace chess4connect.MiddleWares;
+
 public class WebSocketMiddleWare : IMiddleware
 {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)

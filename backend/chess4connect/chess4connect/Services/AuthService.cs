@@ -70,7 +70,7 @@ namespace chess4connect.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public async Task<string> RegisterUser(UserSignUpDto receivedUser)
+        public async Task<User> RegisterUser(UserSignUpDto receivedUser)
         {
 
             //Retorna nulo si el usuario es nulo, si introduce un email en el nombre de usuario o si no introduce un email correcto
@@ -84,7 +84,7 @@ namespace chess4connect.Services
             user.AvatarImageUrl = await _imageService.InsertAsync(receivedUser.ImagaePath);
 
             User newUser = await InsertUser(user);
-            return ObtainToken(newUser);
+            return newUser;
         }
         public async Task<User> GetUserByCredentialAndPassword(string credential, string password)
         {

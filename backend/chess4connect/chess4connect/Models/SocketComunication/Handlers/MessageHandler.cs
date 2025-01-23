@@ -26,8 +26,6 @@ public class MessageHandler
             case SocketComunicationType.CHAT:
                 break;
 
-            case SocketComunicationType.FRIEND:
-                break;
         }
 
         return "";

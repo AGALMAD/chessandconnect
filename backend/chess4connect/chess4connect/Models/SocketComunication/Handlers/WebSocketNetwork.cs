@@ -1,4 +1,5 @@
-﻿using chess4connect.Models.Database.Entities;
+﻿using chess4connect.Enums;
+using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using Microsoft.AspNetCore.DataProtection;
 using System.Collections.Concurrent;
@@ -7,6 +8,7 @@ using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace chess4connect.Models.SocketComunication.Handlers;
 
@@ -64,14 +66,26 @@ public class WebSocketNetwork
         // Lista donde guardar las tareas de envío de mensajes
         List<Task> tasks = new List<Task>();
         // Guardamos una copia de los WebSocketHandler para evitar problemas de concurrencia
-        WebSocketHandler[] handlers = _handlers.ToArray();
+        WebSocketHandler[] handlers = _handlers.Values.ToArray();
 
-        string message = $"Se ha desconectado el usuario con id {disconnectedHandler.Id}. Ahora hay {handlers.Length} usuarios conectados";
+        var message = new ConnectionSocketMessage<ConnectionModel>
+        {
+            Data = new ConnectionModel
+            {
+                Type = ConnectionType.Disconnected,
+                UserId = disconnectedHandler.Id,
+                UsersCounter = handlers.Length,
+                
+            }
+        };
+
+        //Paso a string
+        string stringMessage = JsonSerializer.Serialize(message);
 
         // Enviamos el mensaje al resto de usuarios
         foreach (WebSocketHandler handler in handlers)
         {
-            tasks.Add(handler.SendAsync(message));
+            tasks.Add(handler.SendAsync(stringMessage));
         }
 
         // Esperamos a que todas las tareas de envío de mensajes se completen
@@ -83,7 +97,7 @@ public class WebSocketNetwork
         // Lista donde guardar las tareas de envío de mensajes
         List<Task> tasks = new List<Task>();
         // Guardamos una copia de los WebSocketHandler para evitar problemas de concurrencia
-        WebSocketHandler[] handlers = _handlers.ToArray();
+        WebSocketHandler[] handlers = _handlers.Values.ToArray();
 
         string messageToMe = $"Tú: {message}";
         string messageToOthers = $"Usuario {userHandler.Id}: {message}";
@@ -104,7 +118,7 @@ public class WebSocketNetwork
         return _handlers.FirstOrDefault(p => p.Key == id).Value;
     }
 
-    private async Task NotifyConnectionToAllFriends(User user)
+    private async Task NotifyConnectionToAllFriends(User user, ConnectionType connectionType)
     {
 
         //Comunica a todos los usuarios conectados de nuestra conexión
@@ -115,14 +129,14 @@ public class WebSocketNetwork
 
             if (handler != null)
             {
-                var message = new ConnectionSocketMessage<ConnectionModel>
+                var message = new ConnectionSocketMessage<FriendConnectionModel>
                 {
-                    Data = new ConnectionModel
+                    Data = new FriendConnectionModel
                     {
-                        FriendId = user.Id
+                        Type = connectionType,
+                        FriendId = friend.Id,
                     }
                 };
-
                 //Paso a string
                 string stringMessage = JsonSerializer.Serialize(message);
 
@@ -130,6 +144,39 @@ public class WebSocketNetwork
             }
         }
 
+    }
+
+    private Task NotifyConnectionToAllUsers(WebSocketHandler handler, ConnectionType connectionType)
+    {
+        // Lista donde guardar las tareas de envío de mensajes
+        List<Task> tasks = new List<Task>();
+        // Guardamos una copia de los WebSocketHandler para evitar problemas de concurrencia
+        WebSocketHandler[] handlers = _handlers.Values.ToArray();
+
+
+        //Comunica a todos los usuarios conectados de nuestra conexión
+        foreach (WebSocketHandler webSocketHandler in handlers)
+        {
+
+            var message = new ConnectionSocketMessage<UserConnectionModel>
+            {
+                Data = new UserConnectionModel
+                {
+                    Type = connectionType,
+                    UserCounter = handlers.Length ,
+                }
+            };
+
+            //Paso a string
+            string stringMessage = JsonSerializer.Serialize(message);
+
+            tasks.Add(handler.SendAsync(stringMessage));
+
+
+        }
+
+
+        return Task.WhenAll(tasks);
     }
 
 }

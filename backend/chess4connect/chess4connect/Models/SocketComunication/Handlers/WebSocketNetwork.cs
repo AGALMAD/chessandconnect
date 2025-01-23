@@ -25,8 +25,6 @@ public class WebSocketNetwork
         // Creamos un nuevo WebSocketHandler a partir del WebSocket recibido y lo añadimos a la lista
         WebSocketHandler handler = await AddWebsocketAsync(user, webSocket);
 
-        // Notificamos a los usuarios que un nuevo usuario se ha conectado
-        await NotifyUserConnectedAsync(handler);
         // Esperamos a que el WebSocketHandler termine de manejar la conexión
         await handler.HandleAsync();
     }
@@ -119,33 +117,6 @@ public class WebSocketNetwork
         return _handlers.FirstOrDefault(p => p.Key == id).Value;
     }
 
-    private async Task NotifyConnectionToAllFriends(User user, ConnectionType connectionType)
-    {
-
-        //Comunica a todos los usuarios conectados de nuestra conexión
-        foreach (var friend in user.Friends)
-        {
-            //Obtenemos el socket de nuestro amigo
-            WebSocketHandler handler = GetSocketByUserId(friend.Id);
-
-            if (handler != null)
-            {
-                var message = new ConnectionSocketMessage<FriendConnectionModel>
-                {
-                    Data = new FriendConnectionModel
-                    {
-                        Type = connectionType,
-                        FriendId = friend.Id,
-                    }
-                };
-                //Paso a string
-                string stringMessage = JsonSerializer.Serialize(message);
-
-                await handler.SendAsync(stringMessage);
-            }
-        }
-
-    }
 
    
 

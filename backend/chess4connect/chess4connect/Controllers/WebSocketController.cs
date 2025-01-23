@@ -22,7 +22,6 @@ public class WebSocketController : ControllerBase
     private readonly UserService _userService;
 
     public WebSocketController(
-        WebSocketService websocketService,
         WebSocketNetwork websocketNetwork, 
         UserService userService)
     {
@@ -40,9 +39,6 @@ public class WebSocketController : ControllerBase
         if (user == null)
             HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 
-
-        //Comunica a todos los amigos de la conexión
-        await ComcommunicateConnectionToAllFriends(user);
 
         // Si la petición es de tipo websocket la aceptamos
         if (HttpContext.WebSockets.IsWebSocketRequest)

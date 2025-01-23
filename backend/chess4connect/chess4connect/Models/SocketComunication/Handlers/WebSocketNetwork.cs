@@ -44,6 +44,7 @@ public class WebSocketNetwork
         handler.MessageReceived += OnMessageReceivedAsync;
         _handlers.TryAdd(user.Id, handler);
 
+
         return handler;
 
     }
@@ -146,37 +147,6 @@ public class WebSocketNetwork
 
     }
 
-    private Task NotifyConnectionToAllUsers(WebSocketHandler handler, ConnectionType connectionType)
-    {
-        // Lista donde guardar las tareas de envío de mensajes
-        List<Task> tasks = new List<Task>();
-        // Guardamos una copia de los WebSocketHandler para evitar problemas de concurrencia
-        WebSocketHandler[] handlers = _handlers.Values.ToArray();
-
-
-        //Comunica a todos los usuarios conectados de nuestra conexión
-        foreach (WebSocketHandler webSocketHandler in handlers)
-        {
-
-            var message = new ConnectionSocketMessage<UserConnectionModel>
-            {
-                Data = new UserConnectionModel
-                {
-                    Type = connectionType,
-                    UserCounter = handlers.Length ,
-                }
-            };
-
-            //Paso a string
-            string stringMessage = JsonSerializer.Serialize(message);
-
-            tasks.Add(handler.SendAsync(stringMessage));
-
-
-        }
-
-
-        return Task.WhenAll(tasks);
-    }
+   
 
 }

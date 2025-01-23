@@ -6,6 +6,14 @@ public class WebSocketMiddleWare : IMiddleware
 {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
+        // Verificar si la solicitud es un WebSocket
+        if (!context.WebSockets.IsWebSocketRequest)
+        {
+            await next(context);
+            return;
+        }
+
+
         //Obtiene el jwt de la ruta
         string jwt = context.Request.Query["jwt"].ToString();
 

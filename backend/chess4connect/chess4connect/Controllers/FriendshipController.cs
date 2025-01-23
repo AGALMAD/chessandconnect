@@ -44,7 +44,7 @@ namespace chess4connect.Controllers
         
             IEnumerable<FriendDto> friendDtos = _friendMapper.ToDto(friends);
 
-            return friendDtos;
+            return Ok(friendDtos);
         }
 
         [Authorize]

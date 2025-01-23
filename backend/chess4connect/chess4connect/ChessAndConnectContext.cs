@@ -16,7 +16,7 @@ public class ChessAndConnectContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Play> Plays { get; set; }
-    public DbSet<Game> Games { get; set; }
+    public DbSet<PlayDetail> PlayDetails { get; set; }
     public DbSet<Friendship> Friendships { get; set; }
 
 

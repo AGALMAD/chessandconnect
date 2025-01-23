@@ -1,6 +1,6 @@
 ﻿namespace chess4connect.Enums;
 
-public enum PlayState
+public enum GameResult
 {
     LOSE = -1,
     DRAW = 0,

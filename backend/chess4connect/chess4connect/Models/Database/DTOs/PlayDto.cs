@@ -10,6 +10,6 @@ public class PlayDto
     public User Opponent { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    public PlayState PlayState { get; set; }
+    public GameResult PlayState { get; set; }
     public Game Game { get; set; }
 }

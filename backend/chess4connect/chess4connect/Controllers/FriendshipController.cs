@@ -14,19 +14,24 @@ namespace chess4connect.Controllers
     {
         private FriendshipService _friendshipService;
         private FriendMapper _friendMapper;
+        private UnitOfWork _unitOfWork;
 
-        public FriendshipController(FriendshipService friendshipService, FriendMapper friendMapper)
+        public FriendshipController(FriendshipService friendshipService, FriendMapper friendMapper, UnitOfWork unitOfWork)
         {
             _friendshipService = friendshipService;
             _friendMapper = friendMapper;
+            _unitOfWork = unitOfWork;
         }
 
+        [Authorize]
         [HttpGet ("user")]
-        public async Task<FriendDto> getUser(string nickName)
+        public async Task<IEnumerable<FriendDto>> getUser(string nickName)
         {
-            User user = await _friendshipService.GetUserByNickName (nickName);
-            
-            return _friendMapper.ToDto(user);
+            IEnumerable<User> users = await _unitOfWork.UserRepository.GetUsersByUserName(nickName);
+
+            IEnumerable<FriendDto> usersDtos = _friendMapper.ToDto(users);
+
+            return usersDtos;
         }
 
         [Authorize]
@@ -40,7 +45,7 @@ namespace chess4connect.Controllers
                 return Unauthorized("El usuario no está autenticado.");
             }
 
-            List<User> friends = await _friendshipService.GetAllFriends(userIdInt);
+            List<User> friends = await _friendshipService.GetAllUserFriends(userIdInt);
         
             IEnumerable<FriendDto> friendDtos = _friendMapper.ToDto(friends);
 

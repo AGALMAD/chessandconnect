@@ -22,9 +22,10 @@ public class UserRepository : Repository<User, int>
             .Include(user => user.Plays)
             .FirstOrDefaultAsync(user => user.Id == userId || user.Id == userId);
     }
-    public async Task<User> GetUserByUserName(string nickName)
+
+    public async Task<List<User>> GetUsersByUserName(string nickName)
     {
-        return await GetQueryable().FirstAsync(user => user.UserName == nickName);
+        return await GetQueryable().Where(user => user.UserName == nickName).ToListAsync();
     }
 
     public async Task<User> GetAllInfoButOrdersById(int id)

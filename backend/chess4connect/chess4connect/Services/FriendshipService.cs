@@ -12,12 +12,12 @@ namespace chess4connect.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<User> GetUserByNickName(string nickName)
+        public async Task<User> GetAllUsers(string nickName)
         {
             return await _unitOfWork.UserRepository.GetUserByUserName(nickName);
         }
 
-        public async Task<List<User>> GetAllFriends(int userId)
+        public async Task<List<User>> GetAllUserFriends(int userId)
         {
             User user = await _unitOfWork.UserRepository.GetUserById(userId);
 
@@ -29,7 +29,7 @@ namespace chess4connect.Services
         {
             User user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
-            User friend = await GetUserByNickName(friendNickname);
+        //    User friend = await _unitOfWork(friendNickname); hay que buscar el usuario por id...
 
 
             Friendship request = new Friendship

@@ -61,7 +61,7 @@ export class LoginComponent {
     }
 
     const result = await this.authService.login(data, this.myForm.get('remember')?.value)
-  
+    
 
     if (result.success) {
       Swal.fire({

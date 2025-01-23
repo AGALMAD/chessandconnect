@@ -27,7 +27,7 @@ public class AuthController : ControllerBase
             string stringToken = _authService.ObtainToken(newUser);
             return Ok(new
             {
-                accesToken = stringToken
+                accessToken = stringToken
             });
         }
         else
@@ -46,7 +46,7 @@ public class AuthController : ControllerBase
             string stringToken = _authService.ObtainToken(user);
             return Ok(new
             {
-                accesToken = stringToken
+                accessToken = stringToken
             });
         }
         else

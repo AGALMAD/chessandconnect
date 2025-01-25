@@ -28,6 +28,8 @@ public class WebSocketNetwork
 
         // Esperamos a que el WebSocketHandler termine de manejar la conexión
         await handler.HandleAsync();
+
+        Console.WriteLine("Usuario conectado");
     }
 
     private async Task<WebSocketHandler> AddWebsocketAsync(User user, WebSocket webSocket)

@@ -29,7 +29,6 @@ public class WebSocketNetwork
         // Esperamos a que el WebSocketHandler termine de manejar la conexión
         await handler.HandleAsync();
 
-        Console.WriteLine("Usuario conectado");
     }
 
     private async Task<WebSocketHandler> AddWebsocketAsync(User user, WebSocket webSocket)
@@ -67,6 +66,9 @@ public class WebSocketNetwork
         //Mensaje de conexión a todos los usuarios conectados
         await Broadcast(allHandlers, newHandler, stringConnectionMessage);
 
+        Console.WriteLine("Usuario conectado");
+
+
         return newHandler;
 
     }
@@ -88,6 +90,7 @@ public class WebSocketNetwork
         // Liberamos el semáforo
         _semaphore.Release();
 
+
         //Copia de todos los handlers
         WebSocketHandler[] allHandlers = _handlers.Values.ToArray();
 
@@ -106,6 +109,9 @@ public class WebSocketNetwork
 
         //Mensaje de desconexión a todos los usuarios conectados
         await Broadcast(allHandlers, disconnectedHandler, stringDisconnectionMessage);
+
+        Console.WriteLine("Usuario desconectado");
+
     }
 
     private async Task Broadcast(WebSocketHandler[] allHandlers, WebSocketHandler webSocketHandler, string stringMessage)

@@ -18,8 +18,10 @@ export class HomeComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
-    console.log("JWT : " + this.api.jwt )
-    this.websocketService.connectRxjs()
+    if(this.api.jwt){
+      console.log("JWT : " + this.api.jwt )
+      this.websocketService.connectRxjs()
+    }
   }
 
 }

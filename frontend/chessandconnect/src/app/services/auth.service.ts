@@ -18,7 +18,7 @@ export class AuthService {
   decodedToken: any = null;
 
   constructor(private api: ApiService, private router: Router) {
-    //this.loadTokenFromStorage();
+    this.loadTokenFromStorage();
   }
 
   private loadTokenFromStorage(): void {

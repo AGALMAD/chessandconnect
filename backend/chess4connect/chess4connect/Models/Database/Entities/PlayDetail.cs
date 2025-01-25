@@ -2,12 +2,16 @@
 
 namespace chess4connect.Models.Database.Entities
 {
-    public class Friendship
+    public class PlayDetail
     {
         public int Id { get; set; }
+
+        public int PlayId { get; set; }
+
         public int UserId { get; set; }
-        public int FriendId { get; set; }
-        public FriendshipState State { get; set; }
-        
+
+        public User User { get; set; }
+
+        public GameResult GameResult { get; set; }
     }
 }

@@ -11,7 +11,7 @@ import { FriendsListComponent } from '../../components/friends-list/friends-list
 export class ChessMenuComponent implements OnInit{
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    //throw new Error('Method not implemented.');
   }
 
   

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { User } from '../../models/dto/user';
 
 @Component({
   selector: 'app-navbar',
@@ -10,8 +11,12 @@ import { AuthService } from '../../services/auth.service';
 export class NavbarComponent {
 
     constructor(
-      private authService: AuthService
+      private authService: AuthService,
     ) {
+    }
+
+    User(){
+      return this.authService.getUser()
     }
 
     usuarioToken() {
@@ -21,4 +26,5 @@ export class NavbarComponent {
     closeSession(){
       this.authService.logout()
     }
+    
 }

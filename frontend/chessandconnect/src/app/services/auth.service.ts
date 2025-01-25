@@ -6,6 +6,7 @@ import { ApiService } from './api.service';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { Result } from '../models/result';
+import { User } from '../models/dto/user';
 
 import Swal from 'sweetalert2';
 
@@ -124,6 +125,20 @@ export class AuthService {
     this.decodedToken = null;
     localStorage.removeItem(this.TOKEN_KEY);
     sessionStorage.removeItem(this.TOKEN_KEY);
+  }
+
+  getUser(){
+    const token = this.decodeJwt(this.getToken())
+    
+
+    const user: User = {
+      id: token.id,
+      userName: token.userName,
+      email: token.email,
+      avatarImageUrl: token.avatarImageUrl,
+      plays: []
+    }
+    return user
   }
 }
 

@@ -11,12 +11,15 @@ import { User } from '../../models/dto/user';
 export class NavbarComponent {
 
     constructor(
-      private authService: AuthService,
+      private authService: AuthService
     ) {
     }
 
     User(){
-      return this.authService.getUser()
+      const user: User = this.authService.getUser()
+
+      console.log(user)
+      return user
     }
 
     usuarioToken() {
@@ -26,5 +29,4 @@ export class NavbarComponent {
     closeSession(){
       this.authService.logout()
     }
-    
 }

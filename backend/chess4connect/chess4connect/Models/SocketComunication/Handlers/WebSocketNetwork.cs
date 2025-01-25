@@ -2,6 +2,7 @@
 using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.OpenApi.Any;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Sockets;
@@ -37,15 +38,38 @@ public class WebSocketNetwork
 
         // Sección crítica
         // Creamos un nuevo WebSocketHandler, nos suscribimos a sus eventos y lo añadimos a la lista
-        WebSocketHandler handler = new WebSocketHandler(user.Id, webSocket);
-        handler.Disconnected += OnDisconnectedAsync;
-        handler.MessageReceived += OnMessageReceivedAsync;
-        _handlers.TryAdd(user.Id, handler);
+        WebSocketHandler newHandler = new WebSocketHandler(user.Id, webSocket);
+        newHandler.Disconnected += OnDisconnectedAsync;
+        newHandler.MessageReceived += OnMessageReceivedAsync;
+        _handlers.TryAdd(user.Id, newHandler);
 
+        // Liberamos el semáforo
+        _semaphore.Release();
 
-        return handler;
+        //Copia de todos los handlers
+        WebSocketHandler[] allHandlers = _handlers.Values.ToArray();
+
+        var connectionMessage = new ConnectionSocketMessage<ConnectionModel>
+        {
+            Data = new ConnectionModel
+            {
+                Type = ConnectionType.Connected,
+                UserId = newHandler.Id,
+                UsersCounter = 0,
+
+            }
+        };
+
+        string stringConnectionMessage = JsonSerializer.Serialize(connectionMessage);
+
+        //Mensaje de conexión a todos los usuarios conectados
+        await Broadcast(allHandlers, newHandler, stringConnectionMessage);
+
+        return newHandler;
 
     }
+
+
 
 
     private async Task OnDisconnectedAsync(WebSocketHandler disconnectedHandler)
@@ -62,27 +86,33 @@ public class WebSocketNetwork
         // Liberamos el semáforo
         _semaphore.Release();
 
-        // Lista donde guardar las tareas de envío de mensajes
-        List<Task> tasks = new List<Task>();
-        // Guardamos una copia de los WebSocketHandler para evitar problemas de concurrencia
-        WebSocketHandler[] handlers = _handlers.Values.ToArray();
+        //Copia de todos los handlers
+        WebSocketHandler[] allHandlers = _handlers.Values.ToArray();
 
-        var message = new ConnectionSocketMessage<ConnectionModel>
+        var disconnectionMessage = new ConnectionSocketMessage<ConnectionModel>
         {
             Data = new ConnectionModel
             {
                 Type = ConnectionType.Disconnected,
                 UserId = disconnectedHandler.Id,
-                UsersCounter = handlers.Length,
+                UsersCounter = 0,
                 
             }
         };
 
-        //Paso a string
-        string stringMessage = JsonSerializer.Serialize(message);
+        string stringDisconnectionMessage = JsonSerializer.Serialize(disconnectionMessage);
+
+        //Mensaje de desconexión a todos los usuarios conectados
+        await Broadcast(allHandlers, disconnectedHandler, stringDisconnectionMessage);
+    }
+
+    private async Task Broadcast(WebSocketHandler[] allHandlers, WebSocketHandler webSocketHandler, string stringMessage)
+    {
+        // Lista donde guardar las tareas de envío de mensajes
+        List<Task> tasks = new List<Task>();
 
         // Enviamos el mensaje al resto de usuarios
-        foreach (WebSocketHandler handler in handlers)
+        foreach (WebSocketHandler handler in allHandlers)
         {
             tasks.Add(handler.SendAsync(stringMessage));
         }

@@ -3,7 +3,6 @@ using chess4connect.Models.SocketComunication;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using chess4connect.Services;
-using chess4connect.Services.WebSocket;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

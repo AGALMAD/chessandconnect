@@ -3,6 +3,7 @@ using chess4connect.Mappers;
 using chess4connect.MiddleWares;
 using chess4connect.Models.Database;
 using chess4connect.Models.Database.Entities;
+using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -93,7 +94,8 @@ public class Program {
         builder.Services.AddTransient<FriendMapper>();
 
         //Administrador de todos los websockets
-        builder.Services.AddSingleton<ConnectionManager>();
+        builder.Services.AddSingleton<WebSocketNetwork>();
+
         //MiddleWare
         builder.Services.AddTransient<WebSocketMiddleWare>();
 

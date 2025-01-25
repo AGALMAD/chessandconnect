@@ -1,6 +1,6 @@
 ﻿using chess4connect.Enums;
 
-namespace chess4connect.Models.SocketComunication;
+namespace chess4connect.Models.SocketComunication.MessageTypes;
 
 public class SocketMessage
 {
@@ -20,7 +20,7 @@ public class GameSocketMessage<T> : SocketMessage
 }
 public class ConnectionSocketMessage<T> : SocketMessage
 {
-    public override SocketComunicationType Type => SocketComunicationType.FRIEND;
+    public override SocketComunicationType Type => SocketComunicationType.CONNECTION;
     public T Data { get; set; }
 }
 

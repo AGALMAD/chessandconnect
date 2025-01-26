@@ -12,9 +12,9 @@ namespace chess4connect.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<User> GetAllUsers(string nickName)
+        public async Task<List<User>> GetAllUsersByNickname(string nickName)
         {
-            return await _unitOfWork.UserRepository.GetUserByUserName(nickName);
+            return await _unitOfWork.UserRepository.GetUsersByUserName(nickName);
         }
 
         public async Task<List<User>> GetAllUserFriends(int userId)
@@ -25,11 +25,11 @@ namespace chess4connect.Services
             
         }
 
-        public async Task<Friendship> requestFriendship(int userId, string friendNickname)
+        public async Task<Friendship> requestFriendship(int userId, int friendId)
         {
             User user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
-        //    User friend = await _unitOfWork(friendNickname); hay que buscar el usuario por id...
+            User friend = await _unitOfWork.UserRepository.GetByIdAsync(friendId);
 
 
             Friendship request = new Friendship
@@ -47,13 +47,13 @@ namespace chess4connect.Services
             return request;
         }
 
-        public async Task<List<User>> acceptFriendship(int userId, string friendNick)
+        public async Task<List<User>> acceptFriendship(int userId, int friendId)
         {
             User user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
-            User friend = await GetUserByNickName(friendNick);
+            User friend = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
-            Friendship pendingFriendship = await _unitOfWork.FriendshipRepository.GetFriendshipByUsers(userId, friend.Id);
+            Friendship pendingFriendship = await _unitOfWork.FriendshipRepository.GetFriendshipByUsers(user.Id, friend.Id);
             
             pendingFriendship.State = Enums.FriendshipState.Accepted;
 

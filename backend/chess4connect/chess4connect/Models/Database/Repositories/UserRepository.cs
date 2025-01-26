@@ -20,7 +20,7 @@ public class UserRepository : Repository<User, int>
     {
         return await GetQueryable()
             .Include(user => user.Plays)
-            .FirstOrDefaultAsync(user => user.Id == userId || user.Id == userId);
+            .FirstOrDefaultAsync(user => user.Id == userId);
     }
 
     public async Task<List<User>> GetUsersByUserName(string nickName)

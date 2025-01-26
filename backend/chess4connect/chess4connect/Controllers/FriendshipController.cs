@@ -25,9 +25,9 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpGet ("user")]
-        public async Task<IEnumerable<FriendDto>> getUser(string nickName)
+        public async Task<IEnumerable<FriendDto>> GetUsersByNickname(string nickName)
         {
-            IEnumerable<User> users = await _unitOfWork.UserRepository.GetUsersByUserName(nickName);
+            IEnumerable<User> users = await _friendshipService.GetAllUsersByNickname(nickName);
 
             IEnumerable<FriendDto> usersDtos = _friendMapper.ToDto(users);
 
@@ -54,7 +54,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPost ("request")]
-        public async Task<ActionResult<Friendship>> requestFriendship (string friendNickname)
+        public async Task<ActionResult<Friendship>> requestFriendship (int friendId)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -63,14 +63,14 @@ namespace chess4connect.Controllers
                 return Unauthorized("El usuario no está autenticado.");
             }
 
-            Friendship friendship = await _friendshipService.requestFriendship(userIdInt, friendNickname);
+            Friendship friendship = await _friendshipService.requestFriendship(userIdInt, friendId);
            
             return friendship;
         }
 
         [Authorize]
         [HttpPost ("accept")]
-        public async Task<ActionResult<IEnumerable<FriendDto>>> acceptRequest (string friendNickname)
+        public async Task<ActionResult<IEnumerable<FriendDto>>> acceptRequest (int friendId)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -78,7 +78,7 @@ namespace chess4connect.Controllers
             {
                 return Unauthorized("El usuario no está autenticado.");
             }
-            List<User> friends = await _friendshipService.acceptFriendship(userIdInt, friendNickname);
+            List<User> friends = await _friendshipService.acceptFriendship(userIdInt, friendId);
 
             IEnumerable<FriendDto> friendDtos = _friendMapper.ToDto(friends);
 

@@ -1,2 +1,78 @@
     <!-- Barra de navegación -->
     <app-navbar></app-navbar>
+    <div class="h-screen bg-brown-100 flex items-center justify-center">
+      <div class="bg-brown-200 p-6 rounded-2xl shadow-lg w-full max-w-6xl flex flex-row gap-4">
+        <!-- Left Column: User Search -->
+<!--         <div class="w-1/4 bg-brown-300 p-4 rounded-lg shadow-inner flex flex-col">
+          <h2 class="text-brown-800 font-bold text-lg mb-3">Buscar Usuarios</h2>
+          <input
+            type="text"
+            placeholder="Escribe un nombre..."
+            class="p-2 rounded-lg border border-brown-400 focus:outline-none focus:ring focus:ring-brown-500 mb-4"
+          />
+          <ul class="space-y-2 overflow-y-auto h-64">
+            <li class="p-2 bg-brown-100 rounded-lg shadow">Usuario 1</li>
+            <li class="p-2 bg-brown-100 rounded-lg shadow">Usuario 2</li>
+            <li class="p-2 bg-brown-100 rounded-lg shadow">Usuario 3</li>
+            <li class="p-2 bg-brown-100 rounded-lg shadow">Usuario 4</li>
+            <li class="p-2 bg-brown-100 rounded-lg shadow">Usuario 5</li>
+          </ul>
+        </div>
+     -->
+        <!-- Main Section -->
+        <div class="flex-1 bg-brown-200 p-6 rounded-2xl shadow-lg flex flex-col">
+          <h1 class="text-3xl font-bold text-center text-brown-800 mb-4">Conecta 4</h1>
+          <p class="text-brown-700 text-center mb-4">Elige el modo de juego</p>
+    
+          <div class="flex flex-1 gap-6">
+            <!-- Buttons Section -->
+            <div class="flex flex-col gap-4 w-1/2 justify-center">
+              <button class="w-full bg-brown-600 text-white py-3 rounded-lg hover:bg-brown-700 transition">
+                Jugar con amigos
+              </button>
+              <button class="w-full bg-brown-600 text-white py-3 rounded-lg hover:bg-brown-700 transition">
+                Jugar contra la IA
+              </button>
+              <button class="w-full bg-brown-600 text-white py-3 rounded-lg hover:bg-brown-700 transition">
+                Jugar online
+              </button>
+            </div>
+    
+            <!-- Image Section -->
+            <div class="w-1/2 flex justify-center items-center">
+              <img
+                src="https://www.casualarena.com/bundles/app/st/games/co4/rules/connect-4-rules.jpg?8877992"
+                alt="Chess Board"
+                class="rounded-lg shadow-md w-full max-w-sm"
+              />
+            </div>
+          </div>
+    
+          <!-- Information Section -->
+          <div class="mt-6 bg-brown-100 p-4 rounded-lg shadow-inner">
+            <p class="text-brown-800 font-semibold">Partidas en juego: <span class="font-bold">120</span></p>
+            <p class="text-brown-800 font-semibold">Juagadores conectados: <span class="font-bold">450</span></p>
+          </div>
+        </div>
+    
+        <!-- Right Column: Friends Search -->
+<!--         <div class="w-1/4 bg-brown-300 p-4 rounded-lg shadow-inner flex flex-col">
+          <h2 class="text-brown-800 font-bold text-lg mb-3">Buscar Amigos</h2>
+          <input
+            type="text"
+            placeholder="Escribe un nombre..."
+            class="p-2 rounded-lg border border-brown-400 focus:outline-none focus:ring focus:ring-brown-500 mb-4"
+          />
+          <ul class="space-y-2 overflow-y-auto h-64">
+            <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 1</li>
+            <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 2</li>
+            <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 3</li>
+            <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 4</li>
+            <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 5</li>
+          </ul>
+        </div> -->
+      </div>
+    </div>
+    
+      
+    <app-friends-list></app-friends-list>

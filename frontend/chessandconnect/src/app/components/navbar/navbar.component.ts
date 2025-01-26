@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { User } from '../../models/dto/user';
 
 @Component({
   selector: 'app-navbar',
@@ -12,6 +13,13 @@ export class NavbarComponent {
     constructor(
       private authService: AuthService
     ) {
+    }
+
+    User(){
+      const user: User = this.authService.getUser()
+
+      console.log(user)
+      return user
     }
 
     usuarioToken() {

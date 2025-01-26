@@ -11,7 +11,7 @@ import { MenuService } from '../../services/menu.service';
   templateUrl: './chess-menu.component.html',
   styleUrl: './chess-menu.component.css'
 })
-export class ChessMenuComponent {
+  export class ChessMenuComponent {
 
   constructor(menuService : MenuService){}
 }

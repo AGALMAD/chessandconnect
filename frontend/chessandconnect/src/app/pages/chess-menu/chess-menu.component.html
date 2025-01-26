@@ -1,4 +1,36 @@
     <!-- Barra de navegación -->
     <app-navbar></app-navbar>
-    
+    <div class="h-screen bg-brown-100 flex items-center justify-center">
+        <div class="bg-brown-200 p-6 rounded-2xl shadow-lg w-full max-w-4xl flex flex-col">
+          <h1 class="text-3xl font-bold text-center text-brown-800 mb-4">Ajedrez</h1>
+          <p class="text-brown-700 text-center mb-4">Elige el modo de juego</p>
+      
+          <div class="flex flex-1 gap-6">
+            <!-- Buttons Section -->
+            <div class="flex flex-col gap-4 w-1/2 justify-center">
+              <button class="w-full bg-brown-600 text-white py-3 rounded-lg hover:bg-brown-700 transition">
+                Jugar con amigos
+              </button>
+              <button class="w-full bg-brown-600 text-white py-3 rounded-lg hover:bg-brown-700 transition">
+                Jugar contra la IA
+              </button>
+              <button class="w-full bg-brown-600 text-white py-3 rounded-lg hover:bg-brown-700 transition">
+                Jugar online
+              </button>
+            </div>
+      
+            <!-- Image Section -->
+            <div class="w-1/2 flex justify-center items-center">
+              <img src="https://www.smartick.es/blog/wp-content/uploads/2023/07/Tablero-de-ajedrez-azul.png" alt="Chess Board" class="rounded-lg shadow-md w-full max-w-sm">
+            </div>
+          </div>
+      
+          <!-- Information Section -->
+          <div class="mt-6 bg-brown-100 p-4 rounded-lg shadow-inner">
+            <p class="text-brown-800 font-semibold">Partidas en juego: <span class="font-bold">120</span></p>
+            <p class="text-brown-800 font-semibold">Juagadores conectados: <span class="font-bold">450</span></p>
+          </div>
+        </div>
+      </div>
+      
     <app-friends-list></app-friends-list>

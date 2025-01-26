@@ -9,10 +9,10 @@
             <div class="relative space-x-6">
                 <input type="checkbox" id="dropdownToggle" class="hidden" />
                 <label for="dropdownToggle" class="text-sm font-medium hover:text-[#CBA77B] cursor-pointer flex items-center" title="Ver perfil de salguero">
-                    <img src="{{User().avatarImageUrl}}" 
+                    <img src="{{User().image}}" 
                          alt="Avatar de usuario salguero" 
                          class="w-10 h-10 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
-                    <span>{{User().userName}}</span> 
+                    <span>{{User().name}}</span> 
                 </label>
                 <div
                     id="dropdownMenu"
@@ -27,7 +27,7 @@
                     <a
                         href="#"
                         class="block px-4 py-2 text-sm hover:bg-[#CBA77B] hover:text-[#301e16]"
-                        onclick="location.href='/login';"
+                        (click)="closeSession()"
                     >
                         Cerrar Sesión
                     </a>

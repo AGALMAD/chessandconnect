@@ -54,11 +54,12 @@ namespace chess4connect.Services
             {
                 // EL CONTENIDO DEL JWT
                 Claims = new Dictionary<string, object>
-                    {
-                        { ClaimTypes.NameIdentifier, user.Id },
-                        { "name", user.UserName },
-                        { ClaimTypes.Role, user.Role }
-                    },
+                {
+                    { ClaimTypes.NameIdentifier, user.Id },
+                    { "name", user.UserName },
+                    { ClaimTypes.Role, user.Role },
+                    { "image", user.AvatarImageUrl }
+                },
                 Expires = DateTime.UtcNow.AddYears(3),
                 SigningCredentials = new SigningCredentials(
                         _tokenParameters.IssuerSigningKey,
@@ -82,6 +83,11 @@ namespace chess4connect.Services
 
             try
             {
+                if(receivedUser.ImagePath is null or (IFormFile))
+                {
+                    
+                    receivedUser.ImagePath = ConvertToIFormFile("perfil_por_defecto.png");
+                }
                 user.AvatarImageUrl = await _imageService.InsertAsync(receivedUser.ImagePath);
             }
             catch (Exception ex)
@@ -92,6 +98,17 @@ namespace chess4connect.Services
 
             User newUser = await InsertUser(user);
             return newUser;
+        }
+        public static IFormFile ConvertToIFormFile(string filePath)
+        {
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return new FormFile(
+                stream,
+                0,
+                stream.Length,
+                "file",
+                Path.GetFileName(filePath)
+            );
         }
         public async Task<User> GetUserByCredentialAndPassword(string credential, string password)
         {

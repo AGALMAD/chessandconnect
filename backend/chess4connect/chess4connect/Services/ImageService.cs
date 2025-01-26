@@ -64,5 +64,10 @@ public class ImageService
 
         await FileHelper.SaveAsync(stream, relativePath);
     }
+
+    internal async Task<string> InsertAsync(object png)
+    {
+        throw new NotImplementedException();
+    }
 }
 

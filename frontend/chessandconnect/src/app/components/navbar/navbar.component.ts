@@ -16,10 +16,7 @@ export class NavbarComponent {
     }
 
     User(){
-      const user: User = this.authService.getUser()
-
-      console.log(user)
-      return user
+      return this.authService.getUser()
     }
 
     usuarioToken() {

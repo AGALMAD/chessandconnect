@@ -14,16 +14,16 @@ public class MessageHandler
         var messageJson = JsonSerializer.Deserialize<SocketMessage>(message);
 
         //Obtiene el tipo 
-        SocketComunicationType type = messageJson.Type;
+        SocketCommunicationType type = messageJson.Type;
 
         //Lo gestiona su respectivo servicio
         switch (type)
         {
-            case SocketComunicationType.GAME:
+            case SocketCommunicationType.GAME:
 
                 break;
 
-            case SocketComunicationType.CHAT:
+            case SocketCommunicationType.CHAT:
                 break;
 
         }

@@ -27,7 +27,7 @@ public class UserRepository : Repository<User, int>
         return await GetQueryable().FirstAsync(user => user.UserName == nickName);
     }
 
-    public async Task<User> GetAllInfoButOrdersById(int id)
+    public async Task<User> GetAllInfoById(int id)
     {
         return await GetQueryable()
             .Include(user => user.Friends)

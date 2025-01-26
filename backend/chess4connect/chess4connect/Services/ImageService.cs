@@ -20,11 +20,17 @@ public class ImageService
 
     public async Task<String> InsertAsync(IFormFile image)
     {
-        string relativePath = $"{IMAGES_FOLDER}/{Guid.NewGuid()}_{image.FileName}";
+        try
+        {
+            string relativePath = $"{IMAGES_FOLDER}/{Guid.NewGuid()}_{image.FileName}";
+            await StoreImageAsync(relativePath, image);
 
-        await StoreImageAsync(relativePath, image);
+            return relativePath;
+        }
+        catch (Exception ex) { }
 
-        return relativePath;
+        return null;
+        
     }
     public async Task<User> UpdateAsync(int id, CreateUpdateImageRequest image)
     {

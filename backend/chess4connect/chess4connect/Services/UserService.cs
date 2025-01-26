@@ -11,9 +11,9 @@ public class UserService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<User> GetUserByStringId(string id)
+    public async Task<User> GetUserById(int id)
     {
-        return await _unitOfWork.UserRepository.GetAllInfoButOrdersById(Int32.Parse(id));
+        return await _unitOfWork.UserRepository.GetAllInfoById(id);
 
     }
 

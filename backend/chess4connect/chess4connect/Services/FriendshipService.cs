@@ -41,26 +41,35 @@ namespace chess4connect.Services
 
             await _unitOfWork.FriendshipRepository.InsertAsync(request);
 
-            friend.Requests.Add(request);
-
+            
             await _unitOfWork.SaveAsync();
             return request;
+        }
+
+        public async Task<List<Friendship>> requestsByUserId (int userId)
+        {
+            return await _unitOfWork.FriendshipRepository.gellAllFriendshipFromUser(userId);
         }
 
         public async Task<List<User>> acceptFriendship(int userId, int friendId)
         {
             User user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
-            User friend = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+            User friend = await _unitOfWork.UserRepository.GetByIdAsync(friendId);
 
-            Friendship pendingFriendship = await _unitOfWork.FriendshipRepository.GetFriendshipByUsers(user.Id, friend.Id);
-            
+            Friendship pendingFriendship = await _unitOfWork.FriendshipRepository.GetFriendshipByUsers(friend.Id, user.Id);
+
+            if (pendingFriendship == null)
+            {
+                throw new InvalidOperationException("No se encontró la solicitud de amistad.");
+            }
+
             pendingFriendship.State = Enums.FriendshipState.Accepted;
+            _unitOfWork.FriendshipRepository.Update(pendingFriendship);
 
             user.Friends.Add(friend);
             friend.Friends.Add(user);
-
-            user.Requests.Remove(pendingFriendship);
+            
             await _unitOfWork.SaveAsync();
 
             return user.Friends;

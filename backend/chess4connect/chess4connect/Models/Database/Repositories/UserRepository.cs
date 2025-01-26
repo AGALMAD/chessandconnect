@@ -20,7 +20,15 @@ public class UserRepository : Repository<User, int>
     {
         return await GetQueryable()
             .Include(user => user.Plays)
+            .Include(user => user.Friends)
             .FirstOrDefaultAsync(user => user.Id == userId);
+    }
+
+    public async Task<User> GetUserRequestsById(int userId)
+    {
+        return await GetQueryable()
+        .Include(user => user.Requests.Where(request => request.FriendId == userId))
+        .FirstOrDefaultAsync(user => user.Id == userId);
     }
 
     public async Task<List<User>> GetUsersByUserName(string nickName)

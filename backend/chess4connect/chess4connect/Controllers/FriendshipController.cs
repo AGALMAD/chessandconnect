@@ -24,7 +24,7 @@ namespace chess4connect.Controllers
         }
 
         [Authorize]
-        [HttpGet ("user")]
+        [HttpGet ("getusers")]
         public async Task<IEnumerable<FriendDto>> GetUsersByNickname(string nickName)
         {
             IEnumerable<User> users = await _friendshipService.GetAllUsersByNickname(nickName);
@@ -35,7 +35,7 @@ namespace chess4connect.Controllers
         }
 
         [Authorize]
-        [HttpGet("friends")]
+        [HttpGet("getfriends")]
         public async Task<ActionResult<IEnumerable<FriendDto>>> GetAllFriends()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -53,7 +53,7 @@ namespace chess4connect.Controllers
         }
 
         [Authorize]
-        [HttpPost ("request")]
+        [HttpPost ("makerequest")]
         public async Task<ActionResult<Friendship>> requestFriendship (int friendId)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -69,7 +69,23 @@ namespace chess4connect.Controllers
         }
 
         [Authorize]
-        [HttpPost ("accept")]
+        [HttpGet("getallrequests")]
+        public async Task<ActionResult<List<Friendship>>> getAllRequests()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out var userIdInt))
+            {
+                return Unauthorized("El usuario no está autenticado.");
+            }
+
+            List<Friendship> requests = await _friendshipService.requestsByUserId(userIdInt);
+
+            return Ok(requests);
+        }
+
+        [Authorize]
+        [HttpPost ("acceptrequest")]
         public async Task<ActionResult<IEnumerable<FriendDto>>> acceptRequest (int friendId)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;

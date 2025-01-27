@@ -125,9 +125,6 @@ export class AuthService {
     sessionStorage.removeItem(this.TOKEN_KEY);
     this.router.navigate(['#']);
 
-    //Cierra la conexión con el websocket
-    this.websocketService.disconnectRxjs();
-
   }
 
   public handleSession(token: string, remember: boolean): void {

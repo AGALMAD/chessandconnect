@@ -5,45 +5,37 @@ import { WebsocketService } from './websocket.service';
 @Injectable({
   providedIn: 'root'
 })
-export class MenuService implements OnInit,OnDestroy{
+export class MenuService {
 
   connected$: Subscription;
   isConnected: boolean = false;
   messageReceived$: Subscription;
   disconnected$: Subscription;
-  
+
   usersLogged = 0;
   gamesInProgress = 0;
 
 
-  
-  constructor(private webSocketService: WebsocketService) { }
 
+  constructor(private webSocketService: WebsocketService) {
 
-  ngOnInit(): void {
+    console.log('Mensaje recibido:');
+
     this.connected$ = this.webSocketService.connected.subscribe(() => this.isConnected = true);
 
-    this.messageReceived$ = this.webSocketService.messageReceived.subscribe((message: string) => {
-      this.readMessage(message); 
-    });
+    this.messageReceived$ = this.webSocketService.messageReceived.subscribe(message => 
+      console.log('Mensaje recibido: ' + message)
+    );
 
     this.disconnected$ = this.webSocketService.disconnected.subscribe(() => this.isConnected = false);
-
   }
+
 
   private readMessage(message: string): void {
-    console.log('Mensaje recibido:', message); 
-  }
-
-
-  ngOnDestroy(): void {
-    this.connected$.unsubscribe();
-    this.messageReceived$.unsubscribe();
-    this.disconnected$.unsubscribe();
+    console.log('Mensaje recibido:', message);
   }
 
 
 }
 
 
-  

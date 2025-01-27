@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FriendsListComponent } from '../../components/friends-list/friends-list.component';
+import { WebsocketService } from '../../services/websocket.service';
+import { Subscription } from 'rxjs';
+import { MenuService } from '../../services/menu.service';
 
 @Component({
   selector: 'app-chess-menu',
@@ -8,14 +11,7 @@ import { FriendsListComponent } from '../../components/friends-list/friends-list
   templateUrl: './chess-menu.component.html',
   styleUrl: './chess-menu.component.css'
 })
-export class ChessMenuComponent implements OnInit{
+  export class ChessMenuComponent {
 
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
-
-  
-
-
-
+  constructor(menuService : MenuService){}
 }

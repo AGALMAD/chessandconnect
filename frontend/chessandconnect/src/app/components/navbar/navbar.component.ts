@@ -14,6 +14,10 @@ export class NavbarComponent {
     ) {
     }
 
+    User(){
+      return this.authService.getUser()
+    }
+
     usuarioToken() {
       return this.authService.loged() 
     }

@@ -12,12 +12,12 @@ namespace chess4connect.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<User> GetUserByNickName(string nickName)
+        public async Task<List<User>> GetAllUsersByNickname(string nickName)
         {
-            return await _unitOfWork.UserRepository.GetUserByUserName(nickName);
+            return await _unitOfWork.UserRepository.GetUsersByUserName(nickName);
         }
 
-        public async Task<List<User>> GetAllFriends(int userId)
+        public async Task<List<User>> GetAllUserFriends(int userId)
         {
             User user = await _unitOfWork.UserRepository.GetUserById(userId);
 
@@ -25,11 +25,11 @@ namespace chess4connect.Services
             
         }
 
-        public async Task<Friendship> requestFriendship(int userId, string friendNickname)
+        public async Task<Friendship> requestFriendship(int userId, int friendId)
         {
             User user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
-            User friend = await GetUserByNickName(friendNickname);
+            User friend = await _unitOfWork.UserRepository.GetByIdAsync(friendId);
 
 
             Friendship request = new Friendship
@@ -41,26 +41,35 @@ namespace chess4connect.Services
 
             await _unitOfWork.FriendshipRepository.InsertAsync(request);
 
-            friend.Requests.Add(request);
-
+            
             await _unitOfWork.SaveAsync();
             return request;
         }
 
-        public async Task<List<User>> acceptFriendship(int userId, string friendNick)
+        public async Task<List<Friendship>> requestsByUserId (int userId)
+        {
+            return await _unitOfWork.FriendshipRepository.gellAllFriendshipFromUser(userId);
+        }
+
+        public async Task<List<User>> acceptFriendship(int userId, int friendId)
         {
             User user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
-            User friend = await GetUserByNickName(friendNick);
+            User friend = await _unitOfWork.UserRepository.GetByIdAsync(friendId);
 
-            Friendship pendingFriendship = await _unitOfWork.FriendshipRepository.GetFriendshipByUsers(userId, friend.Id);
-            
+            Friendship pendingFriendship = await _unitOfWork.FriendshipRepository.GetFriendshipByUsers(friend.Id, user.Id);
+
+            if (pendingFriendship == null)
+            {
+                throw new InvalidOperationException("No se encontró la solicitud de amistad.");
+            }
+
             pendingFriendship.State = Enums.FriendshipState.Accepted;
+            _unitOfWork.FriendshipRepository.Update(pendingFriendship);
 
             user.Friends.Add(friend);
             friend.Friends.Add(user);
-
-            user.Requests.Remove(pendingFriendship);
+            
             await _unitOfWork.SaveAsync();
 
             return user.Friends;

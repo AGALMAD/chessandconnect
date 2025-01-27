@@ -14,5 +14,11 @@ namespace chess4connect.Models.Database.Repositories
         {
             return await GetQueryable().FirstAsync(friendship => friendship.UserId == userId && friendship.FriendId == friendId);
         }
+
+        public async Task<List<Friendship>> gellAllFriendshipFromUser (int userId)
+        {
+            return await GetQueryable().Where(friendship => friendship.FriendId == userId).ToListAsync();
+        }
+
     }
 }

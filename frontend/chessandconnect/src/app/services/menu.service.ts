@@ -17,7 +17,7 @@ export class MenuService {
 
 
 
-  constructor(private webSocketService: WebsocketService) {
+  constructor(public webSocketService: WebsocketService) {
 
     console.log('Mensaje recibido:');
 
@@ -34,6 +34,7 @@ export class MenuService {
   private readMessage(message: string): void {
     console.log('Mensaje recibido:', message);
   }
+
 
 
 }

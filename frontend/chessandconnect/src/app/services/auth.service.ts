@@ -6,17 +6,19 @@ import { ApiService } from './api.service';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { Result } from '../models/result';
+import { User } from '../models/dto/user';
 
 import Swal from 'sweetalert2';
+import { WebsocketService } from './websocket.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private readonly TOKEN_KEY = 'token';
   decodedToken: any = null;
 
-  constructor(private api: ApiService, private router: Router) {
+  constructor(private api: ApiService, private router: Router, private websocketService : WebsocketService) {
     this.loadTokenFromStorage();
   }
 
@@ -39,19 +41,23 @@ export class AuthService {
     }
   }
 
-
-  async login(authLogin: Login, remember: boolean): Promise<Result<AuthResponse>>{
-    const result = await this.api.post<AuthResponse>('Auth/login',authLogin)
+  async login(
+    authLogin: Login,
+    remember: boolean
+  ): Promise<Result<AuthResponse>> {
+    const result = await this.api.post<AuthResponse>('Auth/login', authLogin);
     if (result.success) {
       this.setSession(result.data.accessToken, remember);
     } else {
       this.handleError('Ha habido un problema al iniciar sesión.');
     }
-    return result
+    return result;
   }
 
-  async register(authRegister: Register, remember: boolean): Promise<Result<AuthResponse>> {
-
+  async register(
+    authRegister: Register,
+    remember: boolean
+  ): Promise<Result<AuthResponse>> {
     //Paso a formData de los datos del usuario
     const formData = new FormData();
     formData.append('Username', authRegister.username);
@@ -72,7 +78,7 @@ export class AuthService {
   }
 
   private setSession(token: string, remember: boolean): void {
-    this.api.jwt = token; 
+    this.api.jwt = token;
     this.decodedToken = this.decodeJwt(token);
     if (remember) {
       localStorage.setItem(this.TOKEN_KEY, token);
@@ -81,15 +87,21 @@ export class AuthService {
     }
   }
 
-    // Método para recuperar el token
-    getToken(): string | null {
-      if (localStorage.getItem('token') != "" && localStorage.getItem('token') != null) {
-        return localStorage.getItem('token')
-      } else if (sessionStorage.getItem('token') != "" && sessionStorage.getItem('token') != null) {
-        return sessionStorage.getItem('token')
-      }
-      return null;
+  // Método para recuperar el token
+  getToken(): string | null {
+    if (
+      localStorage.getItem('token') != '' &&
+      localStorage.getItem('token') != null
+    ) {
+      return localStorage.getItem('token');
+    } else if (
+      sessionStorage.getItem('token') != '' &&
+      sessionStorage.getItem('token') != null
+    ) {
+      return sessionStorage.getItem('token');
     }
+    return null;
+  }
 
   private handleError(message: string): void {
     Swal.fire({
@@ -99,12 +111,12 @@ export class AuthService {
     });
   }
 
-    loged(){
-      if (this.getToken()) {
-        return true
-      }
-      return false
+  loged() {
+    if (this.getToken()) {
+      return true;
     }
+    return false;
+  }
 
   logout(): void {
     this.api.jwt = '';
@@ -112,6 +124,10 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     sessionStorage.removeItem(this.TOKEN_KEY);
     this.router.navigate(['#']);
+
+    //Cierra la conexión con el websocket
+    this.websocketService.disconnectRxjs();
+
   }
 
   public handleSession(token: string, remember: boolean): void {
@@ -125,5 +141,18 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     sessionStorage.removeItem(this.TOKEN_KEY);
   }
-}
 
+  getUser(){
+    const token = this.decodeJwt(this.getToken())
+    
+
+/*     const user: User = {
+      id: token.id,
+      userName: token.userName,
+      email: token.email,
+      avatarImageUrl: token.avatarImageUrl,
+      plays: []
+    } */
+    return token
+  }
+}

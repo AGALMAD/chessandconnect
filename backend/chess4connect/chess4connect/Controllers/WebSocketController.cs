@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Sockets;
 using System.Net.WebSockets;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
@@ -32,12 +33,17 @@ public class WebSocketController : ControllerBase
     [HttpGet]
     public async Task ConnectAsync()
     {
-        //Si no es una usuario autorizado termina la ejecución
-        User user = await GetAuthorizedUser();
-        Console.WriteLine(user.ToString());
-        if (user == null)
-            HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 
+        //Si no es una usuario autorizado termina la ejecución
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId) || !long.TryParse(userId, out var userIdLong))
+        {
+            HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return;
+        }
+
+        User user = await _userService.GetUserById(Int32.Parse(userId));
 
         // Si la petición es de tipo websocket la aceptamos
         if (HttpContext.WebSockets.IsWebSocketRequest)
@@ -57,15 +63,5 @@ public class WebSocketController : ControllerBase
 
     }//Cierre de conexión
 
-  
-    private async Task<User> GetAuthorizedUser()
-    {
-        // Pilla el usuario autenticado según ASP
-        System.Security.Claims.ClaimsPrincipal currentUser = this.User;
-        string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
-
-        // Pilla el usuario de la base de datos
-        return await _userService.GetUserByStringId(idString);
-    }
 
 }

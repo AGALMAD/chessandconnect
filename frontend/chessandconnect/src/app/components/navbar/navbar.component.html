@@ -5,12 +5,36 @@
                 Chess 4 Connect
             </h1>
         </a>
-        <div class="space-x-6">
-            @if (usuarioToken()) {
-                <a href="" (click)="closeSession()" class="text-sm font-medium hover:text-[#CBA77B]">Cerrar Sesión</a>
-            }@else {
-                <a href="/login" class="text-sm font-medium hover:text-[#CBA77B]">Iniciar Sesión</a>
-            }
-        </div>
+        @if (usuarioToken()) {
+            <div class="relative space-x-6">
+                <input type="checkbox" id="dropdownToggle" class="hidden" />
+                <label for="dropdownToggle" class="text-sm font-medium hover:text-[#CBA77B] cursor-pointer flex items-center" title="Ver perfil de salguero">
+                    <img src="https://localhost:7089/{{User().image}}" 
+                         alt="Avatar de usuario salguero" 
+                         class="w-10 h-10 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
+                    <span>{{User().name}}</span> 
+                </label>
+                <div
+                    id="dropdownMenu"
+                    class="absolute right-0 mt-2 bg-[#301e16] border border-[#CBA77B] rounded shadow-lg z-10 hidden w-[200px]"
+                >
+                    <a
+                        routerLink="/perfil"
+                        class="block px-4 py-2 text-sm hover:bg-[#CBA77B] hover:text-[#301e16]"
+                    >
+                        Mi Perfil
+                    </a>
+                    <a
+                        href="#"
+                        class="block px-4 py-2 text-sm hover:bg-[#CBA77B] hover:text-[#301e16]"
+                        (click)="closeSession()"
+                    >
+                        Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        }@else {
+            <a href="/login" class="text-sm font-medium hover:text-[#CBA77B]">Iniciar Sesión</a>
+        }
     </div>
 </nav>

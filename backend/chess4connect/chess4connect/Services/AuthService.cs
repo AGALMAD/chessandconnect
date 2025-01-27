@@ -54,11 +54,12 @@ namespace chess4connect.Services
             {
                 // EL CONTENIDO DEL JWT
                 Claims = new Dictionary<string, object>
-                    {
-                        { ClaimTypes.NameIdentifier, user.Id },
-                        { "name", user.UserName },
-                        { ClaimTypes.Role, user.Role }
-                    },
+                {
+                    { ClaimTypes.NameIdentifier, user.Id },
+                    { "name", user.UserName },
+                    { ClaimTypes.Role, user.Role },
+                    { "image", user.AvatarImageUrl }
+                },
                 Expires = DateTime.UtcNow.AddYears(3),
                 SigningCredentials = new SigningCredentials(
                         _tokenParameters.IssuerSigningKey,

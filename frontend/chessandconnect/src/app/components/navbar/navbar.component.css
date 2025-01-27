@@ -17,3 +17,8 @@ nav li:hover{
     transform: rotate(90deg);
 
 }
+
+#dropdownToggle:checked + label + #dropdownMenu {
+    display: block;
+  }
+  

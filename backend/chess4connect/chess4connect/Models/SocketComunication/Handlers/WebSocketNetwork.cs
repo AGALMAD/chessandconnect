@@ -100,7 +100,7 @@ public class WebSocketNetwork
             {
                 Type = ConnectionType.Disconnected,
                 UserId = disconnectedHandler.Id,
-                UsersCounter = 0,
+                UsersCounter = allHandlers.Length,
                 
             }
         };

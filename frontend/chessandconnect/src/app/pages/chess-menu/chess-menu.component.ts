@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FriendsListComponent } from '../../components/friends-list/friends-list.component';
 import { MenuService } from '../../services/menu.service';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-chess-menu',
@@ -11,10 +12,11 @@ import { MenuService } from '../../services/menu.service';
 })
   export class ChessMenuComponent implements OnInit{
 
-  constructor(private menuService : MenuService){}
+  constructor(public menuService : MenuService, private api: ApiService){}
 
   ngOnInit(): void {
-    this.menuService.webSocketService.connectRxjs()
+    if(this.api.jwt != "")
+      this.menuService.webSocketService.connectRxjs()
   }
 
 

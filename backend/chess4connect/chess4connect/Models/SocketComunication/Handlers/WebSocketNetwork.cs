@@ -56,7 +56,7 @@ public class WebSocketNetwork
             {
                 Type = ConnectionType.Connected,
                 UserId = newHandler.Id,
-                UsersCounter = 0,
+                UsersCounter = allHandlers.Length,
 
             }
         };

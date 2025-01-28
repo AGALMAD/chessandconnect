@@ -4,7 +4,7 @@ namespace chess4connect.Models.SocketComunication.MessageTypes;
 
 public class ConnectionModel
 {
-    public ConnectionType Type;
+    public ConnectionType Type { get; set; }
     public int UserId { get; set; }
     public int UsersCounter { get; set; }
 }

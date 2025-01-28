@@ -60,7 +60,7 @@ public class WebSocketController : ControllerBase
             HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
         }
 
-
+        
     }//Cierre de conexión
 
 

@@ -14,7 +14,7 @@ export class FriendsService {
   constructor(private api: ApiService, private router: Router) { }
 
 
-  private async getUsersByNickname(userNickname: String): Promise<Result<Friend>> {
+  async getUsersByNickname(userNickname: String): Promise<Result<Friend>> {
     const result = await this.api.get<Friend>('Friendship/getusers', userNickname)
     if (!result.success) {
       this.handleError('Usuario no encontrado');
@@ -22,15 +22,15 @@ export class FriendsService {
     return result
   }
 
-  private async getFriends(): Promise<Result<Friend>> {
-    const result = await this.api.get<Friend>('friendship/getfriends')
+  async getFriends(): Promise<Result<Friend[]>> {
+    const result = await this.api.get<Friend[]>('friendship/getfriends')
     if(!result.success) {
       this.handleError('No se encontraron amigos')
     }
     return result
   } 
 
-  private async makeFriendshipRequest(id: number): Promise<Result<Friendship>>{
+  async makeFriendshipRequest(id: number): Promise<Result<Friendship>>{
     const result = await this.api.post<Friendship>(`Friendship/makerequest?friendId=${id}`)
     if(result.success) {
       this.handleError('No se pudo realizar la petición')
@@ -38,7 +38,7 @@ export class FriendsService {
     return result
   }
 
-  private async acceptFriendshipRequest(id: number): Promise<Result<Friend>> {
+  async acceptFriendshipRequest(id: number): Promise<Result<Friend>> {
     const result = await this.api.post<Friend>(`Friendship/acceptrequest?friendId=${id}`)
     if(result.success) {
       this.handleError('No se pudo aceptar la petición')
@@ -46,7 +46,7 @@ export class FriendsService {
     return result
   }
 
-  private async getAllFriendshipRequest(): Promise<Result<Friendship>> {
+  async getAllFriendshipRequest(): Promise<Result<Friendship>> {
     const result = await this.api.get<Friendship>('friendship/getallrequests')
     if(result.success) {
       this.handleError('No se encontraron amigos')

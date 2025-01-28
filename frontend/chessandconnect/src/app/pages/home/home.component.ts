@@ -21,7 +21,8 @@ export class HomeComponent implements OnInit{
   
   
   ngOnInit(): void {
-    
+    if(this.api.jwt)
+      this.webSocketService.connectRxjs()
   }
 
 

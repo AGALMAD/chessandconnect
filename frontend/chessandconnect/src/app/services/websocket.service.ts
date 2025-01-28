@@ -44,7 +44,7 @@ export class WebsocketService {
     return this.rxjsSocket && !this.rxjsSocket.closed;
   }
 
-  connectRxjs() {
+  async connectRxjs() {
     this.rxjsSocket = webSocket({
       url: environment.socketUrl + "/?jwt=" + this.api.jwt,
 

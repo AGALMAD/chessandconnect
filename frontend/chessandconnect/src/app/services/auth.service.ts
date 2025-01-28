@@ -47,7 +47,7 @@ export class AuthService {
   ): Promise<Result<AuthResponse>> {
     const result = await this.api.post<AuthResponse>('Auth/login', authLogin);
     if (result.success) {
-      this.setSession(result.data.accessToken, remember);
+      await this.setSession(result.data.accessToken, remember);
     } else {
       this.handleError('Ha habido un problema al iniciar sesión.');
     }
@@ -70,20 +70,25 @@ export class AuthService {
     const result = await this.api.post<AuthResponse>('Auth/register', formData);
 
     if (result.success) {
-      this.setSession(result.data.accessToken, remember);
+      await this.setSession(result.data.accessToken, remember);
     } else {
       this.handleError('Ha habido un problema al registrar el usuario.');
     }
     return result;
   }
 
-  private setSession(token: string, remember: boolean): void {
+  private async setSession(token: string, remember: boolean): Promise<void> {
     this.api.jwt = token;
     this.decodedToken = this.decodeJwt(token);
     if (remember) {
       localStorage.setItem(this.TOKEN_KEY, token);
     } else {
       sessionStorage.setItem(this.TOKEN_KEY, token);
+    }
+
+    // Conectar WebSocket si no está conectado
+    if (!this.websocketService.isConnectedRxjs()) {
+      await this.websocketService.connectRxjs();
     }
   }
 
@@ -118,18 +123,21 @@ export class AuthService {
     return false;
   }
 
-  logout(): void {
+  async logout(): Promise<void> {
     this.api.jwt = '';
     this.decodedToken = null;
     localStorage.removeItem(this.TOKEN_KEY);
     sessionStorage.removeItem(this.TOKEN_KEY);
     this.router.navigate(['#']);
 
+    await this.websocketService.disconnectRxjs();
+
+
   }
 
-  public handleSession(token: string, remember: boolean): void {
+  public async handleSession(token: string, remember: boolean): Promise<void> {
     this.clearSession();
-    this.setSession(token, remember);
+    await this.setSession(token, remember);
   }
 
   private clearSession(): void {

@@ -41,7 +41,7 @@ export class MenuService {
 
       const socketMessage = new SocketMessageGeneric<any>();
       socketMessage.Type = parsedMessage.Type as SocketCommunicationType;
-      socketMessage.Data = parsedMessage.Data as ConnectionModel;
+      socketMessage.Data = parsedMessage.Data;
 
 
       this.handleSocketMessage(socketMessage);

@@ -14,12 +14,12 @@ import { ApiService } from '../../services/api.service';
 
   constructor(public menuService : MenuService, private api: ApiService){}
 
-  ngOnInit(): void {
-    this.menuService.webSocketService.connectRxjs()
+  async ngOnInit(): Promise<void> {
+    await this.menuService.webSocketService.connectRxjs()
   }
 
-  ngOnDestroy(): void {
-    this.menuService.webSocketService.disconnectRxjs()
+  async ngOnDestroy(): Promise<void> {
+    await this.menuService.webSocketService.disconnectRxjs()
   }
 
 

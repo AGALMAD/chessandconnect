@@ -11,19 +11,25 @@ import { Subscription } from 'rxjs';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit{
+export class HomeComponent implements OnInit, OnDestroy{
 
 
   constructor(
     private api : ApiService,
     private webSocketService: WebsocketService
   ){}
+
   
-  
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if(this.api.jwt)
-      this.webSocketService.connectRxjs()
+      await this.webSocketService.connectRxjs()
   }
 
+  async ngOnDestroy(): Promise<void> {
+    if(this.api.jwt)
+      await this.webSocketService.disconnectRxjs()
+  }
+  
+  
 
 }

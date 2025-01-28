@@ -86,10 +86,6 @@ export class AuthService {
       sessionStorage.setItem(this.TOKEN_KEY, token);
     }
 
-    // Conectar WebSocket si no está conectado
-    if (!this.websocketService.isConnectedRxjs()) {
-      await this.websocketService.connectRxjs();
-    }
   }
 
   // Método para recuperar el token

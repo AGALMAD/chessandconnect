@@ -4,10 +4,11 @@ import { FriendsListComponent } from '../../components/friends-list/friends-list
 import { WebsocketService } from '../../services/websocket.service';
 import { Subscription } from 'rxjs';
 import { MenuService } from '../../services/menu.service';
+import { UserListComponent } from '../../components/user-list/user-list.component';
 
 @Component({
   selector: 'app-chess-menu',
-  imports: [NavbarComponent, FriendsListComponent],
+  imports: [NavbarComponent, FriendsListComponent,UserListComponent],
   templateUrl: './chess-menu.component.html',
   styleUrl: './chess-menu.component.css'
 })

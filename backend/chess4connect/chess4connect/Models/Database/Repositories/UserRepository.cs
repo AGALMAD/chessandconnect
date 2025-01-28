@@ -20,11 +20,20 @@ public class UserRepository : Repository<User, int>
     {
         return await GetQueryable()
             .Include(user => user.Plays)
-            .FirstOrDefaultAsync(user => user.Id == userId || user.Id == userId);
+            .Include(user => user.Friends)
+            .FirstOrDefaultAsync(user => user.Id == userId);
     }
-    public async Task<User> GetUserByUserName(string nickName)
+
+    public async Task<User> GetUserRequestsById(int userId)
     {
-        return await GetQueryable().FirstAsync(user => user.UserName == nickName);
+        return await GetQueryable()
+        .Include(user => user.Requests.Where(request => request.FriendId == userId))
+        .FirstOrDefaultAsync(user => user.Id == userId);
+    }
+
+    public async Task<List<User>> GetUsersByUserName(string nickName)
+    {
+        return await GetQueryable().Where(user => user.UserName == nickName).ToListAsync();
     }
 
     public async Task<User> GetAllInfoById(int id)

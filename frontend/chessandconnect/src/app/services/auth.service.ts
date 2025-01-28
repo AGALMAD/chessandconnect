@@ -143,13 +143,13 @@ export class AuthService {
     const token = this.decodeJwt(this.getToken())
     
 
-    const user: User = {
+/*     const user: User = {
       id: token.id,
       userName: token.userName,
       email: token.email,
       avatarImageUrl: token.avatarImageUrl,
       plays: []
-    }
-    return user
+    } */
+    return token
   }
 }

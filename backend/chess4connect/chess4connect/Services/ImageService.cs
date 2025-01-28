@@ -22,8 +22,16 @@ public class ImageService
     {
         try
         {
-            string relativePath = $"{IMAGES_FOLDER}/{Guid.NewGuid()}_{image.FileName}";
-            await StoreImageAsync(relativePath, image);
+            string relativePath;
+            if(image == null)
+            {
+                 relativePath = $"{IMAGES_FOLDER}/{"perfil_por_defecto.png"}";
+            }
+            else
+            {
+                 relativePath = $"{IMAGES_FOLDER}/{Guid.NewGuid()}_{image.FileName}";
+                await StoreImageAsync(relativePath, image);
+            }
 
             return relativePath;
         }
@@ -63,6 +71,11 @@ public class ImageService
         using Stream stream = file.OpenReadStream();
 
         await FileHelper.SaveAsync(stream, relativePath);
+    }
+
+    internal async Task<string> InsertAsync(object png)
+    {
+        throw new NotImplementedException();
     }
 }
 

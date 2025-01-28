@@ -11,6 +11,8 @@ public class PlayMapper
         {
             Id = play.Id,
             
+            StartDate = play.StartDate,
+
             EndDate = play.EndDate,
           
            

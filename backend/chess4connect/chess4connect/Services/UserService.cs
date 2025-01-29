@@ -21,4 +21,9 @@ public class UserService
     {
         return await _unitOfWork.UserRepository.GetAllUsers();
     }
+
+    public async Task<List<User>> GetAllFriends(int userId)
+    {
+        return await _unitOfWork.FriendshipRepository
+    }
 }

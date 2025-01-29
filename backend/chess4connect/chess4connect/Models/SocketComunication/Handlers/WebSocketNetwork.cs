@@ -159,10 +159,8 @@ public class WebSocketNetwork
 
         }
 
-        return "";
+        await Task.WhenAll(tasks);
 
-        // Devolvemos una tarea que se completará cuando todas las tareas de envío de mensajes se completen
-        return Task.WhenAll(tasks);
     }
 
     public WebSocketHandler GetSocketByUserId(int id)

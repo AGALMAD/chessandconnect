@@ -12,7 +12,7 @@ import { UserService } from '../../services/user.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit, OnDestroy{
+export class HomeComponent implements OnInit{
 
 
   constructor(
@@ -21,21 +21,12 @@ export class HomeComponent implements OnInit, OnDestroy{
     private userService: UserService
   ){}
 
-  
   async ngOnInit(): Promise<void> {
-    if(this.api.jwt){
-      await this.webSocketService.connectRxjs()
-    }
-
+    await this.webSocketService.connectRxjs()
   }
 
-  async ngOnDestroy(): Promise<void> {
-    if(this.api.jwt){
-      await this.webSocketService.disconnectRxjs()
-      this.userService.currentUser = null
-    }
-  }
-  
+
+
   
 
 }

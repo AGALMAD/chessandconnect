@@ -29,14 +29,19 @@
     <input
       type="text"
       placeholder="Escribe un nombre..."
+      [(ngModel)]="searchQuery" (ngModelChange)="onSearch()"
       class="w-full p-3 rounded-md border border-brown-400 focus:outline-none focus:ring-2 focus:ring-brown-500 mb-5 text-brown-800 placeholder-brown-400"
     />
     <ul class="space-y-3 overflow-y-auto h-48">
-      <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300">Usuario 1</li>
-      <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300">Usuario 2</li>
-      <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300">Usuario 3</li>
-      <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300">Usuario 4</li>
-      <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300">Usuario 5</li>
+      @for (item of users; track $index) {
+        <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300 cursor-pointer flex items-center"
+        (click)="goToProfile(item.id)">
+            <img src="https://localhost:7089/{{item.avatarImageUrl}}" 
+            alt="Avatar de usuario salguero" 
+            class="w-10 h-10 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
+       <span>{{item.userName}}</span> 
+        </li>
+      }
     </ul>
   </div>
 </div>

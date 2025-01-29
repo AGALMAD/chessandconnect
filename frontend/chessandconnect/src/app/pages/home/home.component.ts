@@ -26,9 +26,9 @@ export class HomeComponent implements OnInit, OnDestroy{
     if(this.api.jwt){
       await this.webSocketService.connectRxjs()
     }
-    if(!this.userService.currentUser){
-      await this.userService.getUser()
-    }
+    // if(!this.userService.currentUser){
+    //   await this.userService.getUser()
+    // }
   }
 
   async ngOnDestroy(): Promise<void> {

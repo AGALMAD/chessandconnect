@@ -12,7 +12,7 @@ export class UserService {
 
   constructor(private api: ApiService) {}
 
-  async getUser(): Promise<void> {
+  async getUser(): Promise<void> { 
     const result = await this.api.get<User>('User')
     if (!result.success) {
       this.api.handleError('Usuario no encontrado');

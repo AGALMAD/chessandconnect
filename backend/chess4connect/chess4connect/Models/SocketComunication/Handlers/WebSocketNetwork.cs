@@ -1,8 +1,10 @@
 ﻿using chess4connect.Enums;
 using chess4connect.Models.Database.Entities;
+using chess4connect.Models.SocketComunication.Handlers.Services;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Sockets;
@@ -15,11 +17,16 @@ namespace chess4connect.Models.SocketComunication.Handlers;
 
 public class WebSocketNetwork
 {
+    private FriendRequestService _friendRequestService;
     //Diccionario de conexiones, almacena el id del usuario y el websocket de su conexión
     private ConcurrentDictionary<int, WebSocketHandler> _handlers = new ConcurrentDictionary<int, WebSocketHandler>();
 
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
+    private WebSocketNetwork(FriendRequestService friendRequestService) 
+    { 
+        _friendRequestService = friendRequestService;
+    }
 
     public async Task HandleAsync(User user, WebSocket webSocket)
     {
@@ -154,12 +161,20 @@ public class WebSocketNetwork
                 break;
 
             case SocketCommunicationType.FRIEND:
+                var request = JsonSerializer.Deserialize<FriendshipModel>(message);
 
+                var friendship = _friendRequestService.requestFriendship(request.UserId, request.FriendId);
+
+                WebSocketHandler address = _handlers.GetValueOrDefault(request.UserId);
+
+                string stringMessage = JsonSerializer.Serialize(friendship);
+
+                tasks.Add(address.SendAsync(stringMessage));
+
+                                
                 break;
 
         }
-
-        return "";
 
         // Devolvemos una tarea que se completará cuando todas las tareas de envío de mensajes se completen
         return Task.WhenAll(tasks);

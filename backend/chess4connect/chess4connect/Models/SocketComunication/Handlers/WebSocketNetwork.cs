@@ -136,15 +136,30 @@ public class WebSocketNetwork
         // Guardamos una copia de los WebSocketHandler para evitar problemas de concurrencia
         WebSocketHandler[] handlers = _handlers.Values.ToArray();
 
-        string messageToMe = $"Tú: {message}";
-        string messageToOthers = $"Usuario {userHandler.Id}: {message}";
 
         // Enviamos un mensaje personalizado al nuevo usuario y otro al resto
-        foreach (WebSocketHandler handler in handlers)
+        SocketMessage recived = JsonSerializer.Deserialize<SocketMessage>(message);
+        switch (recived.Type)
         {
-            string messageToSend = handler.Id == userHandler.Id ? messageToMe : messageToOthers;
-            tasks.Add(handler.SendAsync(messageToSend));
+            case SocketCommunicationType.GAME:
+
+                break;
+
+            case SocketCommunicationType.CHAT:
+
+                break;
+
+            case SocketCommunicationType.CONNECTION:
+
+                break;
+
+            case SocketCommunicationType.FRIEND:
+
+                break;
+
         }
+
+        return "";
 
         // Devolvemos una tarea que se completará cuando todas las tareas de envío de mensajes se completen
         return Task.WhenAll(tasks);

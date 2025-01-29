@@ -1,21 +1,21 @@
 import { SocketCommunicationType } from "../../enums/SocketCommunicationType";
 
 export class SocketMessage {
-    type!: SocketCommunicationType;
+    Type!: SocketCommunicationType;
 }
 
 export class SocketMessageGeneric<T> extends SocketMessage {
-    data!: T;
+    Data!: T;
 }
 
 export class GameSocketMessage<T> extends SocketMessageGeneric<T> {
-    override type: SocketCommunicationType = SocketCommunicationType.GAME;
+    override Type: SocketCommunicationType = SocketCommunicationType.GAME;
 }
 
 export class ConnectionSocketMessage<T> extends SocketMessageGeneric<T> {
-    override type: SocketCommunicationType = SocketCommunicationType.CONNECTION;
+    override Type: SocketCommunicationType = SocketCommunicationType.CONNECTION;
 }
 
 export class ChatSocketMessage<T> extends SocketMessageGeneric<T> {
-    override type: SocketCommunicationType = SocketCommunicationType.CHAT;
+    override Type: SocketCommunicationType = SocketCommunicationType.CHAT;
 }

@@ -1,5 +1,5 @@
 export enum SocketCommunicationType {
     GAME = 1,
-    CONNECTION = 2,
-    CHAT = 3,
+    CHAT = 2,
+    CONNECTION = 3,
 }

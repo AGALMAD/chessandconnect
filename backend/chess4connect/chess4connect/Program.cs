@@ -128,7 +128,11 @@ public class Program {
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseCors();
+
         }
+        // Indicamos que active el servicio para archivos estáticos (wwwroot)
+        app.UseStaticFiles();
+
 
         // Habilita el uso de websockets
         app.UseWebSockets();
@@ -138,8 +142,7 @@ public class Program {
 
         app.UseHttpsRedirection();
 
-        // Indicamos que active el servicio para archivos estáticos (wwwroot)
-        app.UseStaticFiles();
+        app.UseRouting();
 
 
         // Habilita la autenticación

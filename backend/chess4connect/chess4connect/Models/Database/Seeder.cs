@@ -33,7 +33,7 @@ public class Seeder
                 Email = "admin@gmail.com",
                 Password = _passwordService.Hash("admin"),
                 Role = "admin",
-                AvatarImageUrl = "",
+                AvatarImageUrl = "UserProfilePicture/perfil_por_defecto.png",
                 Banned = false,
 
             },
@@ -42,7 +42,7 @@ public class Seeder
                 Email = "ale@gmail.com",
                 Password = _passwordService.Hash("ale"),
                 Role = "user",
-                AvatarImageUrl = "",
+                AvatarImageUrl = "UserProfilePicture/perfil_por_defecto.png",
                 Banned = false,
 
             },
@@ -51,7 +51,7 @@ public class Seeder
                 Email = "noe@gmail.com",
                 Password = _passwordService.Hash("noe"),
                 Role = "user",
-                AvatarImageUrl = "",
+                AvatarImageUrl = "UserProfilePicture/perfil_por_defecto.png",
                 Banned = false,
 
             },
@@ -60,7 +60,7 @@ public class Seeder
                 Email = "manu@gmail.com",
                 Password = _passwordService.Hash("manu"),
                 Role = "user",
-                AvatarImageUrl = "",
+                AvatarImageUrl = "UserProfilePicture/perfil_por_defecto.png",
                 Banned = false,
 
             },

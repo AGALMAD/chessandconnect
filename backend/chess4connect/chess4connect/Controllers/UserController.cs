@@ -4,6 +4,8 @@ using chess4connect.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+﻿using chess4connect.Mappers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace chess4connect.Controllers
 {
@@ -13,10 +15,12 @@ namespace chess4connect.Controllers
     {
 
         private UserService _userService;
+        private SmartSearch _smartSearch;
 
-        public UserController(UserService userService) 
+        public UserController(UserService userService, SmartSearch smartSearch) 
         { 
             _userService = userService;
+            _smartSearch = smartSearch;
         }
 
         [HttpGet]
@@ -35,8 +39,11 @@ namespace chess4connect.Controllers
             return await _userService.GetUserById(Int32.Parse(userId));
 
         }
-
-
-
-    }
+        
+        [HttpGet("searchUser")]
+        public List<User> getAllUsers([FromQuery] string query)
+        {
+            return (List<User>)_smartSearch.Search(query);
+        }
+  }
 }

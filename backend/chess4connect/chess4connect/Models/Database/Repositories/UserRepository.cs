@@ -45,4 +45,9 @@ public class UserRepository : Repository<User, int>
             .FirstOrDefaultAsync(user => user.Id == id);
     }
 
+    public async Task<List<User>> GetAllUsers()
+    {
+        return await GetQueryable().ToListAsync();
+    }
+
 }

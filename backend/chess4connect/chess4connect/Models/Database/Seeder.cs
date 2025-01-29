@@ -20,6 +20,8 @@ public class Seeder
     {
         await SeedUsersAsync();
         await _chessAndConnectContext.SaveChangesAsync();
+        await SeedFriendshipsAsync();
+        await _chessAndConnectContext.SaveChangesAsync();
     }
 
     private async Task SeedUsersAsync()
@@ -31,14 +33,71 @@ public class Seeder
                 Email = "admin@gmail.com",
                 Password = _passwordService.Hash("admin"),
                 Role = "admin",
-                AvatarImageUrl = "",
+                AvatarImageUrl = "UserProfilePicture/perfil_por_defecto.png",
                 Banned = false,
 
-            }
+            },
+            new User(){
+                UserName = "ale",
+                Email = "ale@gmail.com",
+                Password = _passwordService.Hash("ale"),
+                Role = "user",
+                AvatarImageUrl = "UserProfilePicture/perfil_por_defecto.png",
+                Banned = false,
+
+            },
+            new User(){
+                UserName = "noe",
+                Email = "noe@gmail.com",
+                Password = _passwordService.Hash("noe"),
+                Role = "user",
+                AvatarImageUrl = "UserProfilePicture/perfil_por_defecto.png",
+                Banned = false,
+
+            },
+            new User(){
+                UserName = "manu",
+                Email = "manu@gmail.com",
+                Password = _passwordService.Hash("manu"),
+                Role = "user",
+                AvatarImageUrl = "UserProfilePicture/perfil_por_defecto.png",
+                Banned = false,
+
+            },
+
         ];
 
         await _chessAndConnectContext.Users.AddRangeAsync(users);
+
+
     }
+    private async Task SeedFriendshipsAsync()
+    {
+        Friendship[] friendships = [
+            new Friendship(){
+                UserId = 2,
+                FriendId = 3,
+                State = Enums.FriendshipState.Accepted,
+            },
+            new Friendship(){
+                UserId = 2,
+                FriendId = 4,
+                State = Enums.FriendshipState.Accepted,
+            },
+            new Friendship(){
+                UserId = 3,
+                FriendId = 4,
+                State = Enums.FriendshipState.Accepted,
+            },
+
+
+        ];
+
+        await _chessAndConnectContext.Friendships.AddRangeAsync(friendships);
+
+
+    }
+
 
 
 }

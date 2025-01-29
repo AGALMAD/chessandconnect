@@ -48,7 +48,7 @@ namespace chess4connect.Services
 
         public async Task<List<Friendship>> requestsByUserId (int userId)
         {
-            return await _unitOfWork.FriendshipRepository.gellAllFriendshipFromUser(userId);
+            return await _unitOfWork.FriendshipRepository.GetAllFriendshipFromUser(userId);
         }
 
         public async Task<List<User>> acceptFriendship(int userId, int friendId)

@@ -10,6 +10,7 @@ import { User } from '../models/dto/user';
 
 import Swal from 'sweetalert2';
 import { WebsocketService } from './websocket.service';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,8 @@ export class AuthService {
   private readonly TOKEN_KEY = 'token';
   decodedToken: any = null;
 
-  constructor(private api: ApiService, private router: Router, private websocketService : WebsocketService) {
+  constructor(private api: ApiService, private router: Router, 
+    private websocketService : WebsocketService, private userService: UserService) {
     this.loadTokenFromStorage();
   }
 
@@ -48,9 +50,11 @@ export class AuthService {
     const result = await this.api.post<AuthResponse>('Auth/login', authLogin);
     if (result.success) {
       await this.setSession(result.data.accessToken, remember);
+
     } else {
       this.handleError('Ha habido un problema al iniciar sesión.');
     }
+    
     return result;
   }
 
@@ -86,6 +90,7 @@ export class AuthService {
       sessionStorage.setItem(this.TOKEN_KEY, token);
     }
 
+    await this.userService.getUser()
   }
 
   // Método para recuperar el token
@@ -128,6 +133,7 @@ export class AuthService {
 
     await this.websocketService.disconnectRxjs();
 
+    this.userService.currentUser = null
 
   }
 

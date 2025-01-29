@@ -1,0 +1,24 @@
+nav li:hover{
+    scale: 110%;
+}
+
+#check {
+    display: none;
+}
+
+
+/*Clases que se utilizan cuando se pulsa el botón para ocultar o mostrar la barra de navegación */
+
+.hidden-nav { 
+    transform: translateX(-100%);
+}
+
+.rotate-icon { 
+    transform: rotate(90deg);
+
+}
+
+#dropdownToggle:checked + label + #dropdownMenu {
+    display: block;
+  }
+  

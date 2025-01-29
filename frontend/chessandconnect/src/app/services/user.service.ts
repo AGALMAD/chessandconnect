@@ -21,7 +21,8 @@ export class UserService {
     this.currentUser = result.data
 
     console.log("Usuario: " + this.currentUser)
-    
+  }
+
   getSearchUsers(query: string){
     return this.api.get<User>(`User/searchUser?query=${query}`)
   }

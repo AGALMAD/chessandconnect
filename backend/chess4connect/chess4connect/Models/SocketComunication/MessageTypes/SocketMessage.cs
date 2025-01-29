@@ -30,3 +30,8 @@ public class ChatSocketMessage<T> : SocketMessage
     public T Data { get; set; }
 }
 
+public class FriendshipSocketMessage<T> : SocketMessage
+{
+    public override SocketCommunicationType Type => SocketCommunicationType.FRIEND;
+    public T Data { get; set; }
+}

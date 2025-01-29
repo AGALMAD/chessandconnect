@@ -2,23 +2,6 @@
     <app-navbar></app-navbar>
     <div class="h-screen bg-brown-100 flex items-center justify-center">
       <div class="bg-brown-200 p-6 rounded-2xl shadow-lg w-full max-w-6xl flex flex-row gap-4">
-        <!-- Left Column: User Search -->
-<!--         <div class="w-1/4 bg-brown-300 p-4 rounded-lg shadow-inner flex flex-col">
-          <h2 class="text-brown-800 font-bold text-lg mb-3">Buscar Usuarios</h2>
-          <input
-            type="text"
-            placeholder="Escribe un nombre..."
-            class="p-2 rounded-lg border border-brown-400 focus:outline-none focus:ring focus:ring-brown-500 mb-4"
-          />
-          <ul class="space-y-2 overflow-y-auto h-64">
-            <li class="p-2 bg-brown-100 rounded-lg shadow">Usuario 1</li>
-            <li class="p-2 bg-brown-100 rounded-lg shadow">Usuario 2</li>
-            <li class="p-2 bg-brown-100 rounded-lg shadow">Usuario 3</li>
-            <li class="p-2 bg-brown-100 rounded-lg shadow">Usuario 4</li>
-            <li class="p-2 bg-brown-100 rounded-lg shadow">Usuario 5</li>
-          </ul>
-        </div>
-     -->
         <!-- Main Section -->
         <div class="flex-1 bg-brown-200 p-6 rounded-2xl shadow-lg flex flex-col">
           <h1 class="text-3xl font-bold text-center text-brown-800 mb-4">Ajedrez</h1>
@@ -51,28 +34,13 @@
           <!-- Information Section -->
           <div class="mt-6 bg-brown-100 p-4 rounded-lg shadow-inner">
             <p class="text-brown-800 font-semibold">Partidas en juego: <span class="font-bold">120</span></p>
-            <p class="text-brown-800 font-semibold">Juagadores conectados: <span class="font-bold">450</span></p>
+            <p class="text-brown-800 font-semibold">Juagadores conectados: <span class="font-bold">{{menuService.usersLogged}}</span></p>
           </div>
         </div>
-    
-        <!-- Right Column: Friends Search -->
-<!--         <div class="w-1/4 bg-brown-300 p-4 rounded-lg shadow-inner flex flex-col">
-          <h2 class="text-brown-800 font-bold text-lg mb-3">Buscar Amigos</h2>
-          <input
-            type="text"
-            placeholder="Escribe un nombre..."
-            class="p-2 rounded-lg border border-brown-400 focus:outline-none focus:ring focus:ring-brown-500 mb-4"
-          />
-          <ul class="space-y-2 overflow-y-auto h-64">
-            <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 1</li>
-            <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 2</li>
-            <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 3</li>
-            <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 4</li>
-            <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 5</li>
-          </ul>
-        </div> -->
+        <div class="w-300px bg-brown-300 p-4 rounded-lg shadow-inner flex flex-col">
+          <app-friends-list></app-friends-list>
+          <br>
+          <app-user-list></app-user-list>
+        </div>    
       </div>
     </div>
-    
-      
-    <app-friends-list></app-friends-list>

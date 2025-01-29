@@ -1,8 +1,10 @@
 ﻿using chess4connect.Enums;
 using chess4connect.Models.Database.Entities;
+using chess4connect.Models.SocketComunication.Handlers.Services;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Sockets;
@@ -15,11 +17,16 @@ namespace chess4connect.Models.SocketComunication.Handlers;
 
 public class WebSocketNetwork
 {
+    private FriendRequestService _friendRequestService;
     //Diccionario de conexiones, almacena el id del usuario y el websocket de su conexión
     private ConcurrentDictionary<int, WebSocketHandler> _handlers = new ConcurrentDictionary<int, WebSocketHandler>();
 
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
+    private WebSocketNetwork(FriendRequestService friendRequestService) 
+    { 
+        _friendRequestService = friendRequestService;
+    }
 
     public async Task HandleAsync(User user, WebSocket webSocket)
     {
@@ -129,21 +136,45 @@ public class WebSocketNetwork
         await Task.WhenAll(tasks);
     }
 
-    private Task OnMessageReceivedAsync(WebSocketHandler userHandler, string message)
+    private Task OnMessageReceivedAsync(string message)
     {
         // Lista donde guardar las tareas de envío de mensajes
         List<Task> tasks = new List<Task>();
         // Guardamos una copia de los WebSocketHandler para evitar problemas de concurrencia
         WebSocketHandler[] handlers = _handlers.Values.ToArray();
 
-        string messageToMe = $"Tú: {message}";
-        string messageToOthers = $"Usuario {userHandler.Id}: {message}";
 
         // Enviamos un mensaje personalizado al nuevo usuario y otro al resto
-        foreach (WebSocketHandler handler in handlers)
+        SocketMessage recived = JsonSerializer.Deserialize<SocketMessage>(message);
+        switch (recived.Type)
         {
-            string messageToSend = handler.Id == userHandler.Id ? messageToMe : messageToOthers;
-            tasks.Add(handler.SendAsync(messageToSend));
+            case SocketCommunicationType.GAME:
+
+                break;
+
+            case SocketCommunicationType.CHAT:
+
+                break;
+
+            case SocketCommunicationType.CONNECTION:
+
+                break;
+
+            case SocketCommunicationType.FRIEND:
+
+                var request = JsonSerializer.Deserialize<FriendshipRequestModel>(message);
+
+                var friendship = _friendRequestService.requestFriendship(request.UserId, request.FriendId);
+
+                WebSocketHandler address = _handlers.GetValueOrDefault(request.UserId);
+
+                string stringMessage = JsonSerializer.Serialize(friendship);
+
+                tasks.Add(address.SendAsync(stringMessage));
+
+                                
+                break;
+
         }
 
         // Devolvemos una tarea que se completará cuando todas las tareas de envío de mensajes se completen

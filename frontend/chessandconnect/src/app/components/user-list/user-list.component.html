@@ -1,0 +1,42 @@
+<!-- Modal toggle -->
+<button
+  data-modal-target="default-modal"
+  data-modal-toggle="default-modal"
+  class="block text-white bg-brown-700 hover:bg-brown-800 focus:ring-4 focus:outline-none focus:ring-brown-500 font-semibold rounded-lg text-lg px-6 py-3 shadow-md"
+  type="button"
+>
+  Buscar Usuarios
+</button>
+
+<!-- Main modal -->
+<div
+  id="default-modal"
+  tabindex="-1"
+  aria-hidden="true"
+  class="hidden fixed inset-0 z-50 flex justify-center items-center bg-brown-800"
+>
+  <div class="w-96 bg-brown-100 p-6 rounded-xl shadow-lg relative">
+    <!-- Close button -->
+    <button
+      data-modal-toggle="default-modal"
+      class="absolute top-4 right-4 text-brown-600 hover:text-brown-800"
+      type="button"
+    >
+      ✕
+    </button>
+
+    <h2 class="text-brown-800 font-bold text-2xl mb-4">Buscar Usuarios</h2>
+    <input
+      type="text"
+      placeholder="Escribe un nombre..."
+      class="w-full p-3 rounded-md border border-brown-400 focus:outline-none focus:ring-2 focus:ring-brown-500 mb-5 text-brown-800 placeholder-brown-400"
+    />
+    <ul class="space-y-3 overflow-y-auto h-48">
+      <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300">Usuario 1</li>
+      <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300">Usuario 2</li>
+      <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300">Usuario 3</li>
+      <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300">Usuario 4</li>
+      <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300">Usuario 5</li>
+    </ul>
+  </div>
+</div>

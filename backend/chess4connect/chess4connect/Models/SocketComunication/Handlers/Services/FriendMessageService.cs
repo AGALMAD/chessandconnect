@@ -1,11 +1,13 @@
+﻿namespace chess4connect.Models.SocketComunication.Handlers.Services
+
 ﻿using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using chess4connect.Services;
 
-namespace chess4connect.Models.SocketComunication.Handlers.Services
 {
     public class FriendMessageService
     {
+
 
         private readonly UserService _userService;
 

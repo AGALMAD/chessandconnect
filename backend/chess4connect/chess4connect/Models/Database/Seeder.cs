@@ -20,6 +20,8 @@ public class Seeder
     {
         await SeedUsersAsync();
         await _chessAndConnectContext.SaveChangesAsync();
+        await SeedFriendshipsAsync();
+        await _chessAndConnectContext.SaveChangesAsync();
     }
 
     private async Task SeedUsersAsync()
@@ -38,7 +40,7 @@ public class Seeder
             new User(){
                 UserName = "ale",
                 Email = "ale@gmail.com",
-                Password = _passwordService.Hash("1234"),
+                Password = _passwordService.Hash("ale"),
                 Role = "user",
                 AvatarImageUrl = "",
                 Banned = false,
@@ -47,7 +49,7 @@ public class Seeder
             new User(){
                 UserName = "noe",
                 Email = "noe@gmail.com",
-                Password = _passwordService.Hash("1234"),
+                Password = _passwordService.Hash("noe"),
                 Role = "user",
                 AvatarImageUrl = "",
                 Banned = false,
@@ -56,7 +58,7 @@ public class Seeder
             new User(){
                 UserName = "manu",
                 Email = "manu@gmail.com",
-                Password = _passwordService.Hash("1234"),
+                Password = _passwordService.Hash("manu"),
                 Role = "user",
                 AvatarImageUrl = "",
                 Banned = false,
@@ -68,6 +70,9 @@ public class Seeder
         await _chessAndConnectContext.Users.AddRangeAsync(users);
 
 
+    }
+    private async Task SeedFriendshipsAsync()
+    {
         Friendship[] friendships = [
             new Friendship(){
                 UserId = 2,
@@ -92,6 +97,7 @@ public class Seeder
 
 
     }
+
 
 
 }

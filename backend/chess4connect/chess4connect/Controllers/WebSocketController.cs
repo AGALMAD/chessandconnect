@@ -34,7 +34,7 @@ public class WebSocketController : ControllerBase
     public async Task ConnectAsync()
     {
 
-        //Si no es una usuario autorizado termina la ejecución
+        //Si no es una usuario autenticado termina la ejecución
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         if (string.IsNullOrEmpty(userId) || !long.TryParse(userId, out var userIdLong))

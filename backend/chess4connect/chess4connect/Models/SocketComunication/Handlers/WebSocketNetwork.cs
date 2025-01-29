@@ -136,7 +136,7 @@ public class WebSocketNetwork
         await Task.WhenAll(tasks);
     }
 
-    private Task OnMessageReceivedAsync(string message)
+    private Task OnMessageReceivedAsync(WebSocketHandler webSocketHandler, string message)
     {
         // Lista donde guardar las tareas de envío de mensajes
         List<Task> tasks = new List<Task>();
@@ -165,8 +165,6 @@ public class WebSocketNetwork
                 break;
 
         }
-
-        await Task.WhenAll(tasks);
 
     }
 

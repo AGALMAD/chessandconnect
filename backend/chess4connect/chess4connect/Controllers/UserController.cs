@@ -37,6 +37,7 @@ namespace chess4connect.Controllers
             }
 
             User user = await _userService.GetUserById(Int32.Parse(userId));
+
             return _userMapper.ToDto(user);
 
         }

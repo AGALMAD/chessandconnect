@@ -2,7 +2,7 @@
 
 namespace chess4connect.Models.SocketComunication.MessageTypes
 {
-    public class FriendshipModel
+    public class FriendshipRequestModel
     {
         public FriendshipState State { get; set; }
         public int UserId { get; set; }

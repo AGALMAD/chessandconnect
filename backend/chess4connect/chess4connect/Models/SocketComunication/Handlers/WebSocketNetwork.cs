@@ -136,7 +136,7 @@ public class WebSocketNetwork
         await Task.WhenAll(tasks);
     }
 
-    private Task OnMessageReceivedAsync(WebSocketHandler userHandler, string message)
+    private Task OnMessageReceivedAsync(string message)
     {
         // Lista donde guardar las tareas de envío de mensajes
         List<Task> tasks = new List<Task>();
@@ -161,7 +161,8 @@ public class WebSocketNetwork
                 break;
 
             case SocketCommunicationType.FRIEND:
-                var request = JsonSerializer.Deserialize<FriendshipModel>(message);
+
+                var request = JsonSerializer.Deserialize<FriendshipRequestModel>(message);
 
                 var friendship = _friendRequestService.requestFriendship(request.UserId, request.FriendId);
 

@@ -16,6 +16,7 @@ namespace chess4connect.Controllers
 
         private UserService _userService;
         private SmartSearch _smartSearch;
+        private UserMapper _userMapper;
 
         public UserController(UserService userService, SmartSearch smartSearch) 
         { 
@@ -24,7 +25,7 @@ namespace chess4connect.Controllers
         }
 
         [HttpGet]
-        public async Task<User> GetAuthenticatedUser()
+        public async Task<UserAfterLoginDto> GetAuthenticatedUser()
         {
             //Si no es una usuario autenticado termina la ejecución
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -36,7 +37,7 @@ namespace chess4connect.Controllers
             }
 
             User user = await _userService.GetUserById(Int32.Parse(userId));
-            return await _userService.GetUserById(Int32.Parse(userId));
+            return _userMapper.ToDto(user);
 
         }
         

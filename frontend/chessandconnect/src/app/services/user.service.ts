@@ -12,13 +12,15 @@ export class UserService {
 
   constructor(private api: ApiService) {}
 
-  async getUsersByNickname(userNickname: String): Promise<void> {
-    const result = await this.api.get<User>('User', userNickname)
+  async getUser(): Promise<void> {
+    const result = await this.api.get<User>('User')
     if (!result.success) {
       this.api.handleError('Usuario no encontrado');
     }
 
     this.currentUser = result.data
+
+    console.log("Usuario: " + this.currentUser)
   }
 
 }

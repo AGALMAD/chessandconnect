@@ -9,7 +9,7 @@ import { User } from '../../models/dto/user';
   templateUrl: './friends-list.component.html',
   styleUrl: './friends-list.component.css'
 })
-export class FriendsListComponent implements OnInit {
+export class FriendsListComponent {
 
   connectedFriends : Friend[]
   disconnectedFriends : Friend[]
@@ -22,17 +22,8 @@ export class FriendsListComponent implements OnInit {
   ) {
   }
   
-  async ngOnInit(): Promise<void> {
-    await this.getUserFriends();
-  }
 
 
 
-
-  async getUserFriends() {
-    const result = await this.friendService.getFriends();
-    this.friendList = result.data
-  }
-  
 
 }

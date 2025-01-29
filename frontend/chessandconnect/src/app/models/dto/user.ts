@@ -1,4 +1,5 @@
 import { Play } from "../play";
+import { Friend } from "./friend";
 
 export interface User {
     id: number,
@@ -6,4 +7,6 @@ export interface User {
     email: string,
     avatarImageUrl: string,
     plays: Play[]
+    friends: Friend[]
+    friendRequest: Friend[]
 }

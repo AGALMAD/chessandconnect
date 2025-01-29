@@ -34,10 +34,63 @@ public class Seeder
                 AvatarImageUrl = "",
                 Banned = false,
 
-            }
+            },
+            new User(){
+                UserName = "ale",
+                Email = "ale@gmail.com",
+                Password = _passwordService.Hash("1234"),
+                Role = "user",
+                AvatarImageUrl = "",
+                Banned = false,
+
+            },
+            new User(){
+                UserName = "noe",
+                Email = "noe@gmail.com",
+                Password = _passwordService.Hash("1234"),
+                Role = "user",
+                AvatarImageUrl = "",
+                Banned = false,
+
+            },
+            new User(){
+                UserName = "manu",
+                Email = "manu@gmail.com",
+                Password = _passwordService.Hash("1234"),
+                Role = "user",
+                AvatarImageUrl = "",
+                Banned = false,
+
+            },
+
         ];
 
         await _chessAndConnectContext.Users.AddRangeAsync(users);
+
+
+        Friendship[] friendships = [
+            new Friendship(){
+                UserId = 2,
+                FriendId = 3,
+                State = Enums.FriendshipState.Accepted,
+            },
+            new Friendship(){
+                UserId = 2,
+                FriendId = 4,
+                State = Enums.FriendshipState.Accepted,
+            },
+            new Friendship(){
+                UserId = 3,
+                FriendId = 4,
+                State = Enums.FriendshipState.Accepted,
+            },
+
+
+        ];
+
+        await _chessAndConnectContext.Friendships.AddRangeAsync(friendships);
+
+
     }
 
 

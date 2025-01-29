@@ -23,10 +23,10 @@ public class WebSocketNetwork
 
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-    private WebSocketNetwork(FriendRequestService friendRequestService) 
-    { 
-        _friendRequestService = friendRequestService;
-    }
+    //private WebSocketNetwork(FriendRequestService friendRequestService) 
+    //{ 
+    //    _friendRequestService = friendRequestService;
+    //}
 
     public async Task HandleAsync(User user, WebSocket webSocket)
     {
@@ -136,7 +136,7 @@ public class WebSocketNetwork
         await Task.WhenAll(tasks);
     }
 
-    private Task OnMessageReceivedAsync(string message)
+    private Task OnMessageReceivedAsync(WebSocketHandler webSocketHandler, string message)
     {
         // Lista donde guardar las tareas de envío de mensajes
         List<Task> tasks = new List<Task>();
@@ -162,15 +162,15 @@ public class WebSocketNetwork
 
             case SocketCommunicationType.FRIEND:
 
-                var request = JsonSerializer.Deserialize<FriendshipRequestModel>(message);
+                //var request = JsonSerializer.Deserialize<FriendshipRequestModel>(message);
 
-                var friendship = _friendRequestService.requestFriendship(request.UserId, request.FriendId);
+                //var friendship = _friendRequestService.requestFriendship(request.UserId, request.FriendId);
 
-                WebSocketHandler address = _handlers.GetValueOrDefault(request.UserId);
+                //WebSocketHandler address = _handlers.GetValueOrDefault(request.UserId);
 
-                string stringMessage = JsonSerializer.Serialize(friendship);
+                //string stringMessage = JsonSerializer.Serialize(friendship);
 
-                tasks.Add(address.SendAsync(stringMessage));
+                //tasks.Add(address.SendAsync(stringMessage));
 
                                 
                 break;

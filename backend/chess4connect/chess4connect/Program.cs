@@ -4,6 +4,7 @@ using chess4connect.MiddleWares;
 using chess4connect.Models.Database;
 using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers;
+using chess4connect.Models.SocketComunication.Handlers.Services;
 using chess4connect.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -85,6 +86,7 @@ public class Program {
         builder.Services.AddScoped<ImageService>();
         builder.Services.AddScoped<SmartSearch>();
         builder.Services.AddScoped<UserService>();
+        builder.Services.AddScoped<FriendRequestService>();
 
         builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
         builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);

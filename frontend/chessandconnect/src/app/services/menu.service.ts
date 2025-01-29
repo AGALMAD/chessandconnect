@@ -24,15 +24,15 @@ export class MenuService {
 
     this.connected$ = this.webSocketService.connected.subscribe(() => this.isConnected = true);
 
-    this.messageReceived$ = this.webSocketService.messageReceived.subscribe(message => 
-      this.readMessage(message)
+    this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message => 
+      await this.readMessage(message)
     );
 
     this.disconnected$ = this.webSocketService.disconnected.subscribe(() => this.isConnected = false);
   }
 
 
-  private readMessage(message: string): void {
+  private async readMessage(message: string): Promise<void> {
     console.log('Mensaje recibido:', message);
 
     try {
@@ -58,9 +58,6 @@ export class MenuService {
         break;
     }
   }
-
-
-
 }
 
 

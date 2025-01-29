@@ -33,14 +33,26 @@
       class="w-full p-3 rounded-md border border-brown-400 focus:outline-none focus:ring-2 focus:ring-brown-500 mb-5 text-brown-800 placeholder-brown-400"
     />
     <ul class="space-y-3 overflow-y-auto h-48">
-      @for (item of users; track $index) {
-        <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300 cursor-pointer flex items-center"
-        (click)="goToProfile(item.id)">
-            <img src="https://localhost:7089/{{item.avatarImageUrl}}" 
-            alt="Avatar de usuario salguero" 
-            class="w-10 h-10 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
-       <span>{{item.userName}}</span> 
+      @if (users.length === 0) {
+        <li class="text-center text-brown-600 text-lg">
+          No hay usuarios disponibles
         </li>
+      }@else {
+        @for (item of users; track $index) {
+          <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300 cursor-pointer flex items-center justify-between"
+          (click)="goToProfile(item.id)">
+          <div class="flex items-center">
+              <img src="https://localhost:7089/{{item.avatarImageUrl}}" 
+                  alt="Avatar de usuario salguero" 
+                  class="w-10 h-10 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
+              <span>{{item.userName}}</span> 
+          </div>
+          <button class="p-2 bg-brown-600 text-white square-full rounded-lg shadow-md hover:bg-brown-700 transition"
+              (click)="sendFriendRequest(item.id)">
+              <i class="fa-solid fa-user-plus"></i>
+          </button>
+          </li>
+        }
       }
     </ul>
   </div>

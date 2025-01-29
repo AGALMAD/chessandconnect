@@ -24,7 +24,7 @@ namespace chess4connect.Models.Database.Repositories
         public async Task<List<Friendship>> GetAllPendingFriendshipsByUserId(int userId)
         {
             return await GetQueryable().
-                Where(friendship => (friendship.UserId == userId || friendship.FriendId == userId) && friendship.State == Enums.FriendshipState.Pending)
+                Where(friendship =>  friendship.FriendId == userId && friendship.State == Enums.FriendshipState.Pending)
                 .ToListAsync();
         }
 

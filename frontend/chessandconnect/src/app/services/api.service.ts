@@ -9,12 +9,13 @@ import { Injectable } from '@angular/core';
 import { Observable, lastValueFrom } from 'rxjs';
 import { Result } from '../models/result';
 import { environment } from '../../environments/environment.development';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private BASE_URL = environment.apiUrl+"api/";
+  private BASE_URL = environment.apiUrl + "api/";
   jwt: string = '';
 
   constructor(private http: HttpClient) { }
@@ -137,5 +138,14 @@ export class ApiService {
     if (contentType) header['Content-Type'] = contentType;
 
     return new HttpHeaders(header);
+  }
+
+
+  public handleError(message: string): void {
+    Swal.fire({
+      icon: 'error',
+      text: message,
+      showConfirmButton: true,
+    });
   }
 }

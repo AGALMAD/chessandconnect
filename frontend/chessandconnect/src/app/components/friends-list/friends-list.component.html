@@ -8,17 +8,15 @@
     class="p-2 rounded-lg border border-brown-400 focus:outline-none focus:ring focus:ring-brown-500 mb-4"
   />
   <ul class="space-y-2 overflow-y-auto h-64">
-    <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 1</li>
-    <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 2</li>
-    <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 3</li>
-    <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 4</li>
-    <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 5</li>
-    <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 6</li>
-    <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 7</li>
-    <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 8</li>
-    <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 9</li>
-    <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 10</li>
-    <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 11</li>
-    <li class="p-2 bg-brown-100 rounded-lg shadow">Amigo 12</li>
+    @for(friend of connectedFriends; track friend.id){
+      <li class="p-2 bg-brown-100 rounded-lg shadow">{{friend.userName}}/li>
+
+    }
+
+    @for(friend of disconnectedFriends; track friend.id){
+      <li class="p-2 bg-brown-100 rounded-lg shadow">{{friend.userName}}/li>
+
+    }
+
   </ul>
 </div>

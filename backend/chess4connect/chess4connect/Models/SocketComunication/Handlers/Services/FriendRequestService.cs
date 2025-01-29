@@ -14,14 +14,6 @@ namespace chess4connect.Models.SocketComunication.Handlers.Services
             _friendshipService = friendshipService;
         }
 
-        public async Task<ActionResult<Friendship>> requestFriendship(int userId, int requestedId)
-        {
-            Friendship friendship = await _friendshipService.requestFriendship(requestedId, userId);
-
-            return friendship;
-        }
-
-
 
     }
 }

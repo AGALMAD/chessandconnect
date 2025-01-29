@@ -16,7 +16,9 @@ import { ConnectionModel } from '../models/WebSocketMessages/ConnectionModel';
   providedIn: 'root'
 })
 export class FriendsService {
+  
 
+  constructor(private api: ApiService, private router: Router) { }
   constructor(
     private api: ApiService, 
     private router: Router,

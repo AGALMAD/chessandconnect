@@ -11,17 +11,9 @@ import { UserListComponent } from '../../components/user-list/user-list.componen
   templateUrl: './chess-menu.component.html',
   styleUrl: './chess-menu.component.css'
 })
-  export class ChessMenuComponent implements OnInit, OnDestroy{
+  export class ChessMenuComponent{
 
   constructor(public menuService : MenuService, private api: ApiService){}
-
-  async ngOnInit(): Promise<void> {
-    await this.menuService.webSocketService.connectRxjs()
-  }
-
-  async ngOnDestroy(): Promise<void> {
-    await this.menuService.webSocketService.disconnectRxjs()
-  }
 
 
 }

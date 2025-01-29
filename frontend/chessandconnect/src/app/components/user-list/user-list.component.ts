@@ -4,6 +4,7 @@ import { query } from '@angular/animations';
 import { User } from '../../models/dto/user';
 import { Result } from '../../models/result';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
@@ -17,7 +18,8 @@ export class UserListComponent {
   searchQuery: string;
 
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ){}
 
   async onSearch(){
@@ -29,4 +31,12 @@ export class UserListComponent {
     const users: Result<User> =  await this.userService.getSearchUsers(this.searchQuery)
     this.users = this.users.concat(users.data);
   }
+
+  goToProfile(id: number){
+    this.router.navigate(
+      ['/profile'],
+      { queryParams: { 'id': id, } }
+    );
+  }
+
 }

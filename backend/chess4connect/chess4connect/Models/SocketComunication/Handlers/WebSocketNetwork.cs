@@ -162,23 +162,12 @@ public class WebSocketNetwork
 
             case SocketCommunicationType.FRIEND:
 
-                var request = JsonSerializer.Deserialize<FriendshipRequestModel>(message);
-
-                var friendship = _friendRequestService.requestFriendship(request.UserId, request.FriendId);
-
-                WebSocketHandler address = _handlers.GetValueOrDefault(request.UserId);
-
-                string stringMessage = JsonSerializer.Serialize(friendship);
-
-                tasks.Add(address.SendAsync(stringMessage));
-
-                                
                 break;
 
         }
 
-        // Devolvemos una tarea que se completará cuando todas las tareas de envío de mensajes se completen
-        return Task.WhenAll(tasks);
+        await Task.WhenAll(tasks);
+
     }
 
     public WebSocketHandler GetSocketByUserId(int id)

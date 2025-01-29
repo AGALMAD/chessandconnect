@@ -21,4 +21,20 @@ public class UserService
     {
         return await _unitOfWork.UserRepository.GetAllUsers();
     }
+
+    public async Task<List<User>> GetAllFriends(int userId)
+    {
+        List<Friendship> acceptedFriedships = await _unitOfWork.FriendshipRepository.GetAllAcceptedFriendshipsByUserId(userId);
+
+        List<User> friends = new List<User>();
+
+        foreach (Friendship friendShip in acceptedFriedships)
+        {
+            int friendId = friendShip.UserId == userId ? friendShip.FriendId : friendShip.UserId;
+            friends.Add (await _unitOfWork.UserRepository.GetUserById(friendId));
+        }
+
+        return friends;
+
+    }
 }

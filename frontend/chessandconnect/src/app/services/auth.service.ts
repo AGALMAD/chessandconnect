@@ -90,7 +90,6 @@ export class AuthService {
       sessionStorage.setItem(this.TOKEN_KEY, token);
     }
 
-    await this.userService.getUser()
   }
 
   // Método para recuperar el token

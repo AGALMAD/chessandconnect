@@ -15,10 +15,29 @@ namespace chess4connect.Models.Database.Repositories
             return await GetQueryable().FirstAsync(friendship => friendship.UserId == userId && friendship.FriendId == friendId);
         }
 
-        public async Task<List<Friendship>> gellAllFriendshipFromUser (int userId)
+        public async Task<List<Friendship>> GetAllFriendshipFromUser (int userId)
         {
             return await GetQueryable().Where(friendship => friendship.FriendId == userId).ToListAsync();
         }
+
+
+        public async Task<List<Friendship>> GetAllPendingFriendshipsByUserId(int userId)
+        {
+            return await GetQueryable().
+                Where(friendship => (friendship.UserId == userId || friendship.FriendId == userId) && friendship.State == Enums.FriendshipState.Pending)
+                .ToListAsync();
+        }
+
+        public async Task<List<Friendship>> GetAllAcceptedFriendshipsByUserId(int userId)
+        {
+            return await GetQueryable().
+                Where(friendship => (friendship.UserId == userId || friendship.FriendId == userId) && friendship.State == Enums.FriendshipState.Accepted)
+                .ToListAsync();
+        }
+
+
+
+
 
     }
 }

@@ -83,6 +83,8 @@ public class Program {
         builder.Services.AddScoped<FriendshipService>();
         builder.Services.AddScoped<UserService>();
         builder.Services.AddScoped<ImageService>();
+        builder.Services.AddScoped<SmartSearch>();
+        builder.Services.AddScoped<UserService>();
 
         builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
         builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);

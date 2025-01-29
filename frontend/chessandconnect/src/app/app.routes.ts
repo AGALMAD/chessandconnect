@@ -10,7 +10,7 @@ export const routes: Routes = [
     {path: "", component: HomeComponent},
     {path: "login", component: LoginComponent},
     {path: "register", component: RegisterComponent},
-    {path: "chess", component: ChessMenuComponent, canActivate: [redirectionGuard]},
+    {path: "chess", component: ChessMenuComponent},// canActivate: [redirectionGuard]},
     {path: "connect4", component: Connect4MenuComponent, canActivate: [redirectionGuard]}
 
 ];

@@ -31,7 +31,7 @@ public class Seeder
                 Email = "admin@gmail.com",
                 Password = _passwordService.Hash("admin"),
                 Role = "admin",
-                AvatarImageUrl = "",
+                AvatarImageUrl = "UserProfilePicture/perfil_por_defecto.png",
                 Banned = false,
 
             }

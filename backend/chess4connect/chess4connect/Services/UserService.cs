@@ -17,4 +17,8 @@ public class UserService
 
     }
 
+    public async Task<List<User>> GetUsers()
+    {
+        return await _unitOfWork.UserRepository.GetAllUsers();
+    }
 }

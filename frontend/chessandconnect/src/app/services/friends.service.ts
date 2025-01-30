@@ -194,8 +194,9 @@ export class FriendsService {
           }
         });
         
-        
-        this.gameInvitations.push(gameInvitation);
+        const invitation = this.gameInvitations.find(invitation => invitation.UserId == gameInvitation.UserId)
+        if(invitation == null)
+          this.gameInvitations.push(gameInvitation);
         break;
 
 

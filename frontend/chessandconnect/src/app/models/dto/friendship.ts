@@ -1,6 +1,6 @@
 export interface Friendship {
-    id: number
-    userId: number
-    friendId: number
-    friendshipState: String
+    Id: number
+    UserId: number
+    FriendId: number
+    FriendshipState: String
 }

@@ -18,9 +18,9 @@ export class UserService {
   async getUser(): Promise<void> { 
     const result = await this.api.get<User>('User')
     if (!result.success) {
-      this.api.handleError('Usuario no encontrado');
+      this.handleError('Usuario no encontrado');
     }
-
+  }
 
 
   getSearchUsers(query: string){

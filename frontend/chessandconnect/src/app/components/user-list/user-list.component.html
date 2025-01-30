@@ -1,27 +1,7 @@
-<!-- Modal toggle -->
-<button
-  data-modal-target="default-modal"
-  data-modal-toggle="default-modal"
-  class="block text-white bg-brown-700 hover:bg-brown-800 focus:ring-4 focus:outline-none focus:ring-brown-500 font-semibold rounded-lg text-lg px-6 py-3 shadow-md"
-  type="button"
->
-  Buscar Usuarios
-</button>
-
-<!-- Main modal -->
-<div
-  id="default-modal"
-  tabindex="-1"
-  aria-hidden="true"
-  class="hidden fixed inset-0 z-50 flex justify-center items-center bg-brown-800"
->
+<div class="fixed inset-0 z-50 flex justify-center items-center bg-brown-800 bg-opacity-50">
   <div class="w-96 bg-brown-100 p-6 rounded-xl shadow-lg relative">
     <!-- Close button -->
-    <button
-      data-modal-toggle="default-modal"
-      class="absolute top-4 right-4 text-brown-600 hover:text-brown-800"
-      type="button"
-    >
+    <button class="absolute top-4 right-4 text-brown-600 hover:text-brown-800" (click)="closeModal()">
       ✕
     </button>
 
@@ -40,16 +20,16 @@
       }@else {
         @for (item of users; track $index) {
           <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300 cursor-pointer flex items-center justify-between">
-          <div class="flex items-center">
+            <div class="flex items-center" (click)="goToProfile(item.id)">
               <img src="https://localhost:7089/{{item.avatarImageUrl}}" 
                   alt="Avatar de usuario salguero" 
                   class="w-10 h-10 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
               <span>{{item.userName}}</span> 
-          </div>
-          <button class="p-2 bg-brown-600 text-white square-full rounded-lg shadow-md hover:bg-brown-700 transition"
-              (click)="goToProfile(item.id)">
+            </div>
+            <button class="p-2 bg-brown-600 text-white rounded-lg shadow-md hover:bg-brown-700 transition"
+                (click)="sendFriendRequest(item.id)">
               <i class="fa-solid fa-user-plus"></i>
-          </button>
+            </button>
           </li>
         }
       }

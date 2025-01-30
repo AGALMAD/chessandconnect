@@ -10,9 +10,9 @@ import { ApiService } from './api.service';
 export class WebsocketService {
 
   constructor(
-    private api : ApiService
-  ){}
-  
+    private api: ApiService
+  ) { }
+
   // Eventos
   connected = new Subject<void>();
   messageReceived = new Subject<any>();
@@ -45,30 +45,37 @@ export class WebsocketService {
   }
 
   async connectRxjs() {
-    this.rxjsSocket = webSocket({
-      url: environment.socketUrl + "/?jwt=" + this.api.jwt,
 
-      // Evento de apertura de conexión
-      openObserver: {
-        next: () => this.onConnected()
-      },
+    if (!this.isConnectedRxjs() && this.api.jwt) {
 
-      // La versión de Rxjs está configurada por defecto para manejar JSON
-      // Si queremos manejar cadenas de texto en crudo debemos configurarlo
-      serializer: (value: string) => value,
-      deserializer: (event: MessageEvent) => event.data
-    });
+      console.log("conectado")
 
-    this.rxjsSocket.subscribe({
-      // Evento de mensaje recibido
-      next: (message: string) => this.onMessageReceived(message),
 
-      // Evento de error generado
-      error: (error) => this.onError(error),
+      this.rxjsSocket = webSocket({
+        url: environment.socketUrl + "/?jwt=" + this.api.jwt,
 
-      // Evento de cierre de conexión
-      complete: () => this.onDisconnected()
-    });
+        // Evento de apertura de conexión
+        openObserver: {
+          next: () => this.onConnected()
+        },
+
+        // La versión de Rxjs está configurada por defecto para manejar JSON
+        // Si queremos manejar cadenas de texto en crudo debemos configurarlo
+        serializer: (value: string) => value,
+        deserializer: (event: MessageEvent) => event.data
+      });
+
+      this.rxjsSocket.subscribe({
+        // Evento de mensaje recibido
+        next: (message: string) => this.onMessageReceived(message),
+
+        // Evento de error generado
+        error: (error) => this.onError(error),
+
+        // Evento de cierre de conexión
+        complete: () => this.onDisconnected()
+      });
+    }
   }
 
   sendRxjs(message: string) {

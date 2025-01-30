@@ -39,8 +39,21 @@
         </div>
         <div class="w-300px bg-brown-300 p-4 rounded-lg shadow-inner flex flex-col">
           <app-friends-list></app-friends-list>
-          <br>
-          <app-user-list></app-user-list>
-        </div>    
+
+          <button 
+            (click)="menuService.openSearchModal()" 
+            class="w-full mb-4 bg-brown-600 text-white py-3 rounded-lg shadow-md hover:bg-brown-700 transition flex items-center justify-center gap-2"
+          >
+            <i class="fa-solid fa-search"></i> Buscar usuarios
+          </button>
+
+          <button 
+            (click)="menuService.openGameInvitationModal()" 
+            class="w-full bg-brown-600 text-white py-3 rounded-lg shadow-md hover:bg-brown-700 transition flex items-center justify-center gap-2"
+          >
+            <i class="fa-solid fa-search"></i> Invitaciones 
+          </button>
+        </div>     
       </div>
     </div>
+

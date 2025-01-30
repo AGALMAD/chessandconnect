@@ -4,6 +4,10 @@ import { WebsocketService } from './websocket.service';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { ConnectionModel } from '../models/WebSocketMessages/ConnectionModel';
+import { MatDialog } from '@angular/material/dialog';
+import { UserListComponent } from '../components/user-list/user-list.component';
+import { GameInvitationComponent } from '../components/game-invitation/game-invitation.component';
+import { NavigationStart, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -18,21 +22,32 @@ export class MenuService {
   usersLogged = 0;
   gamesInProgress = 0;
 
+  private navigationSubscription: Subscription;
 
 
-  constructor(public webSocketService: WebsocketService) {
+  constructor(public webSocketService: WebsocketService ,
+    private dialog: MatDialog,
+    private router: Router) 
+  {
 
     this.connected$ = this.webSocketService.connected.subscribe(() => this.isConnected = true);
 
-    this.messageReceived$ = this.webSocketService.messageReceived.subscribe(message => 
-      this.readMessage(message)
+    this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message => 
+      await this.readMessage(message)
     );
 
     this.disconnected$ = this.webSocketService.disconnected.subscribe(() => this.isConnected = false);
+
+
+    this.navigationSubscription = this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.dialog.closeAll(); // Cierra todos los modales abiertos
+      }
+    });
   }
 
 
-  private readMessage(message: string): void {
+  private async readMessage(message: string): Promise<void> {
     console.log('Mensaje recibido:', message);
 
     try {
@@ -59,8 +74,19 @@ export class MenuService {
     }
   }
 
+  public openSearchModal() {
+    this.dialog.open(UserListComponent, {
+      width: '400px',
+      data: {}  // Puedes pasar datos si necesitas
+    });
+  }
 
-
+  public openGameInvitationModal() {
+    this.dialog.open(GameInvitationComponent, {
+      width: '400px',
+      data: {}  // Puedes pasar datos si necesitas
+    });
+  }
 }
 
 

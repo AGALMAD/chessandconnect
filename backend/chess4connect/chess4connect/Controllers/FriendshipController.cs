@@ -1,10 +1,14 @@
-﻿using chess4connect.Mappers;
+﻿    using chess4connect.Enums;
+using chess4connect.Mappers;
 using chess4connect.Models.Database.DTOs;
 using chess4connect.Models.Database.Entities;
+using chess4connect.Models.SocketComunication.Handlers;
+using chess4connect.Models.SocketComunication.MessageTypes;
 using chess4connect.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace chess4connect.Controllers
 {
@@ -12,12 +16,14 @@ namespace chess4connect.Controllers
     [ApiController]
     public class FriendshipController : ControllerBase
     {
+        private WebSocketNetwork _webSocketNetwork;
         private FriendshipService _friendshipService;
         private FriendMapper _friendMapper;
         private UnitOfWork _unitOfWork;
 
-        public FriendshipController(FriendshipService friendshipService, FriendMapper friendMapper, UnitOfWork unitOfWork)
+        public FriendshipController(FriendshipService friendshipService, FriendMapper friendMapper, UnitOfWork unitOfWork, WebSocketNetwork webSocketNetwork)
         {
+            _webSocketNetwork = webSocketNetwork;
             _friendshipService = friendshipService;
             _friendMapper = friendMapper;
             _unitOfWork = unitOfWork;
@@ -54,7 +60,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPost ("makerequest")]
-        public async Task<ActionResult<Friendship>> requestFriendship (int friendId)
+        public async Task<ActionResult> requestFriendship (int friendId)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -64,8 +70,30 @@ namespace chess4connect.Controllers
             }
 
             Friendship friendship = await _friendshipService.requestFriendship(userIdInt, friendId);
-           
-            return friendship;
+
+            var friendshipSocketMessage = new FriendshipSocketMessage<FriendshipRequestModel>
+            {
+                Data = new FriendshipRequestModel
+                {
+                    State = friendship.State,
+                    UserId = friendship.UserId,
+                    FriendId = friendship.FriendId,
+                }
+            };
+
+            string message = JsonSerializer.Serialize(friendshipSocketMessage);
+
+            WebSocketHandler handler = _webSocketNetwork.GetSocketByUserId(friendship.FriendId);
+
+            if (handler == null)
+            {
+                _webSocketNetwork.StorePendingMessage(friendship.FriendId, message);
+                return Ok("El usuario no está conectado. Mensaje almacenado en espera.");
+            }
+
+            await handler.SendAsync(message);
+
+            return Ok("Solicitud enviada") ;
         }
 
         [Authorize]
@@ -86,7 +114,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPost ("acceptrequest")]
-        public async Task<ActionResult<IEnumerable<FriendDto>>> acceptRequest (int friendId)
+        public async Task<ActionResult<IEnumerable<FriendDto>>> acceptRequest ([FromQuery] int friendId)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -99,6 +127,25 @@ namespace chess4connect.Controllers
             IEnumerable<FriendDto> friendDtos = _friendMapper.ToDto(friends);
 
             return Ok(friendDtos);
+
+        }
+
+
+        [Authorize]
+        [HttpPost("rejectrequest")]
+        public async Task<ActionResult> rejectRequest (int userRequestId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out var userIdInt))
+            {
+                return Unauthorized("El usuario no está autenticado.");
+            }
+
+            await _friendshipService.DeleteFriendshipRequest(userRequestId, userIdInt);
+
+
+            return Ok();
 
         }
 

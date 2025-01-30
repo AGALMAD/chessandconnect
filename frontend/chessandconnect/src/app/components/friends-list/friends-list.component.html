@@ -5,6 +5,7 @@
   <input
     type="text"
     placeholder="Escribe un nombre..."
+    [(ngModel)]="searchQuery" (ngModelChange)="onSearch()"
     class="p-2 rounded-lg border border-brown-400 focus:outline-none focus:ring focus:ring-brown-500 mb-4"
   />
   <ul class="space-y-2 overflow-y-auto h-64">

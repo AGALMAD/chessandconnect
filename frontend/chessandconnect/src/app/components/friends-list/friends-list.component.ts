@@ -4,15 +4,17 @@ import { Friend } from '../../models/dto/friend';
 import { User } from '../../models/dto/user';
 import { RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-friends-list',
-  imports: [RouterLink],
+  imports: [RouterLink, FormsModule],
   templateUrl: './friends-list.component.html',
   styleUrl: './friends-list.component.css'
 })
 export class FriendsListComponent implements OnInit {
 
+  searchQuery: string;
 
   constructor(
     public friendService: FriendsService) {}
@@ -20,8 +22,15 @@ export class FriendsListComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     console.log("obtener amigos")
-    await this.friendService.getFriends()
+    if(!this.searchQuery){
+      this.searchQuery = ""
+    }
+    await this.friendService.getFriends(this.searchQuery)
   }
+
+    async onSearch(){
+     await this.friendService.getFriends(this.searchQuery)
+    }
   
 
 

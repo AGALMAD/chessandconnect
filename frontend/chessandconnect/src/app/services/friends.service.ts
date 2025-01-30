@@ -235,8 +235,9 @@ export class FriendsService {
         }).then((result) => {
           if (result.isConfirmed) {
             gameInvitation.State = FriendshipState.Accepted;
-          } else {
-            gameInvitation.State = FriendshipState.Canceled;
+            this.deleteGameInvitationByUserId(gameInvitation.UserId)
+          } else if(result.isDenied) {
+            this.deleteGameInvitationByUserId(gameInvitation.UserId)
           }
         });
         
@@ -284,5 +285,12 @@ export class FriendsService {
     return this.connectedFriends.find(friend => friend.id === friendId);
   }
 
+
+  deleteGameInvitationByUserId(userId){
+    const invitation = this.gameInvitations.find(invitation => invitation.UserId == userId)
+    if(invitation != null)
+      this.gameInvitations = this.gameInvitations.filter(i => i.UserId !== userId);
+
+  }
 
 }

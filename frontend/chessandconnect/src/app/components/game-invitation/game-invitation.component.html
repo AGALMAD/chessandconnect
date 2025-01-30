@@ -5,7 +5,7 @@
         ✕
       </button>
   
-      <h2 class="text-brown-800 font-bold text-2xl mb-4">Buscar Usuarios</h2>
+      <h2 class="text-brown-800 font-bold text-2xl mb-4">Invitaciones</h2>
 
       <ul class="space-y-3 overflow-y-auto h-48">
         @for (invitation of friendService.gameInvitations; track $index) {
@@ -23,7 +23,7 @@
                     <i class="fa-solid fa-circle-check"></i>                
                 </span>  
         
-                <span class="ml-auto mr-2 hover:scale-125 ">
+                <span (click)="friendService.deleteGameInvitationByUserId(invitation.UserId)" class="ml-auto mr-2 hover:scale-125 ">
                     <i class="fa-solid fa-ban"></i>                
                 </span>      
             </li>

@@ -240,8 +240,9 @@ export class FriendsService {
           }
         });
         
-        
-        this.gameInvitations.push(gameInvitation);
+        const invitation = this.gameInvitations.find(invitation => invitation.UserId == gameInvitation.UserId)
+        if(invitation == null)
+          this.gameInvitations.push(gameInvitation);
         break;
 
 
@@ -276,6 +277,11 @@ export class FriendsService {
     const result = await this.api.post(`User/newGameInvitation?friendId=${friendId}`)
 
 
+  }
+
+
+  getConnectedFriendById(friendId: number): Friend{
+    return this.connectedFriends.find(friend => friend.id === friendId);
   }
 
 

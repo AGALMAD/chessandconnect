@@ -68,9 +68,6 @@ export class FriendsListComponent implements OnInit {
   }
 
 
-  showInvitations(){
-    console.log("Invitaciones : ", this.friendService.gameInvitations)
-  }
 
 
 

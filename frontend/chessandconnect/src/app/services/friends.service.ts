@@ -104,7 +104,7 @@ export class FriendsService {
   friend_request: Friendship;
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Mensaje recibido:', message);
+    console.log('Noe te quiere:', message);
 
     try {
       // Paso del mensaje a objeto
@@ -207,9 +207,10 @@ export class FriendsService {
 
   async makeFriendshipRequest(id: number): Promise<Result<Friendship>> {
     const result = await this.api.post<Friendship>(`Friendship/makerequest?friendId=${id}`)
-    if (result.success) {
+    if (!result.success) {
       this.handleError('No se pudo realizar la petición')
     }
+    
     return result
   }
 

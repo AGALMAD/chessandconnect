@@ -52,7 +52,7 @@ export class FriendsListComponent implements OnInit {
 
 
   async newGameInvitation(friendId: number){
-    this.friendService.newGameInvitation(friendId)
+    await this.friendService.newGameInvitation(friendId)
   }
 
 

@@ -78,10 +78,9 @@ public class UserService
 
     public async Task GameInvitation(int userId, int friendId)
     {
-        Friendship friendship = await _unitOfWork.FriendshipRepository.GetFriendshipByUsers(userId, friendId);
         WebSocketHandler friendHandler = _webSocketNetwork.GetSocketByUserId(friendId);
 
-        if (friendship != null && friendHandler != null)
+        if (friendHandler != null)
         {
             var connectionMessage = new SocketMessage<GameInvitationModel>
             {

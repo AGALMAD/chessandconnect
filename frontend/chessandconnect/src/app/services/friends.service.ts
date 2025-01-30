@@ -12,6 +12,7 @@ import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { ConnectionModel } from '../models/WebSocketMessages/ConnectionModel';
 import { ConnectionType } from '../enums/ConnectionType';
 import { GameInvitationModel } from '../models/WebSocketMessages/GameInvitationModel';
+import { User } from '../models/dto/user';
 
 
 @Injectable({
@@ -148,7 +149,7 @@ export class FriendsService {
         break;
 
       case SocketCommunicationType.GAME_INVITATION:
-        const gameInvitation = message.Data as GameInvitationModel;
+        const gameInvitation: GameInvitationModel = message.Data;
 
         if (!gameInvitation) {
           console.error("Error: message.Data no es un GameInvitationModel válido", message.Data);
@@ -180,7 +181,7 @@ export class FriendsService {
 
   async deleteFriend(friendId: number): Promise<void> {
 
-    const result = await this.api.post<Friendship>(`User/deleteFriend?friendId=${friendId}`)
+    const result = await this.api.post(`User/deleteFriend?friendId=${friendId}`)
 
     await this.getFriends()
 
@@ -188,7 +189,7 @@ export class FriendsService {
 
   async newGameInvitation(friendId: number): Promise<void> {
     console.log("New invitation")
-    const result = await this.api.post<Friendship>(`User/newGameInvitation?friendId=${friendId}`)
+    const result = await this.api.post(`User/newGameInvitation?friendId=${friendId}`)
 
 
   }

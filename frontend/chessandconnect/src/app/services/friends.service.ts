@@ -13,6 +13,7 @@ import { ConnectionModel } from '../models/WebSocketMessages/ConnectionModel';
 import { ConnectionType } from '../enums/ConnectionType';
 import { GameInvitationModel } from '../models/WebSocketMessages/GameInvitationModel';
 import { User } from '../models/dto/user';
+import { FriendshipState } from '../enums/FriendshipState';
 
 
 @Injectable({
@@ -35,6 +36,9 @@ export class FriendsService {
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
     );
+
+    this.gameInvitations = [];
+
   }
 
 
@@ -156,15 +160,44 @@ export class FriendsService {
           break;
         }
 
-        alert('Te ha invitado a partida');
+        const friend = this.connectedFriends.find(friend => friend.id === gameInvitation.UserId);
 
         console.log("Invitation:", gameInvitation);
 
-        this.gameInvitations = []
+
+        // 🔹 Mostrar alerta para aceptar o rechazar
+        Swal.fire({
+          title: '<i class="fa-solid fa-chess-board"></i> ¡Invitación a partida!',
+          text: 'Tu amigo ${friend?.userName} te ha invitado a jugar.',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Aceptar',
+          cancelButtonText: 'Rechazar',
+          timer: 10000,
+          timerProgressBar: true,
+          background: '#301e16',  
+          color: '#E8D5B5',       
+          customClass: {
+            popup: 'rounded-lg shadow-lg',
+            title: 'font-bold text-lg',
+            confirmButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+            cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+            timerProgressBar: 'bg-[#E8D5B5]' 
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            gameInvitation.State = FriendshipState.Accepted;
+          } else {
+            gameInvitation.State = FriendshipState.Canceled;
+          }
+        });
+        
         
         this.gameInvitations.push(gameInvitation);
-
         break;
+
 
     }
   }

@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { FriendsService } from '../../services/friends.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UserListComponent } from '../user-list/user-list.component';
+import { Result } from '../../models/result';
+import { Friend } from '../../models/dto/friend';
 
 @Component({
   selector: 'app-request-list',
@@ -14,8 +16,8 @@ import { UserListComponent } from '../user-list/user-list.component';
 })
 export class RequestListComponent {
 
+  requestList: Friend[] = []
 
-  friendshipList: Friendship[] = []
 
   constructor(
     private userService: UserService,
@@ -26,6 +28,13 @@ export class RequestListComponent {
   ){}
 
 
+  async getAllRequests() {
+    const requestList : Result<Request[]> = await this.friendService.getAllFriendshipRequest()
+  }
 
-  
+
+  closeModal() {
+    this.dialogRef.close();
+  }
+
 }

@@ -107,9 +107,21 @@ namespace chess4connect.Controllers
                 return Unauthorized("El usuario no está autenticado.");
             }
 
-            List<Friendship> requests = await _friendshipService.requestsByUserId(userIdInt);
+            List<Friendship> requests = await _friendshipService.GetAllRequestsByUserId(userIdInt);
+            List<RequestDto> userList = new List<RequestDto>();
+            foreach (var request in requests)
+            {
+                var user = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId);
+                RequestDto userToSend = new RequestDto
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    AvatarImageUrl = user.AvatarImageUrl
+                };
+                userList.Add(userToSend);
+            }
 
-            return Ok(requests);
+            return Ok(userList);
         }
 
         [Authorize]

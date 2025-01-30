@@ -5,5 +5,4 @@ export interface Friend {
     userName: string,
     avatarImageUrl: string,
     connected: boolean
-    plays: Play[]
 }

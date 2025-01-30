@@ -233,4 +233,9 @@ export class FriendsService {
   }
 
 
+  getConnectedFriendById(friendId: number): Friend{
+    return this.connectedFriends.find(friend => friend.id === friendId);
+  }
+
+
 }

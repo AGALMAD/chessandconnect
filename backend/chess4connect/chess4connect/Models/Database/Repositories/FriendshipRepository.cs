@@ -12,7 +12,7 @@ namespace chess4connect.Models.Database.Repositories
 
         public async Task<Friendship> GetFriendshipByUsers (int userId, int friendId)
         {
-            return await GetQueryable().FirstAsync(friendship => friendship.UserId == userId && friendship.FriendId == friendId);
+            return await GetQueryable().FirstAsync(friendship => (friendship.UserId == userId && friendship.FriendId == friendId) || (friendship.UserId == friendId && friendship.FriendId == userId));
         }
 
         public async Task<List<Friendship>> GetAllFriendshipFromUser (int userId)

@@ -3,6 +3,7 @@ using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers.Services;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using System.Collections.Concurrent;
@@ -177,6 +178,8 @@ public class WebSocketNetwork
 
         }
 
+
+        return Task.CompletedTask;
     }
 
     public WebSocketHandler GetSocketByUserId(int id)
@@ -185,6 +188,9 @@ public class WebSocketNetwork
     }
 
 
-   
+    public List<int> GetAllUserIds()
+    {
+        return _handlers.Keys.ToList();
+    }
 
 }

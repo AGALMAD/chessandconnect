@@ -19,8 +19,7 @@ export class FriendsListComponent {
 
   constructor(
     private friendService: FriendsService
-  ) {
-  }
+  ) {}
   
 
 

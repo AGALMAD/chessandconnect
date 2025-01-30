@@ -10,6 +10,7 @@ import { WebsocketService } from './websocket.service';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { ConnectionModel } from '../models/WebSocketMessages/ConnectionModel';
+import { ConnectionType } from '../enums/ConnectionType';
 
 
 @Injectable({
@@ -41,20 +42,20 @@ export class FriendsService {
   }
 
   async getFriends(): Promise<void> {
-    
+
     try {
       const result = await this.api.get<Friend[]>('User/friends');
-  
+
       if (!result.success || !result.data) {
         this.handleError('No se encontraron amigos');
         return;
       }
-  
+
       const allFriends = result.data;
-  
+
       this.connectedFriends = allFriends.filter(friend => friend.connected);
       this.disconnectedFriends = allFriends.filter(friend => !friend.connected);
-  
+
     } catch (error) {
       this.handleError('Error al obtener amigos');
       console.error(error);
@@ -116,6 +117,30 @@ export class FriendsService {
       case SocketCommunicationType.REQUEST:
         console.log('Solicitud de amistad recibida:', message.Data);
         this.friend_request = message.Data;
+        break;
+
+      case SocketCommunicationType.CONNECTION:
+        console.log('Mensaje de conexión recibido:', message.Data);
+
+        const connectionModel = message.Data as ConnectionModel;
+
+        if (connectionModel.Type == ConnectionType.Connected) {
+          const friend = this.disconnectedFriends.find(friend => friend.id === connectionModel.UserId);
+
+          if (friend) {
+            // Eliminar de desconectados y agregar a conectados
+            this.disconnectedFriends = this.disconnectedFriends.filter(f => f.id !== connectionModel.UserId);
+            this.connectedFriends.push(friend);
+          }
+        } else {
+          const friend = this.connectedFriends.find(friend => friend.id === connectionModel.UserId);
+
+          if (friend) {
+            // Eliminar de conectados y agregar a desconectados
+            this.connectedFriends = this.connectedFriends.filter(f => f.id !== connectionModel.UserId);
+            this.disconnectedFriends.push(friend);
+          }
+        }
         break;
     }
   }

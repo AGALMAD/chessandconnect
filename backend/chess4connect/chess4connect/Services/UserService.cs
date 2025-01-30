@@ -50,7 +50,7 @@ public class UserService
                 Id = completeFriend.Id,
                 UserName = completeFriend.UserName,
                 AvatarImageUrl = completeFriend.AvatarImageUrl,
-                Connected = usersConnected.Contains(friendShip.UserId),
+                Connected = usersConnected.Contains(friendId),
             });
 
         }

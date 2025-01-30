@@ -8,13 +8,14 @@
     class="p-2 rounded-lg border border-brown-400 focus:outline-none focus:ring focus:ring-brown-500 mb-4"
   />
   <ul class="space-y-2 overflow-y-auto h-64">
+    
     @for(friend of connectedFriends; track friend.id){
-      <li class="p-2 bg-brown-100 rounded-lg shadow">{{friend.userName}}/li>
+      <li class="p-2 bg-brown-100 rounded-lg shadow">{{friend.userName}}</li>
 
     }
 
     @for(friend of disconnectedFriends; track friend.id){
-      <li class="p-2 bg-brown-100 rounded-lg shadow">{{friend.userName}}/li>
+      <li class="p-2 bg-brown-100 rounded-lg shadow">{{friend.userName}}</li>
 
     }
 

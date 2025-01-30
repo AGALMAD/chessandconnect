@@ -43,9 +43,10 @@ namespace chess4connect.Controllers
         }
         
         [HttpGet("searchUser")]
-        public List<User> getAllUsers([FromQuery] string query)
+        public List<UserAfterLoginDto> getAllUsers([FromQuery] string query)
         {
-            return (List<User>)_smartSearch.Search(query);
+            List<UserAfterLoginDto> userList = _userService.GetUsers().Result;
+            return _smartSearch.Search(query, userList).ToList();
         }
   }
 }

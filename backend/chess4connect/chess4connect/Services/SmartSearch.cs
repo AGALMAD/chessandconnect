@@ -3,6 +3,7 @@ using System.Globalization;
 using F23.StringSimilarity;
 using F23.StringSimilarity.Interfaces;
 using System.Text;
+using chess4connect.Models.Database.DTOs;
 
 
 namespace chess4connect.Services
@@ -18,11 +19,9 @@ namespace chess4connect.Services
             _userService = userService;
         }
 
-        public IList<User> Search(string query)
+        public IList<UserAfterLoginDto> Search(string query, List<UserAfterLoginDto> users)
         {
-            IList<User> result;
-            IList<User> userList = _userService.GetUsers().Result;
-            IList<User> users = userList;
+            IList<UserAfterLoginDto> result;
 
             // Si la consulta está vacía o solo tiene espacios en blanco, devolvemos todos los items
             if (string.IsNullOrWhiteSpace(query))
@@ -35,9 +34,9 @@ namespace chess4connect.Services
                 // Limpiamos la query y la separamos por espacios
                 string[] queryKeys = GetKeys(ClearText(query));
                 // Aquí guardaremos los items que coincidan
-                List<User> matches = new List<User>();
+                List<UserAfterLoginDto> matches = new List<UserAfterLoginDto>();
 
-                foreach (User item in users)
+                foreach (UserAfterLoginDto item in users)
                 {
                     // Limpiamos el item y lo separamos por espacios
                     string[] itemKeys = GetKeys(ClearText(item.UserName));

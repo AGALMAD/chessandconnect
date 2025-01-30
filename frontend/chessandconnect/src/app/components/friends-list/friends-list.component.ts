@@ -11,15 +11,9 @@ import { User } from '../../models/dto/user';
 })
 export class FriendsListComponent implements OnInit {
 
-  connectedFriends : Friend[]
-  disconnectedFriends : Friend[]
-
-  friendRequest: Friend[]
-
 
   constructor(
-    private friendService: FriendsService
-  ) {}
+    public friendService: FriendsService) {}
 
 
   async ngOnInit(): Promise<void> {

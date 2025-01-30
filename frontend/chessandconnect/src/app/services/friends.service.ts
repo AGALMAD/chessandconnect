@@ -41,19 +41,24 @@ export class FriendsService {
   }
 
   async getFriends(): Promise<void> {
-    const result = await this.api.get<Friend[]>('User/friends')
-    if (!result.success) {
-      this.handleError('No se encontraron amigos')
+    
+    try {
+      const result = await this.api.get<Friend[]>('User/friends');
+  
+      if (!result.success || !result.data) {
+        this.handleError('No se encontraron amigos');
+        return;
+      }
+  
+      const allFriends = result.data;
+  
+      this.connectedFriends = allFriends.filter(friend => friend.connected);
+      this.disconnectedFriends = allFriends.filter(friend => !friend.connected);
+  
+    } catch (error) {
+      this.handleError('Error al obtener amigos');
+      console.error(error);
     }
-
-    this.connectedFriends = []
-    this.disconnectedFriends = []
-    var allFriends = result.data
-
-    allFriends.forEach(friend => {
-      friend.connected ? this.connectedFriends.push(friend) : this.disconnectedFriends.push(friend)
-
-    });
 
   }
 

@@ -9,12 +9,14 @@
   />
   <ul class="space-y-2 overflow-y-auto h-64">
     
-    @for(friend of connectedFriends; track friend.id){
+    <p>Conectados</p>
+    @for(friend of friendService.connectedFriends; track friend.id){
       <li class="p-2 bg-brown-100 rounded-lg shadow">{{friend.userName}}</li>
 
     }
 
-    @for(friend of disconnectedFriends; track friend.id){
+    <p>Desconectados</p>
+    @for(friend of friendService.disconnectedFriends; track friend.id){
       <li class="p-2 bg-brown-100 rounded-lg shadow">{{friend.userName}}</li>
 
     }

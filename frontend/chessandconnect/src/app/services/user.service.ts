@@ -9,18 +9,7 @@ import Swal from 'sweetalert2';
 })
 export class UserService {
 
-  currentUser: User
-
-
-
   constructor(private api: ApiService) {}
-
-  async getUser(): Promise<void> { 
-    const result = await this.api.get<User>('User')
-    if (!result.success) {
-      this.api.handleError('Usuario no encontrado');
-    }
-
 
 
   getSearchUsers(query: string){

@@ -17,16 +17,7 @@ public class FriendMessageService
     }
 
 
-    public async Task<string> GetAllFriends(int userId, List<int> userConnected)
-    {
-        List<FriendModel> friendsModel = new List<FriendModel>();
-
-        List<User> friends = _userService.
-
-
-
-
-    }
+    
 
 }
 

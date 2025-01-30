@@ -14,19 +14,9 @@ import { MenuService } from '../../services/menu.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit{
+export class HomeComponent{
 
-
-  constructor(
-    private api : ApiService,
-    private webSocketService: WebsocketService,
-    private userService: UserService,
-    private menuService: MenuService
-  ){}
-
-  async ngOnInit(): Promise<void> {
-    await this.webSocketService.connectRxjs()
-  }
+  
 
 
 

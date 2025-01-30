@@ -21,6 +21,8 @@ public class WebSocketNetwork
     //Diccionario de conexiones, almacena el id del usuario y el websocket de su conexión
     private ConcurrentDictionary<int, WebSocketHandler> _handlers = new ConcurrentDictionary<int, WebSocketHandler>();
 
+    private ConcurrentDictionary<int, Queue<string>> _pendingUserMessages = new ConcurrentDictionary<int, Queue<string>>();
+
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
     private WebSocketNetwork(FriendRequestService friendRequestService) 
@@ -75,6 +77,15 @@ public class WebSocketNetwork
 
         Console.WriteLine("Usuario conectado");
 
+        // Verifica si hay mensajes pendientes y envíalos
+        if (_pendingUserMessages.TryRemove(user.Id, out var pendingMessages))
+        {
+            while (pendingMessages.Count > 0)
+            {
+                string pendingMessage = pendingMessages.Dequeue();
+                await newHandler.SendAsync(pendingMessage);
+            }
+        }
 
         return newHandler;
 
@@ -162,23 +173,22 @@ public class WebSocketNetwork
 
             case SocketCommunicationType.FRIEND:
 
-                var request = JsonSerializer.Deserialize<FriendshipRequestModel>(message);
+                //var request = JsonSerializer.Deserialize<FriendshipRequestModel>(message);
 
-                var friendship = _friendRequestService.requestFriendship(request.UserId, request.FriendId);
+                //var friendship = _friendRequestService.requestFriendship(request.UserId, request.FriendId);
 
-                WebSocketHandler address = _handlers.GetValueOrDefault(request.UserId);
+                //WebSocketHandler address = _handlers.GetValueOrDefault(request.UserId);
 
-                string stringMessage = JsonSerializer.Serialize(friendship);
+                //string stringMessage = JsonSerializer.Serialize(friendship);
 
-                tasks.Add(address.SendAsync(stringMessage));
+                //tasks.Add(address.SendAsync(stringMessage));
 
                                 
                 break;
 
         }
+        return Task.CompletedTask;
 
-        // Devolvemos una tarea que se completará cuando todas las tareas de envío de mensajes se completen
-        return Task.WhenAll(tasks);
     }
 
     public WebSocketHandler GetSocketByUserId(int id)
@@ -186,7 +196,14 @@ public class WebSocketNetwork
         return _handlers.FirstOrDefault(p => p.Key == id).Value;
     }
 
+    public void StorePendingMessage(int userId, string message)
+    {
+        // Obtenemos la cola del usuario o creamos una nueva si no existe
+        var queue = _pendingUserMessages.GetOrAdd(userId, _ => new Queue<string>());
 
-   
+        // Agregamos el mensaje a la cola
+        queue.Enqueue(message);
+    }
+
 
 }

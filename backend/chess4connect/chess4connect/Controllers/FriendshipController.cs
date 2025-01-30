@@ -83,9 +83,13 @@ namespace chess4connect.Controllers
 
             string message = JsonSerializer.Serialize(friendshipSocketMessage);
 
-
-
             WebSocketHandler handler = _webSocketNetwork.GetSocketByUserId(friendship.UserId);
+
+            if (handler == null)
+            {
+                _webSocketNetwork.StorePendingMessage(friendship.UserId, message);
+                return Ok("El usuario no está conectado. Mensaje almacenado en espera.");
+            }
 
             await handler.SendAsync(message);
 

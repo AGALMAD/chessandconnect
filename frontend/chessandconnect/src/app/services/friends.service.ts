@@ -26,7 +26,8 @@ export class FriendsService {
 
   public gameInvitations: GameInvitationModel[]
 
-
+  messageReceived$: Subscription;
+  friend_request: Friendship;
 
   constructor(
     private api: ApiService,
@@ -73,16 +74,30 @@ export class FriendsService {
   }
 
   async acceptFriendshipRequest(id: number): Promise<Result<Friend>> {
+    console.log(id)
     const result = await this.api.post<Friend>(`Friendship/acceptrequest?friendId=${id}`)
-    if (result.success) {
+    if (!result.success) {
       this.handleError('No se pudo aceptar la petición')
+    }
+    const query: string = ""
+
+    await this.getFriends(query)
+    return result
+  }
+
+  async rejectFriendshipRequest(id: number): Promise<Result<Friend>> {
+    console.log(id)
+    const result = await this.api.post<Friend>(`Friendship/rejectrequest?userRequestId=${id}`)
+    if (!result.success) {
+      this.handleError('No se pudo rechazar la petición')
     }
     return result
   }
 
+
   async getAllFriendshipRequest(): Promise<Result<Request[]>> {
     const result = await this.api.get<Request[]>('friendship/getallrequests')
-    if (result.success) {
+    if (!result.success) {
       this.handleError('No se encontraron amigos')
     }
     return result
@@ -99,9 +114,6 @@ export class FriendsService {
 
 
   // RECIVE FRIENDS REQUESTS
-
-  messageReceived$: Subscription;
-  friend_request: Friendship;
 
   private async readMessage(message: string): Promise<void> {
     console.log('Noe te quiere:', message);
@@ -125,7 +137,39 @@ export class FriendsService {
     switch (message.Type) {
       case SocketCommunicationType.REQUEST:
         console.log('Solicitud de amistad recibida:', message.Data);
+       
         this.friend_request = message.Data;
+        console.log(this.friend_request)
+       
+        Swal.fire({
+          title: '<i class="fa-solid fa-chess-board"></i> ¡Solicitud de amistad!',
+          text: ` Nombre te ha enviado una solicitud de amistad.`,
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Aceptar',
+          cancelButtonText: 'Rechazar',
+          timer: 10000,
+          timerProgressBar: true,
+          background: '#301e16',  
+          color: '#E8D5B5',       
+          customClass: {
+            popup: 'rounded-lg shadow-lg',
+            title: 'font-bold text-lg',
+            confirmButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+            cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+            timerProgressBar: 'bg-[#E8D5B5]' 
+          }
+        }).then((result) => {
+
+          if (result.isConfirmed) {
+            console.log(this.friend_request.UserId)
+            this.acceptFriendshipRequest(this.friend_request.UserId)
+          } else {
+            this.rejectFriendshipRequest(this.friend_request.UserId)
+          }
+        });
         break;
 
       case SocketCommunicationType.CONNECTION:
@@ -167,8 +211,11 @@ export class FriendsService {
 
         // 🔹 Mostrar alerta para aceptar o rechazar
         Swal.fire({
-          title: '<i class="fa-solid fa-chess-board"></i> ¡Invitación a partida!',
-          text: 'Tu amigo ${friend?.userName} te ha invitado a jugar.',
+          title: ` <div class="flex items-center"
+          <img src="https://localhost:7089/${friend?.avatarImageUrl}" class="w-10 h-10 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">  
+          <span>${friend?.userName}</span> 
+          </div>`,
+          text: `Invitación de juego.`,
           toast: true,
           position: 'top-end',
           showConfirmButton: true,
@@ -189,13 +236,15 @@ export class FriendsService {
         }).then((result) => {
           if (result.isConfirmed) {
             gameInvitation.State = FriendshipState.Accepted;
-          } else {
-            gameInvitation.State = FriendshipState.Canceled;
+            this.deleteGameInvitationByUserId(gameInvitation.UserId)
+          } else if(result.isDenied) {
+            this.deleteGameInvitationByUserId(gameInvitation.UserId)
           }
         });
         
-        
-        this.gameInvitations.push(gameInvitation);
+        const invitation = this.gameInvitations.find(invitation => invitation.UserId == gameInvitation.UserId)
+        if(invitation == null)
+          this.gameInvitations.push(gameInvitation);
         break;
 
 
@@ -237,5 +286,12 @@ export class FriendsService {
     return this.connectedFriends.find(friend => friend.id === friendId);
   }
 
+
+  deleteGameInvitationByUserId(userId){
+    const invitation = this.gameInvitations.find(invitation => invitation.UserId == userId)
+    if(invitation != null)
+      this.gameInvitations = this.gameInvitations.filter(i => i.UserId !== userId);
+
+  }
 
 }

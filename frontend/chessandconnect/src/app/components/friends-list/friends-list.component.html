@@ -12,7 +12,7 @@
     
     <p>Conectados</p>
     @for(friend of friendService.connectedFriends; track friend.id){
-      <li class="p-2 rounded-lg shadow flex items-center bg-[#301e16] text-[#E8D5B5]">
+      <li class="p-2 rounded-lg shadow flex items-center bg-[#301e16] text-[#E8D5B5] cursor-pointer">
         <img 
         [routerLink]="'/profile'"
           [src]="'https://localhost:7089/' + friend.avatarImageUrl" 
@@ -32,7 +32,7 @@
     }
     <p>Desconectados</p>
     @for(friend of friendService.disconnectedFriends; track friend.id){
-      <li class="p-2 rounded-lg shadow flex items-center bg-[#abaaaa] text-[#301e16]">
+      <li class="p-2 rounded-lg shadow flex items-center bg-[#abaaaa] text-[#301e16] cursor-pointer">
         <img
           [routerLink]="'/profile'"
           [src]="'https://localhost:7089/' + friend.avatarImageUrl" 
@@ -52,4 +52,3 @@
   </ul>
 </div>
 
-<button (click)="showInvitations()">Mostrar Invitaciones</button>

@@ -5,8 +5,10 @@ import { Router } from '@angular/router';
 import { FriendsService } from '../../services/friends.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UserListComponent } from '../user-list/user-list.component';
+
 import { Result } from '../../models/result';
 import { Friend } from '../../models/dto/friend';
+
 
 @Component({
   selector: 'app-request-list',
@@ -16,7 +18,9 @@ import { Friend } from '../../models/dto/friend';
 })
 export class RequestListComponent implements OnInit{
 
+
   requestList: Friend[] = []
+
 
 
   constructor(
@@ -29,6 +33,7 @@ export class RequestListComponent implements OnInit{
   ngOnInit(): void {
     this.getAllRequests()
   }
+
 
 
 

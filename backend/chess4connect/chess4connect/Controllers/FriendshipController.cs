@@ -126,7 +126,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPost ("acceptrequest")]
-        public async Task<ActionResult<IEnumerable<FriendDto>>> acceptRequest (int friendId)
+        public async Task<ActionResult<IEnumerable<FriendDto>>> acceptRequest ([FromQuery] int friendId)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 

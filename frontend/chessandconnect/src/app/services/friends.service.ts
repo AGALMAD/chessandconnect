@@ -11,6 +11,9 @@ import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage'
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { ConnectionModel } from '../models/WebSocketMessages/ConnectionModel';
 import { ConnectionType } from '../enums/ConnectionType';
+import { GameInvitationModel } from '../models/WebSocketMessages/GameInvitationModel';
+import { User } from '../models/dto/user';
+import { FriendshipState } from '../enums/FriendshipState';
 
 
 @Injectable({
@@ -20,6 +23,8 @@ export class FriendsService {
 
   public connectedFriends: Friend[]
   public disconnectedFriends: Friend[]
+
+  public gameInvitations: GameInvitationModel[]
 
 
 
@@ -31,6 +36,9 @@ export class FriendsService {
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
     );
+
+    this.gameInvitations = [];
+
   }
 
 
@@ -143,6 +151,54 @@ export class FriendsService {
           }
         }
         break;
+
+      case SocketCommunicationType.GAME_INVITATION:
+        const gameInvitation: GameInvitationModel = message.Data as GameInvitationModel;
+
+        if (!gameInvitation) {
+          console.error("Error: message.Data no es un GameInvitationModel válido", message.Data);
+          break;
+        }
+
+        const friend = this.connectedFriends.find(friend => friend.id === gameInvitation.UserId);
+
+        console.log("Invitation:", gameInvitation);
+
+
+        // 🔹 Mostrar alerta para aceptar o rechazar
+        Swal.fire({
+          title: '<i class="fa-solid fa-chess-board"></i> ¡Invitación a partida!',
+          text: 'Tu amigo ${friend?.userName} te ha invitado a jugar.',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Aceptar',
+          cancelButtonText: 'Rechazar',
+          timer: 10000,
+          timerProgressBar: true,
+          background: '#301e16',  
+          color: '#E8D5B5',       
+          customClass: {
+            popup: 'rounded-lg shadow-lg',
+            title: 'font-bold text-lg',
+            confirmButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+            cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+            timerProgressBar: 'bg-[#E8D5B5]' 
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            gameInvitation.State = FriendshipState.Accepted;
+          } else {
+            gameInvitation.State = FriendshipState.Canceled;
+          }
+        });
+        
+        
+        this.gameInvitations.push(gameInvitation);
+        break;
+
+
     }
   }
 
@@ -158,14 +214,22 @@ export class FriendsService {
   }
 
 
-  async deleteFriend(friendId: number): Promise<void>{
+  async deleteFriend(friendId: number): Promise<void> {
+
+    const result = await this.api.post(`User/deleteFriend?friendId=${friendId}`)
 
     const query: string = ""
-
-    const result = await this.api.post<Friendship>(`User/deleteFriend?friendId=${friendId}`)
 
     await this.getFriends(query)
 
   }
+
+  async newGameInvitation(friendId: number): Promise<void> {
+    console.log("New invitation")
+    const result = await this.api.post(`User/newGameInvitation?friendId=${friendId}`)
+
+
+  }
+
 
 }

@@ -28,9 +28,9 @@ public class UserService
 
     }
 
-    public async Task<List<UserAfterLoginDto>> GetUsers()
+    public async Task<List<UserAfterLoginDto>> GetUsers(int id)
     {
-        List<User> user = await _unitOfWork.UserRepository.GetAllUsers();
+        List<User> user = await _unitOfWork.UserRepository.GetAllUsers(id);
 
         return _mapper.ToDto(user).ToList() ;
     }
@@ -57,6 +57,7 @@ public class UserService
             });
 
         }
+
 
         return friendsWithState;
 

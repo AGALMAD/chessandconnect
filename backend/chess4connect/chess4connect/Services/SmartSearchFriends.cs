@@ -4,24 +4,25 @@ using F23.StringSimilarity;
 using F23.StringSimilarity.Interfaces;
 using System.Text;
 using chess4connect.Models.Database.DTOs;
+using chess4connect.Models.SocketComunication.MessageTypes;
 
 
 namespace chess4connect.Services
 {
-    public class SmartSearch
+    public class SmartSearchFriends
     {
         private const double THRESHOLD = 0.75;
         private readonly INormalizedStringSimilarity _stringSimilarityComparer;
         private readonly UserService _userService;
 
-        public SmartSearch(UserService userService) {
+        public SmartSearchFriends(UserService userService) {
             _stringSimilarityComparer = new JaroWinkler();
             _userService = userService;
         }
 
-        public IList<UserAfterLoginDto> Search(string query, List<UserAfterLoginDto> users)
+        public List<FriendModel> Search(string query, List<FriendModel> users)
         {
-            IList<UserAfterLoginDto> result;
+            List<FriendModel> result;
 
             // Si la consulta está vacía o solo tiene espacios en blanco, devolvemos todos los items
             if (string.IsNullOrWhiteSpace(query))
@@ -34,9 +35,9 @@ namespace chess4connect.Services
                 // Limpiamos la query y la separamos por espacios
                 string[] queryKeys = GetKeys(ClearText(query));
                 // Aquí guardaremos los items que coincidan
-                List<UserAfterLoginDto> matches = new List<UserAfterLoginDto>();
+                List<FriendModel> matches = new List<FriendModel>();
 
-                foreach (UserAfterLoginDto item in users)
+                foreach (FriendModel item in users)
                 {
                     // Limpiamos el item y lo separamos por espacios
                     string[] itemKeys = GetKeys(ClearText(item.UserName));
@@ -111,6 +112,11 @@ namespace chess4connect.Services
             }
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        internal List<FriendModel> Search(string query)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -11,6 +11,9 @@ import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage'
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { ConnectionModel } from '../models/WebSocketMessages/ConnectionModel';
 import { ConnectionType } from '../enums/ConnectionType';
+import { GameInvitationModel } from '../models/WebSocketMessages/GameInvitationModel';
+import { User } from '../models/dto/user';
+import { FriendshipState } from '../enums/FriendshipState';
 
 
 @Injectable({
@@ -20,6 +23,8 @@ export class FriendsService {
 
   public connectedFriends: Friend[]
   public disconnectedFriends: Friend[]
+
+  public gameInvitations: GameInvitationModel[]
 
 
 
@@ -31,6 +36,9 @@ export class FriendsService {
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
     );
+
+    this.gameInvitations = [];
+
   }
 
 
@@ -42,10 +50,10 @@ export class FriendsService {
     return result
   }
 
-  async getFriends(): Promise<void> {
+  async getFriends(query: string): Promise<void> {
 
     try {
-      const result = await this.api.get<Friend[]>('User/friends');
+      const result = await this.api.get<Friend[]>(`User/friends?query=${query}`);
 
       if (!result.success || !result.data) {
         this.handleError('No se encontraron amigos');
@@ -96,7 +104,7 @@ export class FriendsService {
   friend_request: Friendship;
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Mensaje recibido:', message);
+    console.log('Noe te quiere:', message);
 
     try {
       // Paso del mensaje a objeto
@@ -143,6 +151,54 @@ export class FriendsService {
           }
         }
         break;
+
+      case SocketCommunicationType.GAME_INVITATION:
+        const gameInvitation: GameInvitationModel = message.Data as GameInvitationModel;
+
+        if (!gameInvitation) {
+          console.error("Error: message.Data no es un GameInvitationModel válido", message.Data);
+          break;
+        }
+
+        const friend = this.connectedFriends.find(friend => friend.id === gameInvitation.UserId);
+
+        console.log("Invitation:", gameInvitation);
+
+
+        // 🔹 Mostrar alerta para aceptar o rechazar
+        Swal.fire({
+          title: '<i class="fa-solid fa-chess-board"></i> ¡Invitación a partida!',
+          text: 'Tu amigo ${friend?.userName} te ha invitado a jugar.',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Aceptar',
+          cancelButtonText: 'Rechazar',
+          timer: 10000,
+          timerProgressBar: true,
+          background: '#301e16',  
+          color: '#E8D5B5',       
+          customClass: {
+            popup: 'rounded-lg shadow-lg',
+            title: 'font-bold text-lg',
+            confirmButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+            cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+            timerProgressBar: 'bg-[#E8D5B5]' 
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            gameInvitation.State = FriendshipState.Accepted;
+          } else {
+            gameInvitation.State = FriendshipState.Canceled;
+          }
+        });
+        
+        
+        this.gameInvitations.push(gameInvitation);
+        break;
+
+
     }
   }
 
@@ -151,19 +207,30 @@ export class FriendsService {
 
   async makeFriendshipRequest(id: number): Promise<Result<Friendship>> {
     const result = await this.api.post<Friendship>(`Friendship/makerequest?friendId=${id}`)
-    if (result.success) {
+    if (!result.success) {
       this.handleError('No se pudo realizar la petición')
     }
+    
     return result
   }
 
 
-  async deleteFriend(friendId: number): Promise<void>{
+  async deleteFriend(friendId: number): Promise<void> {
 
-    const result = await this.api.post<Friendship>(`User/deleteFriend?friendId=${friendId}`)
+    const result = await this.api.post(`User/deleteFriend?friendId=${friendId}`)
 
-    await this.getFriends()
+    const query: string = ""
+
+    await this.getFriends(query)
 
   }
+
+  async newGameInvitation(friendId: number): Promise<void> {
+    console.log("New invitation")
+    const result = await this.api.post(`User/newGameInvitation?friendId=${friendId}`)
+
+
+  }
+
 
 }

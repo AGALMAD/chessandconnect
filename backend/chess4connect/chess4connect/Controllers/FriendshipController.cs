@@ -1,4 +1,4 @@
-﻿using chess4connect.Enums;
+﻿    using chess4connect.Enums;
 using chess4connect.Mappers;
 using chess4connect.Models.Database.DTOs;
 using chess4connect.Models.Database.Entities;
@@ -83,17 +83,17 @@ namespace chess4connect.Controllers
 
             string message = JsonSerializer.Serialize(friendshipSocketMessage);
 
-            WebSocketHandler handler = _webSocketNetwork.GetSocketByUserId(friendship.UserId);
+            WebSocketHandler handler = _webSocketNetwork.GetSocketByUserId(friendship.FriendId);
 
             if (handler == null)
             {
-                _webSocketNetwork.StorePendingMessage(friendship.UserId, message);
+                _webSocketNetwork.StorePendingMessage(friendship.FriendId, message);
                 return Ok("El usuario no está conectado. Mensaje almacenado en espera.");
             }
 
             await handler.SendAsync(message);
 
-            return Ok("ok") ;
+            return Ok("Solicitud enviada") ;
         }
 
         [Authorize]

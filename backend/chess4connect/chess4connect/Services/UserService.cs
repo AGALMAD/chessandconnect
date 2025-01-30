@@ -1,8 +1,10 @@
-﻿using chess4connect.Mappers;
+﻿using chess4connect.Enums;
+using chess4connect.Mappers;
 using chess4connect.Models.Database.DTOs;
 using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
+using System.Text.Json;
 
 namespace chess4connect.Services;
 
@@ -11,6 +13,7 @@ public class UserService
     private readonly UnitOfWork _unitOfWork;
     private readonly UserMapper _mapper;
     private readonly WebSocketNetwork _webSocketNetwork;
+    
 
     public UserService(UnitOfWork unitOfWork, UserMapper mapper, WebSocketNetwork webSocketNetwork)
     {
@@ -25,9 +28,9 @@ public class UserService
 
     }
 
-    public async Task<List<UserAfterLoginDto>> GetUsers()
+    public async Task<List<UserAfterLoginDto>> GetUsers(int id)
     {
-        List<User> user = await _unitOfWork.UserRepository.GetAllUsers();
+        List<User> user = await _unitOfWork.UserRepository.GetAllUsers(id);
 
         return _mapper.ToDto(user).ToList() ;
     }
@@ -55,6 +58,7 @@ public class UserService
 
         }
 
+
         return friendsWithState;
 
     }
@@ -70,6 +74,34 @@ public class UserService
         }
 
         await _unitOfWork.SaveAsync();
+
+    }
+
+    public async Task GameInvitation(int userId, int friendId)
+    {
+        WebSocketHandler friendHandler = _webSocketNetwork.GetSocketByUserId(friendId);
+
+        if (friendHandler != null)
+        {
+            var connectionMessage = new SocketMessage<GameInvitationModel>
+            {
+                Type = SocketCommunicationType.GAME_INVITATION,
+
+                Data = new GameInvitationModel
+                {
+                    UserId = userId,
+                    FriendId = friendId,
+                    State = FriendshipState.Pending,
+
+                }
+            };
+
+            string stringGamenInvitationMessage = JsonSerializer.Serialize(connectionMessage);
+
+            await friendHandler.SendAsync(stringGamenInvitationMessage);
+
+
+        }
 
     }
 }

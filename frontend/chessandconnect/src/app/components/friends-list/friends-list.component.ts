@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 export class FriendsListComponent implements OnInit {
 
   searchQuery: string;
+  private searchTimeout: any;
 
   constructor(
     public friendService: FriendsService) {}
@@ -29,7 +30,10 @@ export class FriendsListComponent implements OnInit {
   }
 
     async onSearch(){
-     await this.friendService.getFriends(this.searchQuery)
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = setTimeout(async () => {
+          await this.friendService.getFriends(this.searchQuery);
+      }, 500);
     }
   
 

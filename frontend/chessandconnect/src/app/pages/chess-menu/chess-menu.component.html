@@ -40,7 +40,15 @@
         <div class="w-300px bg-brown-300 p-4 rounded-lg shadow-inner flex flex-col">
           <app-friends-list></app-friends-list>
           <br>
-          <app-user-list></app-user-list>
-        </div>    
+          <br>
+          <br>
+          <br>
+          <button 
+            (click)="openSearchModal()" 
+            class="w-full bg-brown-600 text-white py-3 rounded-lg shadow-md hover:bg-brown-700 transition flex items-center justify-center gap-2"
+          >
+            <i class="fa-solid fa-search"></i> Buscar usuarios
+          </button>
+        </div>     
       </div>
     </div>

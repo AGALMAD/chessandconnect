@@ -11,6 +11,7 @@ export class UserService {
 
   constructor(private api: ApiService) {}
 
+
   getSearchUsers(query: string){
     return this.api.get<User>(`User/searchUser?query=${query}`)
   }

@@ -22,6 +22,7 @@ export class FriendsService {
   public disconnectedFriends: Friend[]
 
 
+
   constructor(
     private api: ApiService,
     private router: Router,

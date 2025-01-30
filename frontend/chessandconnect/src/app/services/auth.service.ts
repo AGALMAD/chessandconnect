@@ -132,8 +132,6 @@ export class AuthService {
 
     await this.websocketService.disconnectRxjs();
 
-    this.userService.currentUser = null
-
   }
 
   public async handleSession(token: string, remember: boolean): Promise<void> {

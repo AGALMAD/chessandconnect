@@ -16,38 +16,50 @@ import { ConnectionModel } from '../models/WebSocketMessages/ConnectionModel';
   providedIn: 'root'
 })
 export class FriendsService {
-  
+
+  public connectedFriends: Friend[]
+  public disconnectedFriends: Friend[]
+
 
   constructor(
-    private api: ApiService, 
+    private api: ApiService,
     private router: Router,
     public webSocketService: WebsocketService
   ) {
-    this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message => 
+    this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
     );
-   }
+  }
 
 
   async getUsersByNickname(userNickname: String): Promise<Result<Friend>> {
     const result = await this.api.get<Friend>('Friendship/getusers', userNickname)
     if (!result.success) {
       this.handleError('Usuario no encontrado');
-    } 
+    }
     return result
   }
 
-  async getFriends(): Promise<Result<Friend[]>> {
-    const result = await this.api.get<Friend[]>('friendship/getfriends')
-    if(!result.success) {
+  async getFriends(): Promise<void> {
+    const result = await this.api.get<Friend[]>('User/friends')
+    if (!result.success) {
       this.handleError('No se encontraron amigos')
     }
-    return result
-  } 
+
+    this.connectedFriends = []
+    this.disconnectedFriends = []
+    var allFriends = result.data
+
+    allFriends.forEach(friend => {
+      friend.connected ? this.connectedFriends.push(friend) : this.disconnectedFriends.push(friend)
+
+    });
+
+  }
 
   async acceptFriendshipRequest(id: number): Promise<Result<Friend>> {
     const result = await this.api.post<Friend>(`Friendship/acceptrequest?friendId=${id}`)
-    if(result.success) {
+    if (result.success) {
       this.handleError('No se pudo aceptar la petición')
     }
     return result
@@ -55,7 +67,7 @@ export class FriendsService {
 
   async getAllFriendshipRequest(): Promise<Result<Friendship>> {
     const result = await this.api.get<Friendship>('friendship/getallrequests')
-    if(result.success) {
+    if (result.success) {
       this.handleError('No se encontraron amigos')
     }
     return result
@@ -74,7 +86,7 @@ export class FriendsService {
   // RECIVE FRIENDS REQUESTS
 
   messageReceived$: Subscription;
-  friend_request: Friendship;  
+  friend_request: Friendship;
 
   private async readMessage(message: string): Promise<void> {
     console.log('Mensaje recibido:', message);
@@ -106,9 +118,9 @@ export class FriendsService {
 
   // SEND FRIEND REQUEST
 
-  async makeFriendshipRequest(id: number): Promise<Result<Friendship>>{
+  async makeFriendshipRequest(id: number): Promise<Result<Friendship>> {
     const result = await this.api.post<Friendship>(`Friendship/makerequest?friendId=${id}`)
-    if(result.success) {
+    if (result.success) {
       this.handleError('No se pudo realizar la petición')
     }
     return result

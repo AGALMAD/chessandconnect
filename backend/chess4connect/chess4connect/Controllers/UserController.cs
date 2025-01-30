@@ -49,7 +49,10 @@ namespace chess4connect.Controllers
         [HttpGet("searchUser")]
         public List<UserAfterLoginDto> getAllUsers([FromQuery] string query)
         {
-            List<UserAfterLoginDto> userList = _userService.GetUsers().Result;
+            //Si no es una usuario autenticado termina la ejecución
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            List<UserAfterLoginDto> userList = _userService.GetUsers(Int32.Parse(userId)).Result;
             return _smartSearch.Search(query, userList).ToList();
         }
 

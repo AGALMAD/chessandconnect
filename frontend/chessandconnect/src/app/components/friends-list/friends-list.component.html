@@ -16,7 +16,7 @@
         [routerLink]="'/profile'"
           [src]="'https://localhost:7089/' + friend.avatarImageUrl" 
           alt="Avatar de {{ friend.userName }}"
-          class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-md"
+          class="w-10 h-10 rounded-full object-cover border-2 border-gray-500 shadow-md opacity-60 hover:scale-110"
         >
         <span class="font-semibold ml-2">{{ friend.userName }}</span>
 
@@ -32,7 +32,7 @@
           [routerLink]="'/profile'"
           [src]="'https://localhost:7089/' + friend.avatarImageUrl" 
           alt="Avatar de {{ friend.userName }}"
-          class="w-10 h-10 rounded-full object-cover border-2 border-gray-500 shadow-md opacity-60"
+          class="w-10 h-10 rounded-full object-cover border-2 border-gray-500 shadow-md opacity-60 hover:scale-110"
         >
         <span class="font-medium ml-2">{{ friend.userName }}</span>
 

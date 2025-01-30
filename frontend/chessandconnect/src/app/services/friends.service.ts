@@ -149,7 +149,7 @@ export class FriendsService {
         break;
 
       case SocketCommunicationType.GAME_INVITATION:
-        const gameInvitation: GameInvitationModel = message.Data;
+        const gameInvitation: GameInvitationModel = message.Data as GameInvitationModel;
 
         if (!gameInvitation) {
           console.error("Error: message.Data no es un GameInvitationModel válido", message.Data);
@@ -158,8 +158,10 @@ export class FriendsService {
 
         alert('Te ha invitado a partida');
 
-        console.log("Message:", gameInvitation);
+        console.log("Invitation:", gameInvitation);
 
+        this.gameInvitations = []
+        
         this.gameInvitations.push(gameInvitation);
 
         break;

@@ -11,6 +11,7 @@ import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage'
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { ConnectionModel } from '../models/WebSocketMessages/ConnectionModel';
 import { ConnectionType } from '../enums/ConnectionType';
+import { GameInvitationModel } from '../models/WebSocketMessages/GameInvitationModel';
 
 
 @Injectable({
@@ -20,6 +21,8 @@ export class FriendsService {
 
   public connectedFriends: Friend[]
   public disconnectedFriends: Friend[]
+
+  public gameInvitations: GameInvitationModel[]
 
 
 
@@ -143,6 +146,23 @@ export class FriendsService {
           }
         }
         break;
+
+      case SocketCommunicationType.GAME_INVITATION:
+        const gameInvitation = message.Data as GameInvitationModel;
+
+        if (!gameInvitation) {
+          console.error("Error: message.Data no es un GameInvitationModel válido", message.Data);
+          break;
+        }
+
+        alert('Te ha invitado a partida');
+
+        console.log("Message:", gameInvitation);
+
+        this.gameInvitations.push(gameInvitation);
+
+        break;
+
     }
   }
 
@@ -158,12 +178,20 @@ export class FriendsService {
   }
 
 
-  async deleteFriend(friendId: number): Promise<void>{
+  async deleteFriend(friendId: number): Promise<void> {
 
     const result = await this.api.post<Friendship>(`User/deleteFriend?friendId=${friendId}`)
 
     await this.getFriends()
 
   }
+
+  async newGameInvitation(friendId: number): Promise<void> {
+    console.log("New invitation")
+    const result = await this.api.post<Friendship>(`User/newGameInvitation?friendId=${friendId}`)
+
+
+  }
+
 
 }

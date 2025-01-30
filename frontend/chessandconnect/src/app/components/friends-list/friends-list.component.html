@@ -11,15 +11,38 @@
     
     <p>Conectados</p>
     @for(friend of friendService.connectedFriends; track friend.id){
-      <li class="p-2 bg-brown-100 rounded-lg shadow">{{friend.userName}}</li>
+      <li class="p-2 rounded-lg shadow flex items-center bg-[#301e16] text-[#E8D5B5]">
+        <img 
+        [routerLink]="'/profile'"
+          [src]="'https://localhost:7089/' + friend.avatarImageUrl" 
+          alt="Avatar de {{ friend.userName }}"
+          class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-md"
+        >
+        <span class="font-semibold ml-2">{{ friend.userName }}</span>
 
+        <span (click)="deleteFriend(friend.id)" class="ml-auto mr-2 hover:scale-125 ">
+          <i class="fa-solid fa-user-slash"></i>
+        </span>      
+      </li>
     }
-
     <p>Desconectados</p>
     @for(friend of friendService.disconnectedFriends; track friend.id){
-      <li class="p-2 bg-brown-100 rounded-lg shadow">{{friend.userName}}</li>
+      <li class="p-2 rounded-lg shadow flex items-center bg-[#abaaaa] text-[#301e16]">
+        <img
+          [routerLink]="'/profile'"
+          [src]="'https://localhost:7089/' + friend.avatarImageUrl" 
+          alt="Avatar de {{ friend.userName }}"
+          class="w-10 h-10 rounded-full object-cover border-2 border-gray-500 shadow-md opacity-60"
+        >
+        <span class="font-medium ml-2">{{ friend.userName }}</span>
 
+
+        <span (click)="deleteFriend(friend.id)" class="ml-auto mr-2 hover:scale-125 ">
+          <i class="fa-solid fa-user-slash"></i>
+        </span>
+      </li>
     }
+    
 
   </ul>
 </div>

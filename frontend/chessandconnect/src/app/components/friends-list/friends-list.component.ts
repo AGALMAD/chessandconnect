@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FriendsService } from '../../services/friends.service';
 import { Friend } from '../../models/dto/friend';
 import { User } from '../../models/dto/user';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-friends-list',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './friends-list.component.html',
   styleUrl: './friends-list.component.css'
 })
@@ -21,6 +22,10 @@ export class FriendsListComponent implements OnInit {
     await this.friendService.getFriends()
   }
   
+
+  deleteFriend(friendId: Number){
+    console.log("Eliminado" + friendId)
+  }
 
 
 

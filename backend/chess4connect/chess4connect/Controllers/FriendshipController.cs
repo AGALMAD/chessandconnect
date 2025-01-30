@@ -130,6 +130,25 @@ namespace chess4connect.Controllers
 
         }
 
+
+        [Authorize]
+        [HttpPost("rejectrequest")]
+        public async Task<ActionResult> rejectRequest (int userRequestId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out var userIdInt))
+            {
+                return Unauthorized("El usuario no está autenticado.");
+            }
+
+            await _friendshipService.DeleteFriendshipRequest(userRequestId, userIdInt);
+
+
+            return Ok();
+
+        }
+
     }
 
 }

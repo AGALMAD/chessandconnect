@@ -62,7 +62,7 @@ public class UserService
 
     public async Task DeleteFriend(int userId, int friendId)
     {
-        Friendship friendship = await _unitOfWork.FriendshipRepository.GetFriendshipByUsers(userId, friendId);
+        Friendship friendship = await _unitOfWork.FriendshipRepository.GetFriendByUser(userId, friendId);
 
         if (friendship != null)
         {

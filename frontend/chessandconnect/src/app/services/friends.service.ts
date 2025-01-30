@@ -50,10 +50,10 @@ export class FriendsService {
     return result
   }
 
-  async getFriends(): Promise<void> {
+  async getFriends(query: string): Promise<void> {
 
     try {
-      const result = await this.api.get<Friend[]>('User/friends');
+      const result = await this.api.get<Friend[]>(`User/friends?query=${query}`);
 
       if (!result.success || !result.data) {
         this.handleError('No se encontraron amigos');
@@ -218,7 +218,9 @@ export class FriendsService {
 
     const result = await this.api.post(`User/deleteFriend?friendId=${friendId}`)
 
-    await this.getFriends()
+    const query: string = ""
+
+    await this.getFriends(query)
 
   }
 

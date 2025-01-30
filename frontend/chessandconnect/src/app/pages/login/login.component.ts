@@ -66,7 +66,7 @@ export class LoginComponent {
     if (result.success) {
       Swal.fire({
         icon: 'success',
-        text: 'Registro Correcto',
+        text: 'Sesión iniciada',
         showConfirmButton: false,
         animation: true,
         toast: true,

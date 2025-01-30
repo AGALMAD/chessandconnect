@@ -141,11 +141,4 @@ export class ApiService {
   }
 
 
-  public handleError(message: string): void {
-    Swal.fire({
-      icon: 'error',
-      text: message,
-      showConfirmButton: true,
-    });
-  }
 }

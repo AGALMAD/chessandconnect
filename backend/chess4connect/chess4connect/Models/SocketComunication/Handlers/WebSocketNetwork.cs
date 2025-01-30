@@ -3,6 +3,7 @@ using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers.Services;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using System.Collections.Concurrent;
@@ -25,10 +26,10 @@ public class WebSocketNetwork
 
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-    private WebSocketNetwork(FriendRequestService friendRequestService) 
-    { 
-        _friendRequestService = friendRequestService;
-    }
+    //private WebSocketNetwork(FriendRequestService friendRequestService) 
+    //{ 
+    //    _friendRequestService = friendRequestService;
+    //}
 
     public async Task HandleAsync(User user, WebSocket webSocket)
     {
@@ -147,7 +148,7 @@ public class WebSocketNetwork
         await Task.WhenAll(tasks);
     }
 
-    private Task OnMessageReceivedAsync(string message)
+    private Task OnMessageReceivedAsync(WebSocketHandler webSocketHandler, string message)
     {
         // Lista donde guardar las tareas de envío de mensajes
         List<Task> tasks = new List<Task>();
@@ -203,6 +204,11 @@ public class WebSocketNetwork
 
         // Agregamos el mensaje a la cola
         queue.Enqueue(message);
+    }
+
+    public List<int> GetAllUserIds()
+    {
+        return _handlers.Keys.ToList();
     }
 
 

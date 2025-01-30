@@ -9,10 +9,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GameInvitationComponent } from '../../components/game-invitation/game-invitation.component';
+import { RequestListComponent } from '../../components/request-list/request-list.component';
 
 @Component({
   selector: 'app-chess-menu',
-  imports: [NavbarComponent, FriendsListComponent, UserListComponent],
+  imports: [NavbarComponent, FriendsListComponent],
   templateUrl: './chess-menu.component.html',
   styleUrl: './chess-menu.component.css'
 })
@@ -59,5 +60,11 @@ export class ChessMenuComponent implements OnInit {
     });
   }
 
+  openRequestModal() {
+    this.dialog.open(RequestListComponent, {
+      width: '400px',
+      data: {}  // Puedes pasar datos si necesitas
+    });
+  }
 
 }

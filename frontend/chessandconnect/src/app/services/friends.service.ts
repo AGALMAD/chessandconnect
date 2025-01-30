@@ -115,7 +115,7 @@ export class FriendsService {
   // RECIVE FRIENDS REQUESTS
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Mensaje recibido:', message);
+    console.log('Noe te quiere:', message);
 
     try {
       // Paso del mensaje a objeto
@@ -240,8 +240,9 @@ export class FriendsService {
           }
         });
         
-        
-        this.gameInvitations.push(gameInvitation);
+        const invitation = this.gameInvitations.find(invitation => invitation.UserId == gameInvitation.UserId)
+        if(invitation == null)
+          this.gameInvitations.push(gameInvitation);
         break;
 
 
@@ -253,9 +254,10 @@ export class FriendsService {
 
   async makeFriendshipRequest(id: number): Promise<Result<Friendship>> {
     const result = await this.api.post<Friendship>(`Friendship/makerequest?friendId=${id}`)
-    if (result.success) {
+    if (!result.success) {
       this.handleError('No se pudo realizar la petición')
     }
+    
     return result
   }
 
@@ -275,6 +277,11 @@ export class FriendsService {
     const result = await this.api.post(`User/newGameInvitation?friendId=${friendId}`)
 
 
+  }
+
+
+  getConnectedFriendById(friendId: number): Friend{
+    return this.connectedFriends.find(friend => friend.id === friendId);
   }
 
 

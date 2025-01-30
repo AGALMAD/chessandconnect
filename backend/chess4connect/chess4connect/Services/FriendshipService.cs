@@ -57,7 +57,7 @@ namespace chess4connect.Services
 
             User friend = await _unitOfWork.UserRepository.GetByIdAsync(friendId);
 
-            Friendship pendingFriendship = await _unitOfWork.FriendshipRepository.GetFriendshipByUsers(friend.Id, user.Id);
+            Friendship pendingFriendship = await _unitOfWork.FriendshipRepository.GetFriendshipRequestedByUser(friend.Id, user.Id);
 
             if (pendingFriendship == null)
             {
@@ -74,7 +74,19 @@ namespace chess4connect.Services
 
             return user.Friends;
         }
+    
+        public async Task DeleteFriendshipRequest(int userId, int friendId)
+        {
+            Friendship friendship = await _unitOfWork.FriendshipRepository.GetFriendshipRequestedByUser(userId, friendId);
+
+            if (friendship != null)
+            {
+                _unitOfWork.FriendshipRepository.Delete(friendship);
+            }
+
+            await _unitOfWork.SaveAsync();
+        }
+    
+    
     }
-
-
 }

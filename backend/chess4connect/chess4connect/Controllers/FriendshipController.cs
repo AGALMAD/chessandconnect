@@ -83,17 +83,17 @@ namespace chess4connect.Controllers
 
             string message = JsonSerializer.Serialize(friendshipSocketMessage);
 
-            WebSocketHandler handler = _webSocketNetwork.GetSocketByUserId(friendship.UserId);
+            WebSocketHandler handler = _webSocketNetwork.GetSocketByUserId(friendship.FriendId);
 
             if (handler == null)
             {
-                _webSocketNetwork.StorePendingMessage(friendship.UserId, message);
+                _webSocketNetwork.StorePendingMessage(friendship.FriendId, message);
                 return Ok("El usuario no está conectado. Mensaje almacenado en espera.");
             }
 
             await handler.SendAsync(message);
 
-            return Ok("ok") ;
+            return Ok("Solicitud enviada") ;
         }
 
         [Authorize]
@@ -127,6 +127,25 @@ namespace chess4connect.Controllers
             IEnumerable<FriendDto> friendDtos = _friendMapper.ToDto(friends);
 
             return Ok(friendDtos);
+
+        }
+
+
+        [Authorize]
+        [HttpPost("rejectrequest")]
+        public async Task<ActionResult> rejectRequest (int userRequestId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out var userIdInt))
+            {
+                return Unauthorized("El usuario no está autenticado.");
+            }
+
+            await _friendshipService.DeleteFriendshipRequest(userRequestId, userIdInt);
+
+
+            return Ok();
 
         }
 

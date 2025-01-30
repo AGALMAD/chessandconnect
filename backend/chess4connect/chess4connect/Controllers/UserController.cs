@@ -68,6 +68,23 @@ namespace chess4connect.Controllers
 
         }
 
+        [HttpPost("deleteFriend")]
+        public async Task DeleteFriendFriends([FromQuery] int friendId)
+        {
+            //Si no es una usuario autenticado termina la ejecución
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-  }
+            if (string.IsNullOrEmpty(userId) || !long.TryParse(userId, out var userIdLong))
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return;
+            }
+
+            await _userService.DeleteFriend(Int32.Parse(userId), friendId);
+
+
+        }
+
+
+    }
 }

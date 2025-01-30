@@ -156,4 +156,13 @@ export class FriendsService {
     return result
   }
 
+
+  async deleteFriend(friendId: number): Promise<void>{
+
+    const result = await this.api.post<Friendship>(`User/deleteFriend?friendId=${friendId}`)
+
+    await this.getFriends()
+
+  }
+
 }

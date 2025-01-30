@@ -23,8 +23,9 @@ export class FriendsListComponent implements OnInit {
   }
   
 
-  deleteFriend(friendId: Number){
+  async deleteFriend(friendId: number){
     console.log("Eliminado" + friendId)
+    await this.friendService.deleteFriend(friendId)
   }
 
 

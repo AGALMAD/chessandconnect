@@ -126,6 +126,28 @@ namespace chess4connect.Controllers
 
             IEnumerable<FriendDto> friendDtos = _friendMapper.ToDto(friends);
 
+            var friendshipSocketMessage = new FriendshipSocketMessage<FriendshipRequestModel>
+            {
+                Data = new FriendshipRequestModel
+                {
+                    State = FriendshipState.Accepted,
+                    UserId = friendId,
+                    FriendId = userIdInt,
+                }
+            };
+
+            string message = JsonSerializer.Serialize(friendshipSocketMessage);
+
+            WebSocketHandler handler = _webSocketNetwork.GetSocketByUserId(friendId);
+
+            if (handler == null)
+            {
+                _webSocketNetwork.StorePendingMessage(friendId, message);
+                return Ok("El usuario no está conectado. Mensaje almacenado en espera.");
+            }
+
+            await handler.SendAsync(message);
+
             return Ok(friendDtos);
 
         }

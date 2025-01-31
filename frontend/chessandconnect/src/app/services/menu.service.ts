@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserListComponent } from '../components/user-list/user-list.component';
 import { GameInvitationComponent } from '../components/game-invitation/game-invitation.component';
 import { NavigationStart, Router } from '@angular/router';
+import { RequestListComponent } from '../components/request-list/request-list.component';
 
 @Injectable({
   providedIn: 'root'
@@ -83,6 +84,13 @@ export class MenuService {
 
   public openGameInvitationModal() {
     this.dialog.open(GameInvitationComponent, {
+      width: '400px',
+      data: {}  // Puedes pasar datos si necesitas
+    });
+  }
+
+  openRequestModal() {
+    this.dialog.open(RequestListComponent, {
       width: '400px',
       data: {}  // Puedes pasar datos si necesitas
     });

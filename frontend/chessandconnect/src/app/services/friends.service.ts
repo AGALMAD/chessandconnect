@@ -14,6 +14,7 @@ import { ConnectionType } from '../enums/ConnectionType';
 import { GameInvitationModel } from '../models/WebSocketMessages/GameInvitationModel';
 import { User } from '../models/dto/user';
 import { FriendshipState } from '../enums/FriendshipState';
+import { RequestFriendship } from '../models/dto/request-friendship';
 
 
 @Injectable({
@@ -95,8 +96,8 @@ export class FriendsService {
   }
 
 
-  async getAllFriendshipRequest(): Promise<Result<Request[]>> {
-    const result = await this.api.get<Request[]>('friendship/getallrequests')
+  async getAllFriendshipRequest(): Promise<Result<RequestFriendship[]>> {
+    const result = await this.api.get<RequestFriendship[]>('friendship/getallrequests')
     if (!result.success) {
       this.handleError('No se encontraron amigos')
     }

@@ -8,6 +8,7 @@ import { UserListComponent } from '../user-list/user-list.component';
 
 import { Result } from '../../models/result';
 import { Friend } from '../../models/dto/friend';
+import { RequestFriendship } from '../../models/dto/request-friendship';
 
 
 @Component({
@@ -19,7 +20,7 @@ import { Friend } from '../../models/dto/friend';
 export class RequestListComponent implements OnInit{
 
 
-  requestList: Friend[] = []
+  requestList: RequestFriendship[] = []
 
 
 
@@ -32,13 +33,15 @@ export class RequestListComponent implements OnInit{
   ){}
   ngOnInit(): void {
     this.getAllRequests()
+    
   }
 
 
 
 
   async getAllRequests() {
-    const requestList : Result<Request[]> = await this.friendService.getAllFriendshipRequest()
+    const result : Result<RequestFriendship[]> = await this.friendService.getAllFriendshipRequest()
+    this.requestList = result.data
   }
 
 

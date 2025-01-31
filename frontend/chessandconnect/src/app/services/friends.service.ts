@@ -94,8 +94,9 @@ export class FriendsService {
     return result
   }
 
-  async getAllFriendshipRequest(): Promise<Result<Friendship>> {
-    const result = await this.api.get<Friendship>('friendship/getallrequests')
+
+  async getAllFriendshipRequest(): Promise<Result<Request[]>> {
+    const result = await this.api.get<Request[]>('friendship/getallrequests')
     if (!result.success) {
       this.handleError('No se encontraron amigos')
     }

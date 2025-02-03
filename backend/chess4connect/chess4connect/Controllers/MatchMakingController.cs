@@ -56,7 +56,7 @@ namespace chess4connect.Controllers
             WebSocketHandler friendSocketHandler = _webSocketNetwork.GetSocketByUserId(userIdInt);
 
             //Envia el mensaje de aceptación al oponente
-            await _matchMakingService.GameInvitation(Int32.Parse(userId), friendId, Enums.FriendshipState.Accepted);
+            await _matchMakingService.GameInvitation(friendId , Int32.Parse(userId), Enums.FriendshipState.Accepted);
 
 
             return Ok("Invitación aceptada");

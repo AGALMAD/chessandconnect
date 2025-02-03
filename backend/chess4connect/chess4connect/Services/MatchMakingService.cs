@@ -20,29 +20,34 @@ namespace chess4connect.Services
         }
 
 
-        public async Task GameInvitation(int userId, int friendId, FriendshipState state)
+        public async Task GameInvitation(int hostId, int friendId, FriendshipState state)
         {
-            WebSocketHandler friendHandler = _webSocketNetwork.GetSocketByUserId(friendId);
-
-            if (friendHandler != null)
+            
+            var gameInvitation = new SocketMessage<GameInvitationModel>
             {
-                var gameInvitation = new SocketMessage<GameInvitationModel>
+                Type = SocketCommunicationType.GAME_INVITATION,
+
+                Data = new GameInvitationModel
                 {
-                    Type = SocketCommunicationType.GAME_INVITATION,
+                    HostId = hostId,
+                    FriendId = friendId,
+                    State = state,
 
-                    Data = new GameInvitationModel
-                    {
-                        HostId = userId,
-                        FriendId = friendId,
-                        State = state,
+                }
+            };
 
-                    }
-                };
+            string stringGamenInvitationMessage = JsonSerializer.Serialize(gameInvitation);
 
-                string stringGamenInvitationMessage = JsonSerializer.Serialize(gameInvitation);
-
+            //Si se envia la invitación, el socket a enviar es el del amigo
+            if (state == FriendshipState.Pending) {
+                WebSocketHandler friendHandler = _webSocketNetwork.GetSocketByUserId(friendId);
                 await friendHandler.SendAsync(stringGamenInvitationMessage);
-
+            }
+            //Si se acepta, el socket a enviar es el del host
+            else
+            {
+                WebSocketHandler friendHandler = _webSocketNetwork.GetSocketByUserId(hostId);
+                await friendHandler.SendAsync(stringGamenInvitationMessage);
 
             }
 

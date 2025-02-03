@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @layer utilities {
     .bg-brown-100 { @apply bg-[#f5e8dc]; }
     .bg-brown-200 { @apply bg-[#e4d5c3]; }
@@ -11,28 +12,3 @@
     .text-brown-800 { @apply text-[#5a3720]; }
     .text-brown-900 { @apply text-[#4a2e1a]; }
   }
-
-nav li:hover{
-    scale: 110%;
-}
-
-#check {
-    display: none;
-}
-
-
-/*Clases que se utilizan cuando se pulsa el botón para ocultar o mostrar la barra de navegación */
-
-.hidden-nav { 
-    transform: translateX(-100%);
-}
-
-.rotate-icon { 
-    transform: rotate(90deg);
-
-}
-
-#dropdownToggle:checked + label + #dropdownMenu {
-    display: block;
-  }
-  

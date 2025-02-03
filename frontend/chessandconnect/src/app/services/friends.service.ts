@@ -28,6 +28,7 @@ export class FriendsService {
   public gameInvitations: GameInvitationModel[]
 
   messageReceived$: Subscription;
+
   friend_request: Friendship;
 
   constructor(
@@ -134,43 +135,52 @@ export class FriendsService {
     }
   }
 
-  private handleSocketMessage(message: SocketMessageGeneric<any>): void {
+  private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
     switch (message.Type) {
       case SocketCommunicationType.REQUEST:
+
         console.log('Solicitud de amistad recibida:', message.Data);
        
         this.friend_request = message.Data;
         console.log(this.friend_request)
-       
-        Swal.fire({
-          title: '<i class="fa-solid fa-chess-board"></i> ¡Solicitud de amistad!',
-          text: ` Nombre te ha enviado una solicitud de amistad.`,
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: true,
-          showCancelButton: true,
-          confirmButtonText: 'Aceptar',
-          cancelButtonText: 'Rechazar',
-          timer: 10000,
-          timerProgressBar: true,
-          background: '#301e16',  
-          color: '#E8D5B5',       
-          customClass: {
-            popup: 'rounded-lg shadow-lg',
-            title: 'font-bold text-lg',
-            confirmButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
-            cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
-            timerProgressBar: 'bg-[#E8D5B5]' 
-          }
-        }).then((result) => {
 
-          if (result.isConfirmed) {
-            console.log(this.friend_request.UserId)
-            this.acceptFriendshipRequest(this.friend_request.UserId)
-          } else {
-            this.rejectFriendshipRequest(this.friend_request.UserId)
-          }
-        });
+        if(this.friend_request.State == FriendshipState.Accepted){
+          const query: string = ""
+          await this.getFriends(query)
+
+        } else {
+          Swal.fire({
+            title: '<i class="fa-solid fa-chess-board"></i> ¡Solicitud de amistad!',
+            text: ` Nombre te ha enviado una solicitud de amistad.`,
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Rechazar',
+            timer: 10000,
+            timerProgressBar: true,
+            background: '#301e16',  
+            color: '#E8D5B5',       
+            customClass: {
+              popup: 'rounded-lg shadow-lg',
+              title: 'font-bold text-lg',
+              confirmButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+              cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+              timerProgressBar: 'bg-[#E8D5B5]' 
+            }
+          }).then((result) => {
+  
+            if (result.isConfirmed) {
+              console.log(this.friend_request.UserId)
+              this.acceptFriendshipRequest(this.friend_request.UserId)
+            } else {
+              this.rejectFriendshipRequest(this.friend_request.UserId)
+            }
+          });
+        }
+       
+        
         break;
 
       case SocketCommunicationType.CONNECTION:

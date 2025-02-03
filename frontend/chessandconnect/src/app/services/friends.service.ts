@@ -15,6 +15,7 @@ import { GameInvitationModel } from '../models/WebSocketMessages/GameInvitationM
 import { User } from '../models/dto/user';
 import { FriendshipState } from '../enums/FriendshipState';
 import { RequestFriendship } from '../models/dto/request-friendship';
+import { MatchMakingService } from './match-making.service';
 
 
 @Injectable({
@@ -33,7 +34,8 @@ export class FriendsService {
   constructor(
     private api: ApiService,
     private router: Router,
-    public webSocketService: WebsocketService
+    public webSocketService: WebsocketService,
+    public matchMakingService: MatchMakingService
   ) {
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
@@ -293,6 +295,29 @@ export class FriendsService {
     if(invitation != null)
       this.gameInvitations = this.gameInvitations.filter(i => i.UserId !== userId);
 
+  }
+
+  acceptInvitationByUserId(userId){
+    const invitation = this.gameInvitations.find(invitation => invitation.UserId == userId)
+    if(invitation != null){
+      console.log("Invitación aceptada")
+
+      //Guarda el oponente
+      var friend = this.getConnectedFriendById(userId)
+      this.matchMakingService.opponent = friend
+
+      //Redirecciona al match making
+
+
+      //Notifica al oponente de la aceptación de la invitación
+
+
+    }
+      
+
+
+    //Elimina la invitación de la lista
+    this.deleteGameInvitationByUserId(userId)
   }
 
 }

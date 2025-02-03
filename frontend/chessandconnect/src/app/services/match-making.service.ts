@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { User } from '../models/dto/user';
+import { Friend } from '../models/dto/friend';
 
 @Injectable({
   providedIn: 'root'
@@ -6,7 +8,7 @@ import { Injectable } from '@angular/core';
 export class MatchMakingService {
 
   isHost : boolean
-
+  opponent: Friend
 
 
   constructor() { }

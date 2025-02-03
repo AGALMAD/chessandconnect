@@ -25,6 +25,46 @@ namespace chess4connect.Controllers
             _matchMakingService = matchMakingService;
         }
 
+        [HttpPost("newGameInvitation")]
+        public async Task GameInvitation([FromQuery] int friendId)
+        {
+            //Si no es una usuario autenticado termina la ejecución
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId) || !long.TryParse(userId, out var userIdLong))
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return;
+            }
+
+            await _matchMakingService.GameInvitation(Int32.Parse(userId), friendId, Enums.FriendshipState.Pending);
+
+
+        }
+
+        [Authorize]
+        [HttpPost("acceptInvitation")]
+        public async Task<ActionResult> AcceptInvitation([FromQuery] int friendId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out var userIdInt))
+            {
+                return Unauthorized("El usuario no está autenticado.");
+            }
+
+            WebSocketHandler friendSocketHandler = _webSocketNetwork.GetSocketByUserId(userIdInt);
+
+            //Envia el mensaje de aceptación al oponente
+            await _matchMakingService.GameInvitation(Int32.Parse(userId), friendId, Enums.FriendshipState.Accepted);
+
+
+            return Ok("Invitación aceptada");
+
+        }
+
+
+
         [Authorize]
         [HttpPost("start")]
         public async Task<ActionResult> StartPlay([FromQuery] int opponentId)

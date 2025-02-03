@@ -217,7 +217,7 @@ export class FriendsService {
           break;
         }
 
-        const friend = this.connectedFriends.find(friend => friend.id === gameInvitation.UserId);
+        const friend = this.connectedFriends.find(friend => friend.id === gameInvitation.HostId);
 
         console.log("Invitation:", gameInvitation);
 
@@ -249,13 +249,13 @@ export class FriendsService {
         }).then((result) => {
           if (result.isConfirmed) {
             gameInvitation.State = FriendshipState.Accepted;
-            this.deleteGameInvitationByUserId(gameInvitation.UserId)
+            this.deleteGameInvitationByUserId(gameInvitation.HostId)
           } else if(result.isDenied) {
-            this.deleteGameInvitationByUserId(gameInvitation.UserId)
+            this.deleteGameInvitationByUserId(gameInvitation.HostId)
           }
         });
         
-        const invitation = this.gameInvitations.find(invitation => invitation.UserId == gameInvitation.UserId)
+        const invitation = this.gameInvitations.find(invitation => invitation.HostId == gameInvitation.HostId)
         if(invitation == null)
           this.gameInvitations.push(gameInvitation);
         break;
@@ -289,7 +289,7 @@ export class FriendsService {
 
   async newGameInvitation(friendId: number): Promise<void> {
     console.log("New invitation")
-    const result = await this.api.post(`User/newGameInvitation?friendId=${friendId}`)
+    const result = await this.api.post(`MatchMaking/newGameInvitation?friendId=${friendId}`)
 
 
   }
@@ -301,25 +301,30 @@ export class FriendsService {
 
 
   deleteGameInvitationByUserId(userId){
-    const invitation = this.gameInvitations.find(invitation => invitation.UserId == userId)
+    const invitation = this.gameInvitations.find(invitation => invitation.HostId == userId)
     if(invitation != null)
-      this.gameInvitations = this.gameInvitations.filter(i => i.UserId !== userId);
+      this.gameInvitations = this.gameInvitations.filter(i => i.HostId !== userId);
 
   }
 
-  acceptInvitationByUserId(userId){
-    const invitation = this.gameInvitations.find(invitation => invitation.UserId == userId)
+  async acceptInvitationByUserId(friendId){
+    const invitation = this.gameInvitations.find(invitation => invitation.HostId == friendId)
     if(invitation != null){
       console.log("Invitación aceptada")
 
       //Guarda el oponente
-      var friend = this.getConnectedFriendById(userId)
+      var friend = this.getConnectedFriendById(friendId)
       this.matchMakingService.opponent = friend
 
-      //Redirecciona al match making
-
-
       //Notifica al oponente de la aceptación de la invitación
+      const result = await this.api.post(`MatchMaking/acceptInvitation?friendId=${friendId}`)
+
+      //Redirecciona al match making
+      if(result.success){
+        this.router.navigate(
+          ['/chess'],
+        );
+      }
 
 
     }
@@ -327,7 +332,7 @@ export class FriendsService {
 
 
     //Elimina la invitación de la lista
-    this.deleteGameInvitationByUserId(userId)
+    this.deleteGameInvitationByUserId(friendId)
   }
 
 }

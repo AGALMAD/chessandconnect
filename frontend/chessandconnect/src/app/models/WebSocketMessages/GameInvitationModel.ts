@@ -1,7 +1,7 @@
 import { FriendshipState } from "../../enums/FriendshipState";
 
 export class GameInvitationModel {
-    UserId!: number;
+    HostId!: number;
     FriendId!: number;
     State!: FriendshipState;
 

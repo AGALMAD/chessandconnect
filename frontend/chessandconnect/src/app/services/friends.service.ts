@@ -14,6 +14,7 @@ import { ConnectionType } from '../enums/ConnectionType';
 import { GameInvitationModel } from '../models/WebSocketMessages/GameInvitationModel';
 import { User } from '../models/dto/user';
 import { FriendshipState } from '../enums/FriendshipState';
+import { RequestFriendship } from '../models/dto/request-friendship';
 
 
 @Injectable({
@@ -95,8 +96,9 @@ export class FriendsService {
     return result
   }
 
-  async getAllFriendshipRequest(): Promise<Result<Friendship>> {
-    const result = await this.api.get<Friendship>('friendship/getallrequests')
+
+  async getAllFriendshipRequest(): Promise<Result<RequestFriendship[]>> {
+    const result = await this.api.get<RequestFriendship[]>('friendship/getallrequests')
     if (!result.success) {
       this.handleError('No se encontraron amigos')
     }
@@ -245,8 +247,9 @@ export class FriendsService {
         }).then((result) => {
           if (result.isConfirmed) {
             gameInvitation.State = FriendshipState.Accepted;
-          } else {
-            gameInvitation.State = FriendshipState.Canceled;
+            this.deleteGameInvitationByUserId(gameInvitation.UserId)
+          } else if(result.isDenied) {
+            this.deleteGameInvitationByUserId(gameInvitation.UserId)
           }
         });
         
@@ -294,5 +297,12 @@ export class FriendsService {
     return this.connectedFriends.find(friend => friend.id === friendId);
   }
 
+
+  deleteGameInvitationByUserId(userId){
+    const invitation = this.gameInvitations.find(invitation => invitation.UserId == userId)
+    if(invitation != null)
+      this.gameInvitations = this.gameInvitations.filter(i => i.UserId !== userId);
+
+  }
 
 }

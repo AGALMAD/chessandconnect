@@ -98,7 +98,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpGet("getallrequests")]
-        public async Task<ActionResult<List<Friendship>>> getAllRequests()
+        public async Task<ActionResult<List<RequestDto>>> getAllRequests()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 

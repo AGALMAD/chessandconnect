@@ -1,5 +1,5 @@
 export interface RequestFriendship {
-    id: number,
+    userId: number,
     userName: string,
     avatarImageUrl: string
 }

@@ -36,11 +36,5 @@ export class ChessMenuComponent implements OnInit {
 
   
 
-  openRequestModal() {
-    this.dialog.open(RequestListComponent, {
-      width: '400px',
-      data: {}  // Puedes pasar datos si necesitas
-    });
-  }
 
 }

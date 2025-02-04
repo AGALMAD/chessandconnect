@@ -1,8 +1,9 @@
 import { FriendshipState } from "../../enums/FriendshipState";
+import { Game } from "../game";
 
 export class GameInvitationModel {
-    UserId!: number;
+    HostId!: number;
     FriendId!: number;
     State!: FriendshipState;
-
+    Game!: Game
 }

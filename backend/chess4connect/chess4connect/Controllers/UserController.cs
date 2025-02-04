@@ -7,6 +7,7 @@ using System.Security.Claims;
 ﻿using chess4connect.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using chess4connect.Models.SocketComunication.MessageTypes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace chess4connect.Controllers
 {
@@ -28,6 +29,7 @@ namespace chess4connect.Controllers
             _smartSearchFriends = smartSearchFriends;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<UserAfterLoginDto> GetAuthenticatedUser()
         {

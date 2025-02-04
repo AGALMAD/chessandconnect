@@ -16,11 +16,14 @@ import { UserService } from './user.service';
   providedIn: 'root',
 })
 export class AuthService {
+
+  public currentUser: User
+
   private readonly TOKEN_KEY = 'token';
   decodedToken: any = null;
 
-  constructor(private api: ApiService, private router: Router, 
-    private websocketService : WebsocketService, private userService: UserService) {
+  constructor(private api: ApiService, private router: Router,
+    private websocketService: WebsocketService, private userService: UserService) {
     this.loadTokenFromStorage();
   }
 
@@ -54,7 +57,7 @@ export class AuthService {
     } else {
       this.handleError('Ha habido un problema al iniciar sesión.');
     }
-    
+
     return result;
   }
 
@@ -146,17 +149,31 @@ export class AuthService {
     sessionStorage.removeItem(this.TOKEN_KEY);
   }
 
-  getUser(){
+  getUser() {
     const token = this.decodeJwt(this.getToken())
-    
 
-/*     const user: User = {
-      id: token.id,
-      userName: token.userName,
-      email: token.email,
-      avatarImageUrl: token.avatarImageUrl,
-      plays: []
-    } */
+
+    /*     const user: User = {
+          id: token.id,
+          userName: token.userName,
+          email: token.email,
+          avatarImageUrl: token.avatarImageUrl,
+          plays: []
+        } */
     return token
   }
+
+
+  async getCurrentUser(): Promise<void> {
+    try {
+      const result = await this.api.get<User>('User'); 
+      this.currentUser = result.data;
+      console.log("User: ",result.data)
+      console.log("Current",this.currentUser)
+    } catch (error) {
+      console.error("Error obteniendo usuario:", error);
+
+    }
+  }
+
 }

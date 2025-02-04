@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { RouterLink } from '@angular/router';
 import { MenuService } from '../../services/menu.service';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -14,7 +15,14 @@ import { MenuService } from '../../services/menu.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent{
+export class HomeComponent implements OnInit{
+
+  constructor(private authService :AuthService,private api: ApiService){}
+
+  ngOnInit(): void {
+    if(this.api.jwt)
+      this.authService.getCurrentUser()
+  }
 
   
 

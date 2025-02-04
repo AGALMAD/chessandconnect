@@ -1,6 +1,7 @@
 ﻿using chess4connect.Models.Database.DTOs;
 using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers;
+using chess4connect.Models.SocketComunication.MessageTypes;
 using chess4connect.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,7 +27,7 @@ namespace chess4connect.Controllers
         }
 
         [HttpPost("newGameInvitation")]
-        public async Task<ActionResult> GameInvitation([FromQuery] int friendId)
+        public async Task<ActionResult> GameInvitation([FromBody] GameInvitationModel gameInvitation)
         {
             //Si no es una usuario autenticado termina la ejecución
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -37,7 +38,7 @@ namespace chess4connect.Controllers
                 return Unauthorized("El usuario no está autenticado.");
             }
 
-            await _matchMakingService.GameInvitation(Int32.Parse(userId), friendId, Enums.FriendshipState.Pending);
+            await _matchMakingService.GameInvitation(gameInvitation);
 
             return Ok("Invitación Enviada");
 
@@ -46,7 +47,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPost("acceptInvitation")]
-        public async Task<ActionResult> AcceptInvitation([FromQuery] int friendId)
+        public async Task<ActionResult> AcceptInvitation([FromBody] GameInvitationModel gameInvitation)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -58,7 +59,7 @@ namespace chess4connect.Controllers
             WebSocketHandler friendSocketHandler = _webSocketNetwork.GetSocketByUserId(userIdInt);
 
             //Envia el mensaje de aceptación al oponente
-            await _matchMakingService.GameInvitation(friendId , Int32.Parse(userId), Enums.FriendshipState.Accepted);
+            await _matchMakingService.GameInvitation(gameInvitation);
 
 
             return Ok("Invitación aceptada");

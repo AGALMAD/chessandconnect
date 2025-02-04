@@ -16,6 +16,8 @@ import { User } from '../models/dto/user';
 import { FriendshipState } from '../enums/FriendshipState';
 import { RequestFriendship } from '../models/dto/request-friendship';
 import { MatchMakingService } from './match-making.service';
+import { Game } from '../models/game';
+import { AuthService } from './auth.service';
 
 
 @Injectable({
@@ -36,7 +38,8 @@ export class FriendsService {
     private api: ApiService,
     private router: Router,
     public webSocketService: WebsocketService,
-    public matchMakingService: MatchMakingService
+    public matchMakingService: MatchMakingService,
+    public authService: AuthService
   ) {
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
@@ -217,6 +220,10 @@ export class FriendsService {
 
           const friend = this.connectedFriends.find(friend => friend.id === gameInvitation.HostId);
 
+          const invitation = this.gameInvitations.find(invitation => invitation.HostId == gameInvitation.HostId)
+          if (invitation == null)
+            this.gameInvitations.push(gameInvitation);
+
           console.log("Invitation:", gameInvitation);
 
 
@@ -247,18 +254,15 @@ export class FriendsService {
           }).then(async (result) => {
             if (result.isConfirmed) {
               gameInvitation.State = FriendshipState.Accepted;
-              await this.acceptInvitationByUserId(friend.id)
+              await this.acceptInvitationByUserId(friend.id, gameInvitation.Game)
             } else if (result.isDenied) {
               this.deleteGameInvitationByUserId(gameInvitation.HostId)
             }
+
           });
 
-          const invitation = this.gameInvitations.find(invitation => invitation.HostId == gameInvitation.HostId)
-          if (invitation == null)
-            this.gameInvitations.push(gameInvitation);
-
         }
-        else{
+        else {
           this.router.navigate(
             ['/chess'],
           );
@@ -295,13 +299,63 @@ export class FriendsService {
 
   }
 
-  async newGameInvitation(friendId: number): Promise<void> {
-    console.log("New invitation")
-    const result = await this.api.post(`MatchMaking/newGameInvitation?friendId=${friendId}`)
 
+  async newGameInvitation(friendId: number, game: Game): Promise<void> {
+    console.log("New invitation")
+
+
+    const gameInvitation: GameInvitationModel = {
+      HostId: this.authService.currentUser.id,
+      FriendId: friendId,
+      State: FriendshipState.Pending,
+      Game: game,
+    };
+
+    try {
+      const result = await this.api.post(`MatchMaking/newGameInvitation`, gameInvitation);
+      console.log("Invitación Enviada Correctamente", result);
+    } catch (error) {
+      console.error("Error al enviar la invitación", error);
+    }
 
   }
 
+
+  async acceptInvitationByUserId(friendId: number, game: Game) {
+    const invitation = this.gameInvitations.find(invitation => invitation.HostId == friendId)
+    if (invitation != null) {
+
+      //Guarda el oponente
+      var friend = this.getConnectedFriendById(friendId)
+      this.matchMakingService.opponent = friend
+
+      const user = this.authService.getCurrentUser()
+
+      const acceptInvitation: GameInvitationModel = {
+        HostId: invitation.HostId,
+        FriendId: invitation.FriendId,
+        State: FriendshipState.Accepted,
+        Game: game,
+      };
+
+      console.log("Aceptada : ", acceptInvitation)
+
+      try {
+        const result = await this.api.post(`MatchMaking/acceptInvitation`, acceptInvitation);
+        this.router.navigate(
+          ['/chess'],
+        );
+      } catch (error) {
+        console.error("Error al enviar la invitación", error);
+      }
+
+
+    }
+
+
+    //Elimina la invitación de la lista
+    this.deleteGameInvitationByUserId(friendId)
+  }
 
   getConnectedFriendById(friendId: number): Friend {
     return this.connectedFriends.find(friend => friend.id === friendId);
@@ -315,32 +369,6 @@ export class FriendsService {
 
   }
 
-  async acceptInvitationByUserId(friendId) {
-    const invitation = this.gameInvitations.find(invitation => invitation.HostId == friendId)
-    if (invitation != null) {
-      console.log("Invitación aceptada")
-
-      //Guarda el oponente
-      var friend = this.getConnectedFriendById(friendId)
-      this.matchMakingService.opponent = friend
-
-      //Notifica al oponente de la aceptación de la invitación
-      const result = await this.api.post(`MatchMaking/acceptInvitation?friendId=${friendId}`)
-
-      //Redirecciona al match making
-      if (result.success) {
-        this.router.navigate(
-          ['/chess'],
-        );
-      }
-
-
-    }
-
-
-
-    //Elimina la invitación de la lista
-    this.deleteGameInvitationByUserId(friendId)
-  }
+  
 
 }

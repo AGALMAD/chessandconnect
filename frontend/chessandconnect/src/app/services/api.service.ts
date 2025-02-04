@@ -10,6 +10,7 @@ import { Observable, lastValueFrom } from 'rxjs';
 import { Result } from '../models/result';
 import { environment } from '../../environments/environment.development';
 import Swal from 'sweetalert2';
+import { User } from '../models/dto/user';
 
 @Injectable({
   providedIn: 'root'

@@ -10,6 +10,7 @@ import { NavigationStart, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GameInvitationComponent } from '../../components/game-invitation/game-invitation.component';
 import { RequestListComponent } from '../../components/request-list/request-list.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-menus',
@@ -22,12 +23,15 @@ export class MenusComponent {
     public menuService: MenuService,
     private api: ApiService,
     private webSocketService: WebsocketService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
 
   ) {
     
   }
   async ngOnInit(): Promise<void> {
     await this.webSocketService.connectRxjs()
+    this.authService.getCurrentUser();
+
   }
 }

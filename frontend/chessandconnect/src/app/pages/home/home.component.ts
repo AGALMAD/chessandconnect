@@ -20,7 +20,6 @@ export class HomeComponent implements OnInit{
   constructor(private authService :AuthService,private api: ApiService){}
 
   ngOnInit(): void {
-    if(this.api.jwt)
       this.authService.getCurrentUser()
   }
 

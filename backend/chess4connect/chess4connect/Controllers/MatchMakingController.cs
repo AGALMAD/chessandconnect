@@ -26,7 +26,7 @@ namespace chess4connect.Controllers
         }
 
         [HttpPost("newGameInvitation")]
-        public async Task GameInvitation([FromQuery] int friendId)
+        public async Task<ActionResult> GameInvitation([FromQuery] int friendId)
         {
             //Si no es una usuario autenticado termina la ejecución
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -34,10 +34,12 @@ namespace chess4connect.Controllers
             if (string.IsNullOrEmpty(userId) || !long.TryParse(userId, out var userIdLong))
             {
                 HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return;
+                return Unauthorized("El usuario no está autenticado.");
             }
 
             await _matchMakingService.GameInvitation(Int32.Parse(userId), friendId, Enums.FriendshipState.Pending);
+
+            return Ok("Invitación Enviada");
 
 
         }

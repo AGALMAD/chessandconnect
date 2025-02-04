@@ -244,10 +244,10 @@ export class FriendsService {
               cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
               timerProgressBar: 'bg-[#E8D5B5]'
             }
-          }).then((result) => {
+          }).then(async (result) => {
             if (result.isConfirmed) {
               gameInvitation.State = FriendshipState.Accepted;
-              this.deleteGameInvitationByUserId(gameInvitation.HostId)
+              await this.acceptInvitationByUserId(friend.id)
             } else if (result.isDenied) {
               this.deleteGameInvitationByUserId(gameInvitation.HostId)
             }
@@ -257,6 +257,11 @@ export class FriendsService {
           if (invitation == null)
             this.gameInvitations.push(gameInvitation);
 
+        }
+        else{
+          this.router.navigate(
+            ['/chess'],
+          );
         }
 
 

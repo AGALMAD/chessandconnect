@@ -7,7 +7,7 @@ import { Friend } from '../models/dto/friend';
 })
 export class MatchMakingService {
 
-  isHost = false
+  isHost = true
   opponent: Friend
 
 

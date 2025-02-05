@@ -342,6 +342,7 @@ export class FriendsService {
 
       try {
         const result = await this.api.post(`MatchMaking/acceptInvitation`, acceptInvitation);
+        this.matchMakingService.isHost = false
         this.router.navigate(
           ['/chess'],
         );

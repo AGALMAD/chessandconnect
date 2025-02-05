@@ -7,6 +7,7 @@ using System.Security.Claims;
 ﻿using chess4connect.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using chess4connect.Models.SocketComunication.MessageTypes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace chess4connect.Controllers
 {
@@ -28,6 +29,7 @@ namespace chess4connect.Controllers
             _smartSearchFriends = smartSearchFriends;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<UserAfterLoginDto> GetAuthenticatedUser()
         {
@@ -93,22 +95,7 @@ namespace chess4connect.Controllers
         }
 
 
-        [HttpPost("newGameInvitation")]
-        public async Task GameInvitation([FromQuery] int friendId)
-        {
-            //Si no es una usuario autenticado termina la ejecución
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(userId) || !long.TryParse(userId, out var userIdLong))
-            {
-                HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return;
-            }
-
-            await _userService.GameInvitation(Int32.Parse(userId), friendId);
-
-
-        }
+       
 
 
     }

@@ -16,11 +16,17 @@ import { UserService } from './user.service';
   providedIn: 'root',
 })
 export class AuthService {
+  public currentUser: User | null;
+
   private readonly TOKEN_KEY = 'token';
   decodedToken: any = null;
 
-  constructor(private api: ApiService, private router: Router, 
-    private websocketService : WebsocketService, private userService: UserService) {
+  constructor(
+    private api: ApiService,
+    private router: Router,
+    private websocketService: WebsocketService,
+    private userService: UserService
+  ) {
     this.loadTokenFromStorage();
   }
 
@@ -50,11 +56,10 @@ export class AuthService {
     const result = await this.api.post<AuthResponse>('Auth/login', authLogin);
     if (result.success) {
       await this.setSession(result.data.accessToken, remember);
-
     } else {
       this.handleError('Ha habido un problema al iniciar sesión.');
     }
-    
+
     return result;
   }
 
@@ -89,7 +94,6 @@ export class AuthService {
     } else {
       sessionStorage.setItem(this.TOKEN_KEY, token);
     }
-
   }
 
   // Método para recuperar el token
@@ -131,7 +135,6 @@ export class AuthService {
     this.router.navigate(['#']);
 
     await this.websocketService.disconnectRxjs();
-
   }
 
   public async handleSession(token: string, remember: boolean): Promise<void> {
@@ -146,17 +149,29 @@ export class AuthService {
     sessionStorage.removeItem(this.TOKEN_KEY);
   }
 
-  getUser(){
-    const token = this.decodeJwt(this.getToken())
-    
+  getUser() {
+    const token = this.decodeJwt(this.getToken());
 
-/*     const user: User = {
-      id: token.id,
-      userName: token.userName,
-      email: token.email,
-      avatarImageUrl: token.avatarImageUrl,
-      plays: []
-    } */
-    return token
+    /*     const user: User = {
+          id: token.id,
+          userName: token.userName,
+          email: token.email,
+          avatarImageUrl: token.avatarImageUrl,
+          plays: []
+        } */
+    return token;
+  }
+
+  async getCurrentUser(): Promise<void> {
+    if (this.api.jwt && this.currentUser == null) {
+      try {
+        const result = await this.api.get<User>('User');
+        this.currentUser = result.data;
+        console.log('User: ', result.data);
+        console.log('Current', this.currentUser);
+      } catch (error) {
+        console.error('Error obteniendo usuario:', error);
+      }
+    }
   }
 }

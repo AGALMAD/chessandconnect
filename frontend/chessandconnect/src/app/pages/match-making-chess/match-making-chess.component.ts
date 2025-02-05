@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
@@ -26,10 +26,34 @@ export class MatchMakingChessComponent {
     private router: Router,
     public matchMakingService: MatchMakingService,
     public authService: AuthService,
-  ) {
-    
+  ) {}
+
+  
+  openLoadMatchMaking(){
+
+    var loadView = document.getElementById("loadView") as HTMLElement
+    var main = document.getElementById("main") as HTMLElement
+
+
+    loadView.classList.remove("hidden")
+    loadView.classList.add("flex")
+
+    main.classList.remove("flex")
+    main.classList.add("hidden")
+
   }
 
+  closeLoadMatchMaking(){
+
+    var loadView = document.getElementById("loadView") as HTMLElement
+    var main = document.getElementById("main") as HTMLElement
+
+    loadView.classList.remove("flex")
+    loadView.classList.add("hidden")
+
+    main.classList.remove("hidden")
+    main.classList.add("flex")
+  }
 
   
 }

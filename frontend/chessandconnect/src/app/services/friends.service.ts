@@ -86,19 +86,52 @@ export class FriendsService {
     if (!result.success) {
       this.handleError('No se pudo aceptar la petición')
     }
+    Swal.fire({
+      title: '<i class="fa-solid fa-chess-board"></i> ¡Solicitud de amistad!',
+      text: `Solicitud de amistad aceptada.`,
+      toast: true,
+      position: 'top-end',
+      timer: 10000,
+      timerProgressBar: true,
+      background: '#301e16',  
+      color: '#E8D5B5',       
+      customClass: {
+        popup: 'rounded-lg shadow-lg',
+        title: 'font-bold text-lg',
+        confirmButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+        cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+        timerProgressBar: 'bg-[#E8D5B5]' 
+      }})
+
+
     const query: string = ""
 
     await this.getFriends(query)
     return result
   }
 
-  async rejectFriendshipRequest(id: number): Promise<Result<Friend>> {
+  async rejectFriendshipRequest(id: number): Promise<void> {
     console.log(id)
-    const result = await this.api.post<Friend>(`Friendship/rejectrequest?userRequestId=${id}`)
+    const result = await this.api.post(`Friendship/rejectrequest?userRequestId=${id}`)
     if (!result.success) {
       this.handleError('No se pudo rechazar la petición')
     }
-    return result
+    Swal.fire({
+      title: '<i class="fa-solid fa-chess-board"></i> ¡Solicitud de amistad!',
+      text: `Solicitud de amistad rechazada.`,
+      toast: true,
+      position: 'top-end',
+      timer: 10000,
+      timerProgressBar: true,
+      background: '#301e16',  
+      color: '#E8D5B5',       
+      customClass: {
+        popup: 'rounded-lg shadow-lg',
+        title: 'font-bold text-lg',
+        confirmButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+        cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+        timerProgressBar: 'bg-[#E8D5B5]' 
+      }})
   }
 
 
@@ -149,6 +182,7 @@ export class FriendsService {
         this.friend_request = message.Data;
         console.log(this.friend_request)
 
+
         if (this.friend_request.State == FriendshipState.Accepted) {
           const query: string = ""
           await this.getFriends(query)
@@ -176,15 +210,12 @@ export class FriendsService {
             }
           }).then((result) => {
 
-            if (result.isConfirmed) {
-              console.log(this.friend_request.UserId)
-              this.acceptFriendshipRequest(this.friend_request.UserId)
-            } else {
-              this.rejectFriendshipRequest(this.friend_request.UserId)
-            }
-          });
-        }
+          if (result.isConfirmed) {
+            console.log(this.friend_request.UserId)
+            this.acceptFriendshipRequest(this.friend_request.UserId)
+          } 
 
+        });
 
         break;
 
@@ -279,10 +310,27 @@ export class FriendsService {
 
   // SEND FRIEND REQUEST
 
-  async makeFriendshipRequest(id: number): Promise<Result<Friendship>> {
+  public async makeFriendshipRequest(id: number): Promise<Result<Friendship>> {
     const result = await this.api.post<Friendship>(`Friendship/makerequest?friendId=${id}`)
     if (!result.success) {
       this.handleError('No se pudo realizar la petición')
+    } else {
+      Swal.fire({
+        title: '<i class="fa-solid fa-chess-board"></i> ¡Solicitud de amistad!',
+        text: ` Solicitud de amistad enviada.`,
+        toast: true,
+        position: 'top-end',
+        timer: 10000,
+        timerProgressBar: true,
+        background: '#301e16',  
+        color: '#E8D5B5',       
+        customClass: {
+          popup: 'rounded-lg shadow-lg',
+          title: 'font-bold text-lg',
+          confirmButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+          cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+          timerProgressBar: 'bg-[#E8D5B5]' 
+        }})
     }
 
     return result

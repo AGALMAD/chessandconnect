@@ -86,6 +86,7 @@ export class FriendsService {
     if (!result.success) {
       this.handleError('No se pudo aceptar la petición')
     }
+    const query: string = ""
     Swal.fire({
       title: '<i class="fa-solid fa-chess-board"></i> ¡Solicitud de amistad!',
       text: `Solicitud de amistad aceptada.`,
@@ -102,17 +103,13 @@ export class FriendsService {
         cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
         timerProgressBar: 'bg-[#E8D5B5]' 
       }})
-
-
-    const query: string = ""
-
     await this.getFriends(query)
     return result
   }
 
-  async rejectFriendshipRequest(id: number): Promise<void> {
+  async rejectFriendshipRequest(id: number): Promise<Result<Friend>> {
     console.log(id)
-    const result = await this.api.post(`Friendship/rejectrequest?userRequestId=${id}`)
+    const result = await this.api.post<Friend>(`Friendship/rejectrequest?userRequestId=${id}`)
     if (!result.success) {
       this.handleError('No se pudo rechazar la petición')
     }
@@ -132,6 +129,7 @@ export class FriendsService {
         cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
         timerProgressBar: 'bg-[#E8D5B5]' 
       }})
+    return result
   }
 
 
@@ -182,7 +180,6 @@ export class FriendsService {
         this.friend_request = message.Data;
         console.log(this.friend_request)
 
-
         if (this.friend_request.State == FriendshipState.Accepted) {
           const query: string = ""
           await this.getFriends(query)
@@ -210,12 +207,13 @@ export class FriendsService {
             }
           }).then((result) => {
 
-          if (result.isConfirmed) {
-            console.log(this.friend_request.UserId)
-            this.acceptFriendshipRequest(this.friend_request.UserId)
-          } 
+            if (result.isConfirmed) {
+              console.log(this.friend_request.UserId)
+              this.acceptFriendshipRequest(this.friend_request.UserId)
+            }
+          });
+        }
 
-        });
 
         break;
 
@@ -310,11 +308,11 @@ export class FriendsService {
 
   // SEND FRIEND REQUEST
 
-  public async makeFriendshipRequest(id: number): Promise<Result<Friendship>> {
+  async makeFriendshipRequest(id: number): Promise<Result<Friendship>> {
     const result = await this.api.post<Friendship>(`Friendship/makerequest?friendId=${id}`)
     if (!result.success) {
       this.handleError('No se pudo realizar la petición')
-    } else {
+    }  else {
       Swal.fire({
         title: '<i class="fa-solid fa-chess-board"></i> ¡Solicitud de amistad!',
         text: ` Solicitud de amistad enviada.`,
@@ -331,7 +329,7 @@ export class FriendsService {
           cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
           timerProgressBar: 'bg-[#E8D5B5]' 
         }})
-    }
+      }
 
     return result
   }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -10,20 +11,22 @@ import { RouterLink } from '@angular/router';
 })
 export class NavbarComponent {
 
-    constructor(
-      private authService: AuthService
-    ) {
-    }
+  public baseUrl = environment.apiUrl; 
 
-    User(){
-      return this.authService.getUser()
-    }
+  constructor(
+    public authService: AuthService
+  ) {
+  }
 
-    usuarioToken() {
-      return this.authService.loged() 
-    }
+  User() {
+    return this.authService.getUser()
+  }
 
-    closeSession(){
-      this.authService.logout()
-    }
+  usuarioToken() {
+    return this.authService.loged()
+  }
+
+  closeSession() {
+    this.authService.logout()
+  }
 }

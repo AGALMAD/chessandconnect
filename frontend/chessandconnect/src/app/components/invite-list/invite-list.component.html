@@ -1,0 +1,19 @@
+<ul class="space-y-4 overflow-y-auto h-64 px-4 py-2 bg-[#2a1a11] rounded-lg shadow-lg">
+    <p class="text-lg font-semibold text-[#E8D5B5] mb-2">Conectados</p>
+  
+    @for(friend of friendService.connectedFriends; track friend.id) {
+      <li class="p-3 rounded-lg shadow-lg flex items-center bg-[#301e16] text-[#E8D5B5] cursor-pointer hover:bg-[#4c2a1f] transition duration-300">
+        <img 
+          [src]="'https://localhost:7089/' + friend.avatarImageUrl" 
+          alt="Avatar de {{ friend.userName }}"
+          class="w-12 h-12 rounded-full object-cover border-2 border-gray-500 shadow-md opacity-80 hover:opacity-100 transition duration-200"
+        >
+        <span class="font-semibold ml-3">{{ friend.userName }}</span>
+  
+        <span (click)="newGameInvitation(friend.id)" class="ml-auto mr-4 px-3 py-1 rounded-lg bg-[#E8D5B5] text-[#301e16] hover:bg-[#a77b5d] transition duration-300 cursor-pointer">
+          Invitar a partida
+        </span>       
+      </li>
+    }
+  </ul>
+  

@@ -12,12 +12,10 @@ import { environment } from '../../../environments/environment';
   selector: 'app-match-making-chess',
   imports: [NavbarComponent],
   templateUrl: './match-making-chess.component.html',
-  styleUrl: './match-making-chess.component.css'
+  styleUrl: './match-making-chess.component.css',
 })
 export class MatchMakingChessComponent {
-
-  public baseUrl = environment.apiUrl; 
-
+  public baseUrl = environment.apiUrl;
 
   constructor(
     public menuService: MenuService,
@@ -25,35 +23,41 @@ export class MatchMakingChessComponent {
     private webSocketService: WebsocketService,
     private router: Router,
     public matchMakingService: MatchMakingService,
-    public authService: AuthService,
-  ) {}
-
-  
-  openLoadMatchMaking(){
-
-    var loadView = document.getElementById("loadView") as HTMLElement
-    var main = document.getElementById("main") as HTMLElement
-
-
-    loadView.classList.remove("hidden")
-    loadView.classList.add("flex")
-
-    main.classList.remove("flex")
-    main.classList.add("hidden")
-
+    public authService: AuthService
+  ) {
   }
 
-  closeLoadMatchMaking(){
+  openLoadMatchMaking() {
+    var loadView = document.getElementById('loadView') as HTMLElement;
+    var main = document.getElementById('main') as HTMLElement;
 
-    var loadView = document.getElementById("loadView") as HTMLElement
-    var main = document.getElementById("main") as HTMLElement
+    loadView.classList.remove('hidden');
+    loadView.classList.add('flex');
 
-    loadView.classList.remove("flex")
-    loadView.classList.add("hidden")
-
-    main.classList.remove("hidden")
-    main.classList.add("flex")
+    main.classList.remove('flex');
+    main.classList.add('hidden');
   }
 
-  
+  closeLoadMatchMaking() {
+    var loadView = document.getElementById('loadView') as HTMLElement;
+    var main = document.getElementById('main') as HTMLElement;
+
+    loadView.classList.remove('flex');
+    loadView.classList.add('hidden');
+
+    main.classList.remove('hidden');
+    main.classList.add('flex');
+  }
+
+  openFriendView() {
+    var main = document.getElementById('main') as HTMLElement;
+    var friendView = document.getElementById('friendView') as HTMLElement;
+
+    if (this.matchMakingService.opponent) {
+      main.classList.remove('flex');
+      main.classList.add('hidden');
+      friendView.classList.remove('hidden');
+      friendView.classList.add('flex');
+    }
+  }
 }

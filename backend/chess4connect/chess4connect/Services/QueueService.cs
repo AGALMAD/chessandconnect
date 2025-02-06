@@ -25,7 +25,7 @@ namespace chess4connect.Services
 
 
         //Añadir a la cola el jugador
-        public async Task addToQueueAsync(int userId, Game gamemode)
+        public async Task<Room> AddToQueueAsync(int userId, Game gamemode)
         {
 
             //Abrimos el semáforo
@@ -43,7 +43,7 @@ namespace chess4connect.Services
                     //Si hay más de un jugador en la cola entrar en una sala
                     if (_queueChess.Count > 1)
                     {
-                        await addToRoom(gamemode);
+                        return await AddToRoom(gamemode);
                     }
                     break;
 
@@ -54,15 +54,15 @@ namespace chess4connect.Services
                     //Si hay más de un jugador en la cola entrar en una sala
                     if (_queueChess.Count > 1)
                     {
-                        await addToRoom(gamemode);
+                        return await AddToRoom(gamemode);
                     }
                     break;
-
             }
 
 
             // Liberamos el semáforo
             _semaphore.Release();
+            return null;
         }
 
 
@@ -70,7 +70,9 @@ namespace chess4connect.Services
 
         //Añadir a una sala la pareja de jugadores 
 
+
         private async Task addToRoom(Game gamemode, int player1, int player2)
+
         {
             WebSocketHandler p1 = _network.GetSocketByUserId(player1);
             WebSocketHandler p2 = _network.GetSocketByUserId(player2);
@@ -103,6 +105,7 @@ namespace chess4connect.Services
                     //WebSocketHandler chess2 = _queueChess.Dequeue();//Sacar segundo jugador
                    
 
+
                 case Game.Connect4://Conecta 4
                     if (p1 == null)
                     {
@@ -116,6 +119,7 @@ namespace chess4connect.Services
                     {
                         _roomService.addToConnnectRoom(p1, p2);//añadir a sala
                     }
+
                     break;
 
             }
@@ -135,6 +139,7 @@ namespace chess4connect.Services
             {
                 case Game.Chess:
                     _queueChess = new Queue<WebSocketHandler>(_queueChess.Where(s => s != socket));
+
                     break;
 
                 case Game.Connect4:
@@ -144,6 +149,8 @@ namespace chess4connect.Services
 
             // Liberamos el semáforo
             _semaphore.Release();
+
+
         }
     }
 }

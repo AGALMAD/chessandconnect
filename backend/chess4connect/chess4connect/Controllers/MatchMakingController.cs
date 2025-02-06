@@ -31,14 +31,12 @@ namespace chess4connect.Controllers
         }
 
         [HttpPost("queueGame")]
-        public async Task<ActionResult> QueueGame(Game gamemode)
+        public async Task<Room> QueueGame(Game gamemode)
         {
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            await _queueService.addToQueueAsync(userId, gamemode);
-
-            return Ok("Searching for a game to join");
+            return await _queueService.AddToQueueAsync(userId, gamemode);
         }
 
         [HttpPost("newGameInvitation")]

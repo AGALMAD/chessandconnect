@@ -113,7 +113,7 @@ namespace chess4connect.Services
 
         }
 
-        private async Task cancelGame(int userId, Game game)
+        public async Task cancelGame(int userId, Game game)
         {
             WebSocketHandler socket = _network.GetSocketByUserId(userId);
 
@@ -134,7 +134,13 @@ namespace chess4connect.Services
 
             // Liberamos el semáforo
             _semaphore.Release();
+        }
 
+        public async Task goIntoIAGame(int userId, Game gamemode)
+        {
+            WebSocketHandler socket = _network.GetSocketByUserId(userId);
+
+            await _roomService.AddToRoom(gamemode, socket);
 
         }
     }

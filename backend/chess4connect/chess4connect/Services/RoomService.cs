@@ -18,38 +18,9 @@ namespace chess4connect.Services
         }
 
 
-        public async Task AddToRoom(Game gamemode, WebSocketHandler player1, WebSocketHandler player2)
+        public async Task AddToRoom(Game gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
         {
-            switch (gamemode)
-            {
-                case Game.Chess:
-                    Room roomChess = new Room
-                    {
-                        Player1 = player1,
-                        Player2 = player2,
-                        StartDate = DateTime.Now,
-                        Game = Enums.Game.Chess
-                    };
-
-                    rooms.Add(roomChess);
-                    await SendRoomMessage(roomChess, player1, player2);
-                    break;
-
-                case Game.Connect4:
-                    Room roomConnect = new Room
-                    {
-                        Player1 = player1,
-                        Player2 = player2,
-                        StartDate = DateTime.Now,
-                        Game = Enums.Game.Connect4
-                    };
-
-                    rooms.Add(roomConnect);
-                    await SendRoomMessage(roomConnect, player1, player2);
-                    break;
-            }
-
-
+            await SendRoomMessage(CreateRoom(gamemode, player1.Id, player2?.Id), player1, player2);
         }
 
         private async Task SendRoomMessage(Room room, WebSocketHandler player1, WebSocketHandler player2)
@@ -64,6 +35,20 @@ namespace chess4connect.Services
 
             await player1.SendAsync(message);
             await player2.SendAsync(message);
+        }
+
+        private Room CreateRoom(Game gamemode, int player1Id, int? player2Id)
+        {
+            Room room = new Room
+            {
+                Player1Id = player1Id,
+                Player2Id = player2Id,
+                StartDate = DateTime.Now,
+                Game = gamemode
+            };
+            rooms.Add(room);
+
+            return room;
         }
 
 

@@ -43,6 +43,18 @@ namespace chess4connect.Controllers
             return Ok("SI");
         }
 
+        [Authorize]
+        [HttpPost("IAGame")]
+        public async Task<ActionResult> IAGame(Game gamemode)
+        {
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            await _queueService.goIntoIAGame(userId, gamemode);
+
+            return Ok("SI");
+        }
+
         [HttpPost("newGameInvitation")]
         public async Task<ActionResult> GameInvitation([FromBody] GameInvitationModel gameInvitation)
         {
@@ -61,6 +73,7 @@ namespace chess4connect.Controllers
 
 
         }
+
 
         [Authorize]
         [HttpPost("acceptInvitation")]

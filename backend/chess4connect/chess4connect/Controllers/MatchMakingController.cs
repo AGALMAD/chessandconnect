@@ -30,6 +30,8 @@ namespace chess4connect.Controllers
             _queueService = queueService;
         }
 
+
+        [Authorize]
         [HttpPost("queueGame")]
         public async Task<ActionResult> QueueGame(Game gamemode)
         {

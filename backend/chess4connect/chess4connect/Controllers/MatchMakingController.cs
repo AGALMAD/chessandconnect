@@ -30,7 +30,6 @@ namespace chess4connect.Controllers
             _queueService = queueService;
         }
 
-        
         [HttpPost("queueGame")]
         public async Task<Room> QueueGame(Game gamemode)
         {
@@ -39,7 +38,6 @@ namespace chess4connect.Controllers
 
             return await _queueService.AddToQueueAsync(userId, gamemode);
         }
-        
 
         [HttpPost("newGameInvitation")]
         public async Task<ActionResult> GameInvitation([FromBody] GameInvitationModel gameInvitation)
@@ -53,9 +51,9 @@ namespace chess4connect.Controllers
                 return Unauthorized("El usuario no está autenticado.");
             }
 
-            bool result =  await _matchMakingService.GameInvitation(gameInvitation);
+            await _matchMakingService.GameInvitation(gameInvitation);
 
-            return result ? Ok("Invitación enviada correctamente"): NotFound("Error al enviar la invitación");
+            return Ok("Invitación Enviada");
 
 
         }
@@ -70,7 +68,9 @@ namespace chess4connect.Controllers
             {
                 return Unauthorized("El usuario no está autenticado.");
             }
-    
+
+            WebSocketHandler friendSocketHandler = _webSocketNetwork.GetSocketByUserId(userIdInt);
+
             //Envia el mensaje de aceptación al oponente
             await _matchMakingService.GameInvitation(gameInvitation);
 

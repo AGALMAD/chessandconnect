@@ -2,6 +2,7 @@
 using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -20,7 +21,7 @@ namespace chess4connect.Services
         }
 
 
-        public async Task GameInvitation(GameInvitationModel gameInvitation)
+        public async Task<bool> GameInvitation(GameInvitationModel gameInvitation)
         {
             
             var gameInvitationMessage = new SocketMessage<GameInvitationModel>
@@ -42,15 +43,29 @@ namespace chess4connect.Services
             //Si se envia la invitación, el socket a enviar es el del amigo
             if (gameInvitation.State == FriendshipState.Pending) {
                 WebSocketHandler friendHandler = _webSocketNetwork.GetSocketByUserId(gameInvitation.FriendId);
+
+                if (friendHandler == null)
+                    return false;
+
+
                 await friendHandler.SendAsync(stringGamenInvitationMessage);
             }
             //Si se acepta, el socket a enviar es el del host
             else
             {
                 WebSocketHandler friendHandler = _webSocketNetwork.GetSocketByUserId(gameInvitation.HostId);
+
+                if (friendHandler == null)
+                    return false ;
+
+
                 await friendHandler.SendAsync(stringGamenInvitationMessage);
 
+
             }
+
+            return true;
+
 
         }
 

@@ -55,9 +55,9 @@ namespace chess4connect.Controllers
                 return Unauthorized("El usuario no está autenticado.");
             }
 
-            await _matchMakingService.GameInvitation(gameInvitation);
+            bool result =  await _matchMakingService.GameInvitation(gameInvitation);
 
-            return Ok("Invitación Enviada");
+            return result ? Ok("Invitación enviada correctamente"): NotFound("Error al enviar la invitación");
 
 
         }
@@ -72,9 +72,7 @@ namespace chess4connect.Controllers
             {
                 return Unauthorized("El usuario no está autenticado.");
             }
-
-            WebSocketHandler friendSocketHandler = _webSocketNetwork.GetSocketByUserId(userIdInt);
-
+    
             //Envia el mensaje de aceptación al oponente
             await _matchMakingService.GameInvitation(gameInvitation);
 

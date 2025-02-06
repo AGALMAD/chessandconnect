@@ -263,6 +263,11 @@ export class FriendsService {
 
         }
         else {
+
+          const friend = this.connectedFriends.find(friend => friend.id === gameInvitation.FriendId);
+
+          this.matchMakingService.opponent = friend
+
           this.router.navigate(
             ['/chess'],
           );

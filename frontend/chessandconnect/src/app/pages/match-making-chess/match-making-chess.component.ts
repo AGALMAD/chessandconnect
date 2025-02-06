@@ -49,15 +49,6 @@ export class MatchMakingChessComponent {
     main.classList.add('flex');
   }
 
-  openFriendView() {
-    var main = document.getElementById('main') as HTMLElement;
-    var friendView = document.getElementById('friendView') as HTMLElement;
 
-    if (this.matchMakingService.opponent) {
-      main.classList.remove('flex');
-      main.classList.add('hidden');
-      friendView.classList.remove('hidden');
-      friendView.classList.add('flex');
-    }
-  }
+  
 }

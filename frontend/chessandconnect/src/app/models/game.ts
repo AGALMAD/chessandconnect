@@ -1,4 +1,4 @@
-export interface Game {
-    id: number,
-    name: string
+export enum Game {
+    Chess,
+    Connect4
 }

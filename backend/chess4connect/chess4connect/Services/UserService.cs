@@ -77,31 +77,5 @@ public class UserService
 
     }
 
-    public async Task GameInvitation(int userId, int friendId)
-    {
-        WebSocketHandler friendHandler = _webSocketNetwork.GetSocketByUserId(friendId);
-
-        if (friendHandler != null)
-        {
-            var connectionMessage = new SocketMessage<GameInvitationModel>
-            {
-                Type = SocketCommunicationType.GAME_INVITATION,
-
-                Data = new GameInvitationModel
-                {
-                    UserId = userId,
-                    FriendId = friendId,
-                    State = FriendshipState.Pending,
-
-                }
-            };
-
-            string stringGamenInvitationMessage = JsonSerializer.Serialize(connectionMessage);
-
-            await friendHandler.SendAsync(stringGamenInvitationMessage);
-
-
-        }
-
-    }
+   
 }

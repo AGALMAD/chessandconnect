@@ -4,8 +4,8 @@ import { Game } from "./game";
 
 export interface Play {
     id: number,
-    user: User,
-    opponent: User,
+    userId: number,
+    opponentId: number,
     startDate: Date,
     endDate: Date,
     playState: playState,

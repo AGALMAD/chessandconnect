@@ -98,7 +98,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpGet("getallrequests")]
-        public async Task<ActionResult<List<Friendship>>> getAllRequests()
+        public async Task<ActionResult<List<RequestDto>>> getAllRequests()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -107,9 +107,21 @@ namespace chess4connect.Controllers
                 return Unauthorized("El usuario no está autenticado.");
             }
 
-            List<Friendship> requests = await _friendshipService.requestsByUserId(userIdInt);
+            List<Friendship> requests = await _friendshipService.GetAllRequestsByUserId(userIdInt);
+            List<RequestDto> userList = new List<RequestDto>();
+            foreach (var request in requests)
+            {
+                var user = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId);
+                RequestDto userToSend = new RequestDto
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    AvatarImageUrl = user.AvatarImageUrl
+                };
+                userList.Add(userToSend);
+            }
 
-            return Ok(requests);
+            return Ok(userList);
         }
 
         [Authorize]
@@ -125,6 +137,28 @@ namespace chess4connect.Controllers
             List<User> friends = await _friendshipService.acceptFriendship(userIdInt, friendId);
 
             IEnumerable<FriendDto> friendDtos = _friendMapper.ToDto(friends);
+
+            var friendshipSocketMessage = new FriendshipSocketMessage<FriendshipRequestModel>
+            {
+                Data = new FriendshipRequestModel
+                {
+                    State = FriendshipState.Accepted,
+                    UserId = friendId,
+                    FriendId = userIdInt,
+                }
+            };
+
+            string message = JsonSerializer.Serialize(friendshipSocketMessage);
+
+            WebSocketHandler handler = _webSocketNetwork.GetSocketByUserId(friendId);
+
+            if (handler == null)
+            {
+                _webSocketNetwork.StorePendingMessage(friendId, message);
+                return Ok("El usuario no está conectado. Mensaje almacenado en espera.");
+            }
+
+            await handler.SendAsync(message);
 
             return Ok(friendDtos);
 

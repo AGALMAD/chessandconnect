@@ -31,7 +31,8 @@ export class MatchMakingChessComponent {
   ) {
   }
 
-  openLoadMatchMaking() {
+  async openLoadMatchMaking() {
+    //Muestra la vista de carga
     var loadView = document.getElementById('loadView') as HTMLElement;
     var main = document.getElementById('main') as HTMLElement;
 
@@ -40,6 +41,11 @@ export class MatchMakingChessComponent {
 
     main.classList.remove('flex');
     main.classList.add('hidden');
+
+
+    //Añade el jugador a la cola
+    const result = await this.api.post(`Friendship/queueGame`, Game.Chess)
+
   }
 
   closeLoadMatchMaking() {

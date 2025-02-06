@@ -292,8 +292,12 @@ export class FriendsService {
 
         }
         else {
+
+          const friend = this.connectedFriends.find(friend => friend.id === gameInvitation.FriendId);
+          this.matchMakingService.opponent = friend
+          
           this.router.navigate(
-            ['/chess'],
+            gameInvitation.Game == Game.Chess ? ['/chess'] : ['/connect'],
           );
         }
 
@@ -369,13 +373,12 @@ export class FriendsService {
 
   async acceptInvitationByUserId(friendId: number, game: Game) {
     const invitation = this.gameInvitations.find(invitation => invitation.HostId == friendId)
-    if (invitation != null) {
+    const friend = this.connectedFriends.find(friend => friend.id === friendId);
 
-      //Guarda el oponente
-      var friend = this.getConnectedFriendById(friendId)
+    if (invitation && friend) {
+
       this.matchMakingService.opponent = friend
 
-      const user = this.authService.getCurrentUser()
 
       const acceptInvitation: GameInvitationModel = {
         HostId: invitation.HostId,
@@ -388,8 +391,9 @@ export class FriendsService {
 
       try {
         const result = await this.api.post(`MatchMaking/acceptInvitation`, acceptInvitation);
+        this.matchMakingService.isHost = false
         this.router.navigate(
-          ['/chess'],
+          game == Game.Chess ? ['/chess'] : ['/connect'],
         );
       } catch (error) {
         console.error("Error al enviar la invitación", error);

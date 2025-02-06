@@ -93,6 +93,10 @@ public class Program {
         builder.Services.AddScoped<RoomService>();
 
 
+        builder.Services.AddSingleton<QueueService>();
+        builder.Services.AddSingleton<RoomService>();
+
+
         builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
         builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);
 

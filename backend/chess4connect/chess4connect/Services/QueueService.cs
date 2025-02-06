@@ -5,7 +5,6 @@ using chess4connect.Models.SocketComunication.Handlers;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 
-
 namespace chess4connect.Services
 {
     public class QueueService
@@ -76,7 +75,6 @@ namespace chess4connect.Services
             WebSocketHandler p1 = _network.GetSocketByUserId(player1);
             WebSocketHandler p2 = _network.GetSocketByUserId(player2);
 
-
             //Abrimos el semáforo
             await _semaphore.WaitAsync();
 
@@ -85,7 +83,6 @@ namespace chess4connect.Services
             switch (gamemode)
             {
                 case Game.Chess://Ajedrez
-
                     if (p1 == null)
                     {
                         _queueChess = new Queue<WebSocketHandler>(_queueChess.Where(s => s != p1));
@@ -148,6 +145,5 @@ namespace chess4connect.Services
             // Liberamos el semáforo
             _semaphore.Release();
         }
-
     }
 }

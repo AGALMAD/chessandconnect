@@ -7,6 +7,9 @@ import { WebsocketService } from '../../services/websocket.service';
 import { MatchMakingService } from '../../services/match-making.service';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
+import { Game } from '../../models/game';
+import { FriendsListComponent } from '../../components/friends-list/friends-list.component';
+import { FriendsService } from '../../services/friends.service';
 
 @Component({
   selector: 'app-match-making-chess',
@@ -23,7 +26,8 @@ export class MatchMakingChessComponent {
     private webSocketService: WebsocketService,
     private router: Router,
     public matchMakingService: MatchMakingService,
-    public authService: AuthService
+    public authService: AuthService,
+    private friendsService: FriendsService
   ) {
   }
 
@@ -50,5 +54,12 @@ export class MatchMakingChessComponent {
   }
 
 
-  
+
+  friendInvitation(friendId: number){
+    this.friendsService.newGameInvitation(friendId,Game.Chess)
+
+  }
+
+
+
 }

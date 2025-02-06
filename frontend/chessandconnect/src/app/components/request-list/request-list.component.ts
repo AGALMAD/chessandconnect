@@ -27,17 +27,25 @@ export class RequestListComponent implements OnInit{
   constructor(
     private userService: UserService,
     private router: Router,
-    private friendService: FriendsService,
+    public friendService: FriendsService,
     public dialogRef: MatDialogRef<UserListComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
+
   ngOnInit(): void {
     this.getAllRequests()
     
   }
 
+  async acceptRequest(id: number) {
+    this.friendService.acceptFriendshipRequest(id)
+    this.requestList = this.requestList.filter(x => x.userId != id);
+  }
 
-
+  async rejectRequest(id: number) {
+    this.friendService.rejectFriendshipRequest(id)
+    this.requestList = this.requestList.filter(x => x.userId != id);
+  }
 
   async getAllRequests() {
     const result : Result<RequestFriendship[]> = await this.friendService.getAllFriendshipRequest()

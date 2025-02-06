@@ -16,12 +16,13 @@
             class="w-10 h-10 rounded-full object-cover border-2 border-gray-500 shadow-md opacity-100 hover:scale-110"
           >
           <span class="font-semibold ml-2">{{ user.userName }}</span>
+          <span class="font-semibold ml-2">{{ user.userId }}</span>
 
-          <span class="ml-auto mr-2 hover:scale-125">
+          <span (click)="acceptRequest(user.userId)" class="ml-auto mr-2 hover:scale-125">
             <i class="fa-solid fa-circle-check"></i>                
           </span>  
 
-          <span class="ml-auto mr-2 hover:scale-125">
+          <span (click)="rejectRequest(user.userId)" class="ml-auto mr-2 hover:scale-125">
             <i class="fa-solid fa-ban"></i>                
           </span>      
         </li>

@@ -48,7 +48,7 @@ export class MatchMakingChessComponent {
 
   }
 
-  closeLoadMatchMaking() {
+  async closeLoadMatchMaking() {
     var loadView = document.getElementById('loadView') as HTMLElement;
     var main = document.getElementById('main') as HTMLElement;
 
@@ -57,6 +57,9 @@ export class MatchMakingChessComponent {
 
     main.classList.remove('hidden');
     main.classList.add('flex');
+
+    //Elimina el jugador a la cola
+    const result = await this.api.post(`Friendship/cancelQueue`, Game.Chess)
   }
 
 
@@ -65,6 +68,20 @@ export class MatchMakingChessComponent {
     this.friendsService.newGameInvitation(friendId,Game.Chess)
 
   }
+
+
+  startGameWithFriend(){
+
+  }
+
+  startGameWithBot(){
+
+    this.router.navigate(['/chessGame']);
+
+
+  }
+
+
 
 
 

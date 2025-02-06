@@ -7,6 +7,8 @@ import { UserProfileComponent } from './pages/user-profile/user-profile.componen
 import { MenusComponent } from './pages/menus/menus.component';
 import { MatchMakingChessComponent } from './pages/match-making-chess/match-making-chess.component';
 import { MatchMakingConnect4Component } from './pages/match-making-connect4/match-making-connect4.component';
+import { ChessComponent } from './pages/chess/chess.component';
+import { Connect4Component } from './pages/connect4/connect4.component';
 
 export const routes: Routes = [
     {path: "", component: HomeComponent},
@@ -16,4 +18,8 @@ export const routes: Routes = [
     {path: "profile", component: UserProfileComponent,canActivate: [redirectionGuard]},
     {path: "chess", component: MatchMakingChessComponent, canActivate: [redirectionGuard]},
     {path: "connect", component: MatchMakingConnect4Component, canActivate: [redirectionGuard]},
+
+    {path: "chessGame", component: ChessComponent, canActivate: [redirectionGuard]},
+    {path: "connectGame", component: Connect4Component, canActivate: [redirectionGuard]},
+
 ];

@@ -30,16 +30,18 @@ namespace chess4connect.Controllers
             _queueService = queueService;
         }
 
+
         [Authorize]
         [HttpPost("queueGame")]
-        public async Task<Room> QueueGame(Game gamemode)
+        public async Task<ActionResult> QueueGame(Game gamemode)
         {
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            return await _queueService.AddToQueueAsync(userId, gamemode);
+            await _queueService.AddToQueueAsync(userId, gamemode);
+
+            return Ok("SI");
         }
-        
 
         [HttpPost("newGameInvitation")]
         public async Task<ActionResult> GameInvitation([FromBody] GameInvitationModel gameInvitation)
@@ -53,9 +55,9 @@ namespace chess4connect.Controllers
                 return Unauthorized("El usuario no está autenticado.");
             }
 
-            bool result =  await _matchMakingService.GameInvitation(gameInvitation);
+            await _matchMakingService.GameInvitation(gameInvitation);
 
-            return result ? Ok("Invitación enviada correctamente"): NotFound("Error al enviar la invitación");
+            return Ok("Invitación Enviada");
 
 
         }
@@ -70,7 +72,9 @@ namespace chess4connect.Controllers
             {
                 return Unauthorized("El usuario no está autenticado.");
             }
-    
+
+            WebSocketHandler friendSocketHandler = _webSocketNetwork.GetSocketByUserId(userIdInt);
+
             //Envia el mensaje de aceptación al oponente
             await _matchMakingService.GameInvitation(gameInvitation);
 
@@ -120,7 +124,22 @@ namespace chess4connect.Controllers
 
         }
 
+        [Authorize]
+        [HttpPost("cancelQueue")]
+        public async Task<ActionResult> CancelQueue([FromBody] Game game)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
+            if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out var userIdInt))
+            {
+                return Unauthorized("El usuario no está autenticado.");
+            }
 
+            await _queueService.cancelGame(userIdInt, game);
+
+            return Ok("Eliminado de la cola");
+        }
+
+ 
     }
 }

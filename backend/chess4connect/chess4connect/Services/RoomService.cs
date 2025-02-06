@@ -1,5 +1,8 @@
-﻿using chess4connect.Models.Database.Entities;
+﻿using chess4connect.Enums;
+using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers;
+using chess4connect.Models.SocketComunication.MessageTypes;
+using System.Text.Json;
 
 namespace chess4connect.Services
 {
@@ -14,35 +17,55 @@ namespace chess4connect.Services
             _network = webSocketNetwork;
         }
 
-        public Room addToChessRoom(WebSocketHandler player1, WebSocketHandler player2)
+
+        public async Task AddToRoom(Game gamemode, WebSocketHandler player1, WebSocketHandler player2)
         {
-            Room room = new Room
+            switch (gamemode)
             {
-                Player1 = player1,
-                Player2 = player2,
-                StartDate = DateTime.Now,
-                Game = Enums.Game.Chess
-            };
+                case Game.Chess:
+                    Room roomChess = new Room
+                    {
+                        Player1 = player1,
+                        Player2 = player2,
+                        StartDate = DateTime.Now,
+                        Game = Enums.Game.Chess
+                    };
 
-            rooms.Add(room);
+                    rooms.Add(roomChess);
+                    await SendRoomMessage(roomChess, player1, player2);
+                    break;
 
-            return room;
+                case Game.Connect4:
+                    Room roomConnect = new Room
+                    {
+                        Player1 = player1,
+                        Player2 = player2,
+                        StartDate = DateTime.Now,
+                        Game = Enums.Game.Connect4
+                    };
+
+                    rooms.Add(roomConnect);
+                    await SendRoomMessage(roomConnect, player1, player2);
+                    break;
+            }
+
+
         }
 
-        public Room addToConnnectRoom(WebSocketHandler player1, WebSocketHandler player2)
+        private async Task SendRoomMessage(Room room, WebSocketHandler player1, WebSocketHandler player2)
         {
-            Room room = new Room
+            var roomSocketMessage = new SocketMessage<Room>
             {
-                Player1 = player1,
-                Player2 = player2,
-                StartDate = DateTime.Now,
-                Game = Enums.Game.Connect4
+                Type = Enums.SocketCommunicationType.GAME_START,
+                Data = room
             };
 
-            rooms.Add(room);
+            string message = JsonSerializer.Serialize(roomSocketMessage);
 
-            return room;
+            await player1.SendAsync(message);
+            await player2.SendAsync(message);
         }
+
 
         
 

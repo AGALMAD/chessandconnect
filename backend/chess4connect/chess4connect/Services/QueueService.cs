@@ -2,6 +2,8 @@
 using chess4connect.Models.Database.DTOs;
 using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers;
+using System.Net.Sockets;
+using System.Net.WebSockets;
 
 namespace chess4connect.Services
 {
@@ -12,8 +14,8 @@ namespace chess4connect.Services
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
         private readonly RoomService _roomService;
 
-        private Queue<WebSocketHandler> _queueChess = new Queue<WebSocketHandler> { };
-        private Queue<WebSocketHandler> _queueConnect = new Queue<WebSocketHandler> { };
+        private List<WebSocketHandler> _queueChess = new List<WebSocketHandler> { };
+        private List<WebSocketHandler> _queueConnect = new List<WebSocketHandler> { };
 
         public QueueService(WebSocketNetwork webSocketNetwork, RoomService roomService) 
         {
@@ -23,7 +25,7 @@ namespace chess4connect.Services
 
 
         //Añadir a la cola el jugador
-        public async Task<Room> AddToQueueAsync(int userId, Game gamemode)
+        public async Task AddToQueueAsync(int userId, Game gamemode)
         {
 
             //Abrimos el semáforo
@@ -36,23 +38,23 @@ namespace chess4connect.Services
             {
                 case Game.Chess://Ajedrez
 
-                    _queueChess.Enqueue(_network.GetSocketByUserId(userId));//añadir a la cola
+                    _queueChess.Add(_network.GetSocketByUserId(userId));//añadir a la cola
 
                     //Si hay más de un jugador en la cola entrar en una sala
                     if (_queueChess.Count > 1)
                     {
-                        return await AddToRoom(gamemode);
+                        await AddToRoom(gamemode);
                     }
                     break;
 
                 case Game.Connect4://Conecta 4
 
-                    _queueConnect.Enqueue(_network.GetSocketByUserId(userId));//añadir a la cola
+                    _queueConnect.Add(_network.GetSocketByUserId(userId));//añadir a la cola
 
                     //Si hay más de un jugador en la cola entrar en una sala
                     if (_queueChess.Count > 1)
                     {
-                        return await AddToRoom(gamemode);
+                        await AddToRoom(gamemode);
                     }
                     break;
             }
@@ -60,7 +62,6 @@ namespace chess4connect.Services
 
             // Liberamos el semáforo
             _semaphore.Release();
-            return null;
         }
 
 
@@ -68,8 +69,11 @@ namespace chess4connect.Services
 
         //Añadir a una sala la pareja de jugadores 
 
-        private async Task<Room> AddToRoom(Game gamemode)
+
+        private async Task AddToRoom(Game gamemode)
+
         {
+
             //Abrimos el semáforo
             await _semaphore.WaitAsync();
 
@@ -78,27 +82,60 @@ namespace chess4connect.Services
             switch (gamemode)
             {
                 case Game.Chess://Ajedrez
-                    WebSocketHandler chess1 = _queueChess.Dequeue();//Sacar primer jugador
-                    WebSocketHandler chess2 = _queueChess.Dequeue();//Sacar segundo jugador
 
+                    WebSocketHandler chess1 = _queueChess[0];//Encuentra primer jugador
 
-                    return _roomService.addToChessRoom(chess1, chess2);//añadir a sala
+                    WebSocketHandler chess2 = _queueChess[1];//Encuentra segundo jugador
+
+                    _queueChess.RemoveRange(0,2);//Sacar dos primeros jugadores
+
+                    await _roomService.AddToRoom(gamemode, chess1, chess2);
+
                     break;
+                   
+
 
                 case Game.Connect4://Conecta 4
-                    WebSocketHandler connect1 = _queueConnect.Dequeue();//Sacar primer jugador
-                    WebSocketHandler connect2 = _queueConnect.Dequeue();//Sacar segundo jugador
+                    WebSocketHandler connect1 = _queueConnect[0];//Encuentra primer jugador
 
+                    WebSocketHandler connect2 = _queueConnect[1];//Encuentra segundo jugador
 
-                     return _roomService.addToConnnectRoom(connect1, connect2);//añadir a sala
+                    _queueConnect.RemoveRange(0, 2);//Sacar dos primeros jugadores
+
+                    await _roomService.AddToRoom(gamemode, connect1, connect2);
+
                     break;
 
             }
             // Liberamos el semáforo
             _semaphore.Release();
 
-            return null;
+
         }
 
+        private async Task cancelGame(int userId, Game game)
+        {
+            WebSocketHandler socket = _network.GetSocketByUserId(userId);
+
+            //Abrimos el semáforo
+            await _semaphore.WaitAsync();
+
+            switch (game)
+            {
+                case Game.Chess:
+                    _queueChess.Remove(socket);
+
+                    break;
+
+                case Game.Connect4:
+                    _queueConnect.Remove(socket);
+                    break;
+            }
+
+            // Liberamos el semáforo
+            _semaphore.Release();
+
+
+        }
     }
 }

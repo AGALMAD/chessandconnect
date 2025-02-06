@@ -1,14 +1,5 @@
 import { Component } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
-import { environment } from '../../../environments/environment';
-import { MenuService } from '../../services/menu.service';
-import { ApiService } from '../../services/api.service';
-import { WebsocketService } from '../../services/websocket.service';
-import { Router } from '@angular/router';
-import { MatchMakingService } from '../../services/match-making.service';
-import { AuthService } from '../../services/auth.service';
-import { FriendsService } from '../../services/friends.service';
-import { Game } from '../../models/game';
 
 @Component({
   selector: 'app-match-making-connect4',
@@ -80,6 +71,5 @@ export class MatchMakingConnect4Component {
 
 
   }
-
 
 }

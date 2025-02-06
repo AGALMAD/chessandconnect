@@ -19,18 +19,18 @@ namespace chess4connect.Controllers
         private WebSocketNetwork _webSocketNetwork;
         private UserService _userService;
         private MatchMakingService _matchMakingService;
-        //private QueueService _queueService;
+        private QueueService _queueService;
 
         public MatchMakingController(WebSocketNetwork webSocketNetwork,UserService userService, 
-            MatchMakingService matchMakingService)
+            MatchMakingService matchMakingService, QueueService queueService)
         {
             _webSocketNetwork = webSocketNetwork;
             _userService = userService;
             _matchMakingService = matchMakingService;
-            //_queueService = queueService;
+            _queueService = queueService;
         }
 
-        /*
+        
         [HttpPost("queueGame")]
         public async Task<ActionResult> QueueGame(Game gamemode)
         {
@@ -41,7 +41,7 @@ namespace chess4connect.Controllers
 
             return Ok("Searching for a game to join");
         }
-        */
+        
 
         [HttpPost("newGameInvitation")]
         public async Task<ActionResult> GameInvitation([FromBody] GameInvitationModel gameInvitation)

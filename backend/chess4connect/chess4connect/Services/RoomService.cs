@@ -52,6 +52,38 @@ namespace chess4connect.Services
 
         }
 
+        public async Task AddToRoomWithIa(Game game, WebSocketHandler socket)
+        {
+
+            switch (game)
+            {
+                case Game.Chess:
+                    Room chessRoom = new Room
+                    {
+                        Player1Id = socket.Id,
+                        Player2Id = null,
+                        StartDate = DateTime.Now,
+                        Game = Enums.Game.Chess
+                    };
+                    rooms.Add(chessRoom);
+                    await SendRoomMessage(chessRoom, socket, null);
+                    break;
+
+                case Game.Connect4:
+                    Room connectRoom = new Room
+                    {
+                        Player1Id = socket.Id,
+                        Player2Id = null,
+                        StartDate = DateTime.Now,
+                        Game = Enums.Game.Connect4
+                    };
+                    rooms.Add(connectRoom);
+                    await SendRoomMessage(connectRoom, socket, null);
+                    break;
+            }
+
+        }
+
         private async Task SendRoomMessage(Room room, WebSocketHandler player1, WebSocketHandler player2)
         {
             var roomSocketMessage = new SocketMessage<Room>

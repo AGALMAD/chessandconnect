@@ -1,5 +1,7 @@
 ﻿using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers;
+using chess4connect.Models.SocketComunication.MessageTypes;
+using System.Text.Json;
 
 namespace chess4connect.Services
 {
@@ -14,7 +16,7 @@ namespace chess4connect.Services
             _network = webSocketNetwork;
         }
 
-        public Room addToChessRoom(WebSocketHandler player1, WebSocketHandler player2)
+        public Room AddToChessRoom(WebSocketHandler player1, WebSocketHandler player2)
         {
             Room room = new Room
             {
@@ -29,7 +31,7 @@ namespace chess4connect.Services
             return room;
         }
 
-        public Room addToConnnectRoom(WebSocketHandler player1, WebSocketHandler player2)
+        public async Task<Room> AddToConnnectRoomAsync(WebSocketHandler player1, WebSocketHandler player2)
         {
             Room room = new Room
             {
@@ -41,8 +43,22 @@ namespace chess4connect.Services
 
             rooms.Add(room);
 
+
+            var roomSocketMessage = new SocketMessage<Room>
+            {
+                Type = Enums.SocketCommunicationType.GAME_START,
+                Data = room
+            };
+
+            string message = JsonSerializer.Serialize(roomSocketMessage);
+
+            await player1.SendAsync(message);
+            await player2.SendAsync(message);
+
             return room;
         }
+
+
 
         
 

@@ -7,4 +7,5 @@ public enum SocketCommunicationType
     CONNECTION = 3,
     FRIEND = 4,
     GAME_INVITATION = 5,
+    GAME_START = 6
 }

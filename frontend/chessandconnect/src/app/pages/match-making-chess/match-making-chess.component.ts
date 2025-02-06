@@ -11,6 +11,7 @@ import { Game } from '../../models/game';
 import { FriendsListComponent } from '../../components/friends-list/friends-list.component';
 import { FriendsService } from '../../services/friends.service';
 
+
 @Component({
   selector: 'app-match-making-chess',
   imports: [NavbarComponent],
@@ -18,7 +19,9 @@ import { FriendsService } from '../../services/friends.service';
   styleUrl: './match-making-chess.component.css',
 })
 export class MatchMakingChessComponent {
+
   public baseUrl = environment.apiUrl;
+
 
   constructor(
     public menuService: MenuService,
@@ -28,6 +31,7 @@ export class MatchMakingChessComponent {
     public matchMakingService: MatchMakingService,
     public authService: AuthService,
     private friendsService: FriendsService
+
   ) {
   }
 

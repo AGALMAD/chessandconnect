@@ -1,6 +1,7 @@
 <!-- Barra de navegación -->
 <app-navbar></app-navbar>
 
+
 <!--Si no tiene amigo en la sala muestra la vista principal-->
 @if (!matchMakingService.opponent) {
   <div id="main" class="min-h-screen bg-brown-100 flex items-center justify-center py-16 px-6 md:py-24 md:px-10">
@@ -52,11 +53,13 @@
                 Desafiar IA
               </button>
             </div>
+
           </div>
         </div>
       </div>
     </div>
   </div>
+
 
 
 }
@@ -127,3 +130,4 @@
   </button>
 
 </section>
+

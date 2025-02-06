@@ -89,7 +89,7 @@ namespace chess4connect.Services
 
                     _queueChess.RemoveRange(0,2);//Sacar dos primeros jugadores
 
-                    _roomService.AddToChessRoom(chess1, chess2);
+                    await _roomService.AddToRoom(gamemode, chess1, chess2);
 
                     break;
                    
@@ -102,7 +102,7 @@ namespace chess4connect.Services
 
                     _queueConnect.RemoveRange(0, 2);//Sacar dos primeros jugadores
 
-                    _roomService.AddToConnnectRoomAsync(connect1, connect2);
+                    await _roomService.AddToRoom(gamemode, connect1, connect2);
 
                     break;
 

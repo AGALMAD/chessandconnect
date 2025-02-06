@@ -23,7 +23,7 @@ namespace chess4connect.Services
 
 
         //Añadir a la cola el jugador
-        public async Task addToQueueAsync(int userId, Game gamemode)
+        public async Task<Room> AddToQueueAsync(int userId, Game gamemode)
         {
 
             //Abrimos el semáforo
@@ -41,7 +41,7 @@ namespace chess4connect.Services
                     //Si hay más de un jugador en la cola entrar en una sala
                     if (_queueChess.Count > 1)
                     {
-                        await addToRoom(gamemode);
+                        return await AddToRoom(gamemode);
                     }
                     break;
 
@@ -52,15 +52,15 @@ namespace chess4connect.Services
                     //Si hay más de un jugador en la cola entrar en una sala
                     if (_queueChess.Count > 1)
                     {
-                        await addToRoom(gamemode);
+                        return await AddToRoom(gamemode);
                     }
                     break;
-
             }
 
 
             // Liberamos el semáforo
             _semaphore.Release();
+            return null;
         }
 
 
@@ -68,7 +68,7 @@ namespace chess4connect.Services
 
         //Añadir a una sala la pareja de jugadores 
 
-        private async Task addToRoom(Game gamemode)
+        private async Task<Room> AddToRoom(Game gamemode)
         {
             //Abrimos el semáforo
             await _semaphore.WaitAsync();
@@ -82,7 +82,7 @@ namespace chess4connect.Services
                     WebSocketHandler chess2 = _queueChess.Dequeue();//Sacar segundo jugador
 
 
-                    _roomService.addToChessRoom(chess1, chess2);//añadir a sala
+                    return _roomService.addToChessRoom(chess1, chess2);//añadir a sala
                     break;
 
                 case Game.Connect4://Conecta 4
@@ -90,13 +90,14 @@ namespace chess4connect.Services
                     WebSocketHandler connect2 = _queueConnect.Dequeue();//Sacar segundo jugador
 
 
-                    _roomService.addToConnnectRoom(connect1, connect2);//añadir a sala
+                     return _roomService.addToConnnectRoom(connect1, connect2);//añadir a sala
                     break;
 
             }
             // Liberamos el semáforo
             _semaphore.Release();
 
+            return null;
         }
 
     }

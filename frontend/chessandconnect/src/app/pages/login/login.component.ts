@@ -74,9 +74,7 @@ export class LoginComponent {
         timer: 1100
       });
 
-      await this.router.navigateByUrl(this.redirectTo)
-      location.reload()
-      
+      await this.router.navigateByUrl(this.redirectTo)      
     }
   
   }

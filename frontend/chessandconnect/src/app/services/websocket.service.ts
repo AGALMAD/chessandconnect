@@ -50,7 +50,6 @@ export class WebsocketService {
 
       console.log("conectado")
 
-
       this.rxjsSocket = webSocket({
         url: environment.socketUrl + "/?jwt=" + this.api.jwt,
 

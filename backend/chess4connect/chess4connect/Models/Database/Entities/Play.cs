@@ -12,5 +12,4 @@ public class Play
     public GameResult PlayState { get; set; }
     public Game Game { get; set; }
     public List<PlayDetail> PlayDetails { get; set; }
-
 }

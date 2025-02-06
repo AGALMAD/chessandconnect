@@ -1,4 +1,5 @@
-﻿using chess4connect.Models.Database.DTOs;
+﻿using chess4connect.Enums;
+using chess4connect.Models.Database.DTOs;
 using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
@@ -6,6 +7,7 @@ using chess4connect.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.WebSockets;
 using System.Security.Claims;
 
 namespace chess4connect.Controllers
@@ -17,13 +19,26 @@ namespace chess4connect.Controllers
         private WebSocketNetwork _webSocketNetwork;
         private UserService _userService;
         private MatchMakingService _matchMakingService;
+        private QueueService _queueService;
 
         public MatchMakingController(WebSocketNetwork webSocketNetwork,UserService userService, 
-            MatchMakingService matchMakingService)
+            MatchMakingService matchMakingService, QueueService queueService)
         {
             _webSocketNetwork = webSocketNetwork;
             _userService = userService;
             _matchMakingService = matchMakingService;
+            _queueService = queueService;
+        }
+
+        [HttpPost("queueGame")]
+        public async Task<ActionResult> QueueGame(Game gamemode)
+        {
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            await _queueService.addToQueueAsync(userId, gamemode);
+
+            return Ok("Searching for a game to join");
         }
 
         [HttpPost("newGameInvitation")]

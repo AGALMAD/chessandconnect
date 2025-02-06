@@ -120,7 +120,22 @@ namespace chess4connect.Controllers
 
         }
 
+        [Authorize]
+        [HttpPost("cancelQueue")]
+        public async Task<ActionResult> CancelQueue([FromBody] Game game)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
+            if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out var userIdInt))
+            {
+                return Unauthorized("El usuario no está autenticado.");
+            }
 
+            await _queueService.cancelGame(userIdInt, game);
+
+            return Ok("Eliminado de la cola");
+        }
+
+ 
     }
 }

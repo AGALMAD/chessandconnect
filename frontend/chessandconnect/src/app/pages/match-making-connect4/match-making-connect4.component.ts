@@ -1,5 +1,14 @@
 import { Component } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { Game } from '../../models/game';
+import { MenuService } from '../../services/menu.service';
+import { WebsocketService } from '../../services/websocket.service';
+import { ApiService } from '../../services/api.service';
+import { MatchMakingService } from '../../services/match-making.service';
+import { AuthService } from '../../services/auth.service';
+import { FriendsService } from '../../services/friends.service';
+import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-match-making-connect4',

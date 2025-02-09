@@ -33,7 +33,6 @@ namespace chess4connect.Services
 
             // Sección crítica
 
-
             switch (gamemode)
             {
                 case Game.Chess://Ajedrez
@@ -45,6 +44,8 @@ namespace chess4connect.Services
                     {
                         await AddToRoom(gamemode);
                     }
+
+
                     break;
 
                 case Game.Connect4://Conecta 4
@@ -59,7 +60,6 @@ namespace chess4connect.Services
                     break;
             }
 
-
             // Liberamos el semáforo
             _semaphore.Release();
         }
@@ -73,11 +73,6 @@ namespace chess4connect.Services
         private async Task AddToRoom(Game gamemode)
 
         {
-
-            //Abrimos el semáforo
-            await _semaphore.WaitAsync();
-
-            // Sección crítica
 
             switch (gamemode)
             {
@@ -107,8 +102,6 @@ namespace chess4connect.Services
                     break;
 
             }
-            // Liberamos el semáforo
-            _semaphore.Release();
 
 
         }

@@ -27,7 +27,6 @@ export class MatchMakingService {
     private api: ApiService,
     private router: Router,
     public webSocketService: WebsocketService,
-    public matchMakingService: MatchMakingService,
     public authService: AuthService,
     private playService: PlayService
   ) {
@@ -59,10 +58,15 @@ export class MatchMakingService {
 
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
+
+
     switch (message.Type) {
       case SocketCommunicationType.GAME_START:
 
         const newRoom = message.Data as Room;
+
+        console.log("ROOM", newRoom)
+
         const opponentId = newRoom.Player1Id != this.authService.currentUser.id ? newRoom.Player1Id : newRoom.Player2Id
 
         const result = await this.api.get<User>(`User/getUserById?id=${opponentId}`)
@@ -70,7 +74,7 @@ export class MatchMakingService {
         this.playService.opponent = result.data
 
         this.router.navigate(
-          newRoom.Game == Game.Chess ? ['/chess'] : ['/connect'],
+          newRoom.Game == Game.Chess ? ['/chessGame'] : ['/connectGame'],
         );
         break
 

@@ -98,44 +98,6 @@ namespace chess4connect.Controllers
 
 
 
-        [Authorize]
-        [HttpPost("start")]
-        public async Task<ActionResult> StartPlay([FromQuery] int opponentId)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out var userIdInt))
-            {
-                return Unauthorized("El usuario no está autenticado.");
-            }
-
-            //Notifica al oponente del inicio de partida
-
-
-            return Ok("Partida creada");
-
-        }
-
-
-        [Authorize]
-        [HttpPost("end")]
-        public async Task<ActionResult> EndPlay([FromBody] GameRequest request)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out var userIdInt))
-            {
-                return Unauthorized("El usuario no está autenticado.");
-            }
-
-            //Guarda la partida en la base de datos y notifica al oponente
-
-
-
-
-            return Ok("Partida creada");
-
-        }
 
         [Authorize]
         [HttpPost("cancelQueue")]

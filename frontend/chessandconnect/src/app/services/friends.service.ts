@@ -173,7 +173,7 @@ export class FriendsService {
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
     switch (message.Type) {
-      case SocketCommunicationType.REQUEST:
+      case SocketCommunicationType.FRIEND:
 
         console.log('Solicitud de amistad recibida:', message.Data);
 

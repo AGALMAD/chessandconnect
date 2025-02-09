@@ -24,7 +24,7 @@ export class FriendsListComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     console.log("obtener amigos")
-    if(!this.searchQuery){
+    if (!this.searchQuery) {
       this.searchQuery = ""
     }
     await this.friendService.getFriends(this.searchQuery)
@@ -55,16 +55,16 @@ export class FriendsListComponent implements OnInit {
       console.log("Eliminación cancelada")
     }
   }
-  
-      async onSearch(){
-      clearTimeout(this.searchTimeout);
-      this.searchTimeout = setTimeout(async () => {
-          await this.friendService.getFriends(this.searchQuery);
-      }, 500);
-    }
+
+  async onSearch() {
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(async () => {
+      await this.friendService.getFriends(this.searchQuery);
+    }, 500);
+  }
 
 
-  async newGameInvitation(friendId: number){
+  async newGameInvitation(friendId: number) {
     await this.friendService.newGameInvitation(friendId, Game.Chess)
   }
 

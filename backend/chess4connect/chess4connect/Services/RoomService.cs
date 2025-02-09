@@ -18,12 +18,22 @@ namespace chess4connect.Services
         }
 
 
-        public async Task AddToRoom(Game gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
+        public async Task CreateRoomAsync(Game gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
         {
-            await SendRoomMessage(CreateRoom(gamemode, player1.Id, player2?.Id), player1, player2);
+            Room room = new Room
+            {
+                Player1Id = player1.Id,
+                Player2Id = player2?.Id,
+                StartDate = DateTime.Now,
+                Game = gamemode
+            };
+
+            rooms.Add(room);
+
+            await SendRoomMessageAsync(room, player1, player2);
         }
 
-        private async Task SendRoomMessage(Room room, WebSocketHandler player1, WebSocketHandler player2)
+        private async Task SendRoomMessageAsync(Room room, WebSocketHandler player1, WebSocketHandler player2)
         {
             var roomSocketMessage = new SocketMessage<Room>
             {
@@ -36,22 +46,6 @@ namespace chess4connect.Services
             await player1.SendAsync(message);
             await player2.SendAsync(message);
         }
-
-        private Room CreateRoom(Game gamemode, int player1Id, int? player2Id)
-        {
-            Room room = new Room
-            {
-                Player1Id = player1Id,
-                Player2Id = player2Id,
-                StartDate = DateTime.Now,
-                Game = gamemode
-            };
-            rooms.Add(room);
-
-            return room;
-        }
-
-
         
 
     }

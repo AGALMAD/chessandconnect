@@ -26,11 +26,12 @@ export class MenusComponent {
     private router: Router,
     private authService: AuthService
 
-  ) {}
-
+  ) {
+    
+  }
   async ngOnInit(): Promise<void> {
     await this.webSocketService.connectRxjs()
-    await this.authService.getCurrentUser();
+    this.authService.getCurrentUser();
 
   }
 }

@@ -9,6 +9,8 @@ import { AuthService } from './auth.service';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { Room } from '../models/room';
+import { PlayService } from './play.service';
+import { Game } from '../models/game';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +28,9 @@ export class MatchMakingService {
     private router: Router,
     public webSocketService: WebsocketService,
     public matchMakingService: MatchMakingService,
-    public authService: AuthService) {
+    public authService: AuthService,
+    private playService: PlayService
+  ) {
 
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
@@ -59,11 +63,15 @@ export class MatchMakingService {
       case SocketCommunicationType.GAME_START:
 
         const newRoom = message.Data as Room;
-
         const opponentId = newRoom.Player1Id != this.authService.currentUser.id ? newRoom.Player1Id : newRoom.Player2Id
 
+        const result = await this.api.get<User>(`User/getUserById?id=${opponentId}`)
 
+        this.playService.opponent = result.data
 
+        this.router.navigate(
+          newRoom.Game == Game.Chess ? ['/chess'] : ['/connect'],
+        );
         break
 
     }

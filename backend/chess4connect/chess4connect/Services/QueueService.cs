@@ -33,7 +33,6 @@ namespace chess4connect.Services
 
             // Sección crítica
 
-
             switch (gamemode)
             {
                 case Game.Chess://Ajedrez
@@ -45,6 +44,8 @@ namespace chess4connect.Services
                     {
                         await AddToRoom(gamemode);
                     }
+
+
                     break;
 
                 case Game.Connect4://Conecta 4
@@ -58,7 +59,6 @@ namespace chess4connect.Services
                     }
                     break;
             }
-
 
             // Liberamos el semáforo
             _semaphore.Release();
@@ -74,11 +74,6 @@ namespace chess4connect.Services
 
         {
 
-            //Abrimos el semáforo
-            await _semaphore.WaitAsync();
-
-            // Sección crítica
-
             switch (gamemode)
             {
                 case Game.Chess://Ajedrez
@@ -89,7 +84,7 @@ namespace chess4connect.Services
 
                     _queueChess.RemoveRange(0,2);//Sacar dos primeros jugadores
 
-                    await _roomService.AddToRoom(gamemode, chess1, chess2);
+                    await _roomService.CreateRoomAsync(gamemode, chess1, chess2);
 
                     break;
                    
@@ -102,18 +97,16 @@ namespace chess4connect.Services
 
                     _queueConnect.RemoveRange(0, 2);//Sacar dos primeros jugadores
 
-                    await _roomService.AddToRoom(gamemode, connect1, connect2);
+                    await _roomService.CreateRoomAsync(gamemode, connect1, connect2);
 
                     break;
 
             }
-            // Liberamos el semáforo
-            _semaphore.Release();
 
 
         }
 
-        private async Task cancelGame(int userId, Game game)
+        public async Task cancelGame(int userId, Game game)
         {
             WebSocketHandler socket = _network.GetSocketByUserId(userId);
 
@@ -134,7 +127,13 @@ namespace chess4connect.Services
 
             // Liberamos el semáforo
             _semaphore.Release();
+        }
 
+        public async Task goIntoIAGame(int userId, Game gamemode)
+        {
+            WebSocketHandler socket = _network.GetSocketByUserId(userId);
+
+            await _roomService.CreateRoomAsync(gamemode, socket);
 
         }
     }

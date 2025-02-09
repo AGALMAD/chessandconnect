@@ -47,7 +47,29 @@ namespace chess4connect.Controllers
             return _userMapper.ToDto(user);
 
         }
-        
+
+
+        [Authorize]
+        [HttpGet("getUserById")]
+        public async Task<UserAfterLoginDto> GetUserById([FromQuery] int id)
+        {
+            //Si no es una usuario autenticado termina la ejecución
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId) || !long.TryParse(userId, out var userIdLong))
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return null;
+            }
+
+            User user = await _userService.GetUserById(id);
+
+            return _userMapper.ToDto(user);
+
+        }
+
+
+
         [HttpGet("searchUser")]
         public List<UserAfterLoginDto> getAllUsers([FromQuery] string query)
         {

@@ -7,6 +7,8 @@ import { WebsocketService } from '../../services/websocket.service';
 import { MatchMakingService } from '../../services/match-making.service';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
+import { Game } from '../../models/game';
+import { FriendsService } from '../../services/friends.service';
 
 @Component({
   selector: 'app-match-making-chess',
@@ -26,6 +28,7 @@ export class MatchMakingChessComponent {
     private router: Router,
     public matchMakingService: MatchMakingService,
     public authService: AuthService,
+    public friendsService : FriendsService
   ) {
     
   }
@@ -44,7 +47,7 @@ export class MatchMakingChessComponent {
 
 
     //Añade el jugador a la cola
-    const result = await this.api.post(`Friendship/queueGame`, Game.Chess)
+    const result = await this.api.post(`MatchMaking/queueGame`, Game.Chess)
 
   }
 
@@ -59,7 +62,7 @@ export class MatchMakingChessComponent {
     main.classList.add('flex');
 
     //Elimina el jugador a la cola
-    const result = await this.api.post(`Friendship/cancelQueue`, Game.Chess)
+    const result = await this.api.post(`MatchMaking/cancelQueue`, Game.Chess)
   }
 
 

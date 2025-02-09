@@ -62,6 +62,8 @@ export class MatchMakingService {
 
         const opponentId = newRoom.Player1Id != this.authService.currentUser.id ? newRoom.Player1Id : newRoom.Player2Id
 
+        const result = await this.api.get<User>(`User?id=${opponentId}`)
+
 
 
         break

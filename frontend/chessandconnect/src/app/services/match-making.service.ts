@@ -59,18 +59,13 @@ export class MatchMakingService {
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
 
-
     switch (message.Type) {
       case SocketCommunicationType.GAME_START:
 
         const newRoom = message.Data as Room;
-
-        console.log("ROOM", newRoom)
-
         const opponentId = newRoom.Player1Id != this.authService.currentUser.id ? newRoom.Player1Id : newRoom.Player2Id
 
         const result = await this.api.get<User>(`User/getUserById?id=${opponentId}`)
-
         this.playService.opponent = result.data
 
         this.router.navigate(

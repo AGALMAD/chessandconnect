@@ -33,7 +33,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPost("queueGame")]
-        public async Task<ActionResult> QueueGame(Game gamemode)
+        public async Task<ActionResult> QueueGame([FromBody] Game gamemode)
         {
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -65,12 +65,27 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPost("IAGame")]
-        public async Task<ActionResult> IAGame(Game gamemode)
+        public async Task<ActionResult> IAGame([FromBody] Game gamemode)
         {
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             await _queueService.goIntoIAGame(userId, gamemode);
+
+            return Ok("SI");
+        }
+
+        [Authorize]
+        [HttpPost("FriendGame")]
+        public async Task<ActionResult> FriendGame([FromBody] Room room)
+        {
+
+            var gamemode = room.Game;
+            var friendId = room.Player2Id;
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            await _queueService.goIntoFriendGame(userId, (int)friendId, gamemode);
 
             return Ok("SI");
         }

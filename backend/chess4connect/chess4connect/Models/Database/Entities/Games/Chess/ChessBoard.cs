@@ -6,14 +6,13 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace chess4connect.Models.Database.Entities.Games.Chess
 {
-    public class ChessBoard
+    public class ChessBoard : BaseBoard
     {
         public static int ROWS = 8;
         public static int COLUMNS = 8;
 
-        public Piece[,] Board { get; set; } = new Piece[ROWS, COLUMNS];
 
-        public ChessBoard()
+        public ChessBoard() : base(ROWS, COLUMNS)
         {
             InitalizeBoard();
         }

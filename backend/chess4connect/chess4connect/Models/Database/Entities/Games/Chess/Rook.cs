@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace chess4connect.Models.Database.Entities.Games.Chess
 {
-    public class Rook : Piece
+    public class Rook : BasePiece
     {
         public Rook(bool host, Point position) : base(host, position) { }
 

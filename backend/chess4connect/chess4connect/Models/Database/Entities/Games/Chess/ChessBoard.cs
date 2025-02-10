@@ -1,4 +1,5 @@
 ﻿using chess4connect.Enums;
+using chess4connect.Models.Database.Entities.Games.Base;
 using Microsoft.AspNetCore.Routing.Constraints;
 using System.Security.Cryptography.X509Certificates;
 
@@ -18,7 +19,7 @@ namespace chess4connect.Models.Database.Entities.Games.Chess
 
         private void InitalizeBoard()
         {
-            //TODO colocar piezas
+            Board[0,0] = new Rook()
         }
     }
 }

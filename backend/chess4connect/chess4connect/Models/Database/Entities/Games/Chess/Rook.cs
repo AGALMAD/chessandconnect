@@ -1,4 +1,6 @@
-﻿namespace chess4connect.Models.Database.Entities.Games.Chess
+﻿using chess4connect.Models.Database.Entities.Games.Base;
+
+namespace chess4connect.Models.Database.Entities.Games.Chess
 {
     public class Rook : Piece
     {

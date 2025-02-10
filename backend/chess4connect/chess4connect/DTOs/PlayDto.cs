@@ -9,5 +9,5 @@ public class PlayDto
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public GameResult PlayState { get; set; }
-    public Game Game { get; set; }
+    public GameType Game { get; set; }
 }

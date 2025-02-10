@@ -12,7 +12,7 @@ public class ChessController : ControllerBase
 
     public ChessController(ChessService chessService)
     {
-        this._chessService = chessService;
+        _chessService = chessService;
     }
 
 }

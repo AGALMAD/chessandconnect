@@ -24,7 +24,6 @@ namespace chess4connect.Services
             {
                 Player1Id = player1.Id,
                 Player2Id = player2?.Id,
-                Game = gamemode
             };
 
             rooms.Add(room);

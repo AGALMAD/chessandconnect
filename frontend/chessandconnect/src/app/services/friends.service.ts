@@ -265,7 +265,7 @@ export class FriendsService {
         else {
 
           const friend = this.connectedFriends.find(friend => friend.id === gameInvitation.FriendId);
-          this.matchMakingService.opponent = friend
+          this.matchMakingService.friendOpponent = friend
           
           this.router.navigate(
             gameInvitation.Game == GameType.Chess ? ['/chess'] : ['/connect'],
@@ -330,7 +330,7 @@ export class FriendsService {
 
     if (invitation && friend) {
 
-      this.matchMakingService.opponent = friend
+      this.matchMakingService.friendOpponent = friend
 
 
       const acceptInvitation: GameInvitationModel = {

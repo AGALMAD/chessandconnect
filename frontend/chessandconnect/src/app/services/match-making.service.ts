@@ -18,7 +18,7 @@ import { GameType } from '../enums/game';
 export class MatchMakingService {
 
   isHost = false
-  opponent: Friend
+  friendOpponent: Friend
 
   messageReceived$: Subscription;
 

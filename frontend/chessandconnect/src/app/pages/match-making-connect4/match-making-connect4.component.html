@@ -2,7 +2,7 @@
 <app-navbar></app-navbar>
 
 <!--Si no tiene amigo en la sala muestra la vista principal-->
-@if (!matchMakingService.opponent) {
+@if (!matchMakingService.friendOpponent) {
 
 <div class="min-h-screen bg-brown-100 flex items-center justify-center py-16 px-6 md:py-24 md:px-10">
   <div class="bg-brown-200 p-8 rounded-2xl shadow-lg w-full max-w-6xl flex flex-col gap-12 items-center">
@@ -66,9 +66,9 @@
     <div class="flex justify-start items-center w-full mb-4">
       <!-- Avatar Oponente -->
       <div class="flex items-center">
-        <img [src]="baseUrl + matchMakingService.opponent?.avatarImageUrl" alt="Opponent"
+        <img [src]="baseUrl + matchMakingService.friendOpponent" alt="Opponent"
           class="w-12 h-12 rounded-full border-2 border-black">
-        <p class="text-[#301e16] font-bold ml-3 ">{{ matchMakingService.opponent?.userName || 'Oponente' }}</p>
+        <p class="text-[#301e16] font-bold ml-3 ">{{ matchMakingService.friendOpponent }}</p>
       </div>
 
       <!-- Contador Oponente -->

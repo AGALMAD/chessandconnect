@@ -1,6 +1,5 @@
 ﻿using chess4connect.Enums;
-using chess4connect.Models.Database.Entities;
-using chess4connect.Models.Database.Entities.Games;
+using chess4connect.Models.Games;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using System.Text.Json;

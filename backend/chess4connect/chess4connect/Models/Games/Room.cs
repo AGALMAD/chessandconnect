@@ -1,8 +1,6 @@
 ﻿using chess4connect.Enums;
-using chess4connect.Models.Database.Entities.Games;
-using chess4connect.Models.SocketComunication.Handlers;
 
-namespace chess4connect.Models.Database.Entities
+namespace chess4connect.Models.Games
 {
     public class Room
     {

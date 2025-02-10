@@ -1,6 +1,6 @@
-﻿using chess4connect.Models.Database.Entities.Games.Base;
+﻿using chess4connect.Models.Games.Base;
 
-namespace chess4connect.Models.Database.Entities.Games;
+namespace chess4connect.Models.Games;
 
 public class Game
 {

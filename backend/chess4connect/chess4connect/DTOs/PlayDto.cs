@@ -1,7 +1,7 @@
 using chess4connect.Enums;
-using chess4connect.Models.Database.Entities.Games;
+using chess4connect.Models.Games;
 
-namespace chess4connect.Models.Database.DTOs;
+namespace chess4connect.DTOs;
 
 public class PlayDto
 {

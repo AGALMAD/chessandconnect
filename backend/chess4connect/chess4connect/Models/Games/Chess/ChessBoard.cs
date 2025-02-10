@@ -1,10 +1,11 @@
 ﻿using chess4connect.Enums;
-using chess4connect.Models.Database.Entities.Games.Base;
+using chess4connect.Models.Games.Chess.Pieces;
+using chess4connect.Models.Games.Base;
 using Microsoft.AspNetCore.Routing.Constraints;
 using System.Drawing;
 using System.Security.Cryptography.X509Certificates;
 
-namespace chess4connect.Models.Database.Entities.Games.Chess
+namespace chess4connect.Models.Games.Chess
 {
     public class ChessBoard : BaseBoard
     {
@@ -12,8 +13,10 @@ namespace chess4connect.Models.Database.Entities.Games.Chess
         public static int COLUMNS = 8;
 
 
-        public ChessBoard() : base(ROWS, COLUMNS)
+        public ChessBoard()
         {
+            Board = new BasePiece[ROWS, COLUMNS];
+
             InitalizeBoard();
         }
 

@@ -1,4 +1,4 @@
-﻿namespace chess4connect.Models.Database.DTOs;
+﻿namespace chess4connect.DTOs;
 
 public class LoginDto
 {

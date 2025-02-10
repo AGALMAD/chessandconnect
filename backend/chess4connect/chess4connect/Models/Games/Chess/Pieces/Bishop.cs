@@ -1,7 +1,7 @@
-﻿using chess4connect.Models.Database.Entities.Games.Base;
+﻿using chess4connect.Models.Games.Base;
 using System.Drawing;
 
-namespace chess4connect.Models.Database.Entities.Games.Chess
+namespace chess4connect.Models.Games.Chess.Pieces
 {
     public class Bishop : BasePiece
     {

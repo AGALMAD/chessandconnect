@@ -1,6 +1,6 @@
 ﻿using chess4connect.Enums;
 
-namespace chess4connect.Models.Database.DTOs
+namespace chess4connect.DTOs
 {
     public class GameRequest
     {

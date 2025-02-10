@@ -1,10 +1,5 @@
 ﻿using chess4connect.Enums;
-using chess4connect.Models.Database.DTOs;
-using chess4connect.Models.Database.Entities.Games;
 using chess4connect.Models.SocketComunication.Handlers;
-using System.Net.Sockets;
-using System.Net.WebSockets;
-
 namespace chess4connect.Services
 {
     public class QueueService

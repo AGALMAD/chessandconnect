@@ -1,13 +1,9 @@
 ﻿using chess4connect.Enums;
-using chess4connect.Models.Database.DTOs;
-using chess4connect.Models.Database.Entities.Games;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using chess4connect.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.WebSockets;
 using System.Security.Claims;
 
 namespace chess4connect.Controllers

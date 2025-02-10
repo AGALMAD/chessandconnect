@@ -2,18 +2,17 @@
 using Microsoft.AspNetCore.Routing.Constraints;
 using System.Security.Cryptography.X509Certificates;
 
-namespace chess4connect.Models.Database.Entities.Chess
+namespace chess4connect.Models.Database.Entities.Games.Chess
 {
     public class ChessBoard
     {
-        public int Rows { get; set; } = 8;
-        public int Columns { get; set; } = 8;
+        public static int ROWS = 8;
+        public static int COLUMS = 8;
 
-        public List<Piece> Pieces { get; set; }
+        public Piece[,] Board { get; set; } = new Piece[ROWS, COLUMS];
 
         public ChessBoard()
         {
-            Pieces = new List<Piece>();
             InitalizeBoard();
         }
 

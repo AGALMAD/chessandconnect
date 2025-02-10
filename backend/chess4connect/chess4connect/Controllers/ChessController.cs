@@ -8,6 +8,11 @@ namespace chess4connect.Controllers;
 [ApiController]
 public class ChessController : ControllerBase
 {
-    private ChessService ;
+    private ChessService _chessService;
+
+    public ChessController(ChessService chessService)
+    {
+        this._chessService = chessService;
+    }
 
 }

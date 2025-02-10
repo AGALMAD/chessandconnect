@@ -10,7 +10,7 @@ import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage'
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { Room } from '../models/room';
 import { PlayService } from './play.service';
-import { Game } from '../models/game';
+import { GameType } from '../enums/game';
 
 @Injectable({
   providedIn: 'root'
@@ -69,7 +69,7 @@ export class MatchMakingService {
         this.playService.opponent = result.data
 
         this.router.navigate(
-          newRoom.Game == Game.Chess ? ['/chessGame'] : ['/connectGame'],
+          newRoom.Game == GameType.Chess ? ['/chessGame'] : ['/connectGame'],
         );
         break
 

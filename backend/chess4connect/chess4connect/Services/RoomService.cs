@@ -1,5 +1,6 @@
 ﻿using chess4connect.Enums;
 using chess4connect.Models.Database.Entities;
+using chess4connect.Models.Database.Entities.Games;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using System.Text.Json;
@@ -18,13 +19,12 @@ namespace chess4connect.Services
         }
 
 
-        public async Task CreateRoomAsync(Game gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
+        public async Task CreateRoomAsync(GameType gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
         {
             Room room = new Room
             {
                 Player1Id = player1.Id,
                 Player2Id = player2?.Id,
-                StartDate = DateTime.Now,
                 Game = gamemode
             };
 

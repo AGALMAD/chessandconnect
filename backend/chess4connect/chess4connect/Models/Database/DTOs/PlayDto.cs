@@ -1,5 +1,5 @@
 using chess4connect.Enums;
-using chess4connect.Models.Database.Entities;
+using chess4connect.Models.Database.Entities.Games;
 
 namespace chess4connect.Models.Database.DTOs;
 

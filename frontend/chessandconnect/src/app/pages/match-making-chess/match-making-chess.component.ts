@@ -7,7 +7,7 @@ import { WebsocketService } from '../../services/websocket.service';
 import { MatchMakingService } from '../../services/match-making.service';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
-import { Game } from '../../models/game';
+import { GameType } from '../../enums/game';
 import { FriendsService } from '../../services/friends.service';
 
 @Component({
@@ -47,7 +47,7 @@ export class MatchMakingChessComponent {
 
 
     //Añade el jugador a la cola
-    const result = await this.api.post(`MatchMaking/queueGame`, Game.Chess)
+    const result = await this.api.post(`MatchMaking/queueGame`, GameType.Chess)
 
   }
 
@@ -62,13 +62,13 @@ export class MatchMakingChessComponent {
     main.classList.add('flex');
 
     //Elimina el jugador a la cola
-    const result = await this.api.post(`MatchMaking/cancelQueue`, Game.Chess)
+    const result = await this.api.post(`MatchMaking/cancelQueue`, GameType.Chess)
   }
 
 
 
   friendInvitation(friendId: number){
-    this.friendsService.newGameInvitation(friendId,Game.Chess)
+    this.friendsService.newGameInvitation(friendId,GameType.Chess)
 
   }
 

@@ -1,6 +1,6 @@
 ﻿using chess4connect.Enums;
 using chess4connect.Models.Database.DTOs;
-using chess4connect.Models.Database.Entities;
+using chess4connect.Models.Database.Entities.Games;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using chess4connect.Services;
@@ -33,7 +33,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPost("queueGame")]
-        public async Task<ActionResult> QueueGame(Game gamemode)
+        public async Task<ActionResult> QueueGame(GameType gamemode)
         {
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -48,7 +48,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPost("cancelQueue")]
-        public async Task<ActionResult> CancelQueue([FromBody] Game game)
+        public async Task<ActionResult> CancelQueue([FromBody] GameType game)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -65,7 +65,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPost("IAGame")]
-        public async Task<ActionResult> IAGame(Game gamemode)
+        public async Task<ActionResult> IAGame(GameType gamemode)
         {
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);

@@ -1,6 +1,6 @@
 import { playState } from "../enums/playState";
 import { User } from "./dto/user";
-import { Game } from "./game";
+import { GameType } from "../enums/game";
 
 export interface Play {
     id: number,
@@ -9,5 +9,5 @@ export interface Play {
     startDate: Date,
     endDate: Date,
     playState: playState,
-    game: Game
+    game: GameType
 }

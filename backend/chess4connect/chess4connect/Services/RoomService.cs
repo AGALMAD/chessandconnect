@@ -1,5 +1,8 @@
-﻿using chess4connect.Models.Database.Entities;
+﻿using chess4connect.Enums;
+using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers;
+using chess4connect.Models.SocketComunication.MessageTypes;
+using System.Text.Json;
 
 namespace chess4connect.Services
 {
@@ -14,36 +17,38 @@ namespace chess4connect.Services
             _network = webSocketNetwork;
         }
 
-        public Room addToChessRoom(WebSocketHandler player1, WebSocketHandler player2)
+
+        public async Task CreateRoomAsync(Game gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
         {
             Room room = new Room
             {
-                Player1 = player1,
-                Player2 = player2,
+                Player1Id = player1.Id,
+                Player2Id = player2?.Id,
                 StartDate = DateTime.Now,
-                Game = Enums.Game.Chess
+                Game = gamemode
             };
 
             rooms.Add(room);
 
-            return room;
+            await SendRoomMessageAsync(room, player1, player2);
         }
 
-        public Room addToConnnectRoom(WebSocketHandler player1, WebSocketHandler player2)
+        private async Task SendRoomMessageAsync(Room room, WebSocketHandler player1, WebSocketHandler player2)
         {
-            Room room = new Room
+            var roomSocketMessage = new SocketMessage<Room>
             {
-                Player1 = player1,
-                Player2 = player2,
-                StartDate = DateTime.Now,
-                Game = Enums.Game.Connect4
+                Type = Enums.SocketCommunicationType.GAME_START,
+                Data = room
             };
 
-            rooms.Add(room);
+            string message = JsonSerializer.Serialize(roomSocketMessage);
 
-            return room;
+            await player1.SendAsync(message);
+            if(player2 is not null)
+            {
+                await player2.SendAsync(message);
+            }
         }
-
         
 
     }

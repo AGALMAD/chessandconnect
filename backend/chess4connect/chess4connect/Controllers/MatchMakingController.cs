@@ -28,33 +28,67 @@ namespace chess4connect.Controllers
             _userService = userService;
             _matchMakingService = matchMakingService;
             _queueService = queueService;
-
         }
 
+
+        [Authorize]
         [HttpPost("queueGame")]
-        public async Task<ActionResult> QueueGame(Game gamemode)
+        public async Task<ActionResult> QueueGame([FromBody] Game gamemode)
         {
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            await _queueService.addToQueueAsync(userId, gamemode);
+            await _queueService.AddToQueueAsync(userId, gamemode);
 
-            return Ok("Searching for a game to join");
-
+            return Ok("SI");
         }
 
-        
-        [HttpPost("queueGame")]
-        public async Task<ActionResult> QueueGame(Game gamemode)
+
+
+
+        [Authorize]
+        [HttpPost("cancelQueue")]
+        public async Task<ActionResult> CancelQueue([FromBody] Game game)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out var userIdInt))
+            {
+                return Unauthorized("El usuario no está autenticado.");
+            }
+
+            await _queueService.cancelGame(userIdInt, game);
+
+            return Ok("Eliminado de la cola");
+        }
+
+
+        [Authorize]
+        [HttpPost("IAGame")]
+        public async Task<ActionResult> IAGame([FromBody] Game gamemode)
         {
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            await _queueService.addToQueueAsync(userId, gamemode);
+            await _queueService.goIntoIAGame(userId, gamemode);
 
-            return Ok("Searching for a game to join");
+            return Ok("SI");
         }
-        
+
+        [Authorize]
+        [HttpPost("FriendGame")]
+        public async Task<ActionResult> FriendGame([FromBody] Room room)
+        {
+
+            var gamemode = room.Game;
+            var friendId = room.Player2Id;
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            await _queueService.goIntoFriendGame(userId, (int)friendId, gamemode);
+
+            return Ok("SI");
+        }
 
         [HttpPost("newGameInvitation")]
         public async Task<ActionResult> GameInvitation([FromBody] GameInvitationModel gameInvitation)
@@ -68,12 +102,13 @@ namespace chess4connect.Controllers
                 return Unauthorized("El usuario no está autenticado.");
             }
 
-            bool result =  await _matchMakingService.GameInvitation(gameInvitation);
+            await _matchMakingService.GameInvitation(gameInvitation);
 
-            return result ? Ok("Invitación enviada correctamente"): NotFound("Error al enviar la invitación");
+            return Ok("Invitación Enviada");
 
 
         }
+
 
         [Authorize]
         [HttpPost("acceptInvitation")]
@@ -85,7 +120,9 @@ namespace chess4connect.Controllers
             {
                 return Unauthorized("El usuario no está autenticado.");
             }
-    
+
+            WebSocketHandler friendSocketHandler = _webSocketNetwork.GetSocketByUserId(userIdInt);
+
             //Envia el mensaje de aceptación al oponente
             await _matchMakingService.GameInvitation(gameInvitation);
 
@@ -94,48 +131,6 @@ namespace chess4connect.Controllers
 
         }
 
-
-
-        [Authorize]
-        [HttpPost("start")]
-        public async Task<ActionResult> StartPlay([FromQuery] int opponentId)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out var userIdInt))
-            {
-                return Unauthorized("El usuario no está autenticado.");
-            }
-
-            //Notifica al oponente del inicio de partida
-
-
-            return Ok("Partida creada");
-
-        }
-
-
-        [Authorize]
-        [HttpPost("end")]
-        public async Task<ActionResult> EndPlay([FromBody] GameRequest request)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out var userIdInt))
-            {
-                return Unauthorized("El usuario no está autenticado.");
-            }
-
-            //Guarda la partida en la base de datos y notifica al oponente
-
-
-
-
-            return Ok("Partida creada");
-
-        }
-
-
-
+ 
     }
 }

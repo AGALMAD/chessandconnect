@@ -87,22 +87,7 @@ export class FriendsService {
       this.handleError('No se pudo aceptar la petición')
     }
     const query: string = ""
-    Swal.fire({
-      title: '<i class="fa-solid fa-chess-board"></i> ¡Solicitud de amistad!',
-      text: `Solicitud de amistad aceptada.`,
-      toast: true,
-      position: 'top-end',
-      timer: 10000,
-      timerProgressBar: true,
-      background: '#301e16',  
-      color: '#E8D5B5',       
-      customClass: {
-        popup: 'rounded-lg shadow-lg',
-        title: 'font-bold text-lg',
-        confirmButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
-        cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
-        timerProgressBar: 'bg-[#E8D5B5]' 
-      }})
+
     await this.getFriends(query)
     return result
   }
@@ -113,22 +98,6 @@ export class FriendsService {
     if (!result.success) {
       this.handleError('No se pudo rechazar la petición')
     }
-    Swal.fire({
-      title: '<i class="fa-solid fa-chess-board"></i> ¡Solicitud de amistad!',
-      text: `Solicitud de amistad rechazada.`,
-      toast: true,
-      position: 'top-end',
-      timer: 10000,
-      timerProgressBar: true,
-      background: '#301e16',  
-      color: '#E8D5B5',       
-      customClass: {
-        popup: 'rounded-lg shadow-lg',
-        title: 'font-bold text-lg',
-        confirmButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
-        cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
-        timerProgressBar: 'bg-[#E8D5B5]' 
-      }})
     return result
   }
 
@@ -173,7 +142,7 @@ export class FriendsService {
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
     switch (message.Type) {
-      case SocketCommunicationType.REQUEST:
+      case SocketCommunicationType.FRIEND:
 
         console.log('Solicitud de amistad recibida:', message.Data);
 
@@ -210,6 +179,8 @@ export class FriendsService {
             if (result.isConfirmed) {
               console.log(this.friend_request.UserId)
               this.acceptFriendshipRequest(this.friend_request.UserId)
+            } else {
+              this.rejectFriendshipRequest(this.friend_request.UserId)
             }
           });
         }
@@ -301,8 +272,7 @@ export class FriendsService {
           );
         }
 
-
-
+      
         break;
 
 
@@ -316,24 +286,7 @@ export class FriendsService {
     const result = await this.api.post<Friendship>(`Friendship/makerequest?friendId=${id}`)
     if (!result.success) {
       this.handleError('No se pudo realizar la petición')
-    }  else {
-      Swal.fire({
-        title: '<i class="fa-solid fa-chess-board"></i> ¡Solicitud de amistad!',
-        text: ` Solicitud de amistad enviada.`,
-        toast: true,
-        position: 'top-end',
-        timer: 10000,
-        timerProgressBar: true,
-        background: '#301e16',  
-        color: '#E8D5B5',       
-        customClass: {
-          popup: 'rounded-lg shadow-lg',
-          title: 'font-bold text-lg',
-          confirmButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
-          cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
-          timerProgressBar: 'bg-[#E8D5B5]' 
-        }})
-      }
+    }
 
     return result
   }
@@ -420,5 +373,4 @@ export class FriendsService {
   }
 
   
-
 }

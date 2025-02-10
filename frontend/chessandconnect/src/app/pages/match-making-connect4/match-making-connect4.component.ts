@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
-import { environment } from '../../../environments/environment';
+import { Game } from '../../models/game';
 import { MenuService } from '../../services/menu.service';
-import { ApiService } from '../../services/api.service';
 import { WebsocketService } from '../../services/websocket.service';
-import { Router } from '@angular/router';
+import { ApiService } from '../../services/api.service';
 import { MatchMakingService } from '../../services/match-making.service';
 import { AuthService } from '../../services/auth.service';
 import { FriendsService } from '../../services/friends.service';
-import { Game } from '../../models/game';
+import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-match-making-connect4',
@@ -32,7 +32,7 @@ export class MatchMakingConnect4Component {
   ) {
   }
 
-  openLoadMatchMaking() {
+  async openLoadMatchMaking() {
     var loadView = document.getElementById('loadView') as HTMLElement;
     var main = document.getElementById('main') as HTMLElement;
 
@@ -41,9 +41,14 @@ export class MatchMakingConnect4Component {
 
     main.classList.remove('flex');
     main.classList.add('hidden');
+
+
+    //Añade el jugador a la cola
+    const result = await this.api.post(`Friendship/queueGame`, Game.Connect4)
+
   }
 
-  closeLoadMatchMaking() {
+  async closeLoadMatchMaking() {
     var loadView = document.getElementById('loadView') as HTMLElement;
     var main = document.getElementById('main') as HTMLElement;
 
@@ -52,12 +57,27 @@ export class MatchMakingConnect4Component {
 
     main.classList.remove('hidden');
     main.classList.add('flex');
+
+    //Elimina el jugador a la cola
+    const result = await this.api.post(`Friendship/cancelQueue`, Game.Connect4)
   }
 
 
 
   friendInvitation(friendId: number) {
     this.friendsService.newGameInvitation(friendId, Game.Connect4)
+
+  }
+
+
+  startGameWithFriend(){
+
+  }
+
+  startGameWithBot(){
+
+    this.router.navigate(['/chessGame']);
+
 
   }
 

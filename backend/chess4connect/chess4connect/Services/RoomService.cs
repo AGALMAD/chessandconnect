@@ -51,7 +51,10 @@ namespace chess4connect.Services
             string message = JsonSerializer.Serialize(roomSocketMessage);
 
             await player1.SendAsync(message);
-            await player2.SendAsync(message);
+            if(player2 is not null)
+            {
+                await player2.SendAsync(message);
+            }
         }
         
 

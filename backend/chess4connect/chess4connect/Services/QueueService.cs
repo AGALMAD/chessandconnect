@@ -131,5 +131,14 @@ namespace chess4connect.Services
             await _roomService.CreateRoomAsync(gamemode, socket);
 
         }
+
+        public async Task goIntoFriendGame(int anfitrion, int friend, Game gamemode)
+        {
+            WebSocketHandler player1 = _network.GetSocketByUserId(anfitrion);
+            WebSocketHandler player2 = _network.GetSocketByUserId(friend);
+
+            await _roomService.CreateRoomAsync(gamemode, player1, player2);
+
+        }
     }
 }

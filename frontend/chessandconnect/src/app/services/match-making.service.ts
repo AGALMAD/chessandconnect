@@ -80,6 +80,17 @@ export class MatchMakingService {
 
   }
 
+  async startGameWithFriend(gamemode: Game){
+      const room : Room = {
+        Player1Id: 0,
+        Player2Id: this.opponent.id,
+        Game: gamemode,
+        id: 0,
+        StartDate: undefined
+      }
+      await this.api.post<Room>(`MatchMaking/FriendGame`, room)
+  }
+
 
 
 }

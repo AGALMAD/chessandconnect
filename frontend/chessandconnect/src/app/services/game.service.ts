@@ -10,7 +10,7 @@ export class GameService {
 
   isHost = false
   opponent: User
-  board: BasePiece[]
+  pieces: BasePiece[]
 
   constructor() { }
 }

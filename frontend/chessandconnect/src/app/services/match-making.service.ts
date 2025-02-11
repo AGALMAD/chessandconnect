@@ -65,7 +65,7 @@ export class MatchMakingService {
 
 
         const newRoom = message.Data as Room;
-        this.gameService.board = newRoom.Game.Board
+        this.gameService.pieces = newRoom.Game.Pieces
 
         const opponentId = newRoom.Player1Id != this.authService.currentUser.id ? newRoom.Player1Id : newRoom.Player2Id
         const result = await this.api.get<User>(`User/getUserById?id=${opponentId}`)

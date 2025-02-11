@@ -12,7 +12,7 @@ export class ChessComponent implements OnInit{
   constructor(public gameService: GameService){}
 
   ngOnInit(): void {
-    console.log(this.gameService.board)
+    console.log("GAMEEEEEE:", this.gameService.pieces)
   }
 
 }

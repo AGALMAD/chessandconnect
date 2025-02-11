@@ -4,7 +4,7 @@ import { BasePiece } from "./Base/BasePiece";
 
 export interface Game {
     GameType: GameType,
-    Board: BasePiece[]
+    Pieces: BasePiece[]
     StartDate:Date
 
 }

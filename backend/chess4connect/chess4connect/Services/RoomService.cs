@@ -1,4 +1,6 @@
-﻿using chess4connect.Enums;
+﻿using chess4connect.DTOs;
+using chess4connect.Enums;
+using chess4connect.Mappers;
 using chess4connect.Models.Games;
 using chess4connect.Models.Games.Chess;
 using chess4connect.Models.Games.Connect;
@@ -40,10 +42,10 @@ namespace chess4connect.Services
 
         private async Task SendRoomMessageAsync(Room room, WebSocketHandler player1, WebSocketHandler player2)
         {
-            var roomSocketMessage = new SocketMessage<Room>
+            var roomSocketMessage = new SocketMessage<RoomDto>
             {
                 Type = SocketCommunicationType.GAME_START,
-                Data = room
+                Data = RoomMapper.ToDto(room),
             };
 
             string message = JsonSerializer.Serialize(roomSocketMessage);

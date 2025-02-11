@@ -5,7 +5,7 @@ import { User } from '../../models/dto/user';
 import { RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
-import { Game } from '../../models/game';
+import { GameType } from '../../enums/game';
 
 @Component({
   selector: 'app-friends-list',
@@ -65,7 +65,7 @@ export class FriendsListComponent implements OnInit {
 
 
   async newGameInvitation(friendId: number) {
-    await this.friendService.newGameInvitation(friendId, Game.Chess)
+    await this.friendService.newGameInvitation(friendId, GameType.Chess)
   }
 
 

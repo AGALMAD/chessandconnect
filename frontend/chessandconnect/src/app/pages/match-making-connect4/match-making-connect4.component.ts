@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
-import { Game } from '../../models/game';
+import { GameType } from '../../enums/game';
 import { MenuService } from '../../services/menu.service';
 import { WebsocketService } from '../../services/websocket.service';
 import { ApiService } from '../../services/api.service';
@@ -44,7 +44,7 @@ export class MatchMakingConnect4Component {
 
 
     //Añade el jugador a la cola
-    const result = await this.api.post(`Friendship/queueGame`, Game.Connect4)
+    const result = await this.api.post(`Friendship/queueGame`, GameType.Connect4)
 
   }
 
@@ -59,13 +59,13 @@ export class MatchMakingConnect4Component {
     main.classList.add('flex');
 
     //Elimina el jugador a la cola
-    const result = await this.api.post(`Friendship/cancelQueue`, Game.Connect4)
+    const result = await this.api.post(`Friendship/cancelQueue`, GameType.Connect4)
   }
 
 
 
   friendInvitation(friendId: number) {
-    this.friendsService.newGameInvitation(friendId, Game.Connect4)
+    this.friendsService.newGameInvitation(friendId, GameType.Connect4)
 
   }
 

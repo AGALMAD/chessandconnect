@@ -1,19 +1,10 @@
 ﻿using chess4connect.Enums;
-using chess4connect.Models.Database.DTOs;
 using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers.Services;
 using chess4connect.Models.SocketComunication.MessageTypes;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Extensions;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace chess4connect.Models.SocketComunication.Handlers;
 

@@ -7,7 +7,7 @@ import { WebsocketService } from '../../services/websocket.service';
 import { MatchMakingService } from '../../services/match-making.service';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
-import { Game } from '../../models/game';
+import { GameType } from '../../enums/game';
 import { FriendsService } from '../../services/friends.service';
 
 @Component({
@@ -18,7 +18,8 @@ import { FriendsService } from '../../services/friends.service';
 })
 export class MatchMakingChessComponent {
 
-  public baseUrl = environment.apiUrl; 
+  public baseUrl = environment.apiUrl;
+  private gamemode = Game.Chess 
 
 
   constructor(
@@ -47,7 +48,7 @@ export class MatchMakingChessComponent {
 
 
     //Añade el jugador a la cola
-    const result = await this.api.post(`MatchMaking/queueGame`, Game.Chess)
+    const result = await this.api.post(`MatchMaking/queueGame`, this.gamemode)
 
   }
 
@@ -62,26 +63,23 @@ export class MatchMakingChessComponent {
     main.classList.add('flex');
 
     //Elimina el jugador a la cola
-    const result = await this.api.post(`MatchMaking/cancelQueue`, Game.Chess)
+    const result = await this.api.post(`MatchMaking/cancelQueue`, this.gamemode)
   }
 
 
 
   friendInvitation(friendId: number){
-    this.friendsService.newGameInvitation(friendId,Game.Chess)
+    this.friendsService.newGameInvitation(friendId, this.gamemode)
 
   }
 
 
-  startGameWithFriend(){
-
+  async startGameWithFriend(){
+    await this.matchMakingService.startGameWithFriend(this.gamemode)
   }
 
-  startGameWithBot(){
-
-    this.router.navigate(['/chessGame']);
-
-
+  async startGameWithBot(){
+    await this.api.post('MatchMaking/IAGame', this.gamemode)
   }
 
 

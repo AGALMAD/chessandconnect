@@ -8,9 +8,9 @@ import { WebsocketService } from './websocket.service';
 import { AuthService } from './auth.service';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
-import { Room } from '../models/room';
-import { PlayService } from './play.service';
+import { Room } from '../models/Games/room';
 import { GameType } from '../enums/game';
+import { GameService } from './game.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class MatchMakingService {
     private router: Router,
     public webSocketService: WebsocketService,
     public authService: AuthService,
-    private playService: PlayService
+    private gameService: GameService
   ) {
 
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
@@ -59,17 +59,20 @@ export class MatchMakingService {
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
 
+    console.log("GAME:", message)
     switch (message.Type) {
       case SocketCommunicationType.GAME_START:
 
-        const newRoom = message.Data as Room;
-        const opponentId = newRoom.Player1Id != this.authService.currentUser.id ? newRoom.Player1Id : newRoom.Player2Id
 
+        const newRoom = message.Data as Room;
+        this.gameService.board = newRoom.Game.Board
+
+        const opponentId = newRoom.Player1Id != this.authService.currentUser.id ? newRoom.Player1Id : newRoom.Player2Id
         const result = await this.api.get<User>(`User/getUserById?id=${opponentId}`)
-        this.playService.opponent = result.data
+        this.gameService.opponent = result.data
 
         this.router.navigate(
-          newRoom.Game == GameType.Chess ? ['/chessGame'] : ['/connectGame'],
+          newRoom.Game.GameType == GameType.Chess ? ['/chessGame'] : ['/connectGame'],
         );
         break
 

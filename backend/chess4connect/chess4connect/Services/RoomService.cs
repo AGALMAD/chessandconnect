@@ -1,5 +1,7 @@
 ﻿using chess4connect.Enums;
 using chess4connect.Models.Games;
+using chess4connect.Models.Games.Chess;
+using chess4connect.Models.Games.Connect;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using System.Text.Json;
@@ -24,6 +26,11 @@ namespace chess4connect.Services
             {
                 Player1Id = player1.Id,
                 Player2Id = player2?.Id,
+                Game = new Game
+                {
+                    GameType = gamemode,
+                    Board = gamemode == GameType.Chess ? new ChessBoard() : new ConnectBoard()
+                }
             };
 
             rooms.Add(room);
@@ -35,7 +42,7 @@ namespace chess4connect.Services
         {
             var roomSocketMessage = new SocketMessage<Room>
             {
-                Type = Enums.SocketCommunicationType.GAME_START,
+                Type = SocketCommunicationType.GAME_START,
                 Data = room
             };
 

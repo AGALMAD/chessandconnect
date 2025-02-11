@@ -7,5 +7,5 @@ public class GameInvitationModel
     public int HostId { get; set; }
     public int FriendId { get; set; }
     public FriendshipState State { get; set; }
-    public Game Game { get; set; }
+    public GameType Game { get; set; }
 }

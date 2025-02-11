@@ -133,7 +133,7 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     sessionStorage.removeItem(this.TOKEN_KEY);
     this.router.navigate(['#']);
-
+    this.currentUser = null;
     await this.websocketService.disconnectRxjs();
   }
 

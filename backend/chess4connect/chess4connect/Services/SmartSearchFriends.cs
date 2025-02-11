@@ -1,9 +1,7 @@
-﻿using chess4connect.Models.Database.Entities;
-using System.Globalization;
+﻿using System.Globalization;
 using F23.StringSimilarity;
 using F23.StringSimilarity.Interfaces;
 using System.Text;
-using chess4connect.Models.Database.DTOs;
 using chess4connect.Models.SocketComunication.MessageTypes;
 
 

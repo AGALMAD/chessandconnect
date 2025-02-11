@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FriendsService } from '../../services/friends.service';
-import { Game } from '../../models/game';
+import { GameType } from '../../enums/game';
 
 @Component({
   selector: 'app-invite-list',
@@ -13,6 +13,6 @@ export class InviteListComponent {
     public friendService: FriendsService) { }
 
     async newGameInvitation(friendId: number){
-      await this.friendService.newGameInvitation(friendId,Game.Chess)
+      await this.friendService.newGameInvitation(friendId,GameType.Chess)
     }
 }

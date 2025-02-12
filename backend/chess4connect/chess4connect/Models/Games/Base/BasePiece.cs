@@ -5,13 +5,13 @@ namespace chess4connect.Models.Games.Base
     public class BasePiece
     {
         public int Id { get; set; }
-        public bool Host { get; set; }
+        public Color Color { get; set; } 
         public Point Position { get; set; }
 
-        public BasePiece(bool host, Point position)
+        public BasePiece(Color color, Point position)
         {
 
-            Host = host;
+            Color = color;
             Position = position;
         }
 

@@ -20,6 +20,7 @@ export class ChessComponent implements OnInit{
   
   letters: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   rows: number[] = [8, 7, 6, 5, 4, 3, 2, 1];
+  cols: number [] = [0, 1, 2, 3, 4, 5, 6, 7]
   cells: string[] = [];
 
   rowsReverse: number[] = [1, 2, 3, 4, 5, 6, 7, 8];

@@ -132,7 +132,7 @@ namespace chess4connect.Services
 
         }
 
-        public async Task goIntoFriendGame(int anfitrion, int friend, Game gamemode)
+        public async Task goIntoFriendGame(int anfitrion, int friend, GameType gamemode)
         {
             WebSocketHandler player1 = _network.GetSocketByUserId(anfitrion);
             WebSocketHandler player2 = _network.GetSocketByUserId(friend);

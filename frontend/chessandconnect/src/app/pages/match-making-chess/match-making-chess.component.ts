@@ -19,7 +19,7 @@ import { FriendsService } from '../../services/friends.service';
 export class MatchMakingChessComponent {
 
   public baseUrl = environment.apiUrl;
-  private gamemode = Game.Chess 
+  private gamemode = GameType.Chess 
 
 
   constructor(

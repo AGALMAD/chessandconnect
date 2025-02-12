@@ -95,7 +95,7 @@ public class Program {
         builder.Services.AddSingleton<RoomService>();
 
         //Game
-        builder.Services.AddSingleton<ChessService>();
+        builder.Services.AddSingleton<GameService>();
         builder.Services.AddSingleton<ConnectService>();
 
 

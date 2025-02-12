@@ -28,10 +28,10 @@ namespace chess4connect.Services
             {
                 Player1Id = player1.Id,
                 Player2Id = player2?.Id,
-                Game = new Game
+                Game = new Models.Games.Game
                 {
                     GameType = gamemode,
-                    Board = gamemode == GameType.Chess ? new ChessBoard() : new ConnectBoard()
+                    Board = gamemode == GameType.Chess ? new global::chess4connect.Models.Games.Chess.ChessBoard() : new global::chess4connect.Models.Games.Connect.ConnectBoard()
                 }
             };
 

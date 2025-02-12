@@ -1,5 +1,5 @@
 ﻿namespace chess4connect.Services;
 
-public class ChessService
+public class GameService
 {
 }

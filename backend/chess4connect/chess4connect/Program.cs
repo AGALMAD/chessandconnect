@@ -90,8 +90,13 @@ public class Program {
         builder.Services.AddScoped<SmartSearchFriends>();
         builder.Services.AddScoped<MatchMakingService>();
 
+        //Matchmaking
         builder.Services.AddSingleton<QueueService>();
         builder.Services.AddSingleton<RoomService>();
+
+        //Game
+        builder.Services.AddSingleton<ChessService>();
+        builder.Services.AddSingleton<ConnectService>();
 
 
         builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));

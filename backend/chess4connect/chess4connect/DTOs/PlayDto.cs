@@ -1,7 +1,7 @@
 using chess4connect.Enums;
-using chess4connect.Models.Database.Entities;
+using chess4connect.Models.Games;
 
-namespace chess4connect.Models.Database.DTOs;
+namespace chess4connect.DTOs;
 
 public class PlayDto
 {
@@ -9,5 +9,5 @@ public class PlayDto
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public GameResult PlayState { get; set; }
-    public Game Game { get; set; }
+    public GameType Game { get; set; }
 }

@@ -1,6 +1,6 @@
-﻿using chess4connect.Enums;
+﻿using chess4connect.DTOs;
+using chess4connect.Enums;
 using chess4connect.Mappers;
-using chess4connect.Models.Database.DTOs;
 using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;

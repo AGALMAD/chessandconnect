@@ -1,5 +1,9 @@
-﻿using chess4connect.Enums;
-using chess4connect.Models.Database.Entities;
+﻿using chess4connect.DTOs;
+using chess4connect.Enums;
+using chess4connect.Mappers;
+using chess4connect.Models.Games;
+using chess4connect.Models.Games.Chess;
+using chess4connect.Models.Games.Connect;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using System.Text.Json;
@@ -18,14 +22,17 @@ namespace chess4connect.Services
         }
 
 
-        public async Task CreateRoomAsync(Game gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
+        public async Task CreateRoomAsync(GameType gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
         {
             Room room = new Room
             {
                 Player1Id = player1.Id,
                 Player2Id = player2?.Id,
-                StartDate = DateTime.Now,
-                Game = gamemode
+                Game = new Game
+                {
+                    GameType = gamemode,
+                    Board = gamemode == GameType.Chess ? new ChessBoard() : new ConnectBoard()
+                }
             };
 
             rooms.Add(room);
@@ -35,10 +42,10 @@ namespace chess4connect.Services
 
         private async Task SendRoomMessageAsync(Room room, WebSocketHandler player1, WebSocketHandler player2)
         {
-            var roomSocketMessage = new SocketMessage<Room>
+            var roomSocketMessage = new SocketMessage<RoomDto>
             {
-                Type = Enums.SocketCommunicationType.GAME_START,
-                Data = room
+                Type = SocketCommunicationType.GAME_START,
+                Data = RoomMapper.ToDto(room),
             };
 
             string message = JsonSerializer.Serialize(roomSocketMessage);

@@ -1,6 +1,6 @@
 ﻿using chess4connect.Models.Database.Entities;
 
-namespace chess4connect.Models.Database.DTOs;
+namespace chess4connect.DTOs;
 
 public class FriendDto
 {

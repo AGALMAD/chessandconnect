@@ -1,4 +1,4 @@
-export enum Game {
+export enum GameType {
     Chess,
     Connect4
 }

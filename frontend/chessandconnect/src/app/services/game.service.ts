@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Friend } from '../models/dto/friend';
 import { User } from '../models/dto/user';
+import { BasePiece } from '../models/Games/Base/BasePiece';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PlayService {
+export class GameService {
 
+
+  isHost = false
   opponent: User
-  
+  pieces: BasePiece[]
 
   constructor() { }
 }

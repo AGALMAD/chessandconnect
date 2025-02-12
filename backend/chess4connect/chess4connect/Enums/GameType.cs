@@ -1,6 +1,6 @@
 ﻿namespace chess4connect.Enums
 {
-    public enum Game
+    public enum GameType
     {
         Chess,
         Connect4

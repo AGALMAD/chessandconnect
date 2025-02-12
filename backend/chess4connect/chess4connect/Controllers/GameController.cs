@@ -8,11 +8,11 @@ namespace chess4connect.Controllers;
 [ApiController]
 public class GameController : ControllerBase
 {
-    private GameService _chessService;
+    private GameService _gameService;
 
-    public GameController(GameService chessService)
+    public GameController(GameService gameService)
     {
-        _chessService = chessService;
+        _gameService = gameService;
     }
 
 }

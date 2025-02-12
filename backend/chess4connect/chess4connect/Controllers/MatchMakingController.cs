@@ -29,7 +29,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPost("queueGame")]
-        public async Task<ActionResult> QueueGame([FromBody] Game gamemode)
+        public async Task<ActionResult> QueueGame([FromBody] GameService gamemode)
         {
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -61,7 +61,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPost("IAGame")]
-        public async Task<ActionResult> IAGame([FromBody] Game gamemode)
+        public async Task<ActionResult> IAGame([FromBody] GameService gamemode)
         {
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);

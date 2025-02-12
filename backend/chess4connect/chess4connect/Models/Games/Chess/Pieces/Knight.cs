@@ -5,7 +5,7 @@ namespace chess4connect.Models.Games.Chess.Pieces
 {
     public class Knight : BasePiece
     {
-        public Knight(bool host, Point position) : base(host, position) { }
+        public Knight(int id, Chess.Color color, Point position) : base(id, color, position) { }
 
         protected List<Point> BasicMovements()
         {

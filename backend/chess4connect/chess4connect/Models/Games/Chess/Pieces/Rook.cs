@@ -5,7 +5,7 @@ namespace chess4connect.Models.Games.Chess.Pieces
 {
     public class Rook : BasePiece
     {
-        public Rook(bool host, Point position) : base(host, position) { }
+        public Rook(int id, Chess.Color color, Point position) : base(id, color, position) { }
 
     }
 }

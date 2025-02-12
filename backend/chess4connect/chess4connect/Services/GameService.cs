@@ -12,7 +12,7 @@ public class GameService
     }
 
 
-    public async Task MovePiece(MoveRequest moveRequest)
+    public async Task MovePiece(ChessMoveRequest moveRequest)
     {
 
     }

@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace chess4connect.Models.Games.Connect;
 
-public class ConnectBoard : BaseBoard
+public class ConnectBoard : BaseBoard<BasePiece>
 {
     public static int ROWS = 6;
     public static int COLUMNS = 7;

@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace chess4connect.Models.Games.Chess
 {
-    public class ChessBoard : BaseBoard
+    public class ChessBoard : BaseBoard<ChessBasePiece>
     {
         public static int ROWS = 8;
         public static int COLUMNS = 8;
@@ -17,9 +17,9 @@ namespace chess4connect.Models.Games.Chess
             Pieces = PlacePiecesInBoard();
         }
 
-        private List<BasePiece> PlacePiecesInBoard()
+        private List<ChessBasePiece> PlacePiecesInBoard()
         {
-            List<BasePiece> allPieces = new List<BasePiece>
+            List<ChessBasePiece> allPieces = new List<ChessBasePiece>
             {
                 new Rook(8, ChessPieceColor.BLACK, new Point(0, 0)),
                 new Knight(9, ChessPieceColor.BLACK, new Point(0, 1)),

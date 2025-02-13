@@ -22,31 +22,31 @@ namespace chess4connect.Models.Games.Chess
         {
             List<BasePiece> allPieces =
             [
-                new Rook(8, Color.BLACK, new Point(0, 0)),
-                new Knight(9, Color.BLACK, new Point(0, 1)),
-                new Bishop(10, Color.BLACK, new Point(0, 2)),
-                new Queen(11, Color.BLACK, new Point(0, 3)),
-                new King(12, Color.BLACK, new Point(0, 4)),
-                new Bishop(13, Color.BLACK, new Point(0, 5)),
-                new Knight(14, Color.BLACK, new Point(0, 6)),
-                new Rook(15, Color.BLACK, new Point(0, 7)),
+                new Rook(8, Pieces.Types.Color.BLACK, new Point(0, 0)),
+                new Knight(9, Pieces.Types.Color.BLACK, new Point(0, 1)),
+                new Bishop(10, Pieces.Types.Color.BLACK, new Point(0, 2)),
+                new Queen(11, Pieces.Types.Color.BLACK, new Point(0, 3)),
+                new King(12, Pieces.Types.Color.BLACK, new Point(0, 4)),
+                new Bishop(13, Pieces.Types.Color.BLACK, new Point(0, 5)),
+                new Knight(14, Pieces.Types.Color.BLACK, new Point(0, 6)),
+                new Rook(15, Pieces.Types.Color.BLACK, new Point(0, 7)),
 
-                new Rook(24, Color.WHITE, new Point(7, 0)),
-                new Knight(25,Color.WHITE, new Point(7, 1)),
-                new Bishop(26, Color.WHITE, new Point(7, 2)),
-                new Queen(27, Color.WHITE, new Point(7, 3)),
-                new King(28, Color.WHITE, new Point(7, 4)),
-                new Bishop(29, Color.WHITE, new Point(7, 5)),
-                new Knight(30, Color.WHITE, new Point(7, 6)),
-                new Rook(31, Color.WHITE, new Point(7, 7)),
+                new Rook(24, Pieces.Types.Color.WHITE, new Point(7, 0)),
+                new Knight(25,Pieces.Types.Color.WHITE, new Point(7, 1)),
+                new Bishop(26, Pieces.Types.Color.WHITE, new Point(7, 2)),
+                new Queen(27, Pieces.Types.Color.WHITE, new Point(7, 3)),
+                new King(28, Pieces.Types.Color.WHITE, new Point(7, 4)),
+                new Bishop(29, Pieces.Types.Color.WHITE, new Point(7, 5)),
+                new Knight(30, Pieces.Types.Color.WHITE, new Point(7, 6)),
+                new Rook(31, Pieces.Types.Color.WHITE, new Point(7, 7)),
             ];
             for (int i = 0; i < COLUMNS; i++)
             {
-                allPieces.Add(new Pawn(i, Color.BLACK, new Point(1, i)));
+                allPieces.Add(new Pawn(i, Pieces.Types.Color.BLACK, new Point(1, i)));
             }
             for (int i = 0; i < COLUMNS; i++)
             {
-                allPieces.Add(new Pawn(i + 16, Color.WHITE, new Point(6, i)));
+                allPieces.Add(new Pawn(i + 16, Pieces.Types.Color.WHITE, new Point(6, i)));
 
             }
 

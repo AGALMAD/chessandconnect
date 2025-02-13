@@ -11,7 +11,7 @@ namespace chess4connect.Models.Games.Chess.Pieces
 
         protected List<Point> BasicMovements()
         {
-            int direction = Host ? -1 : 1;
+            int direction = Color == Types.Color.WHITE ? -1 : 1;
 
             List<Point> basicMovements = new List<Point>
             {

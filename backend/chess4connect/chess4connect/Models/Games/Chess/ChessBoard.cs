@@ -59,5 +59,20 @@ namespace chess4connect.Models.Games.Chess
         }
 
 
+        public void Move(ChessMoveRequest ChessMoveRequest)
+        {
+            var piece = Pieces.FirstOrDefault(p => p.Id == ChessMoveRequest.PieceId);
+
+            var destinyPiece = Pieces.FirstOrDefault(p => p.Position.X == ChessMoveRequest.DestinationPosition.X
+            && p.Position.Y == ChessMoveRequest.DestinationPosition.Y);
+
+            //Si la pieza de destino no es nula la elimina y posiciona la pieza
+            if (destinyPiece != null) 
+            { 
+                Pieces.Remove(destinyPiece);
+                
+
+            }
+        }
     }
 }

@@ -85,5 +85,13 @@ namespace chess4connect.Services
         }
         
 
+        public Game GetGameByUserId (int userId)
+        {
+            var room = rooms.FirstOrDefault(game => game.Player1Id == userId || game.Player2Id == userId);
+
+            return room?.Game;
+        }
+
+
     }
 }

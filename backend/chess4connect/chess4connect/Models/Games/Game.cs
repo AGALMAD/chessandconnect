@@ -6,7 +6,7 @@ namespace chess4connect.Models.Games;
 public class Game
 {
     public GameType GameType { get; set; }
-    public BaseBoard Board { get; set; }
+    public IBoard Board { get; set; }
     public DateTime StartDate { get; set; }
 
 }

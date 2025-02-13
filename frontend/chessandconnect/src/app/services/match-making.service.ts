@@ -12,6 +12,7 @@ import { Room } from '../models/Games/room';
 import { RoomRequest} from '../models/Games/room-request'
 import { GameType } from '../enums/game';
 import { GameService } from './game.service';
+import { ChessBasePiece } from '../models/Games/Chess/ChessBasePiece';
 
 @Injectable({
   providedIn: 'root'
@@ -65,7 +66,7 @@ export class MatchMakingService {
       case SocketCommunicationType.GAME_START:
 
 
-        const newRoom = message.Data as Room;
+        const newRoom = message.Data as Room<ChessBasePiece>;
         this.gameService.pieces = newRoom.Game.Board.Pieces
 
         const opponentId = newRoom.Player1Id != this.authService.currentUser.id ? newRoom.Player1Id : newRoom.Player2Id

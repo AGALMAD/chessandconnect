@@ -1,9 +1,7 @@
 import { GameType } from "../../enums/game";
-import { BaseBoard } from "./Base/BaseBoard";
+import { Board } from "./Base/Board";
 
-export interface Game {
-    GameType: GameType,
-    Board: BaseBoard
-    StartDate:Date
-
+export interface Game<T> {
+    GameType: GameType;
+    Board: Board<T>;
 }

@@ -6,20 +6,26 @@ using System.Drawing;
 
 namespace chess4connect.Models.Games.Chess
 {
-    public class ChessBoard : BaseBoard
+    public class ChessBoard : IBoard
     {
         public static int ROWS = 8;
         public static int COLUMNS = 8;
 
+        public List<IPiece> Pieces { get; set; }
 
         public ChessBoard()
         {
             Pieces = PlacePiecesInBoard();
         }
 
-        private List<BasePiece> PlacePiecesInBoard()
+        public void Initialize()
         {
-            List<BasePiece> allPieces = new List<BasePiece>
+            throw new NotImplementedException();
+        }
+
+        private List<IPiece> PlacePiecesInBoard()
+        {
+            List<IPiece> allPieces = new List<IPiece>
             {
                 new Rook(8, ChessPieceColor.BLACK, new Point(0, 0)),
                 new Knight(9, ChessPieceColor.BLACK, new Point(0, 1)),

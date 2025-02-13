@@ -1,5 +1,6 @@
 ﻿using chess4connect.Models.Games.Base;
 using chess4connect.Models.Games.Chess.Pieces;
+using chess4connect.Models.Games.Chess.Pieces.Types;
 using System.Drawing;
 
 namespace chess4connect.Models.Games.Chess

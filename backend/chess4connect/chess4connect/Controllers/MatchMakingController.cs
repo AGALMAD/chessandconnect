@@ -74,10 +74,10 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPost("FriendGame")]
-        public async Task<ActionResult> FriendGame([FromBody] Room room)
+        public async Task<ActionResult> FriendGame([FromBody] RoomRequest room)
         {
 
-            var gamemode = room.Game.GameType;
+            var gamemode = room.GameType;
             var friendId = room.Player2Id;
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);

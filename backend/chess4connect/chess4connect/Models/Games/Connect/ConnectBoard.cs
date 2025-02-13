@@ -10,7 +10,7 @@ public class ConnectBoard : BaseBoard
     public ConnectBoard()
     {
 
-        Board = new BasePiece[ROWS, COLUMNS];
+        Pieces = new List<BasePiece>();
     }
 }
 

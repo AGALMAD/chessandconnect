@@ -2,10 +2,9 @@
 
 namespace chess4connect.Models.Games.Base;
 
-public interface IBoard
+public class BaseBoard
 {
-    public List<IPiece> Pieces { get; set; }
-    void Initialize();
+    public List<BasePiece> Pieces { get; set; } = new List<BasePiece>();
 
 
 }

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { CommonModule } from '@angular/common';
 import { BasePiece } from '../../models/Games/Base/BasePiece';
-import { ChessBasePiece } from '../../models/Games/Chess/ChessBasePiece';
 
 
 @Component({
@@ -16,7 +15,7 @@ export class ChessComponent implements OnInit{
 
   constructor(public gameService: GameService){}
 
-  pieces: ChessBasePiece[]
+  pieces: BasePiece[]
 
   ngOnInit(): void {
     this.pieces = this.gameService.pieces

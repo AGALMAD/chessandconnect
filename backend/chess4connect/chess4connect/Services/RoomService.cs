@@ -2,10 +2,7 @@
 using chess4connect.Enums;
 using chess4connect.Mappers;
 using chess4connect.Models.Games;
-using chess4connect.Models.Games.Base;
 using chess4connect.Models.Games.Chess;
-using chess4connect.Models.Games.Chess.Pieces;
-using chess4connect.Models.Games.Chess.Pieces.Base;
 using chess4connect.Models.Games.Connect;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
@@ -27,44 +24,22 @@ namespace chess4connect.Services
 
         public async Task CreateRoomAsync(GameType gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
         {
-            if (gamemode == GameType.Chess)
+            Room room = new Room
             {
-                Room room = new Room
+                Player1Id = player1.Id,
+                Player2Id = player2?.Id,
+                Game = new Game
                 {
-                    Player1Id = player1.Id,
-                    Player2Id = player2?.Id,
-                    Game = new Game
-                    {
-                        GameType = gamemode,
-                        Board = new ChessBoard()
-                    }
-                };
+                    GameType = gamemode,
+                    Board = gamemode == GameType.Chess
+                ? new chess4connect.Models.Games.Chess.ChessBoard()
+                : new chess4connect.Models.Games.Connect.ConnectBoard()
+                }
+            };
 
-                rooms.Add(room);
+            rooms.Add(room);
 
-                await SendRoomMessageAsync(room, player1, player2);
-            }
-
-            else if (gamemode == GameType.Connect4)
-            {
-                Room room = new Room
-                {
-                    Player1Id = player1.Id,
-                    Player2Id = player2?.Id,
-                    Game = new Game
-                    {
-                        GameType = gamemode,
-                        Board = new ConnectBoard()
-                    }
-                };
-
-                rooms.Add(room);
-
-                await SendRoomMessageAsync(room, player1, player2);
-            }
-
-
-
+            await SendRoomMessageAsync(room, player1, player2);
         }
 
         private async Task SendRoomMessageAsync(Room room, WebSocketHandler player1, WebSocketHandler player2)

@@ -1,11 +1,12 @@
 ﻿using chess4connect.Models.Games.Base;
+using chess4connect.Models.Games.Chess.Pieces.Types;
 using System.Drawing;
 
 namespace chess4connect.Models.Games.Chess.Pieces
 {
     public class Bishop : BasePiece
     {
-        public Bishop(bool host, Point position) : base(host, position) { }
+        public Bishop(int id, Types.Color color, Point position) : base(id, PieceType.BISHOP, color, position) { }
 
         protected List<Point> BasicMovements()
         {

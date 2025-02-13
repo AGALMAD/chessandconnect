@@ -6,13 +6,13 @@ namespace chess4connect.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ChessController : ControllerBase
+public class GameController : ControllerBase
 {
-    private ChessService _chessService;
+    private GameService _gameService;
 
-    public ChessController(ChessService chessService)
+    public GameController(GameService gameService)
     {
-        _chessService = chessService;
+        _gameService = gameService;
     }
 
 }

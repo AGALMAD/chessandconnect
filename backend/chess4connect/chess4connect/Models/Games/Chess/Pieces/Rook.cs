@@ -6,7 +6,7 @@ namespace chess4connect.Models.Games.Chess.Pieces
 {
     public class Rook : BasePiece
     {
-        public Rook(int id, Types.Color color, Point position) : base(id, PieceType.ROOK, color, position) { }
+        public Rook(int id, Types.ChessPieceColor color, Point position) : base(id, PieceType.ROOK, color, position) { }
 
         protected List<Point> BasicMovements()
         {

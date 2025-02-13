@@ -28,10 +28,12 @@ namespace chess4connect.Services
             {
                 Player1Id = player1.Id,
                 Player2Id = player2?.Id,
-                Game = new Models.Games.Game
+                Game = new Game
                 {
                     GameType = gamemode,
-                    Board = gamemode == GameType.Chess ? new global::chess4connect.Models.Games.Chess.ChessBoard() : new global::chess4connect.Models.Games.Connect.ConnectBoard()
+                    Board = gamemode == GameType.Chess
+                ? new chess4connect.Models.Games.Chess.ChessBoard()
+                : new chess4connect.Models.Games.Connect.ConnectBoard()
                 }
             };
 
@@ -42,10 +44,10 @@ namespace chess4connect.Services
 
         private async Task SendRoomMessageAsync(Room room, WebSocketHandler player1, WebSocketHandler player2)
         {
-            var roomSocketMessage = new SocketMessage<RoomDto>
+            var roomSocketMessage = new SocketMessage<Room>
             {
                 Type = SocketCommunicationType.GAME_START,
-                Data = RoomMapper.ToDto(room),
+                Data = room,
             };
 
             string message = JsonSerializer.Serialize(roomSocketMessage);

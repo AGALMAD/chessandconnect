@@ -6,7 +6,7 @@ namespace chess4connect.Models.Games.Chess.Pieces
 {
     public class Bishop : BasePiece
     {
-        public Bishop(int id, Types.Color color, Point position) : base(id, PieceType.BISHOP, color, position) { }
+        public Bishop(int id, Types.ChessPieceColor color, Point position) : base(id, PieceType.BISHOP, color, position) { }
 
         protected List<Point> BasicMovements()
         {

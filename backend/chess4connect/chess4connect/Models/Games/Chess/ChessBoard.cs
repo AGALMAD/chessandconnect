@@ -12,8 +12,7 @@ namespace chess4connect.Models.Games.Chess
         public static int COLUMNS = 8;
 
         public List<ChessBasePiece> PiecesInBoard { get; set; }
-
-        public List<ChessBasePiece> allPieceMovements;
+        public List<ChessPiecesMovements> ChessPiecesMovements { get; set; }
 
         private ChessBasePiece[,] Board = new ChessBasePiece[ROWS, COLUMNS];
         public ChessBoard()
@@ -56,29 +55,41 @@ namespace chess4connect.Models.Games.Chess
                 Board[6, i] = new Pawn(32 + i, ChessPieceColor.WHITE, new Point(6, i));
             }
 
-            
+
         }
 
 
         private void GetAllPieceMovements()
         {
-            allPieceMovements = new List<ChessBasePiece>();
+            ChessPiecesMovements = new List<ChessPiecesMovements>();
 
             foreach (ChessBasePiece piece in Board)
             {
+                List<Point> movementList = new List<Point>();
                 foreach (Point position in piece.BasicMovements)
                 {
-                    if(Board[position.X,position.Y] == null && position.X < 8 && position.Y < 8)
+                    
+                    if (Board[position.X, position.Y] == null && position.X < 8 && position.Y < 8)
                     {
-                        // añadir movimiento
-                        if (Board[position.X, position.Y].Color != piece.Color)
-                        {
-                            //añadir movimiento para comer
-                        }
+                        
+                        movementList.Add(position);
+
+                    }
+                    else if (Board[position.X, position.Y].Color != piece.Color)
+                    {
+                        movementList.Add(position);
                     }
                 }
+                ChessPiecesMovements newMovements = new ChessPiecesMovements
+                {
+                    Piece = piece,
+                    Movements = movementList
+                };
+
+                ChessPiecesMovements.Add(newMovements);
             }
         }
+
 
 
         //PiecesInBoard = new List<ChessBasePiece>

@@ -1,12 +1,13 @@
 ﻿using chess4connect.Models.Games.Base;
+using chess4connect.Models.Games.Chess.Pieces.Base;
 using chess4connect.Models.Games.Chess.Pieces.Types;
 using System.Drawing;
 
 namespace chess4connect.Models.Games.Chess.Pieces
 {
-    public class Rook : BasePiece
+    public class Rook : ChessBasePiece
     {
-        public Rook(int id, Types.Color color, Point position) : base(id, PieceType.ROOK, color, position) { }
+        public Rook(int id, ChessPieceColor color, Point position) : base(id, PieceType.ROOK, color, position) { }
 
         protected List<Point> BasicMovements()
         {

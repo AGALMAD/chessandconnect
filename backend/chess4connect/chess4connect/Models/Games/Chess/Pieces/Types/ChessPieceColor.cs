@@ -1,6 +1,6 @@
 ﻿namespace chess4connect.Models.Games.Chess.Pieces.Types;
 
-public enum Color
+public enum ChessPieceColor
 {
     WHITE,
     BLACK

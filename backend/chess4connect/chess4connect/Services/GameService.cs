@@ -12,8 +12,10 @@ public class GameService
     }
 
 
-    public async Task MovePiece(ChessMoveRequest moveRequest)
+    public async Task MoveChessPiece(ChessMoveRequest moveRequest, int userId)
     {
+
+
 
     }
 

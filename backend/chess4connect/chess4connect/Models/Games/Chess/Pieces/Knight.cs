@@ -1,11 +1,12 @@
 ﻿using chess4connect.Models.Games.Base;
+using chess4connect.Models.Games.Chess.Pieces.Types;
 using System.Drawing;
 
 namespace chess4connect.Models.Games.Chess.Pieces
 {
     public class Knight : BasePiece
     {
-        public Knight(int id, Chess.Color color, Point position) : base(id, color, position) { }
+        public Knight(int id, Types.Color color, Point position) : base(id, PieceType.KNIGHT, color, position) { }
 
         protected List<Point> BasicMovements()
         {

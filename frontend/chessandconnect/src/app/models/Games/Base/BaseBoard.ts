@@ -1,6 +1,6 @@
-import { BasePiece } from "../Chess/BasePiece";
+import { ChessBasePiece } from "../Chess/ChessBasePiece";
 
 export interface BaseBoard {
-    Pieces: BasePiece[]
+    Pieces: ChessBasePiece[]
 
 }

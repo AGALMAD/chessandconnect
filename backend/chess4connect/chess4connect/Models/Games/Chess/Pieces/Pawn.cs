@@ -1,17 +1,18 @@
 ﻿using chess4connect.Models.Games.Base;
+using chess4connect.Models.Games.Chess.Pieces.Base;
 using chess4connect.Models.Games.Chess.Pieces.Types;
 using System.Drawing;
 
 namespace chess4connect.Models.Games.Chess.Pieces
 {
-    public class Pawn : BasePiece
+    public class Pawn : ChessBasePiece
     {
-        public Pawn(int id, Types.ChessPieceColor color, Point position) : base(id, PieceType.PAWN, color, position) { }
+        public Pawn(int id, ChessPieceColor color, Point position) : base(id, PieceType.PAWN, color, position) { }
         public bool FirstMove { get; set; } = true;
 
         protected List<Point> BasicMovements()
         {
-            int direction = Color == Types.ChessPieceColor.WHITE ? -1 : 1;
+            int direction = Color == ChessPieceColor.WHITE ? -1 : 1;
 
             List<Point> basicMovements = new List<Point>
             {

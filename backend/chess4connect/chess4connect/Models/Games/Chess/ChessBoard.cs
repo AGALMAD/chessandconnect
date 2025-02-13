@@ -1,9 +1,7 @@
-﻿using chess4connect.Enums;
+﻿using chess4connect.Models.Games.Base;
 using chess4connect.Models.Games.Chess.Pieces;
-using chess4connect.Models.Games.Base;
-using Microsoft.AspNetCore.Routing.Constraints;
+using chess4connect.Models.Games.Chess.Pieces.Types;
 using System.Drawing;
-using System.Security.Cryptography.X509Certificates;
 
 namespace chess4connect.Models.Games.Chess
 {
@@ -17,40 +15,44 @@ namespace chess4connect.Models.Games.Chess
         {
             Board = new BasePiece[ROWS, COLUMNS];
 
-            InitalizeBoard();
+            PlacePiecesInBoard();
         }
 
-        private void InitalizeBoard()
+        private List<BasePiece> PlacePiecesInBoard()
         {
-            // Inicializar piezas negras
-            Board[0, 0] = new Rook(false, new Point(0, 0));
-            Board[0, 1] = new Knight(false, new Point(0, 1));
-            Board[0, 2] = new Bishop(false, new Point(0, 2));
-            Board[0, 3] = new Queen(false, new Point(0, 3));
-            Board[0, 4] = new King(false, new Point(0, 4));
-            Board[0, 5] = new Bishop(false, new Point(0, 5));
-            Board[0, 6] = new Knight(false, new Point(0, 6));
-            Board[0, 7] = new Rook(false, new Point(0, 7));
+            List<BasePiece> allPieces =
+            [
+                new Rook(8, Pieces.Types.Color.BLACK, new Point(0, 0)),
+                new Knight(9, Pieces.Types.Color.BLACK, new Point(0, 1)),
+                new Bishop(10, Pieces.Types.Color.BLACK, new Point(0, 2)),
+                new Queen(11, Pieces.Types.Color.BLACK, new Point(0, 3)),
+                new King(12, Pieces.Types.Color.BLACK, new Point(0, 4)),
+                new Bishop(13, Pieces.Types.Color.BLACK, new Point(0, 5)),
+                new Knight(14, Pieces.Types.Color.BLACK, new Point(0, 6)),
+                new Rook(15, Pieces.Types.Color.BLACK, new Point(0, 7)),
+
+                new Rook(24, Pieces.Types.Color.WHITE, new Point(7, 0)),
+                new Knight(25,Pieces.Types.Color.WHITE, new Point(7, 1)),
+                new Bishop(26, Pieces.Types.Color.WHITE, new Point(7, 2)),
+                new Queen(27, Pieces.Types.Color.WHITE, new Point(7, 3)),
+                new King(28, Pieces.Types.Color.WHITE, new Point(7, 4)),
+                new Bishop(29, Pieces.Types.Color.WHITE, new Point(7, 5)),
+                new Knight(30, Pieces.Types.Color.WHITE, new Point(7, 6)),
+                new Rook(31, Pieces.Types.Color.WHITE, new Point(7, 7)),
+            ];
             for (int i = 0; i < COLUMNS; i++)
             {
-                Board[1, i] = new Pawn(false, new Point(1, i));
+                allPieces.Add(new Pawn(i, Pieces.Types.Color.BLACK, new Point(1, i)));
             }
-
-            // Inicializar piezas blancas
-            Board[7, 0] = new Rook(true, new Point(7, 0));
-            Board[7, 1] = new Knight(true, new Point(7, 1));
-            Board[7, 2] = new Bishop(true, new Point(7, 2));
-            Board[7, 3] = new Queen(true, new Point(7, 3));
-            Board[7, 4] = new King(true, new Point(7, 4));
-            Board[7, 5] = new Bishop(true, new Point(7, 5));
-            Board[7, 6] = new Knight(true, new Point(7, 6));
-            Board[7, 7] = new Rook(true, new Point(7, 7));
             for (int i = 0; i < COLUMNS; i++)
             {
-                Board[6, i] = new Pawn(true, new Point(6, i));
+                allPieces.Add(new Pawn(i + 16, Pieces.Types.Color.WHITE, new Point(6, i)));
 
             }
+
+            return allPieces;
         }
+
 
     }
 }

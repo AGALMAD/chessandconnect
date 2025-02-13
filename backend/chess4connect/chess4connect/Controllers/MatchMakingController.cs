@@ -77,7 +77,7 @@ namespace chess4connect.Controllers
         public async Task<ActionResult> FriendGame([FromBody] RoomRequest room)
         {
 
-            var gamemode = room.GameType;
+            var gamemode = room.Game.GameType;
             var friendId = room.Player2Id;
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);

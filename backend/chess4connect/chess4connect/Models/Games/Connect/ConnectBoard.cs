@@ -19,11 +19,6 @@ public class ConnectBoard : IBoard
     {
         throw new NotImplementedException();
     }
-
-    public void Move(ChessMoveRequest ChessMoveRequest)
-    {
-        throw new NotImplementedException();
-    }
 }
 
 

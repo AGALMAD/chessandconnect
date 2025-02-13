@@ -15,11 +15,6 @@ public class GameService
     public async Task MoveChessPiece(ChessMoveRequest moveRequest, int userId)
     {
 
-        Game currentGame = _roomService.GetGameByUserId(userId);
-        if (currentGame != null)
-        {
-            currentGame.Board.Move(moveRequest);
-        }
 
 
     }

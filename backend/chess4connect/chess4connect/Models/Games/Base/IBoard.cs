@@ -7,6 +7,5 @@ public interface IBoard
     public List<IPiece> Pieces { get; set; }
     void Initialize();
 
-    void Move(ChessMoveRequest ChessMoveRequest);
 
 }

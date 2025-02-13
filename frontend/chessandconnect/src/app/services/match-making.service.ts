@@ -9,6 +9,7 @@ import { AuthService } from './auth.service';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { Room } from '../models/Games/room';
+import { RoomRequest} from '../models/Games/room-request'
 import { GameType } from '../enums/game';
 import { GameService } from './game.service';
 
@@ -80,15 +81,12 @@ export class MatchMakingService {
 
   }
 
-  async startGameWithFriend(gamemode: Game){
-      const room : Room = {
-        Player1Id: 0,
-        Player2Id: this.opponent.id,
-        Game: gamemode,
-        id: 0,
-        StartDate: undefined
+  async startGameWithFriend(gamemode: GameType){
+      const room : RoomRequest = {
+        Player2Id: this.friendOpponent.id,
+        GameType: gamemode
       }
-      await this.api.post<Room>(`MatchMaking/FriendGame`, room)
+      await this.api.post<RoomRequest>(`MatchMaking/FriendGame`, room)
   }
 
 

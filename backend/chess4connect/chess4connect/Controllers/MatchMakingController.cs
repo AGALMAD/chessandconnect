@@ -74,7 +74,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPost("FriendGame")]
-        public async Task<ActionResult> FriendGame([FromBody] Room room)
+        public async Task<ActionResult> FriendGame([FromBody] RoomRequest room)
         {
 
             var gamemode = room.Game.GameType;

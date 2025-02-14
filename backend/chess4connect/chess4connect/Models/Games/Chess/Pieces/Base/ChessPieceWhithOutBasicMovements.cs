@@ -1,9 +1,9 @@
 ﻿using chess4connect.Models.Games.Chess.Pieces.Types;
 using System.Drawing;
 
-namespace chess4connect.DTOs.Games;
+namespace chess4connect.Models.Games.Chess.Pieces.Base;
 
-public class ChessPieceDto
+public class ChessPieceWhithOutBasicMovements
 {
     public int Id { get; set; }
     public ChessPieceColor Color { get; set; }

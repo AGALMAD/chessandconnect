@@ -11,7 +11,6 @@ namespace chess4connect.Models.Games.Chess
         public static int ROWS = 8;
         public static int COLUMNS = 8;
 
-        public List<ChessBasePiece> PiecesInBoard { get; set; }
         public List<ChessPiecesMovements> ChessPiecesMovements { get; set; }
 
         private ChessBasePiece[,] Board = new ChessBasePiece[ROWS, COLUMNS];
@@ -97,7 +96,13 @@ namespace chess4connect.Models.Games.Chess
                 //creating a new object of a piece and its movements
                 ChessPiecesMovements newMovements = new ChessPiecesMovements
                 {
-                    Piece = piece,
+                    Piece = new ChessPieceWhithOutBasicMovements
+                    {
+                        Id = piece.Id,
+                        Color = piece.Color,
+                        PieceType = piece.PieceType,
+                        Position = piece.Position,
+                    },
                     Movements = movementList
                 };
 
@@ -106,43 +111,15 @@ namespace chess4connect.Models.Games.Chess
         }
 
 
-
-        //PiecesInBoard = new List<ChessBasePiece>
-        //{
-        //    //new Rook(8, ChessPieceColor.BLACK, new Point(0, 0)),
-        //    //new Knight(9, ChessPieceColor.BLACK, new Point(0, 1)),
-        //    //new Bishop(10, ChessPieceColor.BLACK, new Point(0, 2)),
-        //    //new Queen(11, ChessPieceColor.BLACK, new Point(0, 3)),
-        //    //new King(12, ChessPieceColor.BLACK, new Point(0, 4)),
-        //    //new Bishop(13, ChessPieceColor.BLACK, new Point(0, 5)),
-        //    //new Knight(14, ChessPieceColor.BLACK, new Point(0, 6)),
-        //    //new Rook(15, ChessPieceColor.BLACK, new Point(0, 7)),
-
-        //    //new Rook(24, ChessPieceColor.WHITE, new Point(7, 0)),
-        //    //new Knight(25, ChessPieceColor.WHITE, new Point(7, 1)),
-        //    //new Bishop(26, ChessPieceColor.WHITE, new Point(7, 2)),
-        //    //new Queen(27, ChessPieceColor.WHITE, new Point(7, 3)),
-        //    //new King(28, ChessPieceColor.WHITE, new Point(7, 4)),
-        //    //new Bishop(29, ChessPieceColor.WHITE, new Point(7, 5)),
-        //    //new Knight(30, ChessPieceColor.WHITE, new Point(7, 6)),
-        //    //new Rook(31, ChessPieceColor.WHITE, new Point(7, 7))
-        //};
-
-        //for (int i = 0; i < COLUMNS; i++)
-        //{
-        //    PiecesInBoard.Add(new Pawn(16 + i, ChessPieceColor.BLACK, new Point(1, i)));
-        //}
-
-
         public void MovePiece(ChessMoveRequest moveRequest)
         {
             //Busca la pieza en la lista de piezas del tablero
-            var piece = PiecesInBoard.FirstOrDefault(p => p.Id == moveRequest.PieceId);
+            var piece = convertBoardToList().FirstOrDefault(p => p.Id == moveRequest.PieceId);
 
             if (piece != null)
             {
                 //Verifica si el movimiento que quiere hacer es correcto
-                var chessPieceMovements = ChessPiecesMovements.Where(p => p.Piece == piece).FirstOrDefault();
+                var chessPieceMovements = ChessPiecesMovements.Where(p => p.Piece.Id == piece.Id).FirstOrDefault();
 
                 if (chessPieceMovements != null && chessPieceMovements.Movements.Contains(moveRequest.DestinationPosition))
                 {
@@ -184,9 +161,28 @@ namespace chess4connect.Models.Games.Chess
             var selectedPiece = selectedPieceMovement.Piece;
             Board[selectedPiece.Position.X, selectedPiece.Position.Y] = null;
             selectedPiece.Position = randomMove;
-            Board[randomMove.X, randomMove.Y] = selectedPiece;
+            Board[randomMove.X, randomMove.Y].Id = selectedPiece.Id;
 
         }
+
+
+        public List<ChessBasePiece> convertBoardToList()
+        {
+            List<ChessBasePiece> piecesInBoard = new List<ChessBasePiece>();
+
+            for (int i = 0; i < Board.GetLength(0); i++)
+            {
+                for (int j = 0; j < Board.GetLength(1); j++)
+                {
+                    piecesInBoard.Add(Board[i, j]);
+                }
+            }
+
+
+            return piecesInBoard; 
+
+        }
+
 
 
 

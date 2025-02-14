@@ -49,16 +49,46 @@ namespace chess4connect.Services
 
         private async Task SendRoomMessageAsync(GameType gameType, WebSocketHandler socketPlayer1, WebSocketHandler socketPlayer2)
         {
-            //Mensaje para los jugadores de ajedrez
+            string stringMessage = "";
 
-            var gameInvitationMessage = new SocketMessage<List<ChessBasePiece>>
+            if (gameType == GameType.Chess)
             {
-                Type = SocketCommunicationType.GAME_INVITATION,
 
-                Data = new List<ChessBasePiece>()
-            };
+                //Mensaje para los jugadores de ajedrez
 
-            //Mensaje para los jugadores de conecta4
+                var chessBoardMessage = new SocketMessage<List<ChessBasePiece>>
+                {
+                    Type = SocketCommunicationType.CHESS_BOARD,
+
+                    Data = new List<ChessBasePiece>()
+                };
+
+                stringMessage = JsonSerializer.Serialize(chessBoardMessage);
+            }
+            else if (gameType == GameType.Connect4)
+            {
+                //Mensaje para los jugadores de conecta4
+                var connectBoardMessage = new SocketMessage<List<BasePiece>>
+                {
+                    Type = SocketCommunicationType.CONNECT_BOARD,
+
+                    Data = new List<BasePiece>()
+                };
+                stringMessage = JsonSerializer.Serialize(connectBoardMessage);
+            }
+
+            //Envia los mensajes a los jugadores
+            if (socketPlayer1 != null)
+            {
+                await socketPlayer1.SendAsync(stringMessage);
+            }
+
+            if (socketPlayer2 != null)
+            {
+                await socketPlayer2.SendAsync(stringMessage);
+            }
+
+
 
 
         }

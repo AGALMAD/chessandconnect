@@ -9,6 +9,7 @@ using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using System.Text.Json;
 using chess4connect.DTOs.Games;
+using chess4connect.Models.Games.Chess;
 
 namespace chess4connect.Services
 {
@@ -16,7 +17,7 @@ namespace chess4connect.Services
     {
         private readonly WebSocketNetwork _network;
         private List<ChessRoom> chessRooms = new List<ChessRoom>();
-        private List<ChessRoom<BasePiece>> connectRooms = new List<ChessRoom<BasePiece>>();
+        private List<ConnectRoom> connectRooms = new List<ConnectRoom>();
         public RoomService(WebSocketNetwork webSocketNetwork)
         {
             _network = webSocketNetwork;
@@ -26,74 +27,39 @@ namespace chess4connect.Services
         {
             if (gamemode == GameType.Chess)
             {
-                var room = new ChessRoom<ChessBasePiece>
-                {
-                    Player1Id = player1.Id,
-                    Player2Id = player2?.Id,
-                    Game = new Chess<ChessBasePiece>
-                    {
-                        GameType = gamemode,
-                        Board = new ChessBoard()
-                    }
-                };
+                var room = new ChessRoom(player1.Id, player2.Id,
+                    new ChessGame(DateTime.Now,
+                    new ChessBoard()));
 
                 chessRooms.Add(room);
-                await SendRoomMessageAsync(room, player1, player2);
+
+                await SendRoomMessageAsync(GameType.Chess, player1, player2);
             }
             else if (gamemode == GameType.Connect4)
             {
-                var room = new ChessRoom<BasePiece>
-                {
-                    Player1Id = player1.Id,
-                    Player2Id = player2?.Id,
-                    Game = new Chess<BasePiece>
-                    {
-                        GameType = gamemode,
-                        Board = new ConnectBoard()
-                    }
-                };
+                var room = new ConnectRoom(player1.Id, player2.Id,
+                   new ConnectGame(DateTime.Now,
+                   new ConnectBoard()));
 
                 connectRooms.Add(room);
-                await SendRoomMessageAsync(room, player1, player2);
+
+                await SendRoomMessageAsync(GameType.Connect4, player1, player2);
             }
         }
 
-        private async Task SendRoomMessageAsync<T>(ChessRoom<T> room, WebSocketHandler socketPlayer1, WebSocketHandler socketPlayer2)
+        private async Task SendRoomMessageAsync(GameType gameType, WebSocketHandler socketPlayer1, WebSocketHandler socketPlayer2)
         {
+            //Mensaje para los jugadores de ajedrez
 
-            var socketMessage = new SocketMessage<RoomDto>
+            var gameInvitationMessage = new SocketMessage<List<ChessBasePiece>>
             {
-                Type = SocketCommunicationType.GAME_START,
-                Data = new RoomDto
-                {
-                    Player1Id = room.Player1Id,
-                    Player2Id = room.Player2Id,
-                    GameType = room.Game.GameType,
-                },
+                Type = SocketCommunicationType.GAME_INVITATION,
+
+                Data = new List<ChessBasePiece>()
             };
 
-            string stringSocketMessage = JsonSerializer.Serialize(socketMessage);
+            //Mensaje para los jugadores de conecta4
 
-
-            await socketPlayer1.SendAsync(stringSocketMessage);
-            if (socketPlayer2 is not null)
-            {
-                await socketPlayer2.SendAsync(stringSocketMessage);
-            }
-        }
-
-
-
-        public ChessRoom<ChessBasePiece> GetChessRoomByUserId(int userId)
-        {
-            return chessRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
-
-
-        }
-
-        public ChessRoom<BasePiece> GetConnectRoomByUserId(int userId)
-        {
-            return connectRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
 
         }
 

@@ -8,7 +8,7 @@ public class ChessGame: BaseGame
 {
     public ChessBoard Board { get; set; }
 
-    public ChessGame(GameType gameType,DateTime startDateTime, ChessBoard board): base(gameType, startDateTime)
+    public ChessGame(DateTime startDateTime, ChessBoard board): base(GameType.Chess, startDateTime)
     {
         Board = board;
     }

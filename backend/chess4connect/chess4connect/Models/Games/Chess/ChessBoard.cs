@@ -134,6 +134,31 @@ namespace chess4connect.Models.Games.Chess
         //}
 
 
+        public void MovePiece(ChessMoveRequest moveRequest)
+        {
+            //Busca la pieza en la lista de piezas del tablero
+            var piece = PiecesInBoard.FirstOrDefault(p => p.Id == moveRequest.PieceId);
+
+            if (piece != null)
+            {
+                //Verifica si el movimiento que quiere hacer es correcto
+                var chessPieceMovements = ChessPiecesMovements.Where(p => p.Piece == piece).FirstOrDefault();
+
+                if (chessPieceMovements != null && chessPieceMovements.Movements.Contains(moveRequest.DestinationPosition))
+                {
+                    //Mueve la pieza y actualiza su posición
+                    Board[piece.Position.X, piece.Position.Y] = null;
+
+                    Board[moveRequest.DestinationPosition.X, moveRequest.DestinationPosition.Y] = piece;
+                    piece.Position = moveRequest.DestinationPosition;
+                }
+
+            }
+
+        }
+
+
+
         public void RandomMovement(ChessPieceColor playerColor)
         {
             // Calcula los posibles movimientos que puede hacer 
@@ -143,7 +168,7 @@ namespace chess4connect.Models.Games.Chess
                 .Where(p => p.Piece.Color == playerColor)
                 .ToList();
 
-            // Check if there are any pieces available to move
+            
             if (playerPiecesMovements.Count == 0)
             {
                 Console.WriteLine("No pieces to move.");

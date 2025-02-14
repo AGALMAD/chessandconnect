@@ -9,9 +9,9 @@ namespace chess4connect.Models.Games.Chess.Pieces
     {
         public Knight(int id, ChessPieceColor color, Point position) : base(id, PieceType.KNIGHT, color, position) { }
 
-        protected List<Point> BasicMovements()
+        protected override void GetBasicMovements()
         {
-            return new List<Point>
+            BasicMovements = new List<Point>()
             {
             new Point(2, 1),  new Point(2, -1), new Point(-2, 1), new Point(-2, -1),
             new Point(1, 2),  new Point(1, -2), new Point(-1, 2), new Point(-1, -2)

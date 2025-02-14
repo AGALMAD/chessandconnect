@@ -10,20 +10,21 @@ namespace chess4connect.Models.Games.Chess.Pieces
         public Pawn(int id, ChessPieceColor color, Point position) : base(id, PieceType.PAWN, color, position) { }
         public bool FirstMove { get; set; } = true;
 
-        protected List<Point> BasicMovements()
+        protected override void GetBasicMovements()
         {
             int direction = Color == ChessPieceColor.WHITE ? -1 : 1;
 
-            List<Point> basicMovements = new List<Point>
+            BasicMovements = new List<Point>()
             {
-                new Point(direction, 0)
+                new Point(direction, 0),
+                new Point(direction, 1),
+                new Point(direction, -1),
             };
             if (FirstMove)
             {
-                basicMovements.Add(new Point(2 * direction,0));
+                BasicMovements.Add(new Point(2 * direction,0));
             }
 
-            return basicMovements;
         }
     }
 }

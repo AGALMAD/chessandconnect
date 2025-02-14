@@ -132,5 +132,38 @@ namespace chess4connect.Models.Games.Chess
         //{
         //    PiecesInBoard.Add(new Pawn(16 + i, ChessPieceColor.BLACK, new Point(1, i)));
         //}
+
+
+        public void RandomMovement(ChessPieceColor playerColor)
+        {
+            // Calcula los posibles movimientos que puede hacer 
+            GetAllPieceMovements(playerColor);
+
+            var playerPiecesMovements = ChessPiecesMovements
+                .Where(p => p.Piece.Color == playerColor)
+                .ToList();
+
+            // Check if there are any pieces available to move
+            if (playerPiecesMovements.Count == 0)
+            {
+                Console.WriteLine("No pieces to move.");
+                return;
+            }
+
+            //Movimiento aleatorio de pieza aleatoria
+            var random = new Random();
+            var selectedPieceMovement = playerPiecesMovements[random.Next(playerPiecesMovements.Count)];
+            var randomMove = selectedPieceMovement.Movements[random.Next(selectedPieceMovement.Movements.Count)];
+
+            // Mueve la pieza del tablero
+            var selectedPiece = selectedPieceMovement.Piece;
+            Board[selectedPiece.Position.X, selectedPiece.Position.Y] = null;
+            selectedPiece.Position = randomMove;
+            Board[randomMove.X, randomMove.Y] = selectedPiece;
+
+        }
+
+
+
     }
 }

@@ -21,8 +21,15 @@ export class ChessComponent implements OnInit{
   ngOnInit(): void {
     this.pieces = this.gameService.pieces
     console.log("GAMEEEEEE:", this.gameService.pieces)
+    this.pieces.forEach(p => {
+      p.ChessPieceColor
+    });
   }
+
+
   
+  
+
   letters: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
   lettersReverse: string[] = ['H', 'G', 'F', 'E', 'D', 'C', 'B', 'A']
   numbersReverse: string [] = ['1', '2', '3', '4', '5', '6', '7', '8']

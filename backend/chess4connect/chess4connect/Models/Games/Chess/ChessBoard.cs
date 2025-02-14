@@ -59,27 +59,42 @@ namespace chess4connect.Models.Games.Chess
         }
 
 
-        private void GetAllPieceMovements()
+        private void GetAllPieceMovements(ChessPieceColor actualPlayerColor)
         {
             ChessPiecesMovements = new List<ChessPiecesMovements>();
-
+            
             foreach (ChessBasePiece piece in Board)
             {
+                //only pieces positions from actual player will be recalculated
+                if (piece.Color != actualPlayerColor) continue;
+
                 List<Point> movementList = new List<Point>();
+
                 foreach (Point position in piece.BasicMovements)
                 {
-                    
-                    if (Board[position.X, position.Y] == null && position.X < 8 && position.Y < 8)
+                    //calculate position adding the basic movement to piece position
+                    Point nextMove = new Point
                     {
-                        
-                        movementList.Add(position);
+                        X = piece.Position.X + position.X,
+                        Y = piece.Position.Y + position.Y
+                    };
 
-                    }
-                    else if (Board[position.X, position.Y].Color != piece.Color)
+                    //making sure the next move will be inside the board
+                    if (nextMove.X >= 0 && nextMove.X < 8 && nextMove.Y >= 0 && nextMove.Y < 8)
                     {
-                        movementList.Add(position);
+                        //making sure there is no piece in this cell
+                        if (Board[nextMove.X, nextMove.Y] == null)
+                        {
+                            movementList.Add(nextMove);
+                        }
+                        //checking if this cell contains a opponent piece
+                        else if (Board[nextMove.X, nextMove.Y].Color != piece.Color)
+                        {
+                            movementList.Add(nextMove);
+                        }
                     }
                 }
+                //creating a new object of a piece and its movements
                 ChessPiecesMovements newMovements = new ChessPiecesMovements
                 {
                     Piece = piece,

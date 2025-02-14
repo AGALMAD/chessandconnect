@@ -1,9 +1,9 @@
 ﻿using chess4connect.Models.Games.Base;
-using chess4connect.Models.Games.Chess.Pieces.Base;
-using chess4connect.Models.Games.Chess.Pieces.Types;
+using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
+using chess4connect.Models.Games.Chess.Chess.Pieces.Types;
 using System.Drawing;
 
-namespace chess4connect.Models.Games.Chess.Pieces
+namespace chess4connect.Models.Games.Chess.Chess.Pieces
 {
     public class Pawn : ChessBasePiece
     {

@@ -1,12 +1,12 @@
 ﻿using chess4connect.Models.Games.Base;
-using chess4connect.Models.Games.Chess.Pieces;
-using chess4connect.Models.Games.Chess.Pieces.Base;
-using chess4connect.Models.Games.Chess.Pieces.Types;
+using chess4connect.Models.Games.Chess.Chess.Pieces;
+using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
+using chess4connect.Models.Games.Chess.Chess.Pieces.Types;
 using System.Drawing;
 
-namespace chess4connect.Models.Games.Chess
+namespace chess4connect.Models.Games.Chess.Chess
 {
-    public class ChessBoard : BaseBoard<ChessBasePiece>
+    public class ChessBoard
     {
         public static int ROWS = 8;
         public static int COLUMNS = 8;

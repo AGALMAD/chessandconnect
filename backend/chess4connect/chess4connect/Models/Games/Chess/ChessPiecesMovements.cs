@@ -1,7 +1,7 @@
-﻿using chess4connect.Models.Games.Chess.Pieces.Base;
+﻿using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
 using System.Drawing;
 
-namespace chess4connect.Models.Games.Chess
+namespace chess4connect.Models.Games.Chess.Chess
 {
     public class ChessPiecesMovements
     {

@@ -1,4 +1,4 @@
-﻿using chess4connect.Models.Games.Chess;
+﻿using chess4connect.Models.Games.Chess.Chess;
 
 namespace chess4connect.DTOs.Games;
 

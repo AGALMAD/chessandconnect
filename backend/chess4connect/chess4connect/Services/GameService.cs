@@ -2,8 +2,9 @@
 using chess4connect.Enums;
 using chess4connect.Mappers;
 using chess4connect.Models.Games;
-using chess4connect.Models.Games.Chess.Pieces;
-using chess4connect.Models.Games.Chess.Pieces.Base;
+using chess4connect.Models.Games.Chess.Chess;
+using chess4connect.Models.Games.Chess.Chess.Pieces;
+using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using System.Text.Json;
@@ -31,26 +32,15 @@ public class GameService
 
 
 
-    private async Task SendBoardMessageAsync(int player1Id, int player2Id)
+    private async Task SendBoardMessageAsync(int player1Id, int player2Id, GameType gamemode)
     {
         WebSocketHandler socketPlayer1 = _network.GetSocketByUserId(player1Id);
         WebSocketHandler socketPlayer2 = _network.GetSocketByUserId(player2Id);
 
-        var game = _roomService.GetGameByUserId(player1Id);
-
-        var socketMessage = new SocketMessage<List<T>>
+        if (gamemode == GameType.Chess)
         {
-            Type = SocketCommunicationType.GAME_START,
-            Data = pieces
-        };
+            ChessBoard board =  _roomService.GetChessRoomByUserId(player1Id).Game.Board;
 
-        string stringSocketMessage = JsonSerializer.Serialize(socketMessage);
-
-
-        await socketPlayer1.SendAsync(stringSocketMessage);
-        if (socketPlayer2 !=  null)
-        {
-            await socketPlayer2.SendAsync(stringSocketMessage);
         }
 
     }

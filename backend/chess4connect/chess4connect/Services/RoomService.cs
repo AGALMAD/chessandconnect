@@ -1,10 +1,9 @@
 ﻿using chess4connect.DTOs;
 using chess4connect.Enums;
-using chess4connect.Models.Games;
 using chess4connect.Models.Games.Base;
-using chess4connect.Models.Games.Chess;
-using chess4connect.Models.Games.Chess.Pieces;
-using chess4connect.Models.Games.Chess.Pieces.Base;
+using chess4connect.Models.Games.Chess.Chess;
+using chess4connect.Models.Games.Chess.Chess.Pieces;
+using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
 using chess4connect.Models.Games.Connect;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
@@ -16,8 +15,8 @@ namespace chess4connect.Services
     public class RoomService
     {
         private readonly WebSocketNetwork _network;
-        private List<Room<ChessBasePiece>> chessRooms = new List<Room<ChessBasePiece>>();
-        private List<Room<BasePiece>> connectRooms = new List<Room<BasePiece>>();
+        private List<ChessRoom> chessRooms = new List<ChessRoom>();
+        private List<ChessRoom<BasePiece>> connectRooms = new List<ChessRoom<BasePiece>>();
         public RoomService(WebSocketNetwork webSocketNetwork)
         {
             _network = webSocketNetwork;
@@ -27,11 +26,11 @@ namespace chess4connect.Services
         {
             if (gamemode == GameType.Chess)
             {
-                var room = new Room<ChessBasePiece>
+                var room = new ChessRoom<ChessBasePiece>
                 {
                     Player1Id = player1.Id,
                     Player2Id = player2?.Id,
-                    Game = new Game<ChessBasePiece>
+                    Game = new Chess<ChessBasePiece>
                     {
                         GameType = gamemode,
                         Board = new ChessBoard()
@@ -43,11 +42,11 @@ namespace chess4connect.Services
             }
             else if (gamemode == GameType.Connect4)
             {
-                var room = new Room<BasePiece>
+                var room = new ChessRoom<BasePiece>
                 {
                     Player1Id = player1.Id,
                     Player2Id = player2?.Id,
-                    Game = new Game<BasePiece>
+                    Game = new Chess<BasePiece>
                     {
                         GameType = gamemode,
                         Board = new ConnectBoard()
@@ -59,7 +58,7 @@ namespace chess4connect.Services
             }
         }
 
-        private async Task SendRoomMessageAsync<T>(Room<T> room, WebSocketHandler socketPlayer1, WebSocketHandler socketPlayer2)
+        private async Task SendRoomMessageAsync<T>(ChessRoom<T> room, WebSocketHandler socketPlayer1, WebSocketHandler socketPlayer2)
         {
 
             var socketMessage = new SocketMessage<RoomDto>
@@ -85,14 +84,14 @@ namespace chess4connect.Services
 
 
 
-        public Room<ChessBasePiece> GetChessRoomByUserId(int userId)
+        public ChessRoom<ChessBasePiece> GetChessRoomByUserId(int userId)
         {
             return chessRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
 
 
         }
 
-        public Room<BasePiece> GetConnectRoomByUserId(int userId)
+        public ChessRoom<BasePiece> GetConnectRoomByUserId(int userId)
         {
             return connectRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
 

@@ -1,5 +1,5 @@
 ﻿using chess4connect.DTOs.Games;
-using chess4connect.Models.Games.Chess.Pieces.Base;
+using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
 
 namespace chess4connect.Mappers;
 

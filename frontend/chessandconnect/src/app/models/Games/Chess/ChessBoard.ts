@@ -1,6 +1,5 @@
-import { ChessBasePiece } from "./ChessPiece";
-import { ChessPieceMovements } from "./ChessPiecesMovements";
+import { ChessPiece } from "./ChessPiece";
 
 export interface BaseBoard {
-    ChessPiecesMovements: ChessPieceMovements[]
+    Pieces: ChessPiece[]
 }

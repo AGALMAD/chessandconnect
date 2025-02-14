@@ -82,5 +82,33 @@ namespace chess4connect.Services
                 await socketPlayer2.SendAsync(stringSocketMessage);
             }
         }
+
+
+
+        public object GetGameByUserId(int userId)
+        {
+            foreach (var roomObj in rooms)
+            {
+                var roomType = roomObj.GetType();
+                var player1IdProperty = roomType.GetProperty("Player1Id");
+                var player2IdProperty = roomType.GetProperty("Player2Id");
+
+                if (player1IdProperty != null && player2IdProperty != null)
+                {
+                    var player1Id = player1IdProperty.GetValue(roomObj)?.ToString();
+                    var player2Id = player2IdProperty.GetValue(roomObj)?.ToString();
+
+                    if (player1Id == userId.ToString() || player2Id == userId.ToString())
+                    {
+                        var gameProperty = roomType.GetProperty("Game");
+                        return gameProperty?.GetValue(roomObj);
+                    }
+                }
+            }
+
+            return null; 
+        }
+
+
     }
 }

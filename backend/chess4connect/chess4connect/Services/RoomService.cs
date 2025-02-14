@@ -12,6 +12,9 @@ using System.Text.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using chess4connect.Mappers;
+using chess4connect.Models.Database.Entities;
+using chess4connect.DTOs.Games;
 
 namespace chess4connect.Services
 {
@@ -61,22 +64,27 @@ namespace chess4connect.Services
             }
         }
 
-        private async Task SendRoomMessageAsync<T>(Room<T> room, WebSocketHandler player1, WebSocketHandler player2)
+        private async Task SendRoomMessageAsync<T>(Room<T> room, WebSocketHandler socketPlayer1, WebSocketHandler socketPlayer2)
         {
 
-
-            var roomSocketMessage = new SocketMessage<Room<T>>
+            var socketMessage = new SocketMessage<RoomDto>
             {
                 Type = SocketCommunicationType.GAME_START,
-                Data = room,
+                Data = new RoomDto
+                {
+                    Player1Id = room.Player1Id,
+                    Player2Id = room.Player2Id,
+                    GameType = room.Game.GameType,
+                },
             };
 
-            string message = JsonSerializer.Serialize(roomSocketMessage);
+            string stringSocketMessage = JsonSerializer.Serialize(socketMessage);
 
-            await player1.SendAsync(message);
-            if (player2 is not null)
+
+            await socketPlayer1.SendAsync(stringSocketMessage);
+            if (socketPlayer2 is not null)
             {
-                await player2.SendAsync(message);
+                await socketPlayer2.SendAsync(stringSocketMessage);
             }
         }
     }

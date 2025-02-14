@@ -7,5 +7,4 @@ export interface ChessBasePiece {
     PieceType: PieceType
     ChessPieceColor: ChessPieceColor,
     Position: Point
-    PossibleMovements: Point[]
 }

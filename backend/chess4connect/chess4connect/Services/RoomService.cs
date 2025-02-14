@@ -16,8 +16,8 @@ namespace chess4connect.Services
     public class RoomService
     {
         private readonly WebSocketNetwork _network;
-        private List<object> rooms = new List<object>();
-
+        private List<Room<ChessBasePiece>> chessRooms = new List<Room<ChessBasePiece>>();
+        private List<Room<BasePiece>> connectRooms = new List<Room<BasePiece>>();
         public RoomService(WebSocketNetwork webSocketNetwork)
         {
             _network = webSocketNetwork;
@@ -38,7 +38,7 @@ namespace chess4connect.Services
                     }
                 };
 
-                rooms.Add(room);
+                chessRooms.Add(room);
                 await SendRoomMessageAsync(room, player1, player2);
             }
             else if (gamemode == GameType.Connect4)
@@ -54,7 +54,7 @@ namespace chess4connect.Services
                     }
                 };
 
-                rooms.Add(room);
+                connectRooms.Add(room);
                 await SendRoomMessageAsync(room, player1, player2);
             }
         }
@@ -85,29 +85,19 @@ namespace chess4connect.Services
 
 
 
-        public object GetGameByUserId(int userId)
+        public Room<ChessBasePiece> GetChessRoomByUserId(int userId)
         {
-            foreach (var roomObj in rooms)
-            {
-                var roomType = roomObj.GetType();
-                var player1IdProperty = roomType.GetProperty("Player1Id");
-                var player2IdProperty = roomType.GetProperty("Player2Id");
+            return chessRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
 
-                if (player1IdProperty != null && player2IdProperty != null)
-                {
-                    var player1Id = player1IdProperty.GetValue(roomObj)?.ToString();
-                    var player2Id = player2IdProperty.GetValue(roomObj)?.ToString();
 
-                    if (player1Id == userId.ToString() || player2Id == userId.ToString())
-                    {
-                        var gameProperty = roomType.GetProperty("Game");
-                        return gameProperty?.GetValue(roomObj);
-                    }
-                }
-            }
-
-            return null; 
         }
+
+        public Room<BasePiece> GetConnectRoomByUserId(int userId)
+        {
+            return connectRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
+
+        }
+
 
 
     }

@@ -4,15 +4,15 @@ using System.Drawing;
 
 namespace chess4connect.Models.Games.Chess.Pieces.Base;
 
-public abstract class ChessBasePiece
+public abstract class ChessBasePiece: BasePiece
 {
-    public int Id { get; set; }
-    public ChessPieceColor Color { get; set; }
-    public Point Position { get; set; }
+    public new int Id { get; set; }
+    public new ChessPieceColor Color { get; set; }
+    public new Point Position { get; set; }
     public PieceType PieceType { get; set; }
     public List<Point> BasicMovements { get; set; }
 
-    public ChessBasePiece(int id, PieceType pieceType, ChessPieceColor color, Point position)
+    public ChessBasePiece(int id, PieceType pieceType, ChessPieceColor color, Point position): base(id, color, position)
     {
         PieceType = pieceType;
         Id = id;

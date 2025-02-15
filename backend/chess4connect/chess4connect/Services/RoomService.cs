@@ -16,11 +16,16 @@ namespace chess4connect.Services
     public class RoomService
     {
         private readonly WebSocketNetwork _network;
+        private readonly IServiceScopeFactory _scopeFactory;
+
+
         private List<ChessRoom> chessRooms = new List<ChessRoom>();
         private List<ConnectRoom> connectRooms = new List<ConnectRoom>();
-        public RoomService(WebSocketNetwork webSocketNetwork)
+        public RoomService(WebSocketNetwork webSocketNetwork, IServiceScopeFactory scopeFactory)
         {
             _network = webSocketNetwork;
+            _scopeFactory = scopeFactory;
+
         }
 
         public async Task CreateRoomAsync(GameType gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
@@ -74,10 +79,25 @@ namespace chess4connect.Services
                 await socketPlayer2.SendAsync(stringRoomMessage);
             }
 
-
-
-
+            //Crea el servicio scoped para poder enviar las fichas del tablero
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var gameService = scope.ServiceProvider.GetRequiredService<GameService>();
+                await gameService.SendBoardMessageAsync(socketPlayer1.Id, socketPlayer2.Id, gameType);
+            }
         }
+
+
+        public ChessRoom GetChessRoomByUserId(int userId)
+        {
+            return chessRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
+        }
+        public ChessRoom GetConnectRoomByUserId(int userId)
+        {
+            return chessRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
+        }
+
+
 
 
 

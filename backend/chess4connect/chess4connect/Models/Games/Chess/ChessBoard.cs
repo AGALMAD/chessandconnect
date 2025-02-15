@@ -174,7 +174,8 @@ namespace chess4connect.Models.Games.Chess.Chess
             {
                 for (int j = 0; j < Board.GetLength(1); j++)
                 {
-                    piecesInBoard.Add(Board[i, j]);
+                    if (Board[i, j] != null)
+                        piecesInBoard.Add(Board[i, j]);
                 }
             }
 

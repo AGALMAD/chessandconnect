@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { CommonModule } from '@angular/common';
-import { BasePiece } from '../../models/Games/Base/BasePiece';
 import { ChessPiece } from '../../models/Games/Chess/ChessPiece';
 
 
@@ -20,6 +19,8 @@ export class ChessComponent implements OnInit{
 
   ngOnInit(): void {
     console.log("Opponent:", this.gameService.opponent)
+    console.log("PIECES:", this.gameService.pieces)
+
     this.pieces.forEach(p => {
       p.ChessPieceColor
     });

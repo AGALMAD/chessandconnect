@@ -5,7 +5,7 @@ namespace chess4connect.Mappers;
 
 public static class ChessPieceMapper
 {
-    public static ChessPieceDto ToDto(this ChessBasePiece piece)
+    public static ChessPieceDto ToDto(ChessBasePiece piece)
     {
         return new ChessPieceDto
         {
@@ -16,8 +16,8 @@ public static class ChessPieceMapper
         };
     }
 
-    public static List<ChessPieceDto> ToDto(this List<ChessBasePiece> pieces)
+    public static List<ChessPieceDto> ToDto(List<ChessBasePiece> pieces)
     {
-        return pieces.Select(piece => piece.ToDto()).ToList();
+        return pieces.Select(piece => ChessPieceMapper.ToDto(piece)).ToList();
     }
 }

@@ -37,11 +37,7 @@ public class GameService
         WebSocketHandler socketPlayer1 = _network.GetSocketByUserId(player1Id);
         WebSocketHandler socketPlayer2 = _network.GetSocketByUserId(player2Id);
 
-        if (gamemode == GameType.Chess)
-        {
-            ChessBoard board =  _roomService.GetChessRoomByUserId(player1Id).Game.Board;
-
-        }
+        
 
     }
 

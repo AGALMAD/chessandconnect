@@ -1,4 +1,4 @@
-﻿namespace chess4connect.Models.Games.Chess.Pieces.Types;
+﻿namespace chess4connect.Models.Games.Chess.Chess.Pieces.Types;
 
 public enum ChessPieceColor
 {

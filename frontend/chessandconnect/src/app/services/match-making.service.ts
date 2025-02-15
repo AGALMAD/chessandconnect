@@ -64,16 +64,17 @@ export class MatchMakingService {
     switch (message.Type) {
       case SocketCommunicationType.GAME_START:
 
-
         const newRoom = message.Data as Room;
-        this.gameService.pieces = newRoom.Game.Board.Pieces
 
+        console.log("ROOOOOM", newRoom)
+
+        //Oponente
         const opponentId = newRoom.Player1Id != this.authService.currentUser.id ? newRoom.Player1Id : newRoom.Player2Id
         const result = await this.api.get<User>(`User/getUserById?id=${opponentId}`)
         this.gameService.opponent = result.data
 
         this.router.navigate(
-          newRoom.Game.GameType == GameType.Chess ? ['/chessGame'] : ['/connectGame'],
+          newRoom.GameType == GameType.Chess ? ['/chessGame'] : ['/connectGame'],
         );
         break
 

@@ -30,9 +30,15 @@ namespace chess4connect.Services
 
         public async Task CreateRoomAsync(GameType gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
         {
+            int player2Id = 0;
+            if (player2 == null)
+                player2Id = 0;
+            else 
+                player2Id = player2.Id;
+
             if (gamemode == GameType.Chess)
             {
-                var room = new ChessRoom(player1.Id, player2.Id,
+                var room = new ChessRoom(player1.Id, player2Id,
                     new ChessGame(DateTime.Now,
                     new ChessBoard()));
 
@@ -42,7 +48,7 @@ namespace chess4connect.Services
             }
             else if (gamemode == GameType.Connect4)
             {
-                var room = new ConnectRoom(player1.Id, player2.Id,
+                var room = new ConnectRoom(player1.Id, player2Id,
                    new ConnectGame(DateTime.Now,
                    new ConnectBoard()));
 
@@ -52,8 +58,14 @@ namespace chess4connect.Services
             }
         }
 
-        private async Task SendRoomMessageAsync(GameType gameType, WebSocketHandler socketPlayer1, WebSocketHandler socketPlayer2)
+        private async Task SendRoomMessageAsync(GameType gameType, WebSocketHandler socketPlayer1, WebSocketHandler socketPlayer2 = null)
         {
+            int player2Id;
+            if (socketPlayer2 == null)
+                player2Id = 0;
+            else
+                player2Id = socketPlayer2.Id;
+
             var roomMessage = new SocketMessage<RoomDto>
             {
                 Type = SocketCommunicationType.GAME_START,
@@ -62,7 +74,7 @@ namespace chess4connect.Services
                 {
                     GameType = gameType,
                     Player1Id = socketPlayer1.Id,
-                    Player2Id = socketPlayer2.Id,
+                    Player2Id = player2Id,
                 }
             };
 
@@ -82,8 +94,12 @@ namespace chess4connect.Services
             //Crea el servicio scoped para poder enviar las fichas del tablero
             using (var scope = _scopeFactory.CreateScope())
             {
+                //Envia el mensaje del tablero a los dos jugadores
                 var gameService = scope.ServiceProvider.GetRequiredService<GameService>();
-                await gameService.SendBoardMessageAsync(socketPlayer1.Id, socketPlayer2.Id, gameType);
+                await gameService.SendBoardMessageAsync(socketPlayer1.Id, player2Id, gameType);
+
+                //Envia el mensaje de los movimientos al jugador 1
+                await gameService.SendMovementsMessageAsync(GetChessRoomByUserId(socketPlayer1.Id));
             }
         }
 

@@ -14,6 +14,14 @@ namespace chess4connect.Models.Games.Chess.Chess
         public List<ChessPiecesMovements> ChessPiecesMovements { get; set; }
 
         private ChessBasePiece[,] Board = new ChessBasePiece[ROWS, COLUMNS];
+
+        public ChessPieceColor Turn {  get; set; }
+
+        //Tiempo en segundo de cada turno
+        public int Player1Time { get; set; } = 300;
+        public int Player2Time { get; set; } = 300;
+
+
         public ChessBoard()
         {
             PlacePiecesInBoard();
@@ -58,14 +66,14 @@ namespace chess4connect.Models.Games.Chess.Chess
         }
 
 
-        private void GetAllPieceMovements(ChessPieceColor actualPlayerColor)
+        public void GetAllPieceMovements()
         {
             ChessPiecesMovements = new List<ChessPiecesMovements>();
             
             foreach (ChessBasePiece piece in Board)
             {
                 //only pieces positions from actual player will be recalculated
-                if (piece.Color != actualPlayerColor) continue;
+                if (piece == null || piece.Color != Turn) continue;
 
                 List<Point> movementList = new List<Point>();
 
@@ -111,8 +119,9 @@ namespace chess4connect.Models.Games.Chess.Chess
         }
 
 
-        public void MovePiece(ChessMoveRequest moveRequest)
+        public bool MovePiece(ChessMoveRequest moveRequest)
         {
+
             //Busca la pieza en la lista de piezas del tablero
             var piece = convertBoardToList().FirstOrDefault(p => p.Id == moveRequest.PieceId);
 
@@ -121,28 +130,34 @@ namespace chess4connect.Models.Games.Chess.Chess
                 //Verifica si el movimiento que quiere hacer es correcto
                 var chessPieceMovements = ChessPiecesMovements.Where(p => p.Piece.Id == piece.Id).FirstOrDefault();
 
-                if (chessPieceMovements != null && chessPieceMovements.Movements.Contains(moveRequest.DestinationPosition))
+                if (chessPieceMovements != null && chessPieceMovements.Movements.Contains(new Point(moveRequest.MovementX, moveRequest.MovementY)))
                 {
                     //Mueve la pieza y actualiza su posición
                     Board[piece.Position.X, piece.Position.Y] = null;
 
-                    Board[moveRequest.DestinationPosition.X, moveRequest.DestinationPosition.Y] = piece;
-                    piece.Position = moveRequest.DestinationPosition;
+                    Board[moveRequest.MovementX, moveRequest.MovementY] = piece;
+                    piece.Position = new Point(moveRequest.MovementX, moveRequest.MovementY);
+
+                    //Cambia el turno
+                    Turn = Turn == ChessPieceColor.BLACK ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
+
+                    return true;
                 }
 
             }
 
+            return false;
         }
 
 
 
-        public void RandomMovement(ChessPieceColor playerColor)
+        public void RandomMovement()
         {
             // Calcula los posibles movimientos que puede hacer 
-            GetAllPieceMovements(playerColor);
+            GetAllPieceMovements();
 
             var playerPiecesMovements = ChessPiecesMovements
-                .Where(p => p.Piece.Color == playerColor)
+                .Where(p => p.Piece.Color == Turn)
                 .ToList();
 
             

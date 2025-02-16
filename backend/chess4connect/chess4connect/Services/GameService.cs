@@ -5,6 +5,7 @@ using chess4connect.Models.Games;
 using chess4connect.Models.Games.Chess.Chess;
 using chess4connect.Models.Games.Chess.Chess.Pieces;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
+using chess4connect.Models.Games.Chess.Chess.Pieces.Types;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using System.Security.AccessControl;
@@ -25,10 +26,21 @@ public class GameService
     }
 
 
-    public async Task MoveChessPiece(ChessMoveRequest moveRequest, int userId)
+    public async Task<bool> MoveChessPiece(ChessMoveRequest moveRequest, int userId)
     {
 
+        ChessRoom room = _roomService.GetChessRoomByUserId(userId);
 
+        if (room.Game.Board.MovePiece(moveRequest))
+        {
+            await SendBoardMessageAsync(room.Player1Id, room.Player2Id, room.Game.GameType);
+
+            await SendMovementsMessageAsync(room);
+
+            return true;
+        }
+
+        return false;
 
     }
 
@@ -52,11 +64,18 @@ public class GameService
                 List<ChessBasePiece> pieces = room.Game.Board.convertBoardToList();
 
                 //Lista de piezas sin  los movimientos básicos
-                var roomMessage = new SocketMessage<List<ChessPieceDto>>
+                var roomMessage = new SocketMessage<ChessBoardDto>
                 {
                     Type = SocketCommunicationType.CHESS_BOARD,
 
-                    Data = ChessPieceMapper.ToDto(pieces)
+                    Data = new ChessBoardDto
+                    {
+                        Pieces = ChessPieceMapper.ToDto(pieces),
+                        Turn = room.Game.Board.Turn,
+                        Player1Time = room.Game.Board.Player1Time,
+                        Player2Time = room.Game.Board.Player2Time,
+
+                    }
                 };
 
                 stringBoardMessage = JsonSerializer.Serialize(roomMessage);
@@ -80,6 +99,48 @@ public class GameService
 
     }
 
+
+    public async Task SendMovementsMessageAsync(ChessRoom room)
+    {
+        //Id del jugador a enviar los turnos
+        int playerId = room.Game.Board.Turn == ChessPieceColor.WHITE ? room.Player1Id : room.Player2Id;
+
+        if (room != null)
+        {
+            WebSocketHandler socketPlayer = _network.GetSocketByUserId(playerId);
+
+            //Recoge los movimientos que puede hacer el jugador
+            if (room.Player1Id == playerId)
+            {
+                room.Game.Board.GetAllPieceMovements();
+            }
+            else
+            {
+                room.Game.Board.GetAllPieceMovements();
+            }
+
+            //Lista de piezas sin  los movimientos básicos
+            var roomMessage = new SocketMessage<List<ChessPieceMovementDto>>
+            {
+                Type = SocketCommunicationType.CHESS_MOVEMENTS,
+
+                Data = ChessPieceMovementsMappper.ToDto(room.Game.Board.ChessPiecesMovements)
+            };
+
+            string stringBoardMessage = JsonSerializer.Serialize(roomMessage);
+
+            //Envia los movimientos al jugador
+            if (socketPlayer != null)
+            {
+                await socketPlayer.SendAsync(stringBoardMessage);
+            }
+
+        }
+
+
+       
+
+    }
 
 
 }

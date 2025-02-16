@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { CommonModule } from '@angular/common';
-import { ChessPiece } from '../../models/Games/Chess/ChessPiece';
+import { ChessPieceColor } from '../../models/Games/Chess/Enums/Color';
+import { PieceType } from '../../models/Games/Chess/Enums/PieceType';
 
 
 @Component({
@@ -13,17 +14,15 @@ import { ChessPiece } from '../../models/Games/Chess/ChessPiece';
 
 export class ChessComponent implements OnInit{
 
+  ChessPieceColor = ChessPieceColor; 
+
+
   constructor(public gameService: GameService){}
 
-  pieces: ChessPiece[]
 
   ngOnInit(): void {
     console.log("Opponent:", this.gameService.opponent)
     console.log("PIECES:", this.gameService.pieces)
-
-    this.pieces.forEach(p => {
-      p.ChessPieceColor
-    });
   }
 
 
@@ -40,5 +39,23 @@ export class ChessComponent implements OnInit{
   cols: number [] = [0, 1, 2, 3, 4, 5, 6, 7]
   colsReverse: number[] = [7, 6, 5, 4, 3, 2, 1, 0]
   cells: string[] = [];
+  
+
+
+  getPieceSymbol(pieceType: PieceType): string {
+    switch (pieceType) {
+      case PieceType.BISHOP: return '♝';
+      case PieceType.KING: return '♚'; 
+      case PieceType.KNIGHT: return '♞';
+      case PieceType.PAWN: return '♟'; 
+      case PieceType.QUEEN: return '♛'; 
+      case PieceType.ROOK: return '♜'; 
+      default: return '';
+    }
+  }
+  
+  
+  
+
 
 }

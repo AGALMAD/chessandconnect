@@ -22,52 +22,13 @@
           <div class="w-full h-full flex items-center justify-center"
           [class.bg-brown-200]="(i + j) % 2 === 0"
           [class.bg-brown-600]="(i + j) % 2 !== 0">
-          @for (piece of pieces; track $index) {
+          @for (piece of gameService.pieces; track $index) {
             @if (piece.Position.X  === i && piece.Position.Y === j) {
-              @switch (piece.PieceType) {
-                @case (0) {
-                  @if (piece.ChessPieceColor === 1) {
-                    <span style="font-size:250%; color: black;">♝</span>
-                  }@else {
-                    <span style="font-size:250%; color: azure;">♝</span>
-                  }
-                } 
-                @case (1) {
-                  @if (piece.ChessPieceColor === 1) {
-                    <span style="font-size:250%; color: black;">♚</span>
-                  }@else {
-                    <span style="font-size:250%; color: azure;">♚</span>
-                  }
-                }
-                @case (2) {
-                  @if (piece.ChessPieceColor === 1) {
-                    <span style="font-size:250%; color: black;">♞</span>
-                  }@else {
-                    <span style="font-size:250%; color: azure;">♞</span>
-                  }
-                }
-                @case (3) {
-                  @if (piece.ChessPieceColor === 1) {
-                    <span style="font-size:250%; color: black;">♟</span>
-                  }@else {
-                    <span style="font-size:250%; color: azure;">♟</span>
-                  }
-                }
-                @case (4) {
-                  @if (piece.ChessPieceColor === 1) {
-                    <span style="font-size:250%; color: black;">♛</span>
-                  }@else {
-                    <span style="font-size:250%; color: azure;">♛</span>
-                  }
-                }
-                @case (5) {
-                  @if (piece.ChessPieceColor === 1) {
-                    <span style="font-size:250%; color: black;">♜</span>
-                  }@else {
-                    <span style="font-size:250%; color: azure;  ">♜</span>
-                  }
-                }
-              }
+              <span [ngStyle]="{'font-size': '250%', 'color': piece.ChessPieceColor === ChessPieceColor.BLACK ? 'black' : 'white'}">
+                {{ getPieceSymbol(piece.PieceType) }}
+              </span>
+              
+              
             }
            }
           </div>
@@ -117,28 +78,15 @@
             <div class="w-full h-full flex items-center justify-center"
             [class.bg-brown-200]="(i + j) % 2 === 0"
             [class.bg-brown-600]="(i + j) % 2 !== 0">
-            @for (piece of pieces; track $index) {
+            @for (piece of gameService.pieces; track $index) {
               @if (piece.Position.X  === i && piece.Position.Y === j) {
-                @switch (piece.PieceType) {
-                  @case (0) {
-                    <span style="font-size:180%;">♝</span>
-                  } 
-                  @case (1) {
-                    <span style="font-size:180%;">♚</span>
-                  }
-                  @case (2) {
-                    <span style="font-size:180%;">♞</span>
-                  }
-                  @case (3) {
-                    <span style="font-size:180%;">♟</span>
-                  }
-                  @case (4) {
-                    <span style="font-size:180%;">♛</span>
-                  }
-                  @case (5) {
-                    <span style="font-size:180%;">♜</span>
-                  }
+                @if (piece.ChessPieceColor == ChessPieceColor.BLACK) {
+                  <span class=" text-black">{{getPieceSymbol(piece.PieceType)}}</span>
                 }
+                @else {
+                  <span class=" text-black">{{getPieceSymbol(piece.PieceType)}}</span>
+                }
+                
               }
              }
             </div>

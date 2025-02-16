@@ -5,6 +5,7 @@ using chess4connect.Models.Games;
 using chess4connect.Models.Games.Chess.Chess;
 using chess4connect.Models.Games.Chess.Chess.Pieces;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
+using chess4connect.Models.Games.Chess.Chess.Pieces.Types;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using System.Security.AccessControl;
@@ -88,6 +89,48 @@ public class GameService
 
     }
 
+
+    public async Task SendMovementsMessageAsync(int playerId)
+    {
+        //Sala de los jugadores
+        ChessRoom room = _roomService.GetChessRoomByUserId(playerId);
+
+        if (room != null)
+        {
+            WebSocketHandler socketPlayer = _network.GetSocketByUserId(playerId);
+
+            //Recoge los movimientos que puede hacer el jugador
+            if (room.Player1Id == playerId)
+            {
+                room.Game.Board.GetAllPieceMovements(ChessPieceColor.WHITE);
+            }
+            else
+            {
+                room.Game.Board.GetAllPieceMovements(ChessPieceColor.BLACK);
+            }
+
+            //Lista de piezas sin  los movimientos básicos
+            var roomMessage = new SocketMessage<List<ChessPiecesMovements>>
+            {
+                Type = SocketCommunicationType.CHESS_MOVEMENTS,
+
+                Data = room.Game.Board.ChessPiecesMovements
+            };
+
+            string stringBoardMessage = JsonSerializer.Serialize(roomMessage);
+
+            //Envia los mensajes a los jugadores
+            if (socketPlayer != null)
+            {
+                await socketPlayer.SendAsync(stringBoardMessage);
+            }
+
+        }
+
+
+       
+
+    }
 
 
 }

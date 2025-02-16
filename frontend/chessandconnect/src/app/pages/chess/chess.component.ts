@@ -69,8 +69,7 @@ export class ChessComponent implements OnInit {
       return;
     }
 
-    const destination: Point = { X: destinationX, Y: destinationY };
-    const moveRequest: ChessMoveRequest = { PieceId: this.selectedPiece.Id, Movement: destination };
+    const moveRequest: ChessMoveRequest = { PieceId: this.selectedPiece.Id, MovementX: destinationX,  MovementY: destinationY};
 
     const result = await this.api.post(`Game/moveChessPiece`, moveRequest);
 

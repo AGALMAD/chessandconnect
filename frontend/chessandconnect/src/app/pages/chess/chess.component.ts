@@ -7,12 +7,13 @@ import { ChessPiece } from '../../models/Games/Chess/ChessPiece';
 import { Point } from '../../models/Games/Base/Point';
 import { ChessMoveRequest } from '../../models/Games/Chess/ChessMoveRequest'
 import { ApiService } from '../../services/api.service';
+import { ChatComponent } from "../../components/chat/chat.component";
 
 
 
 @Component({
   selector: 'app-chess',
-  imports: [CommonModule],
+  imports: [CommonModule, ChatComponent],
   templateUrl: './chess.component.html',
   styleUrl: './chess.component.css'
 })
@@ -41,7 +42,7 @@ export class ChessComponent implements OnInit {
   numbers: string[] = ['8', '7', '6', '5', '4', '3', '2', '1']
 
   rows: number[] = [7, 6, 5, 4, 3, 2, 1, 0]
-  rowsReverse: number[] = [1, 2, 3, 4, 5, 6, 7, 8]
+  rowsReverse: number[] = [0, 1, 2, 3, 4, 5, 6, 7]
   cols: number[] = [0, 1, 2, 3, 4, 5, 6, 7]
   colsReverse: number[] = [7, 6, 5, 4, 3, 2, 1, 0]
   cells: string[] = [];

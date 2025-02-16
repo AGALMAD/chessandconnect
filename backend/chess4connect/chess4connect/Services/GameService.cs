@@ -110,11 +110,11 @@ public class GameService
             }
 
             //Lista de piezas sin  los movimientos básicos
-            var roomMessage = new SocketMessage<List<ChessPiecesMovements>>
+            var roomMessage = new SocketMessage<List<ChessPieceMovementDto>>
             {
                 Type = SocketCommunicationType.CHESS_MOVEMENTS,
 
-                Data = room.Game.Board.ChessPiecesMovements
+                Data = ChessPieceMovementsMappper.ToDto(room.Game.Board.ChessPiecesMovements)
             };
 
             string stringBoardMessage = JsonSerializer.Serialize(roomMessage);

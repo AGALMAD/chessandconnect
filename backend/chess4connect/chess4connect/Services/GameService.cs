@@ -64,11 +64,18 @@ public class GameService
                 List<ChessBasePiece> pieces = room.Game.Board.convertBoardToList();
 
                 //Lista de piezas sin  los movimientos básicos
-                var roomMessage = new SocketMessage<List<ChessPieceDto>>
+                var roomMessage = new SocketMessage<ChessBoardDto>
                 {
                     Type = SocketCommunicationType.CHESS_BOARD,
 
-                    Data = ChessPieceMapper.ToDto(pieces)
+                    Data = new ChessBoardDto
+                    {
+                        Pieces = ChessPieceMapper.ToDto(pieces),
+                        Turn = room.Game.Board.Turn,
+                        Player1Time = room.Game.Board.Player1Time,
+                        Player2Time = room.Game.Board.Player2Time,
+
+                    }
                 };
 
                 stringBoardMessage = JsonSerializer.Serialize(roomMessage);

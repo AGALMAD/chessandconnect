@@ -7,6 +7,7 @@ import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage'
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { ChessPieceColor } from '../models/Games/Chess/Enums/Color';
 import { ChessPieceMovements } from '../models/Games/Chess/ChessPiecesMovements';
+import { ChessBoard } from '../models/Games/Chess/ChessBoard';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,14 @@ export class GameService {
 
   playerColor: ChessPieceColor
   opponent: User
+
   pieces: ChessPiece[]
+
+  player1Time: number
+  player2Time: number
+
+  turn : ChessPieceColor
+
 
   movements: ChessPieceMovements[]
 
@@ -58,10 +66,15 @@ export class GameService {
     switch (message.Type) {
       case SocketCommunicationType.CHESS_BOARD:
 
-        const pieces = message.Data as ChessPiece[];
-        this.pieces = pieces
+        const board = message.Data as ChessBoard;
+        console.log("Board", board)
 
-        console.log("Pieces", pieces)
+        
+        this.pieces = board.Pieces
+        this.turn = board.Turn
+        this.player1Time = board.Player1Time
+        this.player2Time = board.Player2Time
+
 
         break
 

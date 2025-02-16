@@ -17,6 +17,11 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         public ChessPieceColor Turn {  get; set; }
 
+        //Tiempo en segundo de cada turno
+        public int Player1Time { get; set; } 
+        public int Player2Time { get; set; }
+
+
         public ChessBoard()
         {
             PlacePiecesInBoard();

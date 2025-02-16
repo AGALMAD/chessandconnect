@@ -8,6 +8,7 @@ import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { ChessPieceColor } from '../models/Games/Chess/Enums/Color';
 import { ChessPieceMovements } from '../models/Games/Chess/ChessPiecesMovements';
 import { ChessBoard } from '../models/Games/Chess/ChessBoard';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +24,8 @@ export class GameService {
 
   pieces: ChessPiece[]
 
-  player1Time: number
-  player2Time: number
+  currentPlayerTimer: number
+  opponentTimer: number
 
   turn : ChessPieceColor
 
@@ -34,7 +35,7 @@ export class GameService {
 
   constructor(
     public webSocketService: WebsocketService,
-
+    private authService: AuthService
   ) {
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
@@ -74,8 +75,8 @@ export class GameService {
 
         this.pieces = board.Pieces
         this.turn = board.Turn
-        this.player1Time = board.Player1Time
-        this.player2Time = board.Player2Time
+        this.currentPlayerTimer = board.Player1Time == this.authService.currentUser.id ? board.Player1Time : board.Player2Time
+        this.opponentTimer = board.Player1Time != this.authService.currentUser.id ? board.Player1Time : board.Player2Time
 
         this.startCountdown();
 
@@ -103,12 +104,12 @@ export class GameService {
 
     this.timerSubscription = interval(1000).subscribe(() => {
       if (this.turn === ChessPieceColor.WHITE) {
-        this.player1Time = Math.max(0, this.player1Time - 1);
+        this.currentPlayerTimer = Math.max(0, this.currentPlayerTimer - 1);
       } else {
-        this.player2Time = Math.max(0, this.player2Time - 1);
+        this.opponentTimer = Math.max(0, this.opponentTimer - 1);
       }
 
-      console.log(this.player1Time, this.player2Time)
+      console.log(this.currentPlayerTimer, this.opponentTimer)
     });
   }
 

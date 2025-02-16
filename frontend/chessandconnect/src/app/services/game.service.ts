@@ -5,6 +5,7 @@ import { WebsocketService } from './websocket.service';
 import { Subscription } from 'rxjs';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
+import { ChessPieceColor } from '../models/Games/Chess/Enums/Color';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class GameService {
   messageReceived$: Subscription;
 
 
-  isHost = false
+  playerColor: ChessPieceColor
   opponent: User
   pieces: ChessPiece[]
 

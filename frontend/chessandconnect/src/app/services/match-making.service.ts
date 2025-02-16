@@ -12,6 +12,7 @@ import { Room } from '../models/Games/room';
 import { RoomRequest} from '../models/Games/room-request'
 import { GameType } from '../enums/game';
 import { GameService } from './game.service';
+import { ChessPieceColor } from '../models/Games/Chess/Enums/Color';
 
 @Injectable({
   providedIn: 'root'
@@ -72,6 +73,9 @@ export class MatchMakingService {
         const opponentId = newRoom.Player1Id != this.authService.currentUser.id ? newRoom.Player1Id : newRoom.Player2Id
         const result = await this.api.get<User>(`User/getUserById?id=${opponentId}`)
         this.gameService.opponent = result.data
+
+        this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id ? ChessPieceColor.WHITE : ChessPieceColor.BLACK 
+
 
         this.router.navigate(
           newRoom.GameType == GameType.Chess ? ['/chessGame'] : ['/connectGame'],

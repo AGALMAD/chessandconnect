@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { ChessPieceColor } from '../models/Games/Chess/Enums/Color';
+import { ChessPieceMovements } from '../models/Games/Chess/ChessPiecesMovements';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,9 @@ export class GameService {
   playerColor: ChessPieceColor
   opponent: User
   pieces: ChessPiece[]
+
+  movements: ChessPieceMovements[]
+
 
   constructor(
     public webSocketService: WebsocketService,
@@ -58,6 +62,15 @@ export class GameService {
         this.pieces = pieces
 
         console.log("Pieces", pieces)
+
+        break
+
+      case SocketCommunicationType.CHESS_MOVEMENTS:
+        const movements = message.Data as ChessPieceMovements[];
+
+        this.movements = movements
+
+        console.log("Movements", movements)
 
         break
 

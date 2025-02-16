@@ -96,6 +96,7 @@ namespace chess4connect.Services
             {
                 var gameService = scope.ServiceProvider.GetRequiredService<GameService>();
                 await gameService.SendBoardMessageAsync(socketPlayer1.Id, player2Id, gameType);
+                await gameService.SendMovementsMessageAsync(socketPlayer1.Id);
             }
         }
 

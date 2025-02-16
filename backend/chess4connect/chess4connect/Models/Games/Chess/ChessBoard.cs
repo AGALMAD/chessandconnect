@@ -58,7 +58,7 @@ namespace chess4connect.Models.Games.Chess.Chess
         }
 
 
-        private void GetAllPieceMovements(ChessPieceColor actualPlayerColor)
+        public void GetAllPieceMovements(ChessPieceColor actualPlayerColor)
         {
             ChessPiecesMovements = new List<ChessPiecesMovements>();
             
@@ -113,8 +113,6 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         public bool MovePiece(ChessMoveRequest moveRequest)
         {
-            GetAllPieceMovements(ChessPieceColor.WHITE);
-
 
             //Busca la pieza en la lista de piezas del tablero
             var piece = convertBoardToList().FirstOrDefault(p => p.Id == moveRequest.PieceId);

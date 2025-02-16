@@ -29,10 +29,10 @@
         @for (piece of gameService.pieces; track $index) {
         @if (piece.Position.X === i && piece.Position.Y === j) {
         @if (piece.ChessPieceColor == ChessPieceColor.BLACK) {
-        <span class=" cursor-pointer text-black">{{getPieceSymbol(piece.PieceType)}}</span>
+        <span class=" cursor-pointer text-3xl text-black">{{getPieceSymbol(piece.PieceType)}}</span>
         }
         @else {
-        <span class="cursor-pointer text-white">{{getPieceSymbol(piece.PieceType)}}</span>
+        <span class="cursor-pointer text-3xl text-white">{{getPieceSymbol(piece.PieceType)}}</span>
         }
 
         }
@@ -94,10 +94,10 @@
         @for (piece of gameService.pieces; track $index) {
         @if (piece.Position.X === i && piece.Position.Y === j) {
         @if (piece.ChessPieceColor == ChessPieceColor.BLACK) {
-        <span class=" cursor-pointer text-black">{{getPieceSymbol(piece.PieceType)}}</span>
+        <span class=" cursor-pointer text-3xl  text-black">{{getPieceSymbol(piece.PieceType)}}</span>
         }
         @else {
-        <span class="cursor-pointer text-white">{{getPieceSymbol(piece.PieceType)}}</span>
+        <span class="cursor-pointer text-3xl text-white">{{getPieceSymbol(piece.PieceType)}}</span>
         }
 
         }

@@ -15,8 +15,7 @@ public class PlayMapper
 
             EndDate = play.EndDate,
           
-           
-            
+             
 
         };
     }

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\Games\Chess\Response\" />
     <Folder Include="wwwroot\UserProfilePicture\" />
   </ItemGroup>
 

@@ -65,7 +65,7 @@ namespace chess4connect.Models.Games.Chess.Chess
             foreach (ChessBasePiece piece in Board)
             {
                 //only pieces positions from actual player will be recalculated
-                if (piece.Color != actualPlayerColor) continue;
+                if (piece == null || piece.Color != actualPlayerColor) continue;
 
                 List<Point> movementList = new List<Point>();
 
@@ -113,6 +113,9 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         public bool MovePiece(ChessMoveRequest moveRequest)
         {
+            GetAllPieceMovements(ChessPieceColor.WHITE);
+
+
             //Busca la pieza en la lista de piezas del tablero
             var piece = convertBoardToList().FirstOrDefault(p => p.Id == moveRequest.PieceId);
 
@@ -121,13 +124,13 @@ namespace chess4connect.Models.Games.Chess.Chess
                 //Verifica si el movimiento que quiere hacer es correcto
                 var chessPieceMovements = ChessPiecesMovements.Where(p => p.Piece.Id == piece.Id).FirstOrDefault();
 
-                if (chessPieceMovements != null && chessPieceMovements.Movements.Contains(moveRequest.DestinationPosition))
+                if (chessPieceMovements != null && chessPieceMovements.Movements.Contains(new Point(moveRequest.MovementX, moveRequest.MovementY)))
                 {
                     //Mueve la pieza y actualiza su posición
                     Board[piece.Position.X, piece.Position.Y] = null;
 
-                    Board[moveRequest.DestinationPosition.X, moveRequest.DestinationPosition.Y] = piece;
-                    piece.Position = moveRequest.DestinationPosition;
+                    Board[moveRequest.MovementX, moveRequest.MovementY] = piece;
+                    piece.Position = new Point(moveRequest.MovementX, moveRequest.MovementY);
 
                     return true;
                 }

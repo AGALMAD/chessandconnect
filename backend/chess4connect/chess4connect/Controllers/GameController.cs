@@ -27,9 +27,13 @@ public class GameController : ControllerBase
             return Unauthorized("El usuario no está autenticado.");
         }
 
-        await _gameService.MoveChessPiece(chessMoveRequest, Int32.Parse(userId));
+        if (await _gameService.MoveChessPiece(chessMoveRequest, Int32.Parse(userId)))
+        {
+            return Ok(chessMoveRequest);
+        }
 
-        return Ok(chessMoveRequest);
+        return BadRequest(chessMoveRequest);
+
     }
 
 

@@ -25,10 +25,18 @@ public class GameService
     }
 
 
-    public async Task MoveChessPiece(ChessMoveRequest moveRequest, int userId)
+    public async Task<bool> MoveChessPiece(ChessMoveRequest moveRequest, int userId)
     {
 
+        ChessRoom room = _roomService.GetChessRoomByUserId(userId);
 
+        if (room.Game.Board.MovePiece(moveRequest))
+        {
+            await SendBoardMessageAsync(room.Player1Id, room.Player2Id, room.Game.GameType);
+            return true;
+        }
+
+        return false;
 
     }
 

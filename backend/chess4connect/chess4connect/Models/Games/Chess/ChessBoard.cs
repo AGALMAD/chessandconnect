@@ -111,7 +111,7 @@ namespace chess4connect.Models.Games.Chess.Chess
         }
 
 
-        public void MovePiece(ChessMoveRequest moveRequest)
+        public bool MovePiece(ChessMoveRequest moveRequest)
         {
             //Busca la pieza en la lista de piezas del tablero
             var piece = convertBoardToList().FirstOrDefault(p => p.Id == moveRequest.PieceId);
@@ -128,10 +128,13 @@ namespace chess4connect.Models.Games.Chess.Chess
 
                     Board[moveRequest.DestinationPosition.X, moveRequest.DestinationPosition.Y] = piece;
                     piece.Position = moveRequest.DestinationPosition;
+
+                    return true;
                 }
 
             }
 
+            return false;
         }
 
 

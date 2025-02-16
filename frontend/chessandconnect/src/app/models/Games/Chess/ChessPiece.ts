@@ -5,6 +5,6 @@ import { PieceType } from "./Enums/PieceType"
 export interface ChessPiece {
     Id:number,
     PieceType: PieceType
-    ChessPieceColor: ChessPieceColor,
+    Color: ChessPieceColor,
     Position: Point
 }

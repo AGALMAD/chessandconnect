@@ -53,7 +53,7 @@ export class ChessComponent implements OnInit {
       case PieceType.BISHOP: return '♝';
       case PieceType.KING: return '♚';
       case PieceType.KNIGHT: return '♞';
-      case PieceType.PAWN: return '♟';
+      case PieceType.PAWN: return '♙';
       case PieceType.QUEEN: return '♛';
       case PieceType.ROOK: return '♜';
       default: return '';

@@ -14,6 +14,9 @@ namespace chess4connect.Models.Games.Chess.Chess
         public List<ChessPiecesMovements> ChessPiecesMovements { get; set; }
 
         private ChessBasePiece[,] Board = new ChessBasePiece[ROWS, COLUMNS];
+
+        public ChessPieceColor Turn {  get; set; }
+
         public ChessBoard()
         {
             PlacePiecesInBoard();
@@ -58,14 +61,14 @@ namespace chess4connect.Models.Games.Chess.Chess
         }
 
 
-        public void GetAllPieceMovements(ChessPieceColor actualPlayerColor)
+        public void GetAllPieceMovements()
         {
             ChessPiecesMovements = new List<ChessPiecesMovements>();
             
             foreach (ChessBasePiece piece in Board)
             {
                 //only pieces positions from actual player will be recalculated
-                if (piece == null || piece.Color != actualPlayerColor) continue;
+                if (piece == null || piece.Color != Turn) continue;
 
                 List<Point> movementList = new List<Point>();
 
@@ -130,6 +133,9 @@ namespace chess4connect.Models.Games.Chess.Chess
                     Board[moveRequest.MovementX, moveRequest.MovementY] = piece;
                     piece.Position = new Point(moveRequest.MovementX, moveRequest.MovementY);
 
+                    //Cambia el turno
+                    Turn = Turn == ChessPieceColor.BLACK ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
+
                     return true;
                 }
 
@@ -140,13 +146,13 @@ namespace chess4connect.Models.Games.Chess.Chess
 
 
 
-        public void RandomMovement(ChessPieceColor playerColor)
+        public void RandomMovement()
         {
             // Calcula los posibles movimientos que puede hacer 
-            GetAllPieceMovements(playerColor);
+            GetAllPieceMovements();
 
             var playerPiecesMovements = ChessPiecesMovements
-                .Where(p => p.Piece.Color == playerColor)
+                .Where(p => p.Piece.Color == Turn)
                 .ToList();
 
             

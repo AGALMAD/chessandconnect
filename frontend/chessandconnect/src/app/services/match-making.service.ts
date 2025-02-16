@@ -12,6 +12,7 @@ import { Room } from '../models/Games/room';
 import { RoomRequest} from '../models/Games/room-request'
 import { GameType } from '../enums/game';
 import { GameService } from './game.service';
+import { ChessPieceColor } from '../models/Games/Chess/Enums/Color';
 
 @Injectable({
   providedIn: 'root'
@@ -64,16 +65,23 @@ export class MatchMakingService {
     switch (message.Type) {
       case SocketCommunicationType.GAME_START:
 
-
         const newRoom = message.Data as Room;
-        this.gameService.pieces = newRoom.Game.Board.Pieces
 
+        console.log("ROOOOOM", newRoom)
+
+        //Oponente
         const opponentId = newRoom.Player1Id != this.authService.currentUser.id ? newRoom.Player1Id : newRoom.Player2Id
-        const result = await this.api.get<User>(`User/getUserById?id=${opponentId}`)
-        this.gameService.opponent = result.data
+        if(opponentId != 0){
+          const result = await this.api.get<User>(`User/getUserById?id=${opponentId}`)
+          this.gameService.opponent = result.data
+
+        }
+
+        this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id ? ChessPieceColor.WHITE : ChessPieceColor.BLACK 
+
 
         this.router.navigate(
-          newRoom.Game.GameType == GameType.Chess ? ['/chessGame'] : ['/connectGame'],
+          newRoom.GameType == GameType.Chess ? ['/chessGame'] : ['/connectGame'],
         );
         break
 

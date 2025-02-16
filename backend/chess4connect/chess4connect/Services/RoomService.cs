@@ -1,83 +1,118 @@
 ﻿using chess4connect.DTOs;
 using chess4connect.Enums;
-using chess4connect.Models.Games;
 using chess4connect.Models.Games.Base;
-using chess4connect.Models.Games.Chess;
-using chess4connect.Models.Games.Chess.Pieces;
-using chess4connect.Models.Games.Chess.Pieces.Base;
+using chess4connect.Models.Games.Chess.Chess;
+using chess4connect.Models.Games.Chess.Chess.Pieces;
+using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
 using chess4connect.Models.Games.Connect;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using System.Text.Json;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Text.Json.Serialization;
+using chess4connect.DTOs.Games;
+using chess4connect.Models.Games.Chess;
 
 namespace chess4connect.Services
 {
     public class RoomService
     {
         private readonly WebSocketNetwork _network;
-        private List<object> rooms = new List<object>();
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public RoomService(WebSocketNetwork webSocketNetwork)
+
+        private List<ChessRoom> chessRooms = new List<ChessRoom>();
+        private List<ConnectRoom> connectRooms = new List<ConnectRoom>();
+        public RoomService(WebSocketNetwork webSocketNetwork, IServiceScopeFactory scopeFactory)
         {
             _network = webSocketNetwork;
+            _scopeFactory = scopeFactory;
+
         }
 
         public async Task CreateRoomAsync(GameType gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
         {
+            int player2Id = 0;
+            if (player2 == null)
+                player2Id = 0;
+            else 
+                player2Id = player2.Id;
+
             if (gamemode == GameType.Chess)
             {
-                var room = new Room<ChessBasePiece>
-                {
-                    Player1Id = player1.Id,
-                    Player2Id = player2?.Id,
-                    Game = new Game<ChessBasePiece>
-                    {
-                        GameType = gamemode,
-                        Board = new ChessBoard()
-                    }
-                };
+                var room = new ChessRoom(player1.Id, player2Id,
+                    new ChessGame(DateTime.Now,
+                    new ChessBoard()));
 
-                rooms.Add(room);
-                await SendRoomMessageAsync(room, player1, player2);
+                chessRooms.Add(room);
+
+                await SendRoomMessageAsync(GameType.Chess, player1, player2);
             }
             else if (gamemode == GameType.Connect4)
             {
-                var room = new Room<BasePiece>
-                {
-                    Player1Id = player1.Id,
-                    Player2Id = player2?.Id,
-                    Game = new Game<BasePiece>
-                    {
-                        GameType = gamemode,
-                        Board = new ConnectBoard()
-                    }
-                };
+                var room = new ConnectRoom(player1.Id, player2Id,
+                   new ConnectGame(DateTime.Now,
+                   new ConnectBoard()));
 
-                rooms.Add(room);
-                await SendRoomMessageAsync(room, player1, player2);
+                connectRooms.Add(room);
+
+                await SendRoomMessageAsync(GameType.Connect4, player1, player2);
             }
         }
 
-        private async Task SendRoomMessageAsync<T>(Room<T> room, WebSocketHandler player1, WebSocketHandler player2)
+        private async Task SendRoomMessageAsync(GameType gameType, WebSocketHandler socketPlayer1, WebSocketHandler socketPlayer2 = null)
         {
+            int player2Id;
+            if (socketPlayer2 == null)
+                player2Id = 0;
+            else
+                player2Id = socketPlayer2.Id;
 
-
-            var roomSocketMessage = new SocketMessage<Room<T>>
+            var roomMessage = new SocketMessage<RoomDto>
             {
                 Type = SocketCommunicationType.GAME_START,
-                Data = room,
+
+                Data = new RoomDto
+                {
+                    GameType = gameType,
+                    Player1Id = socketPlayer1.Id,
+                    Player2Id = player2Id,
+                }
             };
 
-            string message = JsonSerializer.Serialize(roomSocketMessage);
+            string stringRoomMessage = JsonSerializer.Serialize(roomMessage);
 
-            await player1.SendAsync(message);
-            if (player2 is not null)
+            //Envia los mensajes a los jugadores
+            if (socketPlayer1 != null)
             {
-                await player2.SendAsync(message);
+                await socketPlayer1.SendAsync(stringRoomMessage);
+            }
+
+            if (socketPlayer2 != null)
+            {
+                await socketPlayer2.SendAsync(stringRoomMessage);
+            }
+
+            //Crea el servicio scoped para poder enviar las fichas del tablero
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var gameService = scope.ServiceProvider.GetRequiredService<GameService>();
+                await gameService.SendBoardMessageAsync(socketPlayer1.Id, player2Id, gameType);
+                await gameService.SendMovementsMessageAsync(socketPlayer1.Id);
             }
         }
+
+
+        public ChessRoom GetChessRoomByUserId(int userId)
+        {
+            return chessRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
+        }
+        public ChessRoom GetConnectRoomByUserId(int userId)
+        {
+            return chessRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
+        }
+
+
+
+
+
     }
 }

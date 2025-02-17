@@ -22,16 +22,6 @@ public class WebSocketNetwork
 
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-    private readonly GameService _gameService;
-    private readonly RoomService _roomService;
-    
-
-    public WebSocketNetwork(GameService gameService, RoomService roomService) 
-    { 
-        _gameService = gameService;
-        _roomService = roomService;
-    }
-
     public async Task HandleAsync(User user, WebSocket webSocket)
     {
         // Creamos un nuevo WebSocketHandler a partir del WebSocket recibido y lo añadimos a la lista
@@ -162,6 +152,8 @@ public class WebSocketNetwork
         switch (recived.Type)
         {
             case SocketCommunicationType.CHAT:
+
+               await _chatService.sendMessage(message, webSocketHandler.Id);
 
                 break;
 

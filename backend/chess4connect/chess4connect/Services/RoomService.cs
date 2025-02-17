@@ -45,7 +45,6 @@ namespace chess4connect.Services
 
                 chessRooms.Add(room);
 
-                await SendRoomMessageAsync(GameType.Chess, player1, player2);
             }
             else if (gamemode == GameType.Connect4)
             {
@@ -55,8 +54,9 @@ namespace chess4connect.Services
 
                 connectRooms.Add(room);
 
-                await SendRoomMessageAsync(GameType.Connect4, player1, player2);
             }
+
+            await SendRoomMessageAsync(gamemode, player1, player2);
         }
 
         private async Task SendRoomMessageAsync(GameType gameType, WebSocketHandler socketPlayer1, WebSocketHandler socketPlayer2 = null)
@@ -113,9 +113,9 @@ namespace chess4connect.Services
         {
             return chessRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
         }
-        public ChessRoom GetConnectRoomByUserId(int userId)
+        public ConnectRoom GetConnectRoomByUserId(int userId)
         {
-            return chessRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
+            return connectRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
         }
 
 

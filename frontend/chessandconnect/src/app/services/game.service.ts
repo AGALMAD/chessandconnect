@@ -44,7 +44,7 @@ export class GameService {
   }
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Noe te quiere:', message);
+    console.log('Masage:', message);
 
     try {
       // Paso del mensaje a objeto

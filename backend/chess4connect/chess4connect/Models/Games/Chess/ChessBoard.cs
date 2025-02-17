@@ -132,11 +132,26 @@ namespace chess4connect.Models.Games.Chess.Chess
 
                 if (chessPieceMovements != null && chessPieceMovements.Movements.Contains(new Point(moveRequest.MovementX, moveRequest.MovementY)))
                 {
+                    //Si el peon blanco llega al final del tablero se convierte en reina
+                    if (piece.PieceType == PieceType.PAWN && piece.Color == ChessPieceColor.WHITE && moveRequest.MovementX == 0 )
+                    {
+                        piece = new Queen(piece.Id, piece.Color, piece.Position);
+                    }
+
+                    //Si el peon negro llega al final del tablero se convierte en reina
+                    if (piece.PieceType == PieceType.PAWN && piece.Color == ChessPieceColor.BLACK && moveRequest.MovementX == 7)
+                    {
+                        piece = new Queen(piece.Id, piece.Color, piece.Position);
+                    }
+
+
                     //Mueve la pieza y actualiza su posición
                     Board[piece.Position.X, piece.Position.Y] = null;
 
                     Board[moveRequest.MovementX, moveRequest.MovementY] = piece;
                     piece.Position = new Point(moveRequest.MovementX, moveRequest.MovementY);
+
+
 
                     //Cambia el turno
                     Turn = Turn == ChessPieceColor.BLACK ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;

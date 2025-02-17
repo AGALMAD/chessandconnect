@@ -2,6 +2,7 @@
 using chess4connect.Models.Database.Entities;
 using chess4connect.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace chess4connect.Controllers
 {
@@ -17,9 +18,12 @@ namespace chess4connect.Controllers
         }
 
         [HttpPost("Chat")]
-        public async Task<ActionResult> sendChatMessage([FromBody] Chat chat)
+        public async Task<ActionResult> SendChatMessage([FromBody] string message)
         {
-            await _chatService.sendMessage(chat);
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            await _chatService.sendMessage(message, userId);
 
             return Ok("Mensage enviado");
         }

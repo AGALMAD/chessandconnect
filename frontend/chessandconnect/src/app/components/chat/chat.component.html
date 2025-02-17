@@ -2,25 +2,20 @@
 <div class="absolute top-0 right-0 p-4 bg-[#5f6a6a] text-white w-[350px] h-full flex flex-col">
     <div class="overflow-y-auto flex-1">
       <div class="space-y-2">
-        <!-- Mensaje del usuario -->
-        <div class="flex items-start justify-start space-x-2">
-          <div class="bg-brown-200 p-2 rounded-lg text-brown-700 max-w-[80%]">
-            @for (m of chatService.messages; track $index) {
-              @if (m.PlayerId == authService.currentUser.id) {
-                {{m.Message}}
-              }
-            }
+        @for (m of chatService.messages; track $index) {
+          <!-- Mensaje del usuario -->
+          <div class="flex items-start justify-start space-x-2">
+            <div class="bg-brown-200 p-2 rounded-lg text-brown-700 max-w-[80%]">
+  
+            </div>
           </div>
-        </div>
-        <!-- Mensaje del otro usuario -->
-        <div class="flex items-start justify-end space-x-2">
-          <div class="bg-brown-100 p-2 rounded-lg text-brown-700 max-w-[80%]">            
-            @for (m of chatService.messages; track $index) {
-            @if (m.PlayerId == authService.currentUser.id) {
-              {{m.Message}}
-            }
-          }</div>
-        </div>
+          <!-- Mensaje del otro usuario -->
+          <div class="flex items-start justify-end space-x-2">
+            <div class="bg-brown-100 p-2 rounded-lg text-brown-700 max-w-[80%]">  
+                        
+            </div>
+          </div>
+        }
       </div>
     </div>
   

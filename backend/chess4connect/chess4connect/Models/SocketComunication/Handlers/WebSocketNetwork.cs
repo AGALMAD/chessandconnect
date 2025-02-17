@@ -2,6 +2,7 @@
 using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers.Services;
 using chess4connect.Models.SocketComunication.MessageTypes;
+using chess4connect.Services;
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text.Json;
@@ -18,10 +19,12 @@ public class WebSocketNetwork
 
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-    //private WebSocketNetwork(FriendRequestService friendRequestService) 
-    //{ 
-    //    _friendRequestService = friendRequestService;
-    //}
+    private ChatService _chatService;
+
+    public WebSocketNetwork(ChatService chatService)
+    {
+        _chatService = chatService;
+    }
 
     public async Task HandleAsync(User user, WebSocket webSocket)
     {
@@ -140,7 +143,7 @@ public class WebSocketNetwork
         await Task.WhenAll(tasks);
     }
 
-    private Task OnMessageReceivedAsync(WebSocketHandler webSocketHandler, string message)
+    private async Task OnMessageReceivedAsync(WebSocketHandler webSocketHandler, string message)
     {
         // Lista donde guardar las tareas de envío de mensajes
         List<Task> tasks = new List<Task>();
@@ -157,6 +160,8 @@ public class WebSocketNetwork
                 break;
 
             case SocketCommunicationType.CHAT:
+
+               await _chatService.sendMessage(message, webSocketHandler.Id);
 
                 break;
 
@@ -180,7 +185,6 @@ public class WebSocketNetwork
                 break;
 
         }
-        return Task.CompletedTask;
 
     }
 

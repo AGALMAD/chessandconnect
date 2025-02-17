@@ -13,7 +13,7 @@ import { User } from '../../models/dto/user';
 })
 export class ChatComponent {
 
-  message: String
+  message: string
 
   constructor(public chatService: ChatService, public authService: AuthService){}
 
@@ -22,10 +22,6 @@ export class ChatComponent {
   }
 
   sendMessage(){
-    const chat: Chat = {
-      PlayerId: this.authService.currentUser.id,
-      Message: this.message
-    }
-    this.chatService.SendMessage(chat)
+    this.chatService.SendMessage(this.message)
   }
 }

@@ -87,14 +87,14 @@
 
         <!-- Tablero de ajedrez con celdas invertidas -->
         <div class="grid grid-cols-8 grid-rows-8 gap-0 absolute top-[2rem] left-[2rem] w-[calc(100%-4rem)] h-[calc(100%-4rem)]">
-          @for (row of rowsReverse; track $index; let i = $index) {
-          @for (col of colsReverse; track $index; let j = $index) {
+          @for (row of rows; track $index; let i = $index) {
+          @for (col of cols; track $index; let j = $index) {
           <div class="w-full h-full flex items-center justify-center" 
             [class.bg-brown-200]="(i + j) % 2 !== 0"
             [class.bg-brown-600]="(i + j) % 2 === 0" 
             (click)="movePiece(row, col)">
             @for (piece of gameService.pieces; track $index) {
-            @if (piece.Position.X === i && piece.Position.Y === j) {
+            @if (piece.Position.X === row && piece.Position.Y === col) {
             @if (piece.Color == ChessPieceColor.BLACK) {
             <span (click)="selectPiece(piece)" class="cursor-pointer text-5xl text-black !important cursor-pointer">{{getPieceSymbol(piece.PieceType)}}</span>
             }

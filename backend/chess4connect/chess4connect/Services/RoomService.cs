@@ -40,7 +40,10 @@ namespace chess4connect.Services
             {
                 var room = new ChessRoom(player1.Id, player2Id,
                     new ChessGame(DateTime.Now,
-                    new ChessBoard()));
+                    new ChessBoard()
+                    {
+                        StartTurnDateTime = DateTime.Now,
+                    }));
 
                 chessRooms.Add(room);
 

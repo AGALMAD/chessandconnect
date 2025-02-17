@@ -176,7 +176,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                     piece.Position = new Point(moveRequest.MovementX, moveRequest.MovementY);
 
                     //Resta el tiempo en segundos que ha tardado en mover
-                    TimeSpan remaninder = StartTurnDateTime - DateTime.Now;
+                    TimeSpan remaninder = DateTime.Now.Subtract(StartTurnDateTime);
 
                     if (piece.Color == ChessPieceColor.WHITE)
                         Player1Time -= remaninder;

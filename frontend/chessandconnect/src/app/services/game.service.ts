@@ -75,8 +75,8 @@ export class GameService {
 
         this.pieces = board.Pieces
         this.turn = board.Turn
-        this.currentPlayerTimer = board.Player1Time == this.authService.currentUser.id ? board.Player1Time : board.Player2Time
-        this.opponentTimer = board.Player1Time != this.authService.currentUser.id ? board.Player1Time : board.Player2Time
+        this.currentPlayerTimer = this.playerColor == ChessPieceColor.WHITE ? board.Player1Time : board.Player2Time
+        this.opponentTimer = this.playerColor == ChessPieceColor.WHITE ? board.Player2Time : board.Player1Time
 
         this.startCountdown();
 

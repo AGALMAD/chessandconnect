@@ -15,15 +15,13 @@ namespace chess4connect.Services
 {
     public class RoomService
     {
-        private readonly WebSocketNetwork _network;
         private readonly IServiceScopeFactory _scopeFactory;
 
 
         private List<ChessRoom> chessRooms = new List<ChessRoom>();
         private List<ConnectRoom> connectRooms = new List<ConnectRoom>();
-        public RoomService(WebSocketNetwork webSocketNetwork, IServiceScopeFactory scopeFactory)
+        public RoomService(IServiceScopeFactory scopeFactory)
         {
-            _network = webSocketNetwork;
             _scopeFactory = scopeFactory;
 
         }
@@ -40,7 +38,10 @@ namespace chess4connect.Services
             {
                 var room = new ChessRoom(player1.Id, player2Id,
                     new ChessGame(DateTime.Now,
-                    new ChessBoard()));
+                    new ChessBoard()
+                    {
+                        StartTurnDateTime = DateTime.Now,
+                    }));
 
                 chessRooms.Add(room);
 
@@ -60,6 +61,8 @@ namespace chess4connect.Services
 
         private async Task SendRoomMessageAsync(GameType gameType, WebSocketHandler socketPlayer1, WebSocketHandler socketPlayer2 = null)
         {
+            ChessRoom room = GetChessRoomByUserId(socketPlayer1.Id);
+
             int player2Id;
             if (socketPlayer2 == null)
                 player2Id = 0;
@@ -91,12 +94,17 @@ namespace chess4connect.Services
                 await socketPlayer2.SendAsync(stringRoomMessage);
             }
 
+            
+
             //Crea el servicio scoped para poder enviar las fichas del tablero
             using (var scope = _scopeFactory.CreateScope())
             {
+                //Envia el mensaje del tablero a los dos jugadores
                 var gameService = scope.ServiceProvider.GetRequiredService<GameService>();
-                await gameService.SendBoardMessageAsync(socketPlayer1.Id, player2Id, gameType);
-                await gameService.SendMovementsMessageAsync(socketPlayer1.Id);
+                await gameService.SendChessBoardMessageAsync(GetChessRoomByUserId(socketPlayer1.Id), socketPlayer1, socketPlayer2);
+
+                //Envia el mensaje de los movimientos al jugador 1
+                await gameService.SendMovementsMessageAsync(room, socketPlayer1);
             }
         }
 

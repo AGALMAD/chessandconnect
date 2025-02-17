@@ -1,5 +1,7 @@
 ﻿using chess4connect.Enums;
 using chess4connect.Models.Database.Entities;
+using chess4connect.Models.Games;
+using chess4connect.Models.Games.Chess.Chess;
 using chess4connect.Models.SocketComunication.Handlers.Services;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using chess4connect.Services;
@@ -11,20 +13,14 @@ namespace chess4connect.Models.SocketComunication.Handlers;
 
 public class WebSocketNetwork
 {
-    private FriendRequestService _friendRequestService;
+
+
     //Diccionario de conexiones, almacena el id del usuario y el websocket de su conexión
     private ConcurrentDictionary<int, WebSocketHandler> _handlers = new ConcurrentDictionary<int, WebSocketHandler>();
 
     private ConcurrentDictionary<int, Queue<string>> _pendingUserMessages = new ConcurrentDictionary<int, Queue<string>>();
 
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-
-    private ChatService _chatService;
-
-    public WebSocketNetwork(ChatService chatService)
-    {
-        _chatService = chatService;
-    }
 
     public async Task HandleAsync(User user, WebSocket webSocket)
     {
@@ -155,35 +151,23 @@ public class WebSocketNetwork
         SocketMessage recived = JsonSerializer.Deserialize<SocketMessage>(message);
         switch (recived.Type)
         {
-            case SocketCommunicationType.GAME:
-
-                break;
-
             case SocketCommunicationType.CHAT:
 
                await _chatService.sendMessage(message, webSocketHandler.Id);
 
                 break;
 
-            case SocketCommunicationType.CONNECTION:
+            case SocketCommunicationType.CHESS_MOVEMENTS:
+                ChessMoveRequest request = JsonSerializer.Deserialize<SocketMessage<ChessMoveRequest>>(message).Data;
+
+                ChessRoom room = _roomService.GetChessRoomByUserId(webSocketHandler.Id);
+                WebSocketHandler opponentHandler = GetSocketByUserId(room.Player1Id == webSocketHandler.Id ? room.Player2Id : room.Player1Id);
+
+                await _gameService.MoveChessPiece(room, request, webSocketHandler,opponentHandler);
+
 
                 break;
-
-            case SocketCommunicationType.FRIEND:
-
-                //var request = JsonSerializer.Deserialize<FriendshipRequestModel>(message);
-
-                //var friendship = _friendRequestService.requestFriendship(request.UserId, request.FriendId);
-
-                //WebSocketHandler address = _handlers.GetValueOrDefault(request.UserId);
-
-                //string stringMessage = JsonSerializer.Serialize(friendship);
-
-                //tasks.Add(address.SendAsync(stringMessage));
-
                                 
-                break;
-
         }
 
     }

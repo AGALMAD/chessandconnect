@@ -132,18 +132,26 @@ namespace chess4connect.Models.Games.Chess.Chess
 
                 if (chessPieceMovements != null && chessPieceMovements.Movements.Contains(new Point(moveRequest.MovementX, moveRequest.MovementY)))
                 {
-                    //Si el peon blanco llega al final del tablero se convierte en reina
-                    if (piece.PieceType == PieceType.PAWN && piece.Color == ChessPieceColor.WHITE && moveRequest.MovementX == 0 )
-                    {
+                    //Si el peon llega al final se convierte en reina
+                    if ((piece.PieceType == PieceType.PAWN && piece.Color == ChessPieceColor.WHITE && moveRequest.MovementX == 0) ||
+                        (piece.PieceType == PieceType.PAWN && piece.Color == ChessPieceColor.BLACK && moveRequest.MovementX == ROWS - 1))
                         piece = new Queen(piece.Id, piece.Color, piece.Position);
-                    }
+                    
+                    
 
-                    //Si el peon negro llega al final del tablero se convierte en reina
-                    if (piece.PieceType == PieceType.PAWN && piece.Color == ChessPieceColor.BLACK && moveRequest.MovementX == 7)
-                    {
-                        piece = new Queen(piece.Id, piece.Color, piece.Position);
-                    }
+                    //Si el peón tiene una ficha delante no se puede mover
+                    if ((piece.Color == ChessPieceColor.WHITE &&  Board[piece.Position.X -1, piece.Position.Y] != null) ||
+                           (piece.Color == ChessPieceColor.BLACK && Board[piece.Position.X + 1, piece.Position.Y] != null) )
+                        return false;
 
+
+
+
+                    /*El peón solo se puede mover en diagonal cuando tiene una ficha del otro equipo en esa posición
+                    if (Board[piece.Position.X +1, piece.Position.Y +1] != null )
+                        return false;
+
+                    */
 
                     //Mueve la pieza y actualiza su posición
                     Board[piece.Position.X, piece.Position.Y] = null;

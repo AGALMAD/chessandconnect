@@ -136,25 +136,37 @@ namespace chess4connect.Models.Games.Chess.Chess
                     if ((piece.PieceType == PieceType.PAWN && piece.Color == ChessPieceColor.WHITE && moveRequest.MovementX == 0) ||
                         (piece.PieceType == PieceType.PAWN && piece.Color == ChessPieceColor.BLACK && moveRequest.MovementX == ROWS - 1))
                         piece = new Queen(piece.Id, piece.Color, piece.Position);
-                    
-                    
+
+
 
                     //Si el peón tiene una ficha delante no se puede mover
-                    if ((piece.Color == ChessPieceColor.WHITE &&  Board[piece.Position.X -1, piece.Position.Y] != null) ||
-                           (piece.Color == ChessPieceColor.BLACK && Board[piece.Position.X + 1, piece.Position.Y] != null) )
-                        return false;
+                    if (piece.PieceType == PieceType.PAWN)
+                    {
+                        //Movimiento hacia deltante
+                        if(piece.Position.Y == moveRequest.MovementY)
+                        {
+                            //Si hay una pieza delante no se puede mover
+                            if (Board[moveRequest.MovementX, moveRequest.MovementY] != null)
+                                return false;
+                        }
+
+                        // Movimiento diagonal 
+                        if (Math.Abs(piece.Position.Y - moveRequest.MovementY) == 1 &&
+                            moveRequest.MovementX == piece.Position.X + (piece.Color == ChessPieceColor.WHITE ? -1 : 1))
+                        {
+                            // Si la casilla está vacía o tiene una pieza del mismo color, no es un movimiento válido
+                            if (Board[moveRequest.MovementX, moveRequest.MovementY] == null ||
+                                Board[moveRequest.MovementX, moveRequest.MovementY].Color == piece.Color)
+                            {
+                                return false;
+                            }
+                        }
+
+                    }
 
 
-
-
-                    /*El peón solo se puede mover en diagonal cuando tiene una ficha del otro equipo en esa posición
-                    if (Board[piece.Position.X +1, piece.Position.Y +1] != null )
-                        return false;
-
-                    */
-
-                    //Mueve la pieza y actualiza su posición
-                    Board[piece.Position.X, piece.Position.Y] = null;
+                        //Mueve la pieza y actualiza su posición
+                        Board[piece.Position.X, piece.Position.Y] = null;
 
                     Board[moveRequest.MovementX, moveRequest.MovementY] = piece;
                     piece.Position = new Point(moveRequest.MovementX, moveRequest.MovementY);

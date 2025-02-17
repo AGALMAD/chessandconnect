@@ -14,6 +14,18 @@ namespace chess4connect.Models.Games.Chess.Chess
         public List<ChessPiecesMovements> ChessPiecesMovements { get; set; }
 
         private ChessBasePiece[,] Board = new ChessBasePiece[ROWS, COLUMNS];
+
+        public ChessPieceColor Turn {  get; set; }
+
+        //Tiempo en segundo de cada turno
+        public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(300);
+        public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(300);
+
+        //Fecha de inicio de cada turno
+        public DateTime StartTurnDateTime { get; set; }
+
+
+
         public ChessBoard()
         {
             PlacePiecesInBoard();
@@ -58,14 +70,14 @@ namespace chess4connect.Models.Games.Chess.Chess
         }
 
 
-        public void GetAllPieceMovements(ChessPieceColor actualPlayerColor)
+        public void GetAllPieceMovements()
         {
             ChessPiecesMovements = new List<ChessPiecesMovements>();
             
             foreach (ChessBasePiece piece in Board)
             {
                 //only pieces positions from actual player will be recalculated
-                if (piece == null || piece.Color != actualPlayerColor) continue;
+                if (piece == null || piece.Color != Turn) continue;
 
                 List<Point> movementList = new List<Point>();
 
@@ -124,11 +136,60 @@ namespace chess4connect.Models.Games.Chess.Chess
 
                 if (chessPieceMovements != null && chessPieceMovements.Movements.Contains(new Point(moveRequest.MovementX, moveRequest.MovementY)))
                 {
+                    //Si el peon llega al final se convierte en reina
+                    if ((piece.PieceType == PieceType.PAWN && piece.Color == ChessPieceColor.WHITE && moveRequest.MovementX == 0) ||
+                        (piece.PieceType == PieceType.PAWN && piece.Color == ChessPieceColor.BLACK && moveRequest.MovementX == ROWS - 1))
+                        piece = new Queen(piece.Id, piece.Color, piece.Position);
+
+
+
+                    //Si el peón tiene una ficha delante no se puede mover
+                    if (piece.PieceType == PieceType.PAWN)
+                    {
+                        //Movimiento hacia deltante
+                        if(piece.Position.Y == moveRequest.MovementY)
+                        {
+                            //Si hay una pieza delante no se puede mover
+                            if (Board[moveRequest.MovementX, moveRequest.MovementY] != null)
+                                return false;
+                        }
+
+                        // Movimiento diagonal 
+                        if (Math.Abs(piece.Position.Y - moveRequest.MovementY) == 1 &&
+                            moveRequest.MovementX == piece.Position.X + (piece.Color == ChessPieceColor.WHITE ? -1 : 1))
+                        {
+                            // Si la casilla está vacía o tiene una pieza del mismo color, no es un movimiento válido
+                            if (Board[moveRequest.MovementX, moveRequest.MovementY] == null ||
+                                Board[moveRequest.MovementX, moveRequest.MovementY].Color == piece.Color)
+                            {
+                                return false;
+                            }
+                        }
+
+                    }
+
+
                     //Mueve la pieza y actualiza su posición
                     Board[piece.Position.X, piece.Position.Y] = null;
 
                     Board[moveRequest.MovementX, moveRequest.MovementY] = piece;
                     piece.Position = new Point(moveRequest.MovementX, moveRequest.MovementY);
+
+                    //Resta el tiempo en segundos que ha tardado en mover
+                    TimeSpan remaninder = StartTurnDateTime - DateTime.Now;
+
+                    if (piece.Color == ChessPieceColor.WHITE)
+                        Player1Time -= remaninder;
+                    else
+                        Player2Time -= remaninder;
+                    
+
+
+                    //Cambia el turno
+                    Turn = Turn == ChessPieceColor.BLACK ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
+
+                    //Fecha de inicio del turno
+                    StartTurnDateTime = DateTime.Now;
 
                     return true;
                 }
@@ -140,13 +201,13 @@ namespace chess4connect.Models.Games.Chess.Chess
 
 
 
-        public void RandomMovement(ChessPieceColor playerColor)
+        public void RandomMovement()
         {
             // Calcula los posibles movimientos que puede hacer 
-            GetAllPieceMovements(playerColor);
+            GetAllPieceMovements();
 
             var playerPiecesMovements = ChessPiecesMovements
-                .Where(p => p.Piece.Color == playerColor)
+                .Where(p => p.Piece.Color == Turn)
                 .ToList();
 
             

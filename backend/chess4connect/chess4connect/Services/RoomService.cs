@@ -94,9 +94,12 @@ namespace chess4connect.Services
             //Crea el servicio scoped para poder enviar las fichas del tablero
             using (var scope = _scopeFactory.CreateScope())
             {
+                //Envia el mensaje del tablero a los dos jugadores
                 var gameService = scope.ServiceProvider.GetRequiredService<GameService>();
                 await gameService.SendBoardMessageAsync(socketPlayer1.Id, player2Id, gameType);
-                await gameService.SendMovementsMessageAsync(socketPlayer1.Id);
+
+                //Envia el mensaje de los movimientos al jugador 1
+                await gameService.SendMovementsMessageAsync(GetChessRoomByUserId(socketPlayer1.Id));
             }
         }
 

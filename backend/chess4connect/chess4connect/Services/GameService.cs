@@ -34,6 +34,9 @@ public class GameService
         if (room.Game.Board.MovePiece(moveRequest))
         {
             await SendBoardMessageAsync(room.Player1Id, room.Player2Id, room.Game.GameType);
+
+            await SendMovementsMessageAsync(room);
+
             return true;
         }
 
@@ -61,11 +64,18 @@ public class GameService
                 List<ChessBasePiece> pieces = room.Game.Board.convertBoardToList();
 
                 //Lista de piezas sin  los movimientos básicos
-                var roomMessage = new SocketMessage<List<ChessPieceDto>>
+                var roomMessage = new SocketMessage<ChessBoardDto>
                 {
                     Type = SocketCommunicationType.CHESS_BOARD,
 
-                    Data = ChessPieceMapper.ToDto(pieces)
+                    Data = new ChessBoardDto
+                    {
+                        Pieces = ChessPieceMapper.ToDto(pieces),
+                        Turn = room.Game.Board.Turn,
+                        Player1Time = (int)room.Game.Board.Player1Time.TotalSeconds,
+                        Player2Time = (int)room.Game.Board.Player2Time.TotalSeconds,
+
+                    }
                 };
 
                 stringBoardMessage = JsonSerializer.Serialize(roomMessage);
@@ -90,10 +100,10 @@ public class GameService
     }
 
 
-    public async Task SendMovementsMessageAsync(int playerId)
+    public async Task SendMovementsMessageAsync(ChessRoom room)
     {
-        //Sala de los jugadores
-        ChessRoom room = _roomService.GetChessRoomByUserId(playerId);
+        //Id del jugador a enviar los turnos
+        int playerId = room.Game.Board.Turn == ChessPieceColor.WHITE ? room.Player1Id : room.Player2Id;
 
         if (room != null)
         {
@@ -102,11 +112,11 @@ public class GameService
             //Recoge los movimientos que puede hacer el jugador
             if (room.Player1Id == playerId)
             {
-                room.Game.Board.GetAllPieceMovements(ChessPieceColor.WHITE);
+                room.Game.Board.GetAllPieceMovements();
             }
             else
             {
-                room.Game.Board.GetAllPieceMovements(ChessPieceColor.BLACK);
+                room.Game.Board.GetAllPieceMovements();
             }
 
             //Lista de piezas sin  los movimientos básicos
@@ -119,7 +129,7 @@ public class GameService
 
             string stringBoardMessage = JsonSerializer.Serialize(roomMessage);
 
-            //Envia los mensajes a los jugadores
+            //Envia los movimientos al jugador
             if (socketPlayer != null)
             {
                 await socketPlayer.SendAsync(stringBoardMessage);

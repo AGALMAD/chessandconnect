@@ -7,6 +7,8 @@ import { ChessPiece } from '../../models/Games/Chess/ChessPiece';
 import { Point } from '../../models/Games/Base/Point';
 import { ChessMoveRequest } from '../../models/Games/Chess/ChessMoveRequest'
 import { ApiService } from '../../services/api.service';
+import { environment } from '../../../environments/environment';
+import { AuthService } from '../../services/auth.service';
 
 
 
@@ -19,11 +21,13 @@ import { ApiService } from '../../services/api.service';
 
 export class ChessComponent implements OnInit {
 
-  ChessPieceColor = ChessPieceColor;
+  public baseUrl = environment.apiUrl;
 
+
+  ChessPieceColor = ChessPieceColor;
   selectedPiece: ChessPiece | null = null;
 
-  constructor(public gameService: GameService, private api: ApiService) { }
+  constructor(public gameService: GameService, private api: ApiService, public authService : AuthService) { }
 
 
   ngOnInit(): void {

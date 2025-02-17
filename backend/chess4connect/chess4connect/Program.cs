@@ -95,7 +95,7 @@ public class Program {
         builder.Services.AddSingleton<RoomService>();
 
         //Game
-        builder.Services.AddScoped<GameService>();
+        builder.Services.AddSingleton<GameService>();
 
 
         builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));

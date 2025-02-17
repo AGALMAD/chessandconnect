@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Type } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { CommonModule } from '@angular/common';
 import { ChessPieceColor } from '../../models/Games/Chess/Enums/Color';
@@ -9,6 +9,9 @@ import { ChessMoveRequest } from '../../models/Games/Chess/ChessMoveRequest'
 import { ApiService } from '../../services/api.service';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
+import { WebsocketService } from '../../services/websocket.service';
+import { SocketMessage, SocketMessageGeneric } from '../../models/WebSocketMessages/SocketMessage';
+import { SocketCommunicationType } from '../../enums/SocketCommunicationType';
 
 
 
@@ -27,7 +30,7 @@ export class ChessComponent implements OnInit {
   ChessPieceColor = ChessPieceColor;
   selectedPiece: ChessPiece | null = null;
 
-  constructor(public gameService: GameService, private api: ApiService, public authService : AuthService) { }
+  constructor(private websocketService:WebsocketService, public gameService: GameService, private api: ApiService, public authService : AuthService) { }
 
 
   ngOnInit(): void {
@@ -75,14 +78,16 @@ export class ChessComponent implements OnInit {
 
     const moveRequest: ChessMoveRequest = { PieceId: this.selectedPiece.Id, MovementX: destinationX,  MovementY: destinationY};
 
-    const result = await this.api.post(`Game/moveChessPiece`, moveRequest);
-
-    if (result.success) {
-      this.selectedPiece = null; 
+    const message : SocketMessageGeneric<ChessMoveRequest> = {
+      Type : SocketCommunicationType.CHESS_MOVEMENTS,
+      Data : moveRequest
     }
 
-    console.log("Pieza movida: ", result);
+    this.websocketService.sendRxjs(JSON.stringify(message))
+
+
   }
+
 
 
 

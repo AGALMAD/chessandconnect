@@ -18,8 +18,12 @@ namespace chess4connect.Models.Games.Chess.Chess
         public ChessPieceColor Turn {  get; set; }
 
         //Tiempo en segundo de cada turno
-        public int Player1Time { get; set; } = 300;
-        public int Player2Time { get; set; } = 300;
+        public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(300);
+        public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(300);
+
+        //Fecha de inicio de cada turno
+        public DateTime StartTurnDateTime { get; set; }
+
 
 
         public ChessBoard()
@@ -165,16 +169,27 @@ namespace chess4connect.Models.Games.Chess.Chess
                     }
 
 
-                        //Mueve la pieza y actualiza su posición
-                        Board[piece.Position.X, piece.Position.Y] = null;
+                    //Mueve la pieza y actualiza su posición
+                    Board[piece.Position.X, piece.Position.Y] = null;
 
                     Board[moveRequest.MovementX, moveRequest.MovementY] = piece;
                     piece.Position = new Point(moveRequest.MovementX, moveRequest.MovementY);
 
+                    //Resta el tiempo en segundos que ha tardado en mover
+                    TimeSpan remaninder = StartTurnDateTime - DateTime.Now;
+
+                    if (piece.Color == ChessPieceColor.WHITE)
+                        Player1Time -= remaninder;
+                    else
+                        Player2Time -= remaninder;
+                    
 
 
                     //Cambia el turno
                     Turn = Turn == ChessPieceColor.BLACK ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
+
+                    //Fecha de inicio del turno
+                    StartTurnDateTime = DateTime.Now;
 
                     return true;
                 }

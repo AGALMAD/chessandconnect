@@ -72,8 +72,8 @@ public class GameService
                     {
                         Pieces = ChessPieceMapper.ToDto(pieces),
                         Turn = room.Game.Board.Turn,
-                        Player1Time = room.Game.Board.Player1Time,
-                        Player2Time = room.Game.Board.Player2Time,
+                        Player1Time = (int)room.Game.Board.Player1Time.TotalSeconds,
+                        Player2Time = (int)room.Game.Board.Player2Time.TotalSeconds,
 
                     }
                 };

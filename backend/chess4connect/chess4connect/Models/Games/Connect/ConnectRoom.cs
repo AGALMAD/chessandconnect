@@ -20,4 +20,14 @@ public class ConnectRoom: BaseRoom
     {
         throw new NotImplementedException();
     }
+
+    public override Task SendRoom()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override Task MessageHandler(string message)
+    {
+        throw new NotImplementedException();
+    }
 }

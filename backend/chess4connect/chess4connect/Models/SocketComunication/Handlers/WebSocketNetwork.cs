@@ -149,9 +149,9 @@ public class WebSocketNetwork
 
     private async Task OnMessageReceivedAsync(WebSocketHandler webSocketHandler, string message)
     {
-        
-        //Envia a la sala que va a ser quien los va a manejar
 
+        //Envia a la sala que va a ser quien los va a manejar
+        await _roomService.MessageHandler(webSocketHandler.Id, message);
         
 
     }

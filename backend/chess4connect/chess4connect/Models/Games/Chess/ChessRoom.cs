@@ -18,7 +18,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         public ChessGame Game { get; set; }
 
-        public ChessRoom (WebSocketHandler player1Handler, WebSocketHandler? player2Handler, ChessGame game): base(player1Handler, player2Handler)
+        public  ChessRoom (WebSocketHandler player1Handler, WebSocketHandler? player2Handler, ChessGame game): base(player1Handler, player2Handler)
         {
             Game = game;
         }
@@ -121,6 +121,8 @@ namespace chess4connect.Models.Games.Chess.Chess
         }
 
 
+
+
         public async Task MoveChessPiece(ChessMoveRequest moveRequest)
         {
 
@@ -135,6 +137,23 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         }
 
- 
+        public override async Task MessageHandler(string message)
+        {
+            SocketMessage recived = JsonSerializer.Deserialize<SocketMessage>(message);
+
+            switch(recived.Type)
+            {
+                case SocketCommunicationType.CHESS_MOVEMENTS:
+                    ChessMoveRequest request = JsonSerializer.Deserialize<SocketMessage<ChessMoveRequest>>(message).Data;
+
+                    await MoveChessPiece(request);
+
+                    break;
+
+
+            }
+
+
+        }
     }
 }

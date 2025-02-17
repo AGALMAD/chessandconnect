@@ -14,6 +14,7 @@ public abstract class BaseRoom
     public abstract Task SendBoard();
     public abstract Task SendRoom();
 
+    public abstract Task MessageHandler( string message);
 
 
 }

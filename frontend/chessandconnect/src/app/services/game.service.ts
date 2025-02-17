@@ -103,7 +103,7 @@ export class GameService {
     }
 
     this.timerSubscription = interval(1000).subscribe(() => {
-      if (this.turn === ChessPieceColor.WHITE) {
+      if (this.turn === ChessPieceColor.WHITE && this.playerColor == ChessPieceColor.WHITE) {
         this.currentPlayerTimer = Math.max(0, this.currentPlayerTimer - 1);
       } else {
         this.opponentTimer = Math.max(0, this.opponentTimer - 1);

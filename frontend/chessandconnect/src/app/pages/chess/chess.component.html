@@ -50,11 +50,11 @@
           @for (piece of gameService.pieces; track $index) {
           @if (piece.Position.X === i && piece.Position.Y === j) {
           @if (piece.Color == ChessPieceColor.BLACK) {
-          <span class=" cursor-pointer text-3xl text-black cursor-pointer">{{getPieceSymbol(piece.PieceType)}}</span>
+          <span class=" cursor-pointer text-6xl text-black cursor-pointer">{{getPieceSymbol(piece.PieceType)}}</span>
           }
           @else {
           <span (click)="selectPiece(piece)"
-            class="cursor-pointer text-3xl text-white cursor-pointer">{{getPieceSymbol(piece.PieceType)}}</span>
+            class="cursor-pointer text-6xl text-white cursor-pointer">{{getPieceSymbol(piece.PieceType)}}</span>
           }
 
           }
@@ -112,15 +112,15 @@
         <div class="w-full h-full flex items-center justify-center" 
           [class.bg-brown-200]="(i + j) % 2 !== 0"
           [class.bg-brown-600]="(i + j) % 2 === 0" 
-          (click)="movePiece(i, j)">
+          (click)="movePiece(row, col)">
           @for (piece of gameService.pieces; track $index) {
           @if (piece.Position.X === row && piece.Position.Y === col) {
           @if (piece.Color == ChessPieceColor.BLACK) {
           <span (click)="selectPiece(piece)"
-            class="cursor-pointer text-3xl  text-black !important cursor-pointer">{{getPieceSymbol(piece.PieceType)}}</span>
+            class="cursor-pointer text-6xl  text-black !important cursor-pointer">{{getPieceSymbol(piece.PieceType)}}</span>
           }
           @else {
-          <span class="cursor-pointer text-3xl text-white cursor-pointer">{{getPieceSymbol(piece.PieceType)}}</span>
+          <span class="cursor-pointer text-6xl text-white cursor-pointer">{{getPieceSymbol(piece.PieceType)}}</span>
           }
 
           }

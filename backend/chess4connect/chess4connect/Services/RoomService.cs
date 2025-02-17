@@ -20,35 +20,26 @@ namespace chess4connect.Services
 
         private List<ChessRoom> chessRooms = new List<ChessRoom>();
         private List<ConnectRoom> connectRooms = new List<ConnectRoom>();
-        public RoomService(IServiceScopeFactory scopeFactory)
-        {
-            _scopeFactory = scopeFactory;
 
-        }
-
-        public async Task CreateRoomAsync(GameType gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
+        public async Task CreateRoomAsync(GameType gamemode, WebSocketHandler player1Hadler, WebSocketHandler player2Handler = null)
         {
-            int player2Id = 0;
-            if (player2 == null)
-                player2Id = 0;
-            else 
-                player2Id = player2.Id;
 
             if (gamemode == GameType.Chess)
             {
-                var room = new ChessRoom(player1.Id, player2Id,
+                var room = new ChessRoom(player1Hadler, player2Handler,
                     new ChessGame(DateTime.Now,
                     new ChessBoard()
                     {
                         StartTurnDateTime = DateTime.Now,
                     }));
 
+
                 chessRooms.Add(room);
 
             }
             else if (gamemode == GameType.Connect4)
             {
-                var room = new ConnectRoom(player1.Id, player2Id,
+                var room = new ConnectRoom(player1Hadler, player2Handler,
                    new ConnectGame(DateTime.Now,
                    new ConnectBoard()));
 
@@ -56,7 +47,7 @@ namespace chess4connect.Services
 
             }
 
-            await SendRoomMessageAsync(gamemode, player1, player2);
+            await SendRoomMessageAsync(gamemode, player1Hadler, player2Handler);
         }
 
         private async Task SendRoomMessageAsync(GameType gameType, WebSocketHandler socketPlayer1, WebSocketHandler socketPlayer2 = null)

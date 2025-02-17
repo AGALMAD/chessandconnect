@@ -1,13 +1,20 @@
-﻿namespace chess4connect.Models.Games.Base;
+﻿using chess4connect.Models.SocketComunication.Handlers;
+
+namespace chess4connect.Models.Games.Base;
 
 public abstract class BaseRoom
 {
-    public int Player1Id { get; set; }
-    public int Player2Id { get; set; }
+    public WebSocketHandler Player1Handler { get; set; }
+    public WebSocketHandler? Player2Handler { get; set; }
 
-    public BaseRoom(int player1Id, int player2Id) { 
-        Player1Id = player1Id;
-
-        Player2Id = player2Id;
+    public BaseRoom(WebSocketHandler player1Handler, WebSocketHandler? player2Handler) {
+        Player1Handler = player1Handler;
+        Player2Handler = player2Handler;
     }
+    public abstract Task SendBoard();
+    public abstract Task SendRoom();
+
+
+
 }
+

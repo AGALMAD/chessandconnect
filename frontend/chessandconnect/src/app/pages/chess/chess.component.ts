@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Type } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { CommonModule } from '@angular/common';
 import { ChessPieceColor } from '../../models/Games/Chess/Enums/Color';
@@ -9,12 +9,16 @@ import { ChessMoveRequest } from '../../models/Games/Chess/ChessMoveRequest'
 import { ApiService } from '../../services/api.service';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
+import { WebsocketService } from '../../services/websocket.service';
+import { SocketMessage, SocketMessageGeneric } from '../../models/WebSocketMessages/SocketMessage';
+import { SocketCommunicationType } from '../../enums/SocketCommunicationType';
+import { ChatComponent } from "../../components/chat/chat.component";
 
 
 
 @Component({
   selector: 'app-chess',
-  imports: [CommonModule],
+  imports: [CommonModule, ChatComponent],
   templateUrl: './chess.component.html',
   styleUrl: './chess.component.css'
 })
@@ -27,7 +31,7 @@ export class ChessComponent implements OnInit {
   ChessPieceColor = ChessPieceColor;
   selectedPiece: ChessPiece | null = null;
 
-  constructor(public gameService: GameService, private api: ApiService, public authService : AuthService) { }
+  constructor(private websocketService:WebsocketService, public gameService: GameService, private api: ApiService, public authService : AuthService) { }
 
 
   ngOnInit(): void {
@@ -45,9 +49,7 @@ export class ChessComponent implements OnInit {
   numbers: string[] = ['8', '7', '6', '5', '4', '3', '2', '1']
 
   rows: number[] = [7, 6, 5, 4, 3, 2, 1, 0]
-  rowsReverse: number[] = [1, 2, 3, 4, 5, 6, 7, 8]
   cols: number[] = [0, 1, 2, 3, 4, 5, 6, 7]
-  colsReverse: number[] = [7, 6, 5, 4, 3, 2, 1, 0]
   cells: string[] = [];
 
 
@@ -75,14 +77,16 @@ export class ChessComponent implements OnInit {
 
     const moveRequest: ChessMoveRequest = { PieceId: this.selectedPiece.Id, MovementX: destinationX,  MovementY: destinationY};
 
-    const result = await this.api.post(`Game/moveChessPiece`, moveRequest);
-
-    if (result.success) {
-      this.selectedPiece = null; 
+    const message : SocketMessageGeneric<ChessMoveRequest> = {
+      Type : SocketCommunicationType.CHESS_MOVEMENTS,
+      Data : moveRequest
     }
 
-    console.log("Pieza movida: ", result);
+    this.websocketService.sendRxjs(JSON.stringify(message))
+
+
   }
+
 
 
 

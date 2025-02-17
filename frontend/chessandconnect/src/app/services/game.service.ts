@@ -44,7 +44,7 @@ export class GameService {
   }
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Noe te quiere:', message);
+    console.log('Masage:', message);
 
     try {
       // Paso del mensaje a objeto
@@ -75,8 +75,8 @@ export class GameService {
 
         this.pieces = board.Pieces
         this.turn = board.Turn
-        this.currentPlayerTimer = board.Player1Time == this.authService.currentUser.id ? board.Player1Time : board.Player2Time
-        this.opponentTimer = board.Player1Time != this.authService.currentUser.id ? board.Player1Time : board.Player2Time
+        this.currentPlayerTimer = this.playerColor == ChessPieceColor.WHITE ? board.Player1Time : board.Player2Time
+        this.opponentTimer = this.playerColor == ChessPieceColor.WHITE ? board.Player2Time : board.Player1Time
 
         this.startCountdown();
 
@@ -103,7 +103,7 @@ export class GameService {
     }
 
     this.timerSubscription = interval(1000).subscribe(() => {
-      if (this.turn === ChessPieceColor.WHITE) {
+      if (this.turn === ChessPieceColor.WHITE && this.playerColor == ChessPieceColor.WHITE) {
         this.currentPlayerTimer = Math.max(0, this.currentPlayerTimer - 1);
       } else {
         this.opponentTimer = Math.max(0, this.opponentTimer - 1);

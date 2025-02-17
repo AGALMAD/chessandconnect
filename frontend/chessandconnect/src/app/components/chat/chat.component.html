@@ -1,0 +1,30 @@
+<!-- Vista de chat -->
+<div class="absolute top-0 right-0 p-4 bg-[#5f6a6a] text-white w-[350px] h-full flex flex-col">
+    <div class="overflow-y-auto flex-1">
+      <div class="space-y-2">
+        @for (m of chatService.messages; track $index) {
+          <!-- Mensaje del usuario -->
+          <div class="flex items-start justify-start space-x-2">
+            <div class="bg-brown-200 p-2 rounded-lg text-brown-700 max-w-[80%]">
+  
+            </div>
+          </div>
+          <!-- Mensaje del otro usuario -->
+          <div class="flex items-start justify-end space-x-2">
+            <div class="bg-brown-100 p-2 rounded-lg text-brown-700 max-w-[80%]">  
+                        
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  
+    <div class="flex items-center space-x-2 mt-2">
+      <input 
+        type="text" 
+        class="flex-1 p-2 border border-brown-600 rounded-lg text-brown-700 bg-brown-200"
+        placeholder="Escribe un mensaje..." [(ngModel)]="message">
+      <button (click)="sendMessage()" class="bg-brown-600 text-white py-2 px-4 rounded-lg">Enviar</button>
+    </div>
+  </div>
+  

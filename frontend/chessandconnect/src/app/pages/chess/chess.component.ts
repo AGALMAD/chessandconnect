@@ -1,11 +1,11 @@
 import { Component, OnInit, Type } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { CommonModule } from '@angular/common';
-import { ChessPieceColor } from '../../models/Games/Chess/Enums/Color';
+import { PieceColor } from '../../models/Games/Chess/Enums/Color';
 import { PieceType } from '../../models/Games/Chess/Enums/PieceType';
-import { ChessPiece } from '../../models/Games/Chess/ChessPiece';
-import { Point } from '../../models/Games/Base/Point';
-import { ChessMoveRequest } from '../../models/Games/Chess/ChessMoveRequest'
+import { ChessPiece } from '../../models/Games/Chess/chess-piece';
+import { Point } from '../../models/Games/Base/point';
+import { ChessMoveRequest } from '../../models/Games/Chess/chess-move-request'
 import { ApiService } from '../../services/api.service';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
@@ -29,7 +29,7 @@ export class ChessComponent implements OnInit {
   public baseUrl = environment.apiUrl;
 
 
-  ChessPieceColor = ChessPieceColor;
+  ChessPieceColor = PieceColor;
   selectedPiece: ChessPiece | null = null;
 
   constructor(

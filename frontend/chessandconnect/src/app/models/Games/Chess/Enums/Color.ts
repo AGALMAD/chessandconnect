@@ -1,4 +1,4 @@
-export enum ChessPieceColor{
+export enum PieceColor{
     WHITE,
     BLACK
 }

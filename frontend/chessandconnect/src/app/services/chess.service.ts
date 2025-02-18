@@ -5,11 +5,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { GameService } from './game.service';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
-import { ChessBoard } from '../models/Games/Chess/ChessBoard';
+import { ChessBoard } from '../models/Games/Chess/chess-board';
 import { Subscription } from 'rxjs';
-import { ChessPiece } from '../models/Games/Chess/ChessPiece';
-import { ChessPieceMovements } from '../models/Games/Chess/ChessPiecesMovements';
-import { ChessPieceColor } from '../models/Games/Chess/Enums/Color';
+import { ChessPiece } from '../models/Games/Chess/chess-piece';
+import { ChessPieceMovements } from '../models/Games/Chess/chess-pieces-movements';
+import { PieceColor } from '../models/Games/Chess/Enums/Color';
 
 @Injectable({
   providedIn: 'root'
@@ -67,8 +67,8 @@ export class ChessService {
 
         this.pieces = board.Pieces
         this.gameService.turn = board.Turn
-        this.gameService.currentPlayerTimer = this.gameService.playerColor == ChessPieceColor.WHITE ? board.Player1Time : board.Player2Time
-        this.gameService.opponentTimer = this.gameService.playerColor == ChessPieceColor.WHITE ? board.Player2Time : board.Player1Time
+        this.gameService.currentPlayerTimer = this.gameService.playerColor == PieceColor.WHITE ? board.Player1Time : board.Player2Time
+        this.gameService.opponentTimer = this.gameService.playerColor == PieceColor.WHITE ? board.Player2Time : board.Player1Time
 
         this.gameService.startCountdown();
 

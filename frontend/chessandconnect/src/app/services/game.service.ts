@@ -9,6 +9,8 @@ import { ChessPieceColor } from '../models/Games/Chess/Enums/Color';
 import { ChessPieceMovements } from '../models/Games/Chess/ChessPiecesMovements';
 import { ChessBoard } from '../models/Games/Chess/ChessBoard';
 import { AuthService } from './auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ChessResultComponent } from '../components/chess-result/chess-result.component';
 
 @Injectable({
   providedIn: 'root'
@@ -23,19 +25,21 @@ export class GameService {
   opponent: User
 
   pieces: ChessPiece[]
+  movements: ChessPieceMovements[]
 
   currentPlayerTimer: number
   opponentTimer: number
 
   turn: ChessPieceColor
 
-
-  movements: ChessPieceMovements[]
+  winner: User = null
+  looser: User = null
 
 
   constructor(
     public webSocketService: WebsocketService,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog,
   ) {
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
@@ -93,9 +97,18 @@ export class GameService {
 
       case SocketCommunicationType.END_GAME:
         const winnerId = message.Data;
-
-
         console.log("Winner", winnerId)
+
+        this.winner = winnerId == this.authService.currentUser.id ? this.authService.currentUser : this.opponent
+        this.looser = winnerId == this.authService.currentUser.id ? this.opponent : this.authService.currentUser
+
+        this.dialog.open(ChessResultComponent, {
+          width: '800px',
+          data: {
+            winner: this.winner,
+            looser: this.looser
+          }
+        });
 
         break
 

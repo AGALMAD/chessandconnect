@@ -76,6 +76,12 @@ export class MatchMakingService {
           this.gameService.opponent = result.data
 
         }
+        else{
+          this.gameService.opponent = {
+            userName : "Magnus",
+            avatarImageUrl: "UserProfilePicture/bot.png",
+          }
+        }
 
         this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id ? ChessPieceColor.WHITE : ChessPieceColor.BLACK 
 

@@ -79,28 +79,28 @@ export class MenuService {
   public openSearchModal() {
     this.dialog.open(UserListComponent, {
       width: '400px',
-      data: {}  // Puedes pasar datos si necesitas
+      data: {}  
     });
   }
 
   public openGameInvitationModal() {
     this.dialog.open(GameInvitationComponent, {
       width: '400px',
-      data: {}  // Puedes pasar datos si necesitas
+      data: {} 
     });
   }
 
   public openFriendInvitationModal() {
     this.dialog.open(InviteListComponent, {
       width: '400px',
-      data: {}  // Puedes pasar datos si necesitas
+      data: {} 
     });
   }
 
   openRequestModal() {
     this.dialog.open(RequestListComponent, {
       width: '400px',
-      data: {}  // Puedes pasar datos si necesitas
+      data: {}
     });
   }
 }

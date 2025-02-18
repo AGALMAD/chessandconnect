@@ -13,6 +13,7 @@ import { WebsocketService } from '../../services/websocket.service';
 import { SocketMessage, SocketMessageGeneric } from '../../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../../enums/SocketCommunicationType';
 import { ChatComponent } from "../../components/chat/chat.component";
+import { ChessService } from '../../services/chess.service';
 
 
 
@@ -31,12 +32,18 @@ export class ChessComponent implements OnInit {
   ChessPieceColor = ChessPieceColor;
   selectedPiece: ChessPiece | null = null;
 
-  constructor(private websocketService:WebsocketService, public gameService: GameService, private api: ApiService, public authService : AuthService) { }
+  constructor(
+    private websocketService:WebsocketService, 
+    public gameService: GameService, 
+    private api: ApiService, 
+    public authService : AuthService,
+    public chessService: ChessService
+  ) { }
 
 
   ngOnInit(): void {
     console.log("Opponent:", this.gameService.opponent)
-    console.log("PIECES:", this.gameService.pieces)
+    console.log("PIECES:", this.chessService.pieces)
   }
 
 

@@ -20,17 +20,14 @@ export class GameService {
   messageReceived$: Subscription;
   private timerSubscription: any;
 
-
-  playerColor: ChessPieceColor
   opponent: User
-
-  pieces: ChessPiece[]
-  movements: ChessPieceMovements[]
 
   currentPlayerTimer: number
   opponentTimer: number
 
   turn: ChessPieceColor
+  playerColor: ChessPieceColor
+
 
   winner: User = null
   looser: User = null
@@ -71,30 +68,6 @@ export class GameService {
     console.log("BOARD:", message)
 
     switch (message.Type) {
-      case SocketCommunicationType.CHESS_BOARD:
-
-        const board = message.Data as ChessBoard;
-        console.log("Board", board)
-
-
-        this.pieces = board.Pieces
-        this.turn = board.Turn
-        this.currentPlayerTimer = this.playerColor == ChessPieceColor.WHITE ? board.Player1Time : board.Player2Time
-        this.opponentTimer = this.playerColor == ChessPieceColor.WHITE ? board.Player2Time : board.Player1Time
-
-        this.startCountdown();
-
-        break
-
-      case SocketCommunicationType.CHESS_MOVEMENTS:
-        const movements = message.Data as ChessPieceMovements[];
-
-        this.movements = movements
-
-        console.log("Movements", movements)
-
-        break
-
       case SocketCommunicationType.END_GAME:
         const winnerId = message.Data;
         console.log("Winner", winnerId)
@@ -117,7 +90,7 @@ export class GameService {
 
   }
 
-  private startCountdown() {
+  public startCountdown() {
 
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe(); // Detener el anterior

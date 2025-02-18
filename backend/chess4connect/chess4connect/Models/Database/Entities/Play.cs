@@ -8,9 +8,9 @@ public class Play
 {
     public int Id { get; set; }
     public int WinnerId { get; set; }
-    public GameResult GameResult { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+    public GameResult PlayState { get; set; }
     public GameType Game { get; set; }
-    public List<PlayDetail> PlayDetails { get; set; } = new List<PlayDetail>();
+    public List<PlayDetail> PlayDetails { get; set; }
 }

@@ -12,7 +12,7 @@ import { Room } from '../models/Games/room';
 import { RoomRequest} from '../models/Games/room-request'
 import { GameType } from '../enums/game';
 import { GameService } from './game.service';
-import { ChessPieceColor } from '../models/Games/Chess/Enums/Color';
+import { PieceColor } from '../models/Games/Chess/Enums/Color';
 
 @Injectable({
   providedIn: 'root'
@@ -76,8 +76,14 @@ export class MatchMakingService {
           this.gameService.opponent = result.data
 
         }
+        else{
+          this.gameService.opponent = {
+            userName : "Magnus",
+            avatarImageUrl: "UserProfilePicture/bot.png",
+          }
+        }
 
-        this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id ? ChessPieceColor.WHITE : ChessPieceColor.BLACK 
+        this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id ? PieceColor.WHITE : PieceColor.BLACK 
 
 
         this.router.navigate(

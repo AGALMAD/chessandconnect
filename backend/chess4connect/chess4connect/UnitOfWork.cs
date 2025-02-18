@@ -10,10 +10,12 @@ public class UnitOfWork
     private PlayRepository _playRepository;
     private UserRepository _userRepository;
     private FriendshipRepository _friendshipRepository;
-
+    PlayDetailRepository _playDetailRepository;
 
     //public GameRepository OrderRepository => _gameRepository ??= new GameRepository(_context);
     public PlayRepository PlayRepository => _playRepository ??= new PlayRepository(_context);
+    public PlayDetailRepository PlayDetailRepository => _playDetailRepository ??= new PlayDetailRepository(_context);
+
     public UserRepository UserRepository => _userRepository ??= new UserRepository(_context);
     public FriendshipRepository FriendshipRepository => _friendshipRepository ??= new FriendshipRepository(_context);
 

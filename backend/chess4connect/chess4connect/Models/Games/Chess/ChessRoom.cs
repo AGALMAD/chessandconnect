@@ -162,7 +162,7 @@ namespace chess4connect.Models.Games.Chess.Chess
             //Mensaje con el id del ganador
             var winnerMessage = new SocketMessage<int>
             {
-                Type = SocketCommunicationType.CHESS_MOVEMENTS,
+                Type = SocketCommunicationType.END_GAME,
 
                 Data = winnerId,
             };

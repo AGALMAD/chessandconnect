@@ -170,7 +170,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                     }
 
                     //Comprueba Jaque Mate
-                    if (Board[moveRequest.MovementY, moveRequest.MovementX].PieceType == PieceType.KING)
+                    if (Board[moveRequest.MovementX, moveRequest.MovementY] != null && Board[moveRequest.MovementX, moveRequest.MovementY].PieceType == PieceType.KING && Board[moveRequest.MovementX, moveRequest.MovementY].Color != Turn)
                     {
                         return 1;
                     }
@@ -239,12 +239,12 @@ namespace chess4connect.Models.Games.Chess.Chess
 
 
 
-            } while (!MovePiece(new ChessMoveRequest
+            } while (MovePiece(new ChessMoveRequest
             {
                 PieceId = selectedPieceMovement.Piece.Id,
                 MovementX = randomMove.X,
                 MovementY = randomMove.Y,
-            }));
+            }) != 0);
 
 
 

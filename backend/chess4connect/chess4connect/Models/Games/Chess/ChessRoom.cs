@@ -110,12 +110,17 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             string stringBoardMessage = JsonSerializer.Serialize(roomMessage);
 
-            WebSocketHandler playerSocket = Game.Turn == ChessPieceColor.WHITE ? Player1Handler : Player2Handler;
+            WebSocketHandler playerSocket = Game.Board.Turn == ChessPieceColor.WHITE ? Player1Handler : Player2Handler;
 
             //Envia los movimientos al jugador
             if (playerSocket != null)
             {
                 await playerSocket.SendAsync(stringBoardMessage);
+            }
+            else { 
+                Game.Board.RandomMovement();
+                await SendBoard();
+                await SendMovementsMessageAsync();
             }
 
         }

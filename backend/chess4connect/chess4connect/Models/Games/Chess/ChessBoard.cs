@@ -120,6 +120,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
                 ChessPiecesMovements.Add(newMovements);
             }
+            return;
         }
 
 
@@ -203,6 +204,8 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         public void RandomMovement()
         {
+            
+
             // Calcula los posibles movimientos que puede hacer 
             GetAllPieceMovements();
 
@@ -217,16 +220,26 @@ namespace chess4connect.Models.Games.Chess.Chess
                 return;
             }
 
-            //Movimiento aleatorio de pieza aleatoria
             var random = new Random();
-            var selectedPieceMovement = playerPiecesMovements[random.Next(playerPiecesMovements.Count)];
-            var randomMove = selectedPieceMovement.Movements[random.Next(selectedPieceMovement.Movements.Count)];
+            ChessPiecesMovements selectedPieceMovement;
+            Point randomMove;
 
-            // Mueve la pieza del tablero
-            var selectedPiece = selectedPieceMovement.Piece;
-            Board[selectedPiece.Position.X, selectedPiece.Position.Y] = null;
-            selectedPiece.Position = randomMove;
-            Board[randomMove.X, randomMove.Y].Id = selectedPiece.Id;
+            do
+            {
+                
+                selectedPieceMovement = playerPiecesMovements[random.Next(playerPiecesMovements.Count)];
+                randomMove = selectedPieceMovement.Movements[random.Next(selectedPieceMovement.Movements.Count)];
+
+
+
+            } while (!MovePiece(new ChessMoveRequest
+            {
+                PieceId = selectedPieceMovement.Piece.Id,
+                MovementX = randomMove.X,
+                MovementY = randomMove.Y,
+            }));
+
+
 
         }
 

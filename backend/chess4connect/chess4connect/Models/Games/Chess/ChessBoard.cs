@@ -124,7 +124,7 @@ namespace chess4connect.Models.Games.Chess.Chess
         }
 
 
-        public bool MovePiece(ChessMoveRequest moveRequest)
+        public int MovePiece(ChessMoveRequest moveRequest)
         {
 
             //Busca la pieza en la lista de piezas del tablero
@@ -152,7 +152,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                         {
                             //Si hay una pieza delante no se puede mover
                             if (Board[moveRequest.MovementX, moveRequest.MovementY] != null)
-                                return false;
+                                return -1;
                         }
 
                         // Movimiento diagonal 
@@ -163,11 +163,18 @@ namespace chess4connect.Models.Games.Chess.Chess
                             if (Board[moveRequest.MovementX, moveRequest.MovementY] == null ||
                                 Board[moveRequest.MovementX, moveRequest.MovementY].Color == piece.Color)
                             {
-                                return false;
+                                return -1;
                             }
                         }
 
                     }
+
+                    //Comprueba Jaque Mate
+                    if (Board[moveRequest.MovementY, moveRequest.MovementX].PieceType == PieceType.KING)
+                    {
+                        return 1;
+                    }
+
 
 
                     //Mueve la pieza y actualiza su posición
@@ -192,12 +199,12 @@ namespace chess4connect.Models.Games.Chess.Chess
                     //Fecha de inicio del turno
                     StartTurnDateTime = DateTime.Now;
 
-                    return true;
+                    return 0;
                 }
 
             }
 
-            return false;
+            return -1;
         }
 
 

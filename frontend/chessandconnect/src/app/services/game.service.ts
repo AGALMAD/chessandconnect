@@ -27,7 +27,7 @@ export class GameService {
   currentPlayerTimer: number
   opponentTimer: number
 
-  turn : ChessPieceColor
+  turn: ChessPieceColor
 
 
   movements: ChessPieceMovements[]
@@ -91,9 +91,17 @@ export class GameService {
 
         break
 
+      case SocketCommunicationType.END_GAME:
+        const winnerId = message.Data;
+
+
+        console.log("Winner", winnerId)
+
+        break
+
     }
 
-    
+
   }
 
   private startCountdown() {

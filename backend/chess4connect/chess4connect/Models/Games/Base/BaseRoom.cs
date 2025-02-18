@@ -15,6 +15,10 @@ public abstract class BaseRoom
     public abstract Task SendRoom();
 
     public abstract Task MessageHandler( string message);
+    public abstract Task SendWinMessage();
+
+    public abstract Task SendMessage(string message);
+
 
 
 }

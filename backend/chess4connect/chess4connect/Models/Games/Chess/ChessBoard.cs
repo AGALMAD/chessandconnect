@@ -288,6 +288,8 @@ namespace chess4connect.Models.Games.Chess.Chess
             return 0;
         }
 
+
+
         // check for checkmate
         private bool IsCheckmate()
         {

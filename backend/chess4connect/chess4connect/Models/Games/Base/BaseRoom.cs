@@ -1,7 +1,9 @@
 ﻿using chess4connect.DTOs.Games;
 using chess4connect.Enums;
+using chess4connect.Models.Database.Entities;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace chess4connect.Models.Games.Base;
@@ -59,6 +61,20 @@ public abstract class BaseRoom
         }
     }
 
+    public async Task SendChatMessage(string message, int userId)
+    {
+
+        // Si el que envia el mensaje es el Player1 se envia el mensaje al Player2 y viceversa
+
+        if (Player1Handler.Id == userId)
+        {
+            await Player2Handler.SendAsync(message);
+        }
+        else
+        {
+            await Player1Handler.SendAsync(message);
+        }
+    }
 
 
 }

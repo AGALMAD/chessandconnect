@@ -36,7 +36,7 @@ namespace chess4connect.Services
 
                 chessRooms.Add(room);
 
-                await room.SendRoom();
+                await room.SendChessRoom();
 
             }
             else if (gamemode == GameType.Connect4)
@@ -47,7 +47,7 @@ namespace chess4connect.Services
 
                 connectRooms.Add(room);
 
-                await room.SendRoom();
+                await room.SendConnectRoom();
 
             }
 

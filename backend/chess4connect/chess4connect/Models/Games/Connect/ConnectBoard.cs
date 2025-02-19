@@ -12,9 +12,17 @@ public class ConnectBoard
 
     private ConnectPiece[,] Board = new ConnectPiece[COLUMNS, ROWS];
 
-    public PieceColor Turn { get; set; } = PieceColor.YELLOW;
 
-    public int counter {  get; set; } = 1;
+    public PieceColor Turn { get; set; } = PieceColor.YELLOW;
+    public int turnsCounter {  get; set; } = 1;
+
+
+    //Tiempo en segundo de cada turno
+    public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(300);
+    public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(300);
+
+    //Fecha de inicio de cada turno
+    public DateTime StartTurnDateTime { get; set; }
 
     public int DropPiece(int colum)
     {
@@ -22,14 +30,14 @@ public class ConnectBoard
         {
             if (colum <= COLUMNS && Board[colum,i] == null)
             {
-                Board[colum -1, i] = new ConnectPiece(counter, Turn, new Point(colum -1,i));
+                Board[colum -1, i] = new ConnectPiece(turnsCounter, Turn, new Point(colum -1,i));
 
             }
 
             Turn = Turn == PieceColor.YELLOW ? PieceColor.RED : PieceColor.YELLOW;
-            counter++;
+            turnsCounter++;
 
-            if( counter >= 8 && CheckVictory(colum, i))
+            if( turnsCounter >= 8 && CheckVictory(colum, i))
             {
                 return 1;
             }

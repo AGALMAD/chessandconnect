@@ -24,39 +24,13 @@ namespace chess4connect.Models.Games.Chess.Chess
         }
 
 
-
-
-        public override async Task SendRoom()
+        public async Task SendChessRoom()
         {
 
-            int player2Id;
-            if (Player2Handler == null)
-                player2Id = 0;
-            else
-                player2Id = Player2Handler.Id;
-
-            var roomMessage = new SocketMessage<RoomDto>
-            {
-                Type = SocketCommunicationType.GAME_START,
-
-                Data = new RoomDto
-                {
-                    GameType = Game.GameType,
-                    Player1Id = Player1Handler.Id,
-                    Player2Id = player2Id,
-                }
-            };
-
-            string stringRoomMessage = JsonSerializer.Serialize(roomMessage);
-
-            await SendMessage(stringRoomMessage);
-
-
+            await SendRoom(GameType.Chess);
             await SendBoard();
             await SendMovementsMessageAsync();
         }
-
-
 
 
         public override async Task SendBoard()

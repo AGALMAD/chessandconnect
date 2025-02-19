@@ -1,6 +1,9 @@
-﻿using chess4connect.Enums;
+﻿using chess4connect.DTOs.Games;
+using chess4connect.Enums;
+using chess4connect.Mappers;
 using chess4connect.Models.Games.Base;
 using chess4connect.Models.Games.Chess;
+using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Types;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
@@ -40,20 +43,35 @@ public class ConnectRoom: BaseRoom
 
     }
 
-    public override Task SendBoard()
+    public override async Task SendBoard()
     {
-        throw new NotImplementedException();
+        //Lista de piezas original
+        List<ConnectPiece> pieces = Game.Board.convertBoardToList();
+
+        //Lista de piezas sin  los movimientos básicos
+        var roomMessage = new SocketMessage<ConnectBoardDto>
+        {
+            Type = SocketCommunicationType.CHESS_BOARD,
+
+            Data = new ConnectBoardDto
+            {
+                Pieces = pieces,
+                Turn = Game.Board.Turn,
+                Player1Time = (int)Game.Board.Player1Time.TotalSeconds,
+                Player2Time = (int)Game.Board.Player2Time.TotalSeconds,
+
+            }
+        };
+
+        string stringBoardMessage = JsonSerializer.Serialize(roomMessage);
+        await SendMessage(stringBoardMessage);
     }
 
-    public override Task SendRoom()
+    public async Task SendConnectRoom()
     {
-        throw new NotImplementedException();
+        await SendRoom(GameType.Connect4);
     }
 
-    public override Task MessageHandler(string message)
-    {
-        throw new NotImplementedException();
-    }
 
     public override async Task SendWinMessage()
     {
@@ -73,4 +91,9 @@ public class ConnectRoom: BaseRoom
         await SendMessage(stringWinnerMessage);
     }
 
+
+    public override Task MessageHandler(string message)
+    {
+        throw new NotImplementedException();
+    }
 }

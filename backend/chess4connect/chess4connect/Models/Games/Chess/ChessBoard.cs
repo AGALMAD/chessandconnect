@@ -14,7 +14,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         private ChessBasePiece[,] Board = new ChessBasePiece[ROWS, COLUMNS];
 
-        public ChessPieceColor Turn { get; set; }
+        public PieceColor Turn { get; set; }
 
 
         //Tiempo en segundo de cada turno
@@ -141,7 +141,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                     if (Math.Abs(move.X) == 2)
                     {
                         // Fix: Calculate intermediate square based on direction
-                        int direction = piece.Color == ChessPieceColor.WHITE ? -1 : 1;
+                        int direction = piece.Color == PieceColor.WHITE ? -1 : 1;
                         int intermediateX = piece.Position.X + direction;
 
                         if (Board[intermediateX, newY] != null)
@@ -243,8 +243,8 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             // Pawn promotion
             if (piece.PieceType == PieceType.PAWN &&
-                ((piece.Color == ChessPieceColor.WHITE && moveRequest.MovementX == 0) ||
-                 (piece.Color == ChessPieceColor.BLACK && moveRequest.MovementX == ROWS - 1)))
+                ((piece.Color == PieceColor.WHITE && moveRequest.MovementX == 0) ||
+                 (piece.Color == PieceColor.BLACK && moveRequest.MovementX == ROWS - 1)))
             {
                 // Create new queen and update board
                 var queen = new Queen(piece.Id, piece.Color, new Point(moveRequest.MovementX, moveRequest.MovementY));
@@ -267,13 +267,13 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             // Update time
             TimeSpan timeSpent = DateTime.Now.Subtract(StartTurnDateTime);
-            if (piece.Color == ChessPieceColor.WHITE)
+            if (piece.Color == PieceColor.WHITE)
                 Player1Time -= timeSpent;
             else
                 Player2Time -= timeSpent;
 
             // Change turn
-            Turn = Turn == ChessPieceColor.BLACK ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
+            Turn = Turn == PieceColor.BLACK ? PieceColor.WHITE : PieceColor.BLACK;
             StartTurnDateTime = DateTime.Now;
 
             // Recalculate all possible moves for the new position
@@ -311,7 +311,7 @@ namespace chess4connect.Models.Games.Chess.Chess
         {
             // Change turn temporarily to calculate opponent's moves
             var originalTurn = Turn;
-            Turn = Turn == ChessPieceColor.BLACK ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
+            Turn = Turn == PieceColor.BLACK ? PieceColor.WHITE : PieceColor.BLACK;
 
             GetAllPieceMovements();
 
@@ -329,7 +329,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
 
 
-        public void RandomMovement()
+        public async Task RandomMovement()
         {
             // Calculate possible movements
             GetAllPieceMovements();

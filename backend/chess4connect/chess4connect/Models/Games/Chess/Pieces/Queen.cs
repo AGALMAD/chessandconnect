@@ -12,20 +12,20 @@ namespace chess4connect.Models.Games.Chess.Chess.Pieces
 
         protected override void GetBasicMovements()
         {
-            BasicMovements = new List<Point>();
-
-            for (int i = 1; i < 8; i++)
+            BasicMovements = new List<Point>
             {
-                BasicMovements.Add(new Point(i, 0));
-                BasicMovements.Add(new Point(0, i));
-                BasicMovements.Add(new Point(-i, 0));
-                BasicMovements.Add(new Point(0, -i));
+                //horizontal and vertical
+                new Point(1, 0),
+                new Point(0, 1),
+                new Point(-1, 0),
+                new Point(0, -1),
 
-                BasicMovements.Add(new Point(i, i));
-                BasicMovements.Add(new Point(i, -i));
-                BasicMovements.Add(new Point(-i, i));
-                BasicMovements.Add(new Point(-i, -i));
-            }
+                //diagonal
+                new Point(1, 1),
+                new Point(1, -1),
+                new Point(-1, 1),
+                new Point(-1, -1)
+            };
             
         }
     }

@@ -15,10 +15,10 @@ namespace chess4connect.Models.Games.Chess.Chess.Pieces
 
             for (int i = 1; i < 8; i++)
             {
-                BasicMovements.Add(new Point(i, 0));
-                BasicMovements.Add(new Point(0, i));
-                BasicMovements.Add(new Point(-i, 0));
-                BasicMovements.Add(new Point(0, -i));
+                BasicMovements.Add(new Point(1, 0));
+                BasicMovements.Add(new Point(0, 1));
+                BasicMovements.Add(new Point(-1, 0));
+                BasicMovements.Add(new Point(0, -1));
             }
         }
     }

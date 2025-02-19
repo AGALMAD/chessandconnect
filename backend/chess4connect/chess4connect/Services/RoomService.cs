@@ -78,7 +78,7 @@ namespace chess4connect.Services
                     break;
 
                 case SocketCommunicationType.CONNECT4_MOVEMENTS:
-
+                    await GetConnectRoomByUserId(userId).MessageHandler(message);
                     break;
             }
 

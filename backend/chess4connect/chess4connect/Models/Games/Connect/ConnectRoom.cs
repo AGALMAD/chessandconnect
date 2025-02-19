@@ -24,9 +24,9 @@ public class ConnectRoom: BaseRoom
     }
 
 
-    public async Task DropConnectPiece(ConnectDropPieceRequest dropPieceRequest)
+    public async Task DropConnectPiece(int column)
     {
-        int response = Game.Board.DropPiece(dropPieceRequest.Column);
+        int response = Game.Board.DropPiece(column);
 
         if (response == 0)
         {
@@ -51,7 +51,7 @@ public class ConnectRoom: BaseRoom
         //Lista de piezas sin  los movimientos básicos
         var roomMessage = new SocketMessage<ConnectBoardDto>
         {
-            Type = SocketCommunicationType.CHESS_BOARD,
+            Type = SocketCommunicationType.CONNECT_BOARD,
 
             Data = new ConnectBoardDto
             {
@@ -92,8 +92,20 @@ public class ConnectRoom: BaseRoom
     }
 
 
-    public override Task MessageHandler(string message)
+    public override async Task MessageHandler(string message)
     {
-        throw new NotImplementedException();
+        SocketMessage recived = JsonSerializer.Deserialize<SocketMessage>(message);
+
+        switch (recived.Type)
+        {
+            case SocketCommunicationType.CONNECT4_MOVEMENTS:
+                ConnectDropPieceRequest request = JsonSerializer.Deserialize<SocketMessage<ConnectDropPieceRequest>>(message).Data;
+
+                await DropConnectPiece(request.Column);
+
+                break;
+
+
+        }
     }
 }

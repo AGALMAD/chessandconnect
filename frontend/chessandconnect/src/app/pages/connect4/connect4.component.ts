@@ -37,7 +37,7 @@ export class Connect4Component {
     const moveRequest: ConnectDropPieceRequest = { Column: col};
 
     const message : SocketMessageGeneric<ConnectDropPieceRequest> = {
-      Type : SocketCommunicationType.CONNECT_MOVEMENTS,
+      Type : SocketCommunicationType.CONNECT4_MOVEMENTS,
       Data : moveRequest
     }
 

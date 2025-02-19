@@ -22,6 +22,14 @@ public class WebSocketNetwork
 
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
+    private readonly RoomService _roomService;
+
+    public WebSocketNetwork(RoomService roomService)
+    {
+        _roomService = roomService;
+    }
+
+
     public async Task HandleAsync(User user, WebSocket webSocket)
     {
         // Creamos un nuevo WebSocketHandler a partir del WebSocket recibido y lo añadimos a la lista
@@ -141,34 +149,10 @@ public class WebSocketNetwork
 
     private async Task OnMessageReceivedAsync(WebSocketHandler webSocketHandler, string message)
     {
-        // Lista donde guardar las tareas de envío de mensajes
-        List<Task> tasks = new List<Task>();
-        // Guardamos una copia de los WebSocketHandler para evitar problemas de concurrencia
-        WebSocketHandler[] handlers = _handlers.Values.ToArray();
 
-
-        // Enviamos un mensaje personalizado al nuevo usuario y otro al resto
-        SocketMessage recived = JsonSerializer.Deserialize<SocketMessage>(message);
-        switch (recived.Type)
-        {
-            case SocketCommunicationType.CHAT:
-
-               await _chatService.sendMessage(message, webSocketHandler.Id);
-
-                break;
-
-            case SocketCommunicationType.CHESS_MOVEMENTS:
-                ChessMoveRequest request = JsonSerializer.Deserialize<SocketMessage<ChessMoveRequest>>(message).Data;
-
-                ChessRoom room = _roomService.GetChessRoomByUserId(webSocketHandler.Id);
-                WebSocketHandler opponentHandler = GetSocketByUserId(room.Player1Id == webSocketHandler.Id ? room.Player2Id : room.Player1Id);
-
-                await _gameService.MoveChessPiece(room, request, webSocketHandler,opponentHandler);
-
-
-                break;
-                                
-        }
+        //Envia a la sala que va a ser quien los va a manejar
+        await _roomService.MessageHandler(webSocketHandler.Id, message);
+        
 
     }
 

@@ -89,15 +89,12 @@ public class Program {
         builder.Services.AddScoped<FriendRequestService>();
         builder.Services.AddScoped<SmartSearchFriends>();
         builder.Services.AddScoped<MatchMakingService>();
-        builder.Services.AddScoped<ChatService>();
 
         //Matchmaking
         builder.Services.AddSingleton<QueueService>();
         builder.Services.AddSingleton<RoomService>();
 
-        //Game
-        builder.Services.AddSingleton<GameService>();
-
+      
 
         builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
         builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);

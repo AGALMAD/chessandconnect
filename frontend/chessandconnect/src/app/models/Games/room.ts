@@ -1,5 +1,5 @@
 import { GameType } from "../../enums/game";
-import { Game } from "./Game";
+import { ChessGame } from "./Chess/chess-game";
 
 export interface Room {
     Player1Id: number,

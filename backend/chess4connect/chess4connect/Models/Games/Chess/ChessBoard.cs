@@ -120,10 +120,11 @@ namespace chess4connect.Models.Games.Chess.Chess
 
                 ChessPiecesMovements.Add(newMovements);
             }
+            return;
         }
 
 
-        public bool MovePiece(ChessMoveRequest moveRequest)
+        public int MovePiece(ChessMoveRequest moveRequest)
         {
 
             //Busca la pieza en la lista de piezas del tablero
@@ -151,7 +152,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                         {
                             //Si hay una pieza delante no se puede mover
                             if (Board[moveRequest.MovementX, moveRequest.MovementY] != null)
-                                return false;
+                                return -1;
                         }
 
                         // Movimiento diagonal 
@@ -162,11 +163,18 @@ namespace chess4connect.Models.Games.Chess.Chess
                             if (Board[moveRequest.MovementX, moveRequest.MovementY] == null ||
                                 Board[moveRequest.MovementX, moveRequest.MovementY].Color == piece.Color)
                             {
-                                return false;
+                                return -1;
                             }
                         }
 
                     }
+
+                    //Comprueba Jaque Mate
+                    if (Board[moveRequest.MovementX, moveRequest.MovementY] != null && Board[moveRequest.MovementX, moveRequest.MovementY].PieceType == PieceType.KING && Board[moveRequest.MovementX, moveRequest.MovementY].Color != Turn)
+                    {
+                        return 1;
+                    }
+
 
 
                     //Mueve la pieza y actualiza su posición
@@ -176,7 +184,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                     piece.Position = new Point(moveRequest.MovementX, moveRequest.MovementY);
 
                     //Resta el tiempo en segundos que ha tardado en mover
-                    TimeSpan remaninder = StartTurnDateTime - DateTime.Now;
+                    TimeSpan remaninder = DateTime.Now.Subtract(StartTurnDateTime);
 
                     if (piece.Color == ChessPieceColor.WHITE)
                         Player1Time -= remaninder;
@@ -191,18 +199,20 @@ namespace chess4connect.Models.Games.Chess.Chess
                     //Fecha de inicio del turno
                     StartTurnDateTime = DateTime.Now;
 
-                    return true;
+                    return 0;
                 }
 
             }
 
-            return false;
+            return -1;
         }
 
 
 
         public void RandomMovement()
         {
+            
+
             // Calcula los posibles movimientos que puede hacer 
             GetAllPieceMovements();
 
@@ -217,16 +227,26 @@ namespace chess4connect.Models.Games.Chess.Chess
                 return;
             }
 
-            //Movimiento aleatorio de pieza aleatoria
             var random = new Random();
-            var selectedPieceMovement = playerPiecesMovements[random.Next(playerPiecesMovements.Count)];
-            var randomMove = selectedPieceMovement.Movements[random.Next(selectedPieceMovement.Movements.Count)];
+            ChessPiecesMovements selectedPieceMovement;
+            Point randomMove;
 
-            // Mueve la pieza del tablero
-            var selectedPiece = selectedPieceMovement.Piece;
-            Board[selectedPiece.Position.X, selectedPiece.Position.Y] = null;
-            selectedPiece.Position = randomMove;
-            Board[randomMove.X, randomMove.Y].Id = selectedPiece.Id;
+            do
+            {
+                
+                selectedPieceMovement = playerPiecesMovements[random.Next(playerPiecesMovements.Count)];
+                randomMove = selectedPieceMovement.Movements[random.Next(selectedPieceMovement.Movements.Count)];
+
+
+
+            } while (MovePiece(new ChessMoveRequest
+            {
+                PieceId = selectedPieceMovement.Piece.Id,
+                MovementX = randomMove.X,
+                MovementY = randomMove.Y,
+            }) != 0);
+
+
 
         }
 

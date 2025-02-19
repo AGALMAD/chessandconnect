@@ -7,7 +7,6 @@ namespace chess4connect.Models.Games.Chess;
 
 public class ChessGame: BaseGame
 {
-    public ChessPieceColor Turn {  get; set; }
     public ChessBoard Board { get; set; }
 
     public ChessGame(DateTime startDateTime, ChessBoard board): base(GameType.Chess, startDateTime)

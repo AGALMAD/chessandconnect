@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/dto/user';
-import { ChessPiece } from '../models/Games/Chess/ChessPiece';
+import { ChessPiece } from '../models/Games/Chess/chess-piece';
 import { WebsocketService } from './websocket.service';
 import { interval, Subscription } from 'rxjs';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
-import { ChessPieceColor } from '../models/Games/Chess/Enums/Color';
-import { ChessPieceMovements } from '../models/Games/Chess/ChessPiecesMovements';
-import { ChessBoard } from '../models/Games/Chess/ChessBoard';
+import { PieceColor } from '../models/Games/Chess/Enums/Color';
+import { ChessPieceMovements } from '../models/Games/Chess/chess-pieces-movements';
+import { ChessBoard } from '../models/Games/Chess/chess-board';
 import { AuthService } from './auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ChessResultComponent } from '../components/chess-result/chess-result.component';
 
 @Injectable({
   providedIn: 'root'
@@ -18,24 +20,23 @@ export class GameService {
   messageReceived$: Subscription;
   private timerSubscription: any;
 
-
-  playerColor: ChessPieceColor
   opponent: User
-
-  pieces: ChessPiece[]
 
   currentPlayerTimer: number
   opponentTimer: number
 
-  turn : ChessPieceColor
+  turn: PieceColor
+  playerColor: PieceColor
 
 
-  movements: ChessPieceMovements[]
+  winner: User = null
+  looser: User = null
 
 
   constructor(
     public webSocketService: WebsocketService,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog,
   ) {
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
@@ -44,7 +45,7 @@ export class GameService {
   }
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Noe te quiere:', message);
+    console.log('Masage:', message);
 
     try {
       // Paso del mensaje a objeto
@@ -67,43 +68,36 @@ export class GameService {
     console.log("BOARD:", message)
 
     switch (message.Type) {
-      case SocketCommunicationType.CHESS_BOARD:
+      case SocketCommunicationType.END_GAME:
+        const winnerId = message.Data;
+        console.log("Winner", winnerId)
 
-        const board = message.Data as ChessBoard;
-        console.log("Board", board)
+        this.winner = winnerId == this.authService.currentUser.id ? this.authService.currentUser : this.opponent
+        this.looser = winnerId == this.authService.currentUser.id ? this.opponent : this.authService.currentUser
 
-
-        this.pieces = board.Pieces
-        this.turn = board.Turn
-        this.currentPlayerTimer = board.Player1Time == this.authService.currentUser.id ? board.Player1Time : board.Player2Time
-        this.opponentTimer = board.Player1Time != this.authService.currentUser.id ? board.Player1Time : board.Player2Time
-
-        this.startCountdown();
-
-        break
-
-      case SocketCommunicationType.CHESS_MOVEMENTS:
-        const movements = message.Data as ChessPieceMovements[];
-
-        this.movements = movements
-
-        console.log("Movements", movements)
+        this.dialog.open(ChessResultComponent, {
+          width: '800px',
+          data: {
+            winner: this.winner,
+            looser: this.looser
+          }
+        });
 
         break
 
     }
 
-    
+
   }
 
-  private startCountdown() {
+  public startCountdown() {
 
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe(); // Detener el anterior
     }
 
     this.timerSubscription = interval(1000).subscribe(() => {
-      if (this.turn === ChessPieceColor.WHITE) {
+      if (this.turn === PieceColor.WHITE && this.playerColor == PieceColor.WHITE) {
         this.currentPlayerTimer = Math.max(0, this.currentPlayerTimer - 1);
       } else {
         this.opponentTimer = Math.max(0, this.opponentTimer - 1);

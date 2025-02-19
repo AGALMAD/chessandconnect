@@ -94,9 +94,7 @@ public class Program {
         builder.Services.AddSingleton<QueueService>();
         builder.Services.AddSingleton<RoomService>();
 
-        //Game
-        builder.Services.AddScoped<GameService>();
-
+      
 
         builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
         builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);

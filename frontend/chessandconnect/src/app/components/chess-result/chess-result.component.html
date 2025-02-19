@@ -1,0 +1,43 @@
+<div class=" min-h-96 min-w-96 fixed inset-0 z-50 flex justify-center items-center bg-brown-800 bg-opacity-50">
+    <div class=" bg-brown-100 p-6 rounded-xl shadow-lg relative">
+        <!-- Close button -->
+        <button class="absolute top-4 right-4 text-brown-600 hover:text-brown-800" (click)="closeModal()">
+            ✕
+        </button>
+
+        <h2 class="text-brown-800 font-bold text-2xl mb-4">Resultado</h2>
+
+        <div class=" flex flex-row">
+            <!--Ganador-->
+            <div>
+                <img src="/public/GameResult/crown.png" alt="">
+
+                <div class=" mt-6 flex items-center justify-between w-[80vh] ">
+                    <div class="flex items-center space-x-3">
+                        <img [src]="baseUrl + winner.avatarImageUrl" alt="Player"
+                            class=" size-40 rounded-full border-2 border-black">
+                        <p class="text-[#301e16] font-bold">{{ winner.userName || 'Jugador' }}</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--Perdedor-->
+            <div>
+                <div class=" mt-6 flex items-center justify-between w-[80vh] ">
+                    <div class="flex items-center space-x-3">
+                        <img [src]="baseUrl + looser?.avatarImageUrl" alt="Player"
+                            class=" size-40 rounded-full border-2 border-black">
+                        <p class="text-[#301e16] font-bold">{{ looser?.userName || 'Jugador' }}</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+</div>

@@ -15,102 +15,60 @@ namespace chess4connect.Services
 {
     public class RoomService
     {
-        private readonly WebSocketNetwork _network;
         private readonly IServiceScopeFactory _scopeFactory;
 
 
         private List<ChessRoom> chessRooms = new List<ChessRoom>();
         private List<ConnectRoom> connectRooms = new List<ConnectRoom>();
-        public RoomService(WebSocketNetwork webSocketNetwork, IServiceScopeFactory scopeFactory)
-        {
-            _network = webSocketNetwork;
-            _scopeFactory = scopeFactory;
 
-        }
-
-        public async Task CreateRoomAsync(GameType gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
+        public async Task CreateRoomAsync(GameType gamemode, WebSocketHandler player1Hadler, WebSocketHandler player2Handler = null)
         {
-            int player2Id = 0;
-            if (player2 == null)
-                player2Id = 0;
-            else 
-                player2Id = player2.Id;
 
             if (gamemode == GameType.Chess)
             {
-                var room = new ChessRoom(player1.Id, player2Id,
+                var room = new ChessRoom(player1Hadler, player2Handler,
                     new ChessGame(DateTime.Now,
-                    new ChessBoard()));
+                    new ChessBoard()
+                    {
+                        StartTurnDateTime = DateTime.Now,
+                    }));
+
 
                 chessRooms.Add(room);
 
-                await SendRoomMessageAsync(GameType.Chess, player1, player2);
+                await room.SendRoom();
+
             }
             else if (gamemode == GameType.Connect4)
             {
-                var room = new ConnectRoom(player1.Id, player2Id,
+                var room = new ConnectRoom(player1Hadler, player2Handler,
                    new ConnectGame(DateTime.Now,
                    new ConnectBoard()));
 
                 connectRooms.Add(room);
 
-                await SendRoomMessageAsync(GameType.Connect4, player1, player2);
+                await room.SendRoom();
+
             }
+
         }
 
-        private async Task SendRoomMessageAsync(GameType gameType, WebSocketHandler socketPlayer1, WebSocketHandler socketPlayer2 = null)
+        public async Task MessageHandler(int userId, string message)
         {
-            int player2Id;
-            if (socketPlayer2 == null)
-                player2Id = 0;
-            else
-                player2Id = socketPlayer2.Id;
 
-            var roomMessage = new SocketMessage<RoomDto>
-            {
-                Type = SocketCommunicationType.GAME_START,
+            await GetChessRoomByUserId(userId).MessageHandler(message);
 
-                Data = new RoomDto
-                {
-                    GameType = gameType,
-                    Player1Id = socketPlayer1.Id,
-                    Player2Id = player2Id,
-                }
-            };
-
-            string stringRoomMessage = JsonSerializer.Serialize(roomMessage);
-
-            //Envia los mensajes a los jugadores
-            if (socketPlayer1 != null)
-            {
-                await socketPlayer1.SendAsync(stringRoomMessage);
-            }
-
-            if (socketPlayer2 != null)
-            {
-                await socketPlayer2.SendAsync(stringRoomMessage);
-            }
-
-            //Crea el servicio scoped para poder enviar las fichas del tablero
-            using (var scope = _scopeFactory.CreateScope())
-            {
-                //Envia el mensaje del tablero a los dos jugadores
-                var gameService = scope.ServiceProvider.GetRequiredService<GameService>();
-                await gameService.SendBoardMessageAsync(socketPlayer1.Id, player2Id, gameType);
-
-                //Envia el mensaje de los movimientos al jugador 1
-                await gameService.SendMovementsMessageAsync(GetChessRoomByUserId(socketPlayer1.Id));
-            }
         }
+
 
 
         public ChessRoom GetChessRoomByUserId(int userId)
         {
-            return chessRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
+            return chessRooms.FirstOrDefault(r => r.Player1Handler.Id == userId || r.Player2Handler.Id == userId);
         }
-        public ChessRoom GetConnectRoomByUserId(int userId)
+        public ConnectRoom GetConnectRoomByUserId(int userId)
         {
-            return chessRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
+            return connectRooms.FirstOrDefault(r => r.Player1Handler.Id == userId || r.Player2Handler.Id == userId);
         }
 
 

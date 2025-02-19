@@ -97,7 +97,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             string stringBoardMessage = JsonSerializer.Serialize(roomMessage);
 
-            WebSocketHandler playerSocket = Game.Board.Turn == ChessPieceColor.WHITE ? Player1Handler : Player2Handler;
+            WebSocketHandler playerSocket = Game.Board.Turn == PieceColor.WHITE ? Player1Handler : Player2Handler;
 
             //Envia los movimientos al jugador
             if (playerSocket != null)
@@ -118,7 +118,9 @@ namespace chess4connect.Models.Games.Chess.Chess
         public async Task MoveChessPiece(ChessMoveRequest moveRequest)
         {
 
-            if (Game.Board.MovePiece(moveRequest) == 0)
+            int response = Game.Board.MovePiece(moveRequest);
+
+            if (response == 0)
             {
                 await SendBoard();
 
@@ -126,7 +128,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             }
 
-            if (Game.Board.MovePiece(moveRequest) == 1)
+            if (response == 1)
             {
                 await SendWinMessage();
 
@@ -156,7 +158,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         public override async Task SendWinMessage()
         {
-            int winnerId = Game.Board.Turn == ChessPieceColor.WHITE ? Player1Handler.Id : Player2Handler.Id;
+            int winnerId = Game.Board.Turn == PieceColor.WHITE ? Player1Handler.Id : Player2Handler.Id;
 
 
             //Mensaje con el id del ganador
@@ -171,18 +173,6 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             await SendMessage(stringWinnerMessage);
 
-        }
-
-        public override async Task SendMessage(string message)
-        {
-            //Envia los movimientos al jugador
-            await Player1Handler.SendAsync(message);
-
-
-            if (Player2Handler != null)
-            {
-                await Player1Handler.SendAsync(message);
-            }
         }
     }
 }

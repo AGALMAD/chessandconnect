@@ -17,7 +17,17 @@ public abstract class BaseRoom
     public abstract Task MessageHandler( string message);
     public abstract Task SendWinMessage();
 
-    public abstract Task SendMessage(string message);
+    public async Task SendMessage(string message)
+    {
+        //Envia los movimientos al jugador
+        await Player1Handler.SendAsync(message);
+
+
+        if (Player2Handler != null)
+        {
+            await Player2Handler.SendAsync(message);
+        }
+    }
 
 
 

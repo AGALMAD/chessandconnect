@@ -7,7 +7,7 @@ namespace chess4connect.Models.Games.Chess.Chess.Pieces
 {
     public class Queen : ChessBasePiece
     {
-        public Queen(int id, ChessPieceColor color, Point position) : base(id, PieceType.QUEEN, color, position) { }
+        public Queen(int id, PieceColor color, Point position) : base(id, PieceType.QUEEN, color, position) { }
 
 
         protected override void GetBasicMovements()

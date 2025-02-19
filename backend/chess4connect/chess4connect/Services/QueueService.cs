@@ -48,7 +48,7 @@ namespace chess4connect.Services
                     _queueConnect.Add(_network.GetSocketByUserId(userId));//añadir a la cola
 
                     //Si hay más de un jugador en la cola entrar en una sala
-                    if (_queueChess.Count > 1)
+                    if (_queueConnect.Count > 1)
                     {
                         await AddToRoom(gamemode);
                     }

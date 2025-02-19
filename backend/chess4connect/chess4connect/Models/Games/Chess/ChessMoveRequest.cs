@@ -1,7 +1,7 @@
 ﻿using chess4connect.Models.Games.Base;
 using System.Drawing;
 
-namespace chess4connect.Models.Games;
+namespace chess4connect.Models.Games.Chess;
 
 public class ChessMoveRequest
 {

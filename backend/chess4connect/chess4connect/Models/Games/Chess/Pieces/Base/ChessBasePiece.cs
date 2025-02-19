@@ -7,12 +7,12 @@ namespace chess4connect.Models.Games.Chess.Chess.Pieces.Base;
 public abstract class ChessBasePiece
 {
     public int Id { get; set; }
-    public ChessPieceColor Color { get; set; }
+    public PieceColor Color { get; set; }
     public Point Position { get; set; }
     public PieceType PieceType { get; set; }
     public List<Point> BasicMovements { get; set; }
 
-    public ChessBasePiece(int id, PieceType pieceType, ChessPieceColor color, Point position)
+    public ChessBasePiece(int id, PieceType pieceType, PieceColor color, Point position)
     {
         PieceType = pieceType;
         Id = id;

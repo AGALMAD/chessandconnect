@@ -16,6 +16,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         public ChessPieceColor Turn { get; set; }
 
+
         //Tiempo en segundo de cada turno
         public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(300);
         public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(300);
@@ -35,34 +36,34 @@ namespace chess4connect.Models.Games.Chess.Chess
             Board = new ChessBasePiece[ROWS, COLUMNS];
 
             //Black pieces initialized in Board
-            Board[0, 0] = new Rook(8, ChessPieceColor.BLACK, new Point(0, 0));
-            Board[0, 1] = new Knight(9, ChessPieceColor.BLACK, new Point(0, 1));
-            Board[0, 2] = new Bishop(10, ChessPieceColor.BLACK, new Point(0, 2));
-            Board[0, 3] = new Queen(11, ChessPieceColor.BLACK, new Point(0, 3));
-            Board[0, 4] = new King(12, ChessPieceColor.BLACK, new Point(0, 4));
-            Board[0, 5] = new Bishop(13, ChessPieceColor.BLACK, new Point(0, 5));
-            Board[0, 6] = new Knight(14, ChessPieceColor.BLACK, new Point(0, 6));
-            Board[0, 7] = new Rook(15, ChessPieceColor.BLACK, new Point(0, 7));
+            Board[0, 0] = new Rook(8, PieceColor.BLACK, new Point(0, 0));
+            Board[0, 1] = new Knight(9, PieceColor.BLACK, new Point(0, 1));
+            Board[0, 2] = new Bishop(10, PieceColor.BLACK, new Point(0, 2));
+            Board[0, 3] = new Queen(11, PieceColor.BLACK, new Point(0, 3));
+            Board[0, 4] = new King(12, PieceColor.BLACK, new Point(0, 4));
+            Board[0, 5] = new Bishop(13, PieceColor.BLACK, new Point(0, 5));
+            Board[0, 6] = new Knight(14, PieceColor.BLACK, new Point(0, 6));
+            Board[0, 7] = new Rook(15, PieceColor.BLACK, new Point(0, 7));
 
             for (int i = 0; i < COLUMNS; i++)
             {
-                Board[1, i] = new Pawn(16 + i, ChessPieceColor.BLACK, new Point(1, i));
+                Board[1, i] = new Pawn(16 + i, PieceColor.BLACK, new Point(1, i));
             }
 
 
             //White pieces initialized in Board
-            Board[7, 0] = new Rook(24, ChessPieceColor.WHITE, new Point(7, 0));
-            Board[7, 1] = new Knight(25, ChessPieceColor.WHITE, new Point(7, 1));
-            Board[7, 2] = new Bishop(26, ChessPieceColor.WHITE, new Point(7, 2));
-            Board[7, 3] = new Queen(27, ChessPieceColor.WHITE, new Point(7, 3));
-            Board[7, 4] = new King(28, ChessPieceColor.WHITE, new Point(7, 4));
-            Board[7, 5] = new Bishop(29, ChessPieceColor.WHITE, new Point(7, 5));
-            Board[7, 6] = new Knight(30, ChessPieceColor.WHITE, new Point(7, 6));
-            Board[7, 7] = new Rook(31, ChessPieceColor.WHITE, new Point(7, 7));
+            Board[7, 0] = new Rook(24, PieceColor.WHITE, new Point(7, 0));
+            Board[7, 1] = new Knight(25, PieceColor.WHITE, new Point(7, 1));
+            Board[7, 2] = new Bishop(26, PieceColor.WHITE, new Point(7, 2));
+            Board[7, 3] = new Queen(27, PieceColor.WHITE, new Point(7, 3));
+            Board[7, 4] = new King(28, PieceColor.WHITE, new Point(7, 4));
+            Board[7, 5] = new Bishop(29, PieceColor.WHITE, new Point(7, 5));
+            Board[7, 6] = new Knight(30, PieceColor.WHITE, new Point(7, 6));
+            Board[7, 7] = new Rook(31, PieceColor.WHITE, new Point(7, 7));
 
             for (int i = 0; i < COLUMNS; i++)
             {
-                Board[6, i] = new Pawn(32 + i, ChessPieceColor.WHITE, new Point(6, i));
+                Board[6, i] = new Pawn(32 + i, PieceColor.WHITE, new Point(6, i));
             }
 
 
@@ -130,9 +131,11 @@ namespace chess4connect.Models.Games.Chess.Chess
                 // Forward movement (when Y doesn't change)
                 if (move.Y == 0)
                 {
+
                     // Can't move forward if piece is blocking
                     if (Board[newX, newY] != null)
                         continue;
+
 
                     // For two-square first move, check if path is clear
                     if (Math.Abs(move.X) == 2)
@@ -144,6 +147,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                         if (Board[intermediateX, newY] != null)
                             continue;
                     }
+
 
                     movementList.Add(new Point(newX, newY));
                 }
@@ -161,6 +165,7 @@ namespace chess4connect.Models.Games.Chess.Chess
             {
                 int newX = piece.Position.X + move.X;
                 int newY = piece.Position.Y + move.Y;
+
 
                 if (newX >= 0 && newX < 8 && newY >= 0 && newY < 8)
                 {
@@ -220,6 +225,7 @@ namespace chess4connect.Models.Games.Chess.Chess
             var piece = convertBoardToList().FirstOrDefault(p => p.Id == moveRequest.PieceId);
             if (piece == null) return -1;
 
+
             // Verify if movement is valid
             var chessPieceMovements = ChessPiecesMovements.FirstOrDefault(p => p.Piece.Id == piece.Id);
             if (chessPieceMovements == null ||
@@ -227,6 +233,7 @@ namespace chess4connect.Models.Games.Chess.Chess
             {
                 return -1;
             }
+
 
             // Store the old position
             Point oldPosition = piece.Position;
@@ -308,6 +315,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             GetAllPieceMovements();
 
+
             // Check if any opponent piece can capture the king's position
             bool isUnderAttack = ChessPiecesMovements
                 .Any(p => p.Movements.Contains(king.Position));
@@ -341,6 +349,7 @@ namespace chess4connect.Models.Games.Chess.Chess
             int maxAttempts = 100; 
             int attempts = 0;
 
+
             while (attempts < maxAttempts)
             {
                 try
@@ -357,6 +366,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
                     // Select a random move
                     var randomMove = selectedPieceMovement.Movements[random.Next(selectedPieceMovement.Movements.Count)];
+
 
                     // Try to make the move
                     int result = MovePiece(new ChessMoveRequest

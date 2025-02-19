@@ -3,18 +3,21 @@
     <div class="overflow-y-auto flex-1">
       <div class="space-y-2">
         @for (m of chatService.messages; track $index) {
+          @if (authService.currentUser.id != m.userId) {
           <!-- Mensaje del usuario -->
           <div class="flex items-start justify-start space-x-2">
             <div class="bg-brown-200 p-2 rounded-lg text-brown-700 max-w-[80%]">
-  
+              {{m.Message}}
             </div>
           </div>
+          }@else {
           <!-- Mensaje del otro usuario -->
           <div class="flex items-start justify-end space-x-2">
             <div class="bg-brown-100 p-2 rounded-lg text-brown-700 max-w-[80%]">  
-                        
+                  {{m.Message}}      
             </div>
           </div>
+          }
         }
       </div>
     </div>

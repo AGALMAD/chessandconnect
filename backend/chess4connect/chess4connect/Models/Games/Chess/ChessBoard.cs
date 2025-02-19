@@ -15,7 +15,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         private ChessBasePiece[,] Board = new ChessBasePiece[ROWS, COLUMNS];
 
-        public ChessPieceColor Turn {  get; set; }
+        public PieceColor Turn {  get; set; }
 
         //Tiempo en segundo de cada turno
         public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(300);
@@ -36,34 +36,34 @@ namespace chess4connect.Models.Games.Chess.Chess
             Board = new ChessBasePiece[ROWS, COLUMNS];
 
             //Black pieces initialized in Board
-            Board[0, 0] = new Rook(8, ChessPieceColor.BLACK, new Point(0, 0));
-            Board[0, 1] = new Knight(9, ChessPieceColor.BLACK, new Point(0, 1));
-            Board[0, 2] = new Bishop(10, ChessPieceColor.BLACK, new Point(0, 2));
-            Board[0, 3] = new Queen(11, ChessPieceColor.BLACK, new Point(0, 3));
-            Board[0, 4] = new King(12, ChessPieceColor.BLACK, new Point(0, 4));
-            Board[0, 5] = new Bishop(13, ChessPieceColor.BLACK, new Point(0, 5));
-            Board[0, 6] = new Knight(14, ChessPieceColor.BLACK, new Point(0, 6));
-            Board[0, 7] = new Rook(15, ChessPieceColor.BLACK, new Point(0, 7));
+            Board[0, 0] = new Rook(8, PieceColor.BLACK, new Point(0, 0));
+            Board[0, 1] = new Knight(9, PieceColor.BLACK, new Point(0, 1));
+            Board[0, 2] = new Bishop(10, PieceColor.BLACK, new Point(0, 2));
+            Board[0, 3] = new Queen(11, PieceColor.BLACK, new Point(0, 3));
+            Board[0, 4] = new King(12, PieceColor.BLACK, new Point(0, 4));
+            Board[0, 5] = new Bishop(13, PieceColor.BLACK, new Point(0, 5));
+            Board[0, 6] = new Knight(14, PieceColor.BLACK, new Point(0, 6));
+            Board[0, 7] = new Rook(15, PieceColor.BLACK, new Point(0, 7));
 
             for (int i = 0; i < COLUMNS; i++)
             {
-                Board[1, i] = new Pawn(16 + i, ChessPieceColor.BLACK, new Point(1, i));
+                Board[1, i] = new Pawn(16 + i, PieceColor.BLACK, new Point(1, i));
             }
 
 
             //White pieces initialized in Board
-            Board[7, 0] = new Rook(24, ChessPieceColor.WHITE, new Point(7, 0));
-            Board[7, 1] = new Knight(25, ChessPieceColor.WHITE, new Point(7, 1));
-            Board[7, 2] = new Bishop(26, ChessPieceColor.WHITE, new Point(7, 2));
-            Board[7, 3] = new Queen(27, ChessPieceColor.WHITE, new Point(7, 3));
-            Board[7, 4] = new King(28, ChessPieceColor.WHITE, new Point(7, 4));
-            Board[7, 5] = new Bishop(29, ChessPieceColor.WHITE, new Point(7, 5));
-            Board[7, 6] = new Knight(30, ChessPieceColor.WHITE, new Point(7, 6));
-            Board[7, 7] = new Rook(31, ChessPieceColor.WHITE, new Point(7, 7));
+            Board[7, 0] = new Rook(24, PieceColor.WHITE, new Point(7, 0));
+            Board[7, 1] = new Knight(25, PieceColor.WHITE, new Point(7, 1));
+            Board[7, 2] = new Bishop(26, PieceColor.WHITE, new Point(7, 2));
+            Board[7, 3] = new Queen(27, PieceColor.WHITE, new Point(7, 3));
+            Board[7, 4] = new King(28, PieceColor.WHITE, new Point(7, 4));
+            Board[7, 5] = new Bishop(29, PieceColor.WHITE, new Point(7, 5));
+            Board[7, 6] = new Knight(30, PieceColor.WHITE, new Point(7, 6));
+            Board[7, 7] = new Rook(31, PieceColor.WHITE, new Point(7, 7));
 
             for (int i = 0; i < COLUMNS; i++)
             {
-                Board[6, i] = new Pawn(32 + i, ChessPieceColor.WHITE, new Point(6, i));
+                Board[6, i] = new Pawn(32 + i, PieceColor.WHITE, new Point(6, i));
             }
 
 
@@ -138,8 +138,8 @@ namespace chess4connect.Models.Games.Chess.Chess
                 if (chessPieceMovements != null && chessPieceMovements.Movements.Contains(new Point(moveRequest.MovementX, moveRequest.MovementY)))
                 {
                     //Si el peon llega al final se convierte en reina
-                    if ((piece.PieceType == PieceType.PAWN && piece.Color == ChessPieceColor.WHITE && moveRequest.MovementX == 0) ||
-                        (piece.PieceType == PieceType.PAWN && piece.Color == ChessPieceColor.BLACK && moveRequest.MovementX == ROWS - 1))
+                    if ((piece.PieceType == PieceType.PAWN && piece.Color == PieceColor.WHITE && moveRequest.MovementX == 0) ||
+                        (piece.PieceType == PieceType.PAWN && piece.Color == PieceColor.BLACK && moveRequest.MovementX == ROWS - 1))
                         piece = new Queen(piece.Id, piece.Color, piece.Position);
 
 
@@ -157,7 +157,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
                         // Movimiento diagonal 
                         if (Math.Abs(piece.Position.Y - moveRequest.MovementY) == 1 &&
-                            moveRequest.MovementX == piece.Position.X + (piece.Color == ChessPieceColor.WHITE ? -1 : 1))
+                            moveRequest.MovementX == piece.Position.X + (piece.Color == PieceColor.WHITE ? -1 : 1))
                         {
                             // Si la casilla está vacía o tiene una pieza del mismo color, no es un movimiento válido
                             if (Board[moveRequest.MovementX, moveRequest.MovementY] == null ||
@@ -186,7 +186,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                     //Resta el tiempo en segundos que ha tardado en mover
                     TimeSpan remaninder = DateTime.Now.Subtract(StartTurnDateTime);
 
-                    if (piece.Color == ChessPieceColor.WHITE)
+                    if (piece.Color == PieceColor.WHITE)
                         Player1Time -= remaninder;
                     else
                         Player2Time -= remaninder;
@@ -194,7 +194,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
 
                     //Cambia el turno
-                    Turn = Turn == ChessPieceColor.BLACK ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
+                    Turn = Turn == PieceColor.BLACK ? PieceColor.WHITE : PieceColor.BLACK;
 
                     //Fecha de inicio del turno
                     StartTurnDateTime = DateTime.Now;

@@ -20,6 +20,8 @@ export class MatchMakingConnect4Component {
 
 
   public baseUrl = environment.apiUrl;
+  private gamemode = GameType.Connect4 
+
 
   constructor(
     public menuService: MenuService,
@@ -33,6 +35,7 @@ export class MatchMakingConnect4Component {
   }
 
   async openLoadMatchMaking() {
+    //Muestra la vista de carga
     var loadView = document.getElementById('loadView') as HTMLElement;
     var main = document.getElementById('main') as HTMLElement;
 
@@ -44,7 +47,7 @@ export class MatchMakingConnect4Component {
 
 
     //Añade el jugador a la cola
-    const result = await this.api.post(`Friendship/queueGame`, GameType.Connect4)
+    const result = await this.api.post(`MatchMaking/queueGame`, this.gamemode)
 
   }
 
@@ -59,26 +62,23 @@ export class MatchMakingConnect4Component {
     main.classList.add('flex');
 
     //Elimina el jugador a la cola
-    const result = await this.api.post(`Friendship/cancelQueue`, GameType.Connect4)
+    const result = await this.api.post(`MatchMaking/cancelQueue`, this.gamemode)
   }
 
 
 
-  friendInvitation(friendId: number) {
-    this.friendsService.newGameInvitation(friendId, GameType.Connect4)
+  friendInvitation(friendId: number){
+    this.friendsService.newGameInvitation(friendId, this.gamemode)
 
   }
 
 
-  startGameWithFriend(){
-
+  async startGameWithFriend(){
+    await this.matchMakingService.startGameWithFriend(this.gamemode)
   }
 
-  startGameWithBot(){
-
-    this.router.navigate(['/chessGame']);
-
-
+  async startGameWithBot(){
+    await this.api.post('MatchMaking/IAGame', this.gamemode)
   }
 
 }

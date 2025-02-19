@@ -209,9 +209,13 @@ namespace chess4connect.Models.Games.Chess.Chess
 
 
 
-        public void RandomMovement()
+        public async Task RandomMovement()
         {
-            
+            var random = new Random();
+
+
+            //Delay del bot al mover una ficha
+            await Task.Delay(random.Next(1000, 5000));
 
             // Calcula los posibles movimientos que puede hacer 
             GetAllPieceMovements();
@@ -227,7 +231,6 @@ namespace chess4connect.Models.Games.Chess.Chess
                 return;
             }
 
-            var random = new Random();
             ChessPiecesMovements selectedPieceMovement;
             Point randomMove;
 
@@ -244,7 +247,8 @@ namespace chess4connect.Models.Games.Chess.Chess
                 PieceId = selectedPieceMovement.Piece.Id,
                 MovementX = randomMove.X,
                 MovementY = randomMove.Y,
-            }) != 0);
+            }) == -1);
+
 
 
 

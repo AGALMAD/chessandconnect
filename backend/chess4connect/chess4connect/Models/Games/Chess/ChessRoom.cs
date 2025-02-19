@@ -79,7 +79,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                 await playerSocket.SendAsync(stringBoardMessage);
             }
             else { 
-                Game.Board.RandomMovement();
+                await Game.Board.RandomMovement();
                 await SendBoard();
                 await SendMovementsMessageAsync();
             }

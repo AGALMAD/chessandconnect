@@ -3,7 +3,7 @@ import { User } from '../models/dto/user';
 import { ChessPiece } from '../models/Games/Chess/chess-piece';
 import { WebsocketService } from './websocket.service';
 import { interval, Subscription } from 'rxjs';
-import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
+import { SocketMessage, SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { PieceColor } from '../models/Games/Chess/Enums/Color';
 import { ChessPieceMovements } from '../models/Games/Chess/chess-pieces-movements';
@@ -110,7 +110,9 @@ export class GameService {
 
   drawRequest(){
 
-    
+    const message : SocketMessage = {
+      Type : SocketCommunicationType.DRAW_REQUEST,
+    }
   }
 
 

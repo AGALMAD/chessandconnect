@@ -139,9 +139,9 @@ public class Program {
         {
             app.UseSwagger();
             app.UseSwaggerUI();
-            app.UseCors();
-
         }
+
+        app.UseCors();
         // Indicamos que active el servicio para archivos estáticos (wwwroot)
         app.UseStaticFiles();
 

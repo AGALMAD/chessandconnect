@@ -140,14 +140,13 @@
 
           @if (chessService.showMovements != null) {
             @for (movements of chessService.showMovements.Movements; track $index) {
-              @if (movements.X == row && movements.Y == col) {
-                <div class="flex items-center justify-center min-h-screen bg-gray-900">
-                  <div class="w-32 h-32 bg-white opacity-50 rounded-full"></div>
+              @if (movements.X == i && movements.Y == j) {
+                <div class="cursor-pointer flex items-center justify-center fixed z-40" (click)="movePiece(i, j)">
+                  <div class="w-12 h-12 rounded-full bg-white opacity-75"></div>
                 </div>
-                
               }
               }
-          }
+          } 
         </div>
         }
 

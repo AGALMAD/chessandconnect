@@ -72,6 +72,10 @@ export class ChessService {
         this.gameService.opponentTimer = this.gameService.playerColor == PieceColor.WHITE ? board.Player2Time : board.Player1Time
 
         this.showMovements = null
+
+        //Audio when u move a piece
+        this.movementSound()
+
         this.gameService.startCountdown();
 
         break
@@ -89,5 +93,11 @@ export class ChessService {
 
 
   }
+
+  movementSound(): void {
+    const audio = new Audio('audio/sonido_mover_pieza.mp4')
+    audio.play()
+  }
+  
 
 }

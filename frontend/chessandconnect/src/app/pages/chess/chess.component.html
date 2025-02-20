@@ -11,7 +11,7 @@
         <p class="text-[#301e16] font-bold">{{ gameService.opponent?.userName || 'Oponente' }}</p>
       </div>
       <div class="bg-[#737171] text-white rounded-md p-2 text-xl font-bold">
-        {{ gameService.opponentTimer }}
+        {{ gameService.opponentTimer | pipeTimer}}
       </div>
     </div>
     <!--Tablero normal-->
@@ -181,7 +181,7 @@
         <p class="text-[#301e16] font-bold">{{ authService.currentUser?.userName || 'Jugador' }}</p>
       </div>
       <div class="bg-[#b8b5b5] text-white rounded-md p-2 text-xl font-bold">
-        {{ gameService.currentPlayerTimer }}
+        {{ gameService.currentPlayerTimer | pipeTimer }}
       </div>
     </div>
 

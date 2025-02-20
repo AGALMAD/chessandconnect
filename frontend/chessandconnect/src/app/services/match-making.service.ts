@@ -83,12 +83,22 @@ export class MatchMakingService {
           }
         }
 
-        this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id ? PieceColor.WHITE : PieceColor.BLACK 
+        
+        if(newRoom.GameType == GameType.Chess)
+        {
+          this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id ? PieceColor.WHITE : PieceColor.BLACK 
+          this.router.navigate(
+           ['/chessGame'],
+          );
+        }
+        else if (newRoom.GameType == GameType.Connect4){
 
+          this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id ? PieceColor.YELLOW : PieceColor.RED 
+          this.router.navigate(
+            ['/connectGame'],
+          );
+        }
 
-        this.router.navigate(
-          newRoom.GameType == GameType.Chess ? ['/chessGame'] : ['/connectGame'],
-        );
         break
 
     }

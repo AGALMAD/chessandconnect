@@ -26,7 +26,7 @@ public class ConnectBoard
 
     public int DropPiece(int colum)
     {
-        for (int i = 0; i < ROWS; i++)
+        for (int i = ROWS; i > 0; i--)
         {
             if (colum <= COLUMNS && Board[colum,i] == null)
             {

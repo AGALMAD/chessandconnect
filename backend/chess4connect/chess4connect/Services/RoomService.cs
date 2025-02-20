@@ -94,12 +94,12 @@ namespace chess4connect.Services
 
                     if (connectioMessage.Data.Type == ConnectionType.Disconnected)
                     {
-                        ChessRoom room = GetChessRoomByUserId(userId);
+                        ChessRoom chessRoom1 = GetChessRoomByUserId(userId);
 
-                        if (room != null)
+                        if (chessRoom1 != null)
                         {
-                            await room.SaveGame(_serviceProvider, GameResult.WIN);
-                            chessRooms.Remove(room);
+                            await chessRoom1.SaveGame(_serviceProvider, GameResult.WIN);
+                            chessRooms.Remove(chessRoom1);
                         }
 
                         else
@@ -118,7 +118,29 @@ namespace chess4connect.Services
                     break;
                 case SocketCommunicationType.DRAW_REQUEST:
 
+                    ChessRoom room = GetChessRoomByUserId(userId);
 
+                    if (room != null)
+                    {
+                        if (await room.NewDrawRequest())
+                        {
+                            await room.SaveGame(_serviceProvider,GameResult.DRAW);
+                        }
+                    }
+
+                    else
+                    {
+                        ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+
+                        if (connectRoom != null)
+                        {
+                            if (await room.NewDrawRequest())
+                            {
+                                await room.SaveGame(_serviceProvider, GameResult.DRAW);
+                            }
+                        }
+
+                    }
 
 
                     break;

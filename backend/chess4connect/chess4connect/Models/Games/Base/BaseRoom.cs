@@ -13,7 +13,10 @@ public abstract class BaseRoom
     public WebSocketHandler Player1Handler { get; set; }
     public WebSocketHandler? Player2Handler { get; set; }
 
-    public List<bool> DrawRequests { get; set; } = new List<bool>();
+    public int DrawRequests { get; set; } = 0;
+
+    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+
 
     public BaseRoom(WebSocketHandler player1Handler, WebSocketHandler? player2Handler) {
         Player1Handler = player1Handler;
@@ -83,16 +86,16 @@ public abstract class BaseRoom
     }
 
 
-    public bool NewDrawRequest()
+    public async Task<bool> NewDrawRequest()
     {
-        DrawRequests.Add(true);
+        await _semaphore.WaitAsync();
 
-        if (DrawRequests.Count >= 2)
-        {
-            return true;
-        }
+        DrawRequests++;
 
-        return false;
+        _semaphore.Release();
+
+        return DrawRequests == 2;
+
     }
 
 }

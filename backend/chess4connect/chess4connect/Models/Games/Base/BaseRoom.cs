@@ -68,7 +68,10 @@ public abstract class BaseRoom
 
         if (Player1Handler.Id == userId)
         {
-            await Player2Handler.SendAsync(message);
+            if (Player2Handler != null)
+            {
+                await Player2Handler.SendAsync(message);
+            }
         }
         else
         {

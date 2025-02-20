@@ -64,6 +64,7 @@ namespace chess4connect.Services
         {
             SocketMessage recived = JsonSerializer.Deserialize<SocketMessage>(message);
 
+
             switch (recived.Type)
             {
                 case SocketCommunicationType.CHAT:
@@ -107,12 +108,18 @@ namespace chess4connect.Services
 
                             if (connectRoom != null)
                             {
-                                await room.SaveGame(_serviceProvider, GameResult.WIN);
+                                await connectRoom.SaveGame(_serviceProvider, GameResult.WIN);
                                 connectRooms.Remove(connectRoom);
                             }
 
                         }
                     }
+
+                    break;
+                case SocketCommunicationType.DRAW_REQUEST:
+
+
+
 
                     break;
             }

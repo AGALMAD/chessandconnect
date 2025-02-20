@@ -1,6 +1,7 @@
 ﻿using chess4connect.DTOs.Games;
 using chess4connect.Enums;
 using chess4connect.Mappers;
+using chess4connect.Models.Database.Entities;
 using chess4connect.Models.Games.Base;
 using chess4connect.Models.Games.Chess;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
@@ -107,5 +108,43 @@ public class ConnectRoom: BaseRoom
 
 
         }
+    }
+
+    public override async Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult)
+    {
+        using var scope = serviceProvider.CreateAsyncScope();
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
+
+        Play play = new Play
+        {
+            StartDate = Game.StartDate,
+            EndDate = DateTime.Now,
+            Game = GameType.Connect4,
+        };
+
+        unitOfWork.PlayRepository.Add(play);
+
+        await unitOfWork.SaveAsync();
+
+        PlayDetail playDetailUser1 = new PlayDetail
+        {
+            PlayId = play.Id,
+            UserId = Game.Board.Turn == PieceColor.YELLOW ? Player1Handler.Id : Player2Handler.Id,
+            GameResult = gameResult
+        };
+
+        PlayDetail playDetailUser2 = new PlayDetail
+        {
+            PlayId = play.Id,
+            UserId = Game.Board.Turn == PieceColor.YELLOW ? Player2Handler.Id : Player1Handler.Id,
+            GameResult = gameResult == GameResult.DRAW ? gameResult : GameResult.LOSE
+        };
+
+        unitOfWork.PlayDetailRepository.Add(playDetailUser1);
+        unitOfWork.PlayDetailRepository.Add(playDetailUser2);
+        await unitOfWork.SaveAsync();
+
+
+        await SendWinMessage();
     }
 }

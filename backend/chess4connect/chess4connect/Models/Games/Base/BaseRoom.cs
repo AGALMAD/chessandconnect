@@ -13,11 +13,14 @@ public abstract class BaseRoom
     public WebSocketHandler Player1Handler { get; set; }
     public WebSocketHandler? Player2Handler { get; set; }
 
+    public List<bool> DrawRequests { get; set; } = new List<bool>();
+
     public BaseRoom(WebSocketHandler player1Handler, WebSocketHandler? player2Handler) {
         Player1Handler = player1Handler;
         Player2Handler = player2Handler;
     }
     public abstract Task SendBoard();
+    public abstract Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult);
     public abstract Task SendWinMessage();
     public abstract Task MessageHandler( string message);
 
@@ -79,6 +82,18 @@ public abstract class BaseRoom
         }
     }
 
+
+    public bool NewDrawRequest()
+    {
+        DrawRequests.Add(true);
+
+        if (DrawRequests.Count >= 2)
+        {
+            return true;
+        }
+
+        return false;
+    }
 
 }
 

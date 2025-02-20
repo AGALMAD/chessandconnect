@@ -133,7 +133,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         }
 
-        public async Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult)
+        public override async Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult)
         {
             using var scope = serviceProvider.CreateAsyncScope();
             var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
@@ -191,5 +191,6 @@ namespace chess4connect.Models.Games.Chess.Chess
             await SendMessage(stringWinnerMessage);
 
         }
+
     }
 }

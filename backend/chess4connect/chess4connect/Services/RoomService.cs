@@ -16,11 +16,17 @@ namespace chess4connect.Services
 {
     public class RoomService
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IServiceProvider _serviceProvider;
 
 
         private List<ChessRoom> chessRooms = new List<ChessRoom>();
         private List<ConnectRoom> connectRooms = new List<ConnectRoom>();
+
+        public RoomService(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
 
         public async Task CreateRoomAsync(GameType gamemode, WebSocketHandler player1Hadler, WebSocketHandler player2Handler = null)
         {
@@ -79,6 +85,35 @@ namespace chess4connect.Services
 
                 case SocketCommunicationType.CONNECT4_MOVEMENTS:
                     await GetConnectRoomByUserId(userId).MessageHandler(message);
+                    break;
+
+                //Si el compañero se desconecta, elimina la sala y envía mensaje de victoria al usuario
+                case SocketCommunicationType.CONNECTION:
+                    ConnectionSocketMessage<ConnectionModel> connectioMessage = JsonSerializer.Deserialize<ConnectionSocketMessage<ConnectionModel>>(message);
+
+                    if (connectioMessage.Data.Type == ConnectionType.Disconnected)
+                    {
+                        ChessRoom room = GetChessRoomByUserId(userId);
+
+                        if (room != null)
+                        {
+                            await room.SaveGame(_serviceProvider, GameResult.WIN);
+                            chessRooms.Remove(room);
+                        }
+
+                        else
+                        {
+                            ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+
+                            if (connectRoom != null)
+                            {
+                                await room.SaveGame(_serviceProvider, GameResult.WIN);
+                                connectRooms.Remove(connectRoom);
+                            }
+
+                        }
+                    }
+
                     break;
             }
 

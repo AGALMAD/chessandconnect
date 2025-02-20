@@ -107,7 +107,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             if (response == 1)
             {
-                await SaveGame(serviceProvider);
+                await SaveGame(serviceProvider, GameResult.WIN);
 
             }
 
@@ -133,7 +133,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         }
 
-        public async Task SaveGame(IServiceProvider serviceProvider)
+        public async Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult)
         {
             using var scope = serviceProvider.CreateAsyncScope();
             var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
@@ -149,6 +149,23 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             await unitOfWork.SaveAsync();
 
+            PlayDetail playDetailUser1 = new PlayDetail
+            {
+                PlayId = play.Id,
+                UserId = Game.Board.Turn == PieceColor.WHITE ? Player1Handler.Id : Player2Handler.Id,
+                GameResult = gameResult
+            };
+
+            PlayDetail playDetailUser2 = new PlayDetail
+            {
+                PlayId = play.Id,
+                UserId = Game.Board.Turn == PieceColor.WHITE ? Player2Handler.Id : Player1Handler.Id,
+                GameResult = gameResult == GameResult.DRAW ? gameResult : GameResult.LOSE
+            };
+
+            unitOfWork.PlayDetailRepository.Add(playDetailUser1);
+            unitOfWork.PlayDetailRepository.Add(playDetailUser2);
+            await unitOfWork.SaveAsync();
 
 
             await SendWinMessage();
@@ -158,7 +175,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         public override async Task SendWinMessage()
         {
-            int winnerId = Game.Board.Turn == PieceColor.WHITE ? Player2Handler.Id : Player2Handler.Id;
+            int winnerId = Game.Board.Turn == PieceColor.WHITE ? Player1Handler.Id : Player2Handler.Id;
 
 
             //Mensaje con el id del ganador

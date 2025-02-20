@@ -21,6 +21,7 @@ export class ChessService {
 
   pieces: ChessPiece[]
   movements: ChessPieceMovements[]
+  showMovements: ChessPieceMovements
 
 
   constructor(
@@ -70,6 +71,7 @@ export class ChessService {
         this.gameService.currentPlayerTimer = this.gameService.playerColor == PieceColor.WHITE ? board.Player1Time : board.Player2Time
         this.gameService.opponentTimer = this.gameService.playerColor == PieceColor.WHITE ? board.Player2Time : board.Player1Time
 
+        this.showMovements = null
         this.gameService.startCountdown();
 
         break

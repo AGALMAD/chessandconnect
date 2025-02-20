@@ -14,6 +14,7 @@ import { SocketMessage, SocketMessageGeneric } from '../../models/WebSocketMessa
 import { SocketCommunicationType } from '../../enums/SocketCommunicationType';
 import { ChatComponent } from "../../components/chat/chat.component";
 import { ChessService } from '../../services/chess.service';
+import { ChessPieceMovements } from '../../models/Games/Chess/chess-pieces-movements';
 
 
 
@@ -75,11 +76,15 @@ export class ChessComponent implements OnInit {
 
   selectPiece(piece: ChessPiece) {
     this.selectedPiece = piece;
+    console.log(piece)
+  
+    this.chessService.showMovements = this.chessService.movements.find(m => m.Id == piece.Id) || null;
   }
-
+  
   async movePiece(destinationX: number, destinationY: number) {
     if (!this.selectedPiece) {
       return;
+      
     }
 
     const moveRequest: ChessMoveRequest = { PieceId: this.selectedPiece.Id, MovementX: destinationX,  MovementY: destinationY};
@@ -90,7 +95,6 @@ export class ChessComponent implements OnInit {
     }
 
     this.websocketService.sendRxjs(JSON.stringify(message))
-
 
   }
 

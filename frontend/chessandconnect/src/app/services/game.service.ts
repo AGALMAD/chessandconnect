@@ -107,4 +107,11 @@ export class GameService {
     });
   }
 
+
+  drawRequest(){
+
+    
+  }
+
+
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PieceColor } from '../../models/Games/Chess/Enums/Color';
+import { PieceColor } from '../../models/games/chess/Enums/piece-color';
 import { environment } from '../../../environments/environment';
 import { WebsocketService } from '../../services/websocket.service';
 import { GameService } from '../../services/game.service';

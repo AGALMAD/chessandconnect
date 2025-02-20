@@ -7,19 +7,17 @@ namespace chess4connect.Models.Games.Chess.Chess.Pieces
 {
     public class Rook : ChessBasePiece
     {
-        public Rook(int id, ChessPieceColor color, Point position) : base(id, PieceType.ROOK, color, position) { }
+        public Rook(int id, PieceColor color, Point position) : base(id, PieceType.ROOK, color, position) { }
 
         protected override void GetBasicMovements()
         {
-            BasicMovements = new List<Point>();
-
-            for (int i = 1; i < 8; i++)
+            BasicMovements = new List<Point>
             {
-                BasicMovements.Add(new Point(i, 0));
-                BasicMovements.Add(new Point(0, i));
-                BasicMovements.Add(new Point(-i, 0));
-                BasicMovements.Add(new Point(0, -i));
-            }
+                new Point(1, 0),
+                new Point(0, 1),
+                new Point(-1, 0),
+                new Point(0, -1)
+            };
         }
     }
 }

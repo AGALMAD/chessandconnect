@@ -6,7 +6,7 @@ namespace chess4connect.DTOs.Games;
 public class ChessBoardDto
 {    
     public List<ChessPieceDto> Pieces { get; set; }
-    public ChessPieceColor Turn { get; set; }
+    public PieceColor Turn { get; set; }
     public int Player1Time { get; set; }
     public int Player2Time { get; set; }
 

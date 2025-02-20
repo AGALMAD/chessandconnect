@@ -1,5 +1,4 @@
-﻿using chess4connect.Models.Games.Base;
-using chess4connect.Models.Games.Chess.Chess.Pieces;
+﻿using chess4connect.Models.Games.Chess.Chess.Pieces;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Types;
 using System.Drawing;
@@ -15,7 +14,8 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         private ChessBasePiece[,] Board = new ChessBasePiece[ROWS, COLUMNS];
 
-        public ChessPieceColor Turn {  get; set; }
+        public PieceColor Turn { get; set; }
+
 
         //Tiempo en segundo de cada turno
         public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(300);
@@ -36,34 +36,34 @@ namespace chess4connect.Models.Games.Chess.Chess
             Board = new ChessBasePiece[ROWS, COLUMNS];
 
             //Black pieces initialized in Board
-            Board[0, 0] = new Rook(8, ChessPieceColor.BLACK, new Point(0, 0));
-            Board[0, 1] = new Knight(9, ChessPieceColor.BLACK, new Point(0, 1));
-            Board[0, 2] = new Bishop(10, ChessPieceColor.BLACK, new Point(0, 2));
-            Board[0, 3] = new Queen(11, ChessPieceColor.BLACK, new Point(0, 3));
-            Board[0, 4] = new King(12, ChessPieceColor.BLACK, new Point(0, 4));
-            Board[0, 5] = new Bishop(13, ChessPieceColor.BLACK, new Point(0, 5));
-            Board[0, 6] = new Knight(14, ChessPieceColor.BLACK, new Point(0, 6));
-            Board[0, 7] = new Rook(15, ChessPieceColor.BLACK, new Point(0, 7));
+            Board[0, 0] = new Rook(8, PieceColor.BLACK, new Point(0, 0));
+            Board[0, 1] = new Knight(9, PieceColor.BLACK, new Point(0, 1));
+            Board[0, 2] = new Bishop(10, PieceColor.BLACK, new Point(0, 2));
+            Board[0, 3] = new Queen(11, PieceColor.BLACK, new Point(0, 3));
+            Board[0, 4] = new King(12, PieceColor.BLACK, new Point(0, 4));
+            Board[0, 5] = new Bishop(13, PieceColor.BLACK, new Point(0, 5));
+            Board[0, 6] = new Knight(14, PieceColor.BLACK, new Point(0, 6));
+            Board[0, 7] = new Rook(15, PieceColor.BLACK, new Point(0, 7));
 
             for (int i = 0; i < COLUMNS; i++)
             {
-                Board[1, i] = new Pawn(16 + i, ChessPieceColor.BLACK, new Point(1, i));
+                Board[1, i] = new Pawn(16 + i, PieceColor.BLACK, new Point(1, i));
             }
 
 
             //White pieces initialized in Board
-            Board[7, 0] = new Rook(24, ChessPieceColor.WHITE, new Point(7, 0));
-            Board[7, 1] = new Knight(25, ChessPieceColor.WHITE, new Point(7, 1));
-            Board[7, 2] = new Bishop(26, ChessPieceColor.WHITE, new Point(7, 2));
-            Board[7, 3] = new Queen(27, ChessPieceColor.WHITE, new Point(7, 3));
-            Board[7, 4] = new King(28, ChessPieceColor.WHITE, new Point(7, 4));
-            Board[7, 5] = new Bishop(29, ChessPieceColor.WHITE, new Point(7, 5));
-            Board[7, 6] = new Knight(30, ChessPieceColor.WHITE, new Point(7, 6));
-            Board[7, 7] = new Rook(31, ChessPieceColor.WHITE, new Point(7, 7));
+            Board[7, 0] = new Rook(24, PieceColor.WHITE, new Point(7, 0));
+            Board[7, 1] = new Knight(25, PieceColor.WHITE, new Point(7, 1));
+            Board[7, 2] = new Bishop(26, PieceColor.WHITE, new Point(7, 2));
+            Board[7, 3] = new Queen(27, PieceColor.WHITE, new Point(7, 3));
+            Board[7, 4] = new King(28, PieceColor.WHITE, new Point(7, 4));
+            Board[7, 5] = new Bishop(29, PieceColor.WHITE, new Point(7, 5));
+            Board[7, 6] = new Knight(30, PieceColor.WHITE, new Point(7, 6));
+            Board[7, 7] = new Rook(31, PieceColor.WHITE, new Point(7, 7));
 
             for (int i = 0; i < COLUMNS; i++)
             {
-                Board[6, i] = new Pawn(32 + i, ChessPieceColor.WHITE, new Point(6, i));
+                Board[6, i] = new Pawn(32 + i, PieceColor.WHITE, new Point(6, i));
             }
 
 
@@ -73,39 +73,34 @@ namespace chess4connect.Models.Games.Chess.Chess
         public void GetAllPieceMovements()
         {
             ChessPiecesMovements = new List<ChessPiecesMovements>();
-            
+
             foreach (ChessBasePiece piece in Board)
             {
-                //only pieces positions from actual player will be recalculated
                 if (piece == null || piece.Color != Turn) continue;
 
                 List<Point> movementList = new List<Point>();
 
-                foreach (Point position in piece.BasicMovements)
+                switch (piece.PieceType)
                 {
-                    //calculate position adding the basic movement to piece position
-                    Point nextMove = new Point
-                    {
-                        X = piece.Position.X + position.X,
-                        Y = piece.Position.Y + position.Y
-                    };
+                    case PieceType.PAWN:
+                        CalculatePawnMoves(piece, movementList);
+                        break;
 
-                    //making sure the next move will be inside the board
-                    if (nextMove.X >= 0 && nextMove.X < 8 && nextMove.Y >= 0 && nextMove.Y < 8)
-                    {
-                        //making sure there is no piece in this cell
-                        if (Board[nextMove.X, nextMove.Y] == null)
-                        {
-                            movementList.Add(nextMove);
-                        }
-                        //checking if this cell contains a opponent piece
-                        else if (Board[nextMove.X, nextMove.Y].Color != piece.Color)
-                        {
-                            movementList.Add(nextMove);
-                        }
-                    }
+                    case PieceType.KNIGHT:
+                        CalculateKnightMoves(piece, movementList);
+                        break;
+
+                    case PieceType.KING:
+                        CalculateKingMoves(piece, movementList);
+                        break;
+
+                    case PieceType.ROOK:
+                    case PieceType.BISHOP:
+                    case PieceType.QUEEN:
+                        CalculateSlidingMoves(piece, movementList);
+                        break;
                 }
-                //creating a new object of a piece and its movements
+
                 ChessPiecesMovements newMovements = new ChessPiecesMovements
                 {
                     Piece = new ChessPieceWhithOutBasicMovements
@@ -120,136 +115,299 @@ namespace chess4connect.Models.Games.Chess.Chess
 
                 ChessPiecesMovements.Add(newMovements);
             }
-            return;
+        }
+
+        private void CalculatePawnMoves(ChessBasePiece piece, List<Point> movementList)
+        {
+            foreach (Point move in piece.BasicMovements)
+            {
+                int newX = piece.Position.X + move.X;
+                int newY = piece.Position.Y + move.Y;
+
+                // Early bounds check
+                if (newX < 0 || newX >= 8 || newY < 0 || newY >= 8)
+                    continue;
+
+                // Forward movement (when Y doesn't change)
+                if (move.Y == 0)
+                {
+
+                    // Can't move forward if piece is blocking
+                    if (Board[newX, newY] != null)
+                        continue;
+
+
+                    // For two-square first move, check if path is clear
+                    if (Math.Abs(move.X) == 2)
+                    {
+                        // Fix: Calculate intermediate square based on direction
+                        int direction = piece.Color == PieceColor.WHITE ? -1 : 1;
+                        int intermediateX = piece.Position.X + direction;
+
+                        if (Board[intermediateX, newY] != null)
+                     
+                            continue;
+                    }
+
+
+                    movementList.Add(new Point(newX, newY));
+                }
+                // Diagonal captures
+                else if (Board[newX, newY]?.Color != piece.Color && Board[newX, newY] != null)
+                {
+                    movementList.Add(new Point(newX, newY));
+                }
+            }
+        }
+
+        private void CalculateKnightMoves(ChessBasePiece piece, List<Point> movementList)
+        {
+            foreach (Point move in piece.BasicMovements)
+            {
+                int newX = piece.Position.X + move.X;
+                int newY = piece.Position.Y + move.Y;
+
+
+                if (newX >= 0 && newX < 8 && newY >= 0 && newY < 8)
+                {
+                    if (Board[newX, newY] == null || Board[newX, newY].Color != piece.Color)
+                    {
+                        movementList.Add(new Point(newX, newY));
+                    }
+                }
+            }
+        }
+
+        private void CalculateKingMoves(ChessBasePiece piece, List<Point> movementList)
+        {
+            foreach (Point move in piece.BasicMovements)
+            {
+                int newX = piece.Position.X + move.X;
+                int newY = piece.Position.Y + move.Y;
+
+                if (newX >= 0 && newX < 8 && newY >= 0 && newY < 8)
+                {
+                    if (Board[newX, newY] == null || Board[newX, newY].Color != piece.Color)
+                    {
+                        movementList.Add(new Point(newX, newY));
+                    }
+                }
+            }
+        }
+
+        private void CalculateSlidingMoves(ChessBasePiece piece, List<Point> movementList)
+        {
+            foreach (Point direction in piece.BasicMovements)
+            {
+                for (int distance = 1; distance < 8; distance++)
+                {
+                    int newX = piece.Position.X + (direction.X * distance);
+                    int newY = piece.Position.Y + (direction.Y * distance);
+
+                    if (newX < 0 || newX >= 8 || newY < 0 || newY >= 8)
+                        break;
+
+                    if (Board[newX, newY] != null)
+                    {
+                        if (Board[newX, newY].Color != piece.Color)
+                            movementList.Add(new Point(newX, newY));
+                        break;
+                    }
+
+                    movementList.Add(new Point(newX, newY));
+                }
+            }
         }
 
 
         public int MovePiece(ChessMoveRequest moveRequest)
         {
-
-            //Busca la pieza en la lista de piezas del tablero
+            // Find the piece
             var piece = convertBoardToList().FirstOrDefault(p => p.Id == moveRequest.PieceId);
+            if (piece == null) return -1;
 
-            if (piece != null)
+
+            // Verify if movement is valid
+            var chessPieceMovements = ChessPiecesMovements.FirstOrDefault(p => p.Piece.Id == piece.Id);
+            if (chessPieceMovements == null ||
+                !chessPieceMovements.Movements.Contains(new Point(moveRequest.MovementX, moveRequest.MovementY)))
             {
-                //Verifica si el movimiento que quiere hacer es correcto
-                var chessPieceMovements = ChessPiecesMovements.Where(p => p.Piece.Id == piece.Id).FirstOrDefault();
-
-                if (chessPieceMovements != null && chessPieceMovements.Movements.Contains(new Point(moveRequest.MovementX, moveRequest.MovementY)))
-                {
-                    //Si el peon llega al final se convierte en reina
-                    if ((piece.PieceType == PieceType.PAWN && piece.Color == ChessPieceColor.WHITE && moveRequest.MovementX == 0) ||
-                        (piece.PieceType == PieceType.PAWN && piece.Color == ChessPieceColor.BLACK && moveRequest.MovementX == ROWS - 1))
-                        piece = new Queen(piece.Id, piece.Color, piece.Position);
-
-
-
-                    //Si el peón tiene una ficha delante no se puede mover
-                    if (piece.PieceType == PieceType.PAWN)
-                    {
-                        //Movimiento hacia deltante
-                        if(piece.Position.Y == moveRequest.MovementY)
-                        {
-                            //Si hay una pieza delante no se puede mover
-                            if (Board[moveRequest.MovementX, moveRequest.MovementY] != null)
-                                return -1;
-                        }
-
-                        // Movimiento diagonal 
-                        if (Math.Abs(piece.Position.Y - moveRequest.MovementY) == 1 &&
-                            moveRequest.MovementX == piece.Position.X + (piece.Color == ChessPieceColor.WHITE ? -1 : 1))
-                        {
-                            // Si la casilla está vacía o tiene una pieza del mismo color, no es un movimiento válido
-                            if (Board[moveRequest.MovementX, moveRequest.MovementY] == null ||
-                                Board[moveRequest.MovementX, moveRequest.MovementY].Color == piece.Color)
-                            {
-                                return -1;
-                            }
-                        }
-
-                    }
-
-                    //Comprueba Jaque Mate
-                    if (Board[moveRequest.MovementX, moveRequest.MovementY] != null && Board[moveRequest.MovementX, moveRequest.MovementY].PieceType == PieceType.KING && Board[moveRequest.MovementX, moveRequest.MovementY].Color != Turn)
-                    {
-                        return 1;
-                    }
-
-
-
-                    //Mueve la pieza y actualiza su posición
-                    Board[piece.Position.X, piece.Position.Y] = null;
-
-                    Board[moveRequest.MovementX, moveRequest.MovementY] = piece;
-                    piece.Position = new Point(moveRequest.MovementX, moveRequest.MovementY);
-
-                    //Resta el tiempo en segundos que ha tardado en mover
-                    TimeSpan remaninder = DateTime.Now.Subtract(StartTurnDateTime);
-
-                    if (piece.Color == ChessPieceColor.WHITE)
-                        Player1Time -= remaninder;
-                    else
-                        Player2Time -= remaninder;
-                    
-
-
-                    //Cambia el turno
-                    Turn = Turn == ChessPieceColor.BLACK ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
-
-                    //Fecha de inicio del turno
-                    StartTurnDateTime = DateTime.Now;
-
-                    return 0;
-                }
-
+                return -1;
             }
 
-            return -1;
+
+            // Store the old position
+            Point oldPosition = piece.Position;
+
+            // Execute the move
+            Board[oldPosition.X, oldPosition.Y] = null;
+
+            // Pawn promotion
+            if (piece.PieceType == PieceType.PAWN &&
+                ((piece.Color == PieceColor.WHITE && moveRequest.MovementX == 0) ||
+                 (piece.Color == PieceColor.BLACK && moveRequest.MovementX == ROWS - 1)))
+            {
+                // Create new queen and update board
+                var queen = new Queen(piece.Id, piece.Color, new Point(moveRequest.MovementX, moveRequest.MovementY));
+                Board[moveRequest.MovementX, moveRequest.MovementY] = queen;
+                // Update the piece to the new queen
+                piece = queen;
+            }
+            else
+            {
+                // Normal move
+                Board[moveRequest.MovementX, moveRequest.MovementY] = piece;
+                piece.Position = new Point(moveRequest.MovementX, moveRequest.MovementY);
+
+                // Update FirstMove flag for pawns
+                if (piece.PieceType == PieceType.PAWN && piece is Pawn pawn)
+                {
+                    pawn.FirstMove = false;
+                }
+            }
+
+            // Update time
+            TimeSpan timeSpent = DateTime.Now.Subtract(StartTurnDateTime);
+            if (piece.Color == PieceColor.WHITE)
+                Player1Time -= timeSpent;
+            else
+                Player2Time -= timeSpent;
+
+            
+            // Check if the move results in checkmate
+            if (IsCheckmate())
+            {
+                return 1;
+            }
+
+            // Change turn
+            Turn = Turn == PieceColor.BLACK ? PieceColor.WHITE : PieceColor.BLACK;
+            StartTurnDateTime = DateTime.Now;
+
+            // Recalculate all possible moves for the new position
+            GetAllPieceMovements();
+
+
+            return 0;
         }
 
 
 
-        public void RandomMovement()
+        // check for checkmate
+        private bool IsCheckmate()
         {
-            
+            // Get the opponent's king
+            var opponentColor = Turn == PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE;
+            var king = convertBoardToList().FirstOrDefault(p => p.PieceType == PieceType.KING && p.Color == opponentColor);
 
-            // Calcula los posibles movimientos que puede hacer 
+            if (king == null) return false;
+
+            // Check if the king is under attack
+            if (!IsKingUnderAttack(king)) return false;
+
+            // Get possible moves for the king
+            var kingMoves = new List<Point>();
+            CalculateKingMoves(king, kingMoves);
+
+            // If the king can move to a safe position, it's not checkmate
+            foreach (var move in kingMoves)
+            {
+                // Temporarily move the king to the new position
+                var originalPosition = king.Position;
+                king.Position = move;
+
+                if (!IsKingUnderAttack(king))
+                {
+                    king.Position = originalPosition;
+                    return false;
+                }
+
+                // Restore original position
+                king.Position = originalPosition;
+            }
+
+            return true;
+        }
+
+        private bool IsKingUnderAttack(ChessBasePiece king)
+        {
             GetAllPieceMovements();
 
+            // Check if any opponent piece can capture the king's position
+            bool isUnderAttack = ChessPiecesMovements.Any(p => p.Movements.Contains(king.Position));
+
+             return isUnderAttack;
+        }
+
+
+
+
+        public async Task RandomMovement()
+        {
+            var random = new Random();
+
+
+            //Delay del bot al mover una ficha
+            await Task.Delay(random.Next(1000, 5000));
+
+            // Calculate possible movements
+            GetAllPieceMovements();
+
+            // Get pieces valid moves
             var playerPiecesMovements = ChessPiecesMovements
-                .Where(p => p.Piece.Color == Turn)
+                .Where(p => p.Piece.Color == Turn && p.Movements.Any())
                 .ToList();
 
-            
-            if (playerPiecesMovements.Count == 0)
+            // If no valid moves available, return
+            if (!playerPiecesMovements.Any())
             {
-                Console.WriteLine("No pieces to move.");
                 return;
             }
 
-            var random = new Random();
-            ChessPiecesMovements selectedPieceMovement;
-            Point randomMove;
+            int maxAttempts = 100; 
+            int attempts = 0;
 
-            do
+
+            while (attempts < maxAttempts)
             {
-                
-                selectedPieceMovement = playerPiecesMovements[random.Next(playerPiecesMovements.Count)];
-                randomMove = selectedPieceMovement.Movements[random.Next(selectedPieceMovement.Movements.Count)];
+                try
+                {
+                    // Select a random piece that has valid moves
+                    var selectedPieceMovement = playerPiecesMovements[random.Next(playerPiecesMovements.Count)];
+
+                    // Make sure the piece has valid moves
+                    if (selectedPieceMovement.Movements.Count == 0)
+                    {
+                        attempts++;
+                        continue;
+                    }
+
+                    // Select a random move
+                    var randomMove = selectedPieceMovement.Movements[random.Next(selectedPieceMovement.Movements.Count)];
 
 
+                    // Try to make the move
+                    int result = MovePiece(new ChessMoveRequest
+                    {
+                        PieceId = selectedPieceMovement.Piece.Id,
+                        MovementX = randomMove.X,
+                        MovementY = randomMove.Y,
+                    });
 
-            } while (MovePiece(new ChessMoveRequest
-            {
-                PieceId = selectedPieceMovement.Piece.Id,
-                MovementX = randomMove.X,
-                MovementY = randomMove.Y,
-            }) != 0);
+                    if (result == 0)
+                    {
+                        // Move successful
+                        return;
+                    }
 
-
-
+                    attempts++;
+                }
+                catch (Exception)
+                {
+                    attempts++;
+                }
+            }
         }
-
 
         public List<ChessBasePiece> convertBoardToList()
         {
@@ -265,7 +423,7 @@ namespace chess4connect.Models.Games.Chess.Chess
             }
 
 
-            return piecesInBoard; 
+            return piecesInBoard;
 
         }
 

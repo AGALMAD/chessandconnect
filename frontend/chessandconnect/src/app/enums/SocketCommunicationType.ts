@@ -7,8 +7,7 @@ export enum SocketCommunicationType {
     GAME_START = 6,
     CHESS_BOARD = 7,
     CONNECT_BOARD = 8,
-    CHESS_MOVEMENTS= 9,
-    END_GAME = 10,
-    
-
+    CHESS_MOVEMENTS = 9,
+    CONNECT4_MOVEMENTS = 10,
+    END_GAME = 11,
 }

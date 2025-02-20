@@ -5,7 +5,7 @@ namespace chess4connect.DTOs.Games;
 public class ChessPieceDto
 {
     public int Id { get; set; }
-    public ChessPieceColor Color { get; set; }
+    public PieceColor Color { get; set; }
     public Point Position { get; set; }
     public PieceType PieceType { get; set; }
 }

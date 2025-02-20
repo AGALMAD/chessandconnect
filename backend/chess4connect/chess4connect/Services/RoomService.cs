@@ -10,6 +10,7 @@ using chess4connect.Models.SocketComunication.MessageTypes;
 using System.Text.Json;
 using chess4connect.DTOs.Games;
 using chess4connect.Models.Games.Chess;
+using chess4connect.Models.Games;
 
 namespace chess4connect.Services
 {
@@ -36,7 +37,7 @@ namespace chess4connect.Services
 
                 chessRooms.Add(room);
 
-                await room.SendRoom();
+                await room.SendChessRoom();
 
             }
             else if (gamemode == GameType.Connect4)
@@ -47,7 +48,7 @@ namespace chess4connect.Services
 
                 connectRooms.Add(room);
 
-                await room.SendRoom();
+                await room.SendConnectRoom();
 
             }
 
@@ -55,8 +56,31 @@ namespace chess4connect.Services
 
         public async Task MessageHandler(int userId, string message)
         {
+            SocketMessage recived = JsonSerializer.Deserialize<SocketMessage>(message);
 
-            await GetChessRoomByUserId(userId).MessageHandler(message);
+            switch (recived.Type)
+            {
+                case SocketCommunicationType.CHAT:
+                    ChessRoom chessRoom = GetChessRoomByUserId(userId);
+
+                    if(chessRoom != null)
+                    {
+                        await chessRoom.SendChatMessage(message, userId);
+                    }
+                    else 
+                    {
+                        await GetConnectRoomByUserId(userId).SendChatMessage(message, userId);
+                    }
+                    break;
+
+                case SocketCommunicationType.CHESS_MOVEMENTS:
+                    await GetChessRoomByUserId(userId).MessageHandler(message);
+                    break;
+
+                case SocketCommunicationType.CONNECT4_MOVEMENTS:
+                    await GetConnectRoomByUserId(userId).MessageHandler(message);
+                    break;
+            }
 
         }
 

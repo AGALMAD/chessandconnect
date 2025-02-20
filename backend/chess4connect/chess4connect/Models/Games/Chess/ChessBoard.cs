@@ -145,6 +145,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                         int intermediateX = piece.Position.X + direction;
 
                         if (Board[intermediateX, newY] != null)
+                     
                             continue;
                     }
 
@@ -272,13 +273,12 @@ namespace chess4connect.Models.Games.Chess.Chess
             else
                 Player2Time -= timeSpent;
 
-
+            
             // Check if the move results in checkmate
             if (IsCheckmate())
             {
                 return 1;
             }
-
 
             // Change turn
             Turn = Turn == PieceColor.BLACK ? PieceColor.WHITE : PieceColor.BLACK;
@@ -331,19 +331,12 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         private bool IsKingUnderAttack(ChessBasePiece king)
         {
-            // Get the opponent's possible moves
-            var originalTurn = Turn;
-            Turn = Turn == PieceColor.BLACK ? PieceColor.WHITE : PieceColor.BLACK;
             GetAllPieceMovements();
 
             // Check if any opponent piece can capture the king's position
             bool isUnderAttack = ChessPiecesMovements.Any(p => p.Movements.Contains(king.Position));
 
-            // Restore original turn
-            Turn = originalTurn;
-            GetAllPieceMovements();
-
-            return isUnderAttack;
+             return isUnderAttack;
         }
 
 

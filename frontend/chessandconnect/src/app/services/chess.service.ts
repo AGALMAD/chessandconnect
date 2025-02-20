@@ -96,7 +96,7 @@ export class ChessService {
   }
 
   movementSound(): void {
-    const audio = new Audio('audio/sonido_mover_pieza.mp4')
+    const audio = new Audio('audio/sonido_mover_pieza.webm')
     audio.play()
   }
   

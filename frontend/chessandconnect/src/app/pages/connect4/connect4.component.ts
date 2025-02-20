@@ -7,9 +7,9 @@ import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { ChessService } from '../../services/chess.service';
 import { ConnectService } from '../../services/connect.service';
-import { ConnectDropPieceRequest } from '../../models/Games/Connect/connect-drop-piece-request';
 import { SocketMessageGeneric } from '../../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../../enums/SocketCommunicationType';
+import { ConnectDropPieceRequest } from '../../models/games/connect/connect-drop-piece-request';
 
 @Component({
   selector: 'app-connect4',

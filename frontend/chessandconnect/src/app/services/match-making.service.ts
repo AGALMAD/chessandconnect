@@ -8,9 +8,11 @@ import { WebsocketService } from './websocket.service';
 import { AuthService } from './auth.service';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
-import { Room } from '../models/room';
-import { PlayService } from './play.service';
-import { Game } from '../models/game';
+import { Room } from '../models/Games/room';
+import { RoomRequest} from '../models/Games/room-request'
+import { GameType } from '../enums/game';
+import { GameService } from './game.service';
+import { PieceColor } from '../models/Games/Chess/Enums/Color';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,7 @@ import { Game } from '../models/game';
 export class MatchMakingService {
 
   isHost = false
-  opponent: Friend
+  friendOpponent: Friend
 
   messageReceived$: Subscription;
 
@@ -28,7 +30,7 @@ export class MatchMakingService {
     private router: Router,
     public webSocketService: WebsocketService,
     public authService: AuthService,
-    private playService: PlayService
+    private gameService: GameService
   ) {
 
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
@@ -59,33 +61,56 @@ export class MatchMakingService {
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
 
+    console.log("GAME:", message)
     switch (message.Type) {
       case SocketCommunicationType.GAME_START:
 
         const newRoom = message.Data as Room;
+
+        console.log("ROOOOOM", newRoom)
+
+        //Oponente
         const opponentId = newRoom.Player1Id != this.authService.currentUser.id ? newRoom.Player1Id : newRoom.Player2Id
+        if(opponentId != 0){
+          const result = await this.api.get<User>(`User/getUserById?id=${opponentId}`)
+          this.gameService.opponent = result.data
 
-        const result = await this.api.get<User>(`User/getUserById?id=${opponentId}`)
-        this.playService.opponent = result.data
+        }
+        else{
+          this.gameService.opponent = {
+            userName : "Magnus",
+            avatarImageUrl: "UserProfilePicture/bot.png",
+          }
+        }
 
-        this.router.navigate(
-          newRoom.Game == Game.Chess ? ['/chessGame'] : ['/connectGame'],
-        );
+        
+        if(newRoom.GameType == GameType.Chess)
+        {
+          this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id ? PieceColor.WHITE : PieceColor.BLACK 
+          this.router.navigate(
+           ['/chessGame'],
+          );
+        }
+        else if (newRoom.GameType == GameType.Connect4){
+
+          this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id ? PieceColor.YELLOW : PieceColor.RED 
+          this.router.navigate(
+            ['/connectGame'],
+          );
+        }
+
         break
 
     }
 
   }
 
-  async startGameWithFriend(gamemode: Game){
-      const room : Room = {
-        Player1Id: 0,
-        Player2Id: this.opponent.id,
-        Game: gamemode,
-        id: 0,
-        StartDate: undefined
+  async startGameWithFriend(gamemode: GameType){
+      const room : RoomRequest = {
+        Player2Id: this.friendOpponent.id,
+        GameType: gamemode
       }
-      await this.api.post<Room>(`MatchMaking/FriendGame`, room)
+      await this.api.post<RoomRequest>(`MatchMaking/FriendGame`, room)
   }
 
 

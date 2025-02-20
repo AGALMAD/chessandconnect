@@ -1,55 +1,103 @@
-﻿using chess4connect.Enums;
-using chess4connect.Models.Database.Entities;
+﻿using chess4connect.DTOs;
+using chess4connect.Enums;
+using chess4connect.Models.Games.Base;
+using chess4connect.Models.Games.Chess.Chess;
+using chess4connect.Models.Games.Chess.Chess.Pieces;
+using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
+using chess4connect.Models.Games.Connect;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using System.Text.Json;
+using chess4connect.DTOs.Games;
+using chess4connect.Models.Games.Chess;
+using chess4connect.Models.Games;
 
 namespace chess4connect.Services
 {
     public class RoomService
     {
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        private readonly WebSocketNetwork _network;
 
-        List<Room> rooms = new List<Room>();
-        public RoomService(WebSocketNetwork webSocketNetwork)
+        private List<ChessRoom> chessRooms = new List<ChessRoom>();
+        private List<ConnectRoom> connectRooms = new List<ConnectRoom>();
+
+        public async Task CreateRoomAsync(GameType gamemode, WebSocketHandler player1Hadler, WebSocketHandler player2Handler = null)
         {
-            _network = webSocketNetwork;
-        }
 
-
-        public async Task CreateRoomAsync(Game gamemode, WebSocketHandler player1, WebSocketHandler player2 = null)
-        {
-            Room room = new Room
+            if (gamemode == GameType.Chess)
             {
-                Player1Id = player1.Id,
-                Player2Id = player2?.Id,
-                StartDate = DateTime.Now,
-                Game = gamemode
-            };
+                var room = new ChessRoom(player1Hadler, player2Handler,
+                    new ChessGame(DateTime.Now,
+                    new ChessBoard()
+                    {
+                        StartTurnDateTime = DateTime.Now,
+                    }));
 
-            rooms.Add(room);
 
-            await SendRoomMessageAsync(room, player1, player2);
-        }
+                chessRooms.Add(room);
 
-        private async Task SendRoomMessageAsync(Room room, WebSocketHandler player1, WebSocketHandler player2)
-        {
-            var roomSocketMessage = new SocketMessage<Room>
-            {
-                Type = Enums.SocketCommunicationType.GAME_START,
-                Data = room
-            };
+                await room.SendChessRoom();
 
-            string message = JsonSerializer.Serialize(roomSocketMessage);
-
-            await player1.SendAsync(message);
-            if(player2 is not null)
-            {
-                await player2.SendAsync(message);
             }
+            else if (gamemode == GameType.Connect4)
+            {
+                var room = new ConnectRoom(player1Hadler, player2Handler,
+                   new ConnectGame(DateTime.Now,
+                   new ConnectBoard()));
+
+                connectRooms.Add(room);
+
+                await room.SendConnectRoom();
+
+            }
+
         }
-        
+
+        public async Task MessageHandler(int userId, string message)
+        {
+            SocketMessage recived = JsonSerializer.Deserialize<SocketMessage>(message);
+
+            switch (recived.Type)
+            {
+                case SocketCommunicationType.CHAT:
+                    ChessRoom chessRoom = GetChessRoomByUserId(userId);
+
+                    if(chessRoom != null)
+                    {
+                        await chessRoom.SendChatMessage(message, userId);
+                    }
+                    else 
+                    {
+                        await GetConnectRoomByUserId(userId).SendChatMessage(message, userId);
+                    }
+                    break;
+
+                case SocketCommunicationType.CHESS_MOVEMENTS:
+                    await GetChessRoomByUserId(userId).MessageHandler(message);
+                    break;
+
+                case SocketCommunicationType.CONNECT4_MOVEMENTS:
+                    await GetConnectRoomByUserId(userId).MessageHandler(message);
+                    break;
+            }
+
+        }
+
+
+
+        public ChessRoom GetChessRoomByUserId(int userId)
+        {
+            return chessRooms.FirstOrDefault(r => r.Player1Handler.Id == userId || r.Player2Handler.Id == userId);
+        }
+        public ConnectRoom GetConnectRoomByUserId(int userId)
+        {
+            return connectRooms.FirstOrDefault(r => r.Player1Handler.Id == userId || r.Player2Handler.Id == userId);
+        }
+
+
+
+
 
     }
 }

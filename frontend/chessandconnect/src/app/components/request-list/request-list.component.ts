@@ -9,6 +9,7 @@ import { UserListComponent } from '../user-list/user-list.component';
 import { Result } from '../../models/result';
 import { Friend } from '../../models/dto/friend';
 import { RequestFriendship } from '../../models/dto/request-friendship';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -19,6 +20,7 @@ import { RequestFriendship } from '../../models/dto/request-friendship';
 })
 export class RequestListComponent implements OnInit{
 
+  public baseUrl = environment.apiUrl;
 
   requestList: RequestFriendship[] = []
 

@@ -16,7 +16,7 @@ import { User } from '../models/dto/user';
 import { FriendshipState } from '../enums/FriendshipState';
 import { RequestFriendship } from '../models/dto/request-friendship';
 import { MatchMakingService } from './match-making.service';
-import { Game } from '../models/game';
+import { GameType } from '../enums/game';
 import { AuthService } from './auth.service';
 
 
@@ -265,10 +265,10 @@ export class FriendsService {
         else {
 
           const friend = this.connectedFriends.find(friend => friend.id === gameInvitation.FriendId);
-          this.matchMakingService.opponent = friend
+          this.matchMakingService.friendOpponent = friend
           
           this.router.navigate(
-            gameInvitation.Game == Game.Chess ? ['/chess'] : ['/connect'],
+            gameInvitation.Game == GameType.Chess ? ['/chess'] : ['/connect'],
           );
         }
 
@@ -303,7 +303,7 @@ export class FriendsService {
   }
 
 
-  async newGameInvitation(friendId: number, game: Game): Promise<void> {
+  async newGameInvitation(friendId: number, game: GameType): Promise<void> {
     console.log("New invitation")
 
 
@@ -324,13 +324,13 @@ export class FriendsService {
   }
 
 
-  async acceptInvitationByUserId(friendId: number, game: Game) {
+  async acceptInvitationByUserId(friendId: number, game: GameType) {
     const invitation = this.gameInvitations.find(invitation => invitation.HostId == friendId)
     const friend = this.connectedFriends.find(friend => friend.id === friendId);
 
     if (invitation && friend) {
 
-      this.matchMakingService.opponent = friend
+      this.matchMakingService.friendOpponent = friend
 
 
       const acceptInvitation: GameInvitationModel = {
@@ -346,7 +346,7 @@ export class FriendsService {
         const result = await this.api.post(`MatchMaking/acceptInvitation`, acceptInvitation);
         this.matchMakingService.isHost = false
         this.router.navigate(
-          game == Game.Chess ? ['/chess'] : ['/connect'],
+          game == GameType.Chess ? ['/chess'] : ['/connect'],
         );
       } catch (error) {
         console.error("Error al enviar la invitación", error);

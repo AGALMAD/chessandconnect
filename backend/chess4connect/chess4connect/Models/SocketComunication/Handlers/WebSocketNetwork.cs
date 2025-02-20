@@ -1,25 +1,20 @@
 ﻿using chess4connect.Enums;
-using chess4connect.Models.Database.DTOs;
 using chess4connect.Models.Database.Entities;
+using chess4connect.Models.Games;
+using chess4connect.Models.Games.Chess.Chess;
 using chess4connect.Models.SocketComunication.Handlers.Services;
 using chess4connect.Models.SocketComunication.MessageTypes;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Extensions;
+using chess4connect.Services;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace chess4connect.Models.SocketComunication.Handlers;
 
 public class WebSocketNetwork
 {
-    private FriendRequestService _friendRequestService;
+
+
     //Diccionario de conexiones, almacena el id del usuario y el websocket de su conexión
     private ConcurrentDictionary<int, WebSocketHandler> _handlers = new ConcurrentDictionary<int, WebSocketHandler>();
 
@@ -27,10 +22,13 @@ public class WebSocketNetwork
 
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-    //private WebSocketNetwork(FriendRequestService friendRequestService) 
-    //{ 
-    //    _friendRequestService = friendRequestService;
-    //}
+    private readonly RoomService _roomService;
+
+    public WebSocketNetwork(RoomService roomService)
+    {
+        _roomService = roomService;
+    }
+
 
     public async Task HandleAsync(User user, WebSocket webSocket)
     {
@@ -149,47 +147,12 @@ public class WebSocketNetwork
         await Task.WhenAll(tasks);
     }
 
-    private Task OnMessageReceivedAsync(WebSocketHandler webSocketHandler, string message)
+    private async Task OnMessageReceivedAsync(WebSocketHandler webSocketHandler, string message)
     {
-        // Lista donde guardar las tareas de envío de mensajes
-        List<Task> tasks = new List<Task>();
-        // Guardamos una copia de los WebSocketHandler para evitar problemas de concurrencia
-        WebSocketHandler[] handlers = _handlers.Values.ToArray();
 
-
-        // Enviamos un mensaje personalizado al nuevo usuario y otro al resto
-        SocketMessage recived = JsonSerializer.Deserialize<SocketMessage>(message);
-        switch (recived.Type)
-        {
-            case SocketCommunicationType.GAME:
-
-                break;
-
-            case SocketCommunicationType.CHAT:
-
-                break;
-
-            case SocketCommunicationType.CONNECTION:
-
-                break;
-
-            case SocketCommunicationType.FRIEND:
-
-                //var request = JsonSerializer.Deserialize<FriendshipRequestModel>(message);
-
-                //var friendship = _friendRequestService.requestFriendship(request.UserId, request.FriendId);
-
-                //WebSocketHandler address = _handlers.GetValueOrDefault(request.UserId);
-
-                //string stringMessage = JsonSerializer.Serialize(friendship);
-
-                //tasks.Add(address.SendAsync(stringMessage));
-
-                                
-                break;
-
-        }
-        return Task.CompletedTask;
+        //Envia a la sala que va a ser quien los va a manejar
+        await _roomService.MessageHandler(webSocketHandler.Id, message);
+        
 
     }
 

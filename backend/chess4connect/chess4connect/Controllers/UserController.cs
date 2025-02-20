@@ -1,13 +1,13 @@
-﻿using chess4connect.Models.Database.DTOs;
-using chess4connect.Models.Database.Entities;
+﻿using chess4connect.Models.Database.Entities;
 using chess4connect.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-﻿using chess4connect.Mappers;
+using chess4connect.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using Microsoft.AspNetCore.Authorization;
+using chess4connect.DTOs;
 
 namespace chess4connect.Controllers
 {

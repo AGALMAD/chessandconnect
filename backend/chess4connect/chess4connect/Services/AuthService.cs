@@ -1,6 +1,6 @@
-﻿using chess4connect.Helpers;
+﻿using chess4connect.DTOs;
+using chess4connect.Helpers;
 using chess4connect.Mappers;
-using chess4connect.Models.Database.DTOs;
 using chess4connect.Models.Database.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;

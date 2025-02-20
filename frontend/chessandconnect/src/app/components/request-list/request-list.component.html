@@ -11,7 +11,7 @@
       @for (user of requestList; track $index) {
         <li class="p-2 rounded-lg shadow flex items-center bg-[#301e16] text-[#E8D5B5]">
           <img 
-            [src]="'https://localhost:7089/' + user.avatarImageUrl" 
+            [src]="baseUrl + user.avatarImageUrl" 
             alt="Avatar de {{ user.userName }}"
             class="w-10 h-10 rounded-full object-cover border-2 border-gray-500 shadow-md opacity-100 hover:scale-110"
           >

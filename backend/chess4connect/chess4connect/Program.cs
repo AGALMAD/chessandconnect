@@ -90,9 +90,11 @@ public class Program {
         builder.Services.AddScoped<SmartSearchFriends>();
         builder.Services.AddScoped<MatchMakingService>();
 
+        //Matchmaking
         builder.Services.AddSingleton<QueueService>();
         builder.Services.AddSingleton<RoomService>();
 
+      
 
         builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
         builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);

@@ -1,5 +1,5 @@
-﻿using chess4connect.Helpers;
-using chess4connect.Models.Database.DTOs;
+﻿using chess4connect.DTOs;
+using chess4connect.Helpers;
 using chess4connect.Models.Database.Entities;
 using chess4connect.Models.Database.Repositories;
 using Microsoft.AspNetCore.Http.HttpResults;

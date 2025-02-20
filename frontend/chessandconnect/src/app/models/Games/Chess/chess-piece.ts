@@ -1,4 +1,5 @@
-import { Point } from "../Base/point"
+
+import { Point } from "../base/point"
 import { PieceColor } from "./Enums/Color"
 import { PieceType } from "./Enums/PieceType"
 

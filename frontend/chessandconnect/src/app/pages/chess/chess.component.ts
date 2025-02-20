@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PieceColor } from '../../models/Games/Chess/Enums/Color';
 import { PieceType } from '../../models/Games/Chess/Enums/PieceType';
 import { ChessPiece } from '../../models/Games/Chess/chess-piece';
-import { Point } from '../../models/Games/Base/point';
+import { Point } from '../../models/Games/base/point';
 import { ChessMoveRequest } from '../../models/Games/Chess/chess-move-request'
 import { ApiService } from '../../services/api.service';
 import { environment } from '../../../environments/environment';

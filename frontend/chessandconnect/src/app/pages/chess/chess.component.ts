@@ -11,14 +11,19 @@ import { SocketMessage, SocketMessageGeneric } from '../../models/WebSocketMessa
 import { SocketCommunicationType } from '../../enums/SocketCommunicationType';
 import { ChatComponent } from "../../components/chat/chat.component";
 import { ChessService } from '../../services/chess.service';
+
+import { ChessPieceMovements } from '../../models/Games/Chess/chess-pieces-movements';
+import { PipeTimerPipe } from '../../pipes/pipe-timer.pipe';
+
 import { ChessPiece } from '../../models/games/chess/chess-piece';
 import { ChessMoveRequest } from '../../models/games/chess/chess-move-request';
 
 
 
+
 @Component({
   selector: 'app-chess',
-  imports: [CommonModule, ChatComponent],
+  imports: [CommonModule, ChatComponent, PipeTimerPipe],
   templateUrl: './chess.component.html',
   styleUrl: './chess.component.css'
 })

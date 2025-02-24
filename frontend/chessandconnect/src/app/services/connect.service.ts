@@ -6,9 +6,10 @@ import { Subscription } from 'rxjs';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { GameService } from './game.service';
-import { PieceColor } from '../models/games/chess/Enums/piece-color';
 import { ConnectPiece } from '../models/games/connect/connect-piece';
 import { ConnectBoard } from '../models/games/connect/connect-board';
+import { PieceColor } from '../models/games/chess/enums/piece-color';
+
 
 @Injectable({
   providedIn: 'root'

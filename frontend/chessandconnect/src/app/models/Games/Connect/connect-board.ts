@@ -1,4 +1,6 @@
-import { PieceColor } from "../chess/Enums/piece-color";
+
+
+import { PieceColor } from "../chess/enums/piece-color";
 import { ConnectPiece } from "./connect-piece";
 
 export interface ConnectBoard {

@@ -10,9 +10,11 @@ import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage'
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { GameType } from '../enums/game';
 import { GameService } from './game.service';
-import { PieceColor } from '../models/games/chess/Enums/piece-color';
+
 import { Room } from '../models/games/room';
 import { RoomRequest } from '../models/games/room-request';
+import { PieceColor } from '../models/games/chess/enums/piece-color';
+
 
 @Injectable({
   providedIn: 'root'

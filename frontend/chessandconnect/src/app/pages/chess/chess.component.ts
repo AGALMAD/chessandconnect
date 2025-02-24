@@ -10,10 +10,11 @@ import { SocketCommunicationType } from '../../enums/SocketCommunicationType';
 import { ChatComponent } from "../../components/chat/chat.component";
 import { ChessService } from '../../services/chess.service';
 import { PipeTimerPipe } from '../../pipes/pipe-timer.pipe';
-import { ChessPiece } from '../../models/games/chess/chess-piece';
 import { ChessMoveRequest } from '../../models/games/chess/chess-move-request';
-import { PieceColor } from '../../models/games/chess/enums/pieceColor';
+
 import { PieceType } from '../../models/games/chess/enums/piece-type';
+import { ChessPiece } from '../../models/games/chess/chess-piece';
+import { PieceColor } from '../../models/games/chess/enums/piece-color';
 
 
 

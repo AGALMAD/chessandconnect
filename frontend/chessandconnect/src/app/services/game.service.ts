@@ -4,10 +4,12 @@ import { WebsocketService } from './websocket.service';
 import { interval, Subscription } from 'rxjs';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
-import { PieceColor } from '../models/games/chess/Enums/piece-color';
+
 import { AuthService } from './auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChessResultComponent } from '../components/chess-result/chess-result.component';
+import { PieceColor } from '../models/games/chess/enums/piece-color';
+
 
 @Injectable({
   providedIn: 'root'

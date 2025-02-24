@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { PieceColor } from '../../models/games/chess/Enums/piece-color';
 import { environment } from '../../../environments/environment';
 import { WebsocketService } from '../../services/websocket.service';
 import { GameService } from '../../services/game.service';
@@ -10,6 +9,7 @@ import { ConnectService } from '../../services/connect.service';
 import { SocketMessageGeneric } from '../../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../../enums/SocketCommunicationType';
 import { ConnectDropPieceRequest } from '../../models/games/connect/connect-drop-piece-request';
+import { PieceColor } from '../../models/games/chess/enums/piece-color';
 
 @Component({
   selector: 'app-connect4',

@@ -3,7 +3,7 @@ import { PieceType } from "../../../enums/piece-type"
 
 export interface ChessPiece {
     Id:number,
-    PieceType: PieceType
     Player1Piece: boolean,
     Position: Point
+    PieceType: PieceType
 }

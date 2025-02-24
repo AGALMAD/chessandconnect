@@ -61,7 +61,6 @@ export class GameService {
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
 
-    console.log("BOARD:", message)
 
     switch (message.Type) {
       case SocketCommunicationType.END_GAME:

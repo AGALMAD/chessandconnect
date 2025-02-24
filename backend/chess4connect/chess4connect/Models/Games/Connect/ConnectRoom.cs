@@ -31,7 +31,7 @@ public class ConnectRoom: BaseRoom
 
         if (response == 0)
         {
-            await SendDropPiece();
+            await SendBoard();
 
         }
 
@@ -44,7 +44,7 @@ public class ConnectRoom: BaseRoom
 
     }
 
-    public override async Task SendDropPiece()
+    public override async Task SendBoard()
     {
 
         //Lista de piezas sin  los movimientos básicos

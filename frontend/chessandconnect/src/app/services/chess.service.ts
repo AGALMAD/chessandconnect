@@ -38,7 +38,6 @@ export class ChessService {
   }
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Masage:', message);
 
     try {
       // Paso del mensaje a objeto

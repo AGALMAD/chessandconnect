@@ -22,7 +22,7 @@ public abstract class BaseRoom
         Player1Handler = player1Handler;
         Player2Handler = player2Handler;
     }
-    public abstract Task SendDropPiece();
+    public abstract Task SendBoard();
     public abstract Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult);
     public abstract Task SendWinMessage();
     public abstract Task MessageHandler( string message);

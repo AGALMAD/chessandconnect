@@ -44,6 +44,7 @@ export class ChessComponent implements OnInit {
   ngOnInit(): void {
     console.log("Opponent:", this.gameService.opponent)
     console.log("PIECES:", this.chessService.pieces)
+    console.log("COLOR", this.gameService.playerColor)
   }
 
 

@@ -63,13 +63,10 @@ export class MatchMakingService {
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
 
-    console.log("GAME:", message)
     switch (message.Type) {
       case SocketCommunicationType.GAME_START:
 
         const newRoom = message.Data as Room;
-
-        console.log("ROOOOOM", newRoom)
 
         //Oponente
         const opponentId = newRoom.Player1Id != this.authService.currentUser.id ? newRoom.Player1Id : newRoom.Player2Id
@@ -88,14 +85,14 @@ export class MatchMakingService {
         
         if(newRoom.GameType == GameType.Chess)
         {
-          this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id 
+          this.gameService.playerColor = newRoom.Player1Id === this.authService.currentUser.id 
           this.router.navigate(
            ['/chessGame'],
           );
         }
         else if (newRoom.GameType == GameType.Connect4){
 
-          this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id 
+          this.gameService.playerColor = newRoom.Player1Id === this.authService.currentUser.id 
           this.router.navigate(
             ['/connectGame'],
           );

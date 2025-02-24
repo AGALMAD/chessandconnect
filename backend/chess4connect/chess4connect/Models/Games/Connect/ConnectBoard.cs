@@ -10,87 +10,88 @@ public class ConnectBoard
     public static int COLUMNS = 7;
     public static int ROWS = 6;
 
-    private ConnectPiece[,] Board = new ConnectPiece[COLUMNS, ROWS];
+    private ConnectPiece[,] Board = new ConnectPiece[ROWS, COLUMNS];
 
 
     public bool Player1Turn { get; set; } = true;
-    public int turnsCounter {  get; set; } = 1;
+    public int turnsCounter { get; set; } = 1;
 
     public ConnectPiece LastPiece { get; set; }
 
-
-    //Tiempo en segundo de cada turno
+    // Tiempo en segundos de cada turno
     public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(300);
     public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(300);
 
-    //Fecha de inicio de cada turno
+    // Fecha de inicio de cada turno
     public DateTime StartTurnDateTime { get; set; }
 
     public int DropPiece(int colum)
     {
-        for (int i = ROWS; i > 0; i--)
+        if (colum < 1 || colum > COLUMNS)
+            return -1;
+
+        colum --; 
+
+        for (int i = ROWS - 1; i >= 0; i--)
         {
-            if (colum <= COLUMNS && Board[colum,i] == null)
+            if (Board[i, colum] == null)
             {
-                ConnectPiece piece = new ConnectPiece(Player1Turn, new Point(colum - 1, i));
-                Board[colum -1, i] = piece;
+                ConnectPiece piece = new ConnectPiece(Player1Turn, new Point(colum, i));
+                Board[i, colum] = piece;
                 LastPiece = piece;
+
+                Player1Turn = !Player1Turn;
+                turnsCounter++;
+
+                if (turnsCounter >= 8 && CheckVictory(colum, i))
+                {
+                    return 1;
+                }
+
+                return 0;
             }
-
-            Player1Turn = !Player1Turn;
-            turnsCounter++; 
-
-            if( turnsCounter >= 8 && CheckVictory(colum, i))
-            {
-                return 1;
-            }
-
-
-            return 0;
         }
 
-        return -1;
+        return -1;  // Si la columna está llena
     }
-
-
 
     public bool CheckVictory(int col, int row)
     {
-        if (Board[col, row] == null)
+        if (Board[row, col] == null)
             return false;
 
-        bool color = Board[col, row].Player1Piece;
+        bool color = Board[row, col].Player1Piece;
 
-        return CheckDirection(col, row, 1, 0, color) ||  // Horizontal
-               CheckDirection(col, row, 0, 1, color) ||  // Vertical
-               CheckDirection(col, row, 1, 1, color) ||  // Diagonal ↘
-               CheckDirection(col, row, 1, -1, color);   // Diagonal ↗
+        return CheckDirection(row, col, 1, 0, color) ||  // Horizontal
+               CheckDirection(row, col, 0, 1, color) ||  // Vertical
+               CheckDirection(row, col, 1, 1, color) ||  // Diagonal ↘
+               CheckDirection(row, col, 1, -1, color);   // Diagonal ↗
     }
 
-    private bool CheckDirection(int col, int row, int dCol, int dRow, bool color)
+    private bool CheckDirection(int row, int col, int dRow, int dCol, bool color)
     {
         int count = 1;
 
-        //verifica en 2 direcciones
-        count += CountPieces(col, row, dCol, dRow, color);
-        count += CountPieces(col, row, -dCol, -dRow, color);
+        // Verifica en ambas direcciones
+        count += CountPieces(row, col, dRow, dCol, color);
+        count += CountPieces(row, col, -dRow, -dCol, color);
 
         return count >= 4;
     }
 
-    private int CountPieces(int col, int row, int dCol, int dRow, bool color)
+    private int CountPieces(int row, int col, int dRow, int dCol, bool color)
     {
         int count = 0;
 
         for (int i = 1; i < 4; i++)
         {
-            int newCol = col + dCol * i;
             int newRow = row + dRow * i;
+            int newCol = col + dCol * i;
 
-            if (newCol < 0 || newCol >= COLUMNS || newRow < 0 || newRow >= ROWS)
+            if (newRow < 0 || newRow >= ROWS || newCol < 0 || newCol >= COLUMNS)
                 break;
 
-            if (Board[newCol, newRow] == null || Board[newCol, newRow].Player1Piece != color)
+            if (Board[newRow, newCol] == null || Board[newRow, newCol].Player1Piece != color)
                 break;
 
             count++;
@@ -98,8 +99,5 @@ public class ConnectBoard
 
         return count;
     }
-
-
 }
-
 

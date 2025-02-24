@@ -1,61 +1,64 @@
 <div class="flex justify-center items-center min-h-screen bg-brown-700 p-4">
-  <div class="flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-7xl space-y-6">
-    
-    <!-- Contenedor para Tablero y Chat -->
-    <div class="flex justify-center items-center gap-8 w-full">
-      
-      <!-- Tablero -->
-      <div class="grid grid-rows-6 gap-y-2 bg-brown-600 p-4 rounded-lg shadow-lg w-[80vh] flex justify-center">
-        
-        <!-- Cabecera del oponente -->
-        <div class="flex items-center justify-between w-full mb-6">
-          <div class="flex items-center space-x-3">
-            <img *ngIf="gameService.opponent?.avatarImageUrl" [src]="baseUrl + gameService.opponent.avatarImageUrl"
-              alt="Opponent" class="w-12 h-12 rounded-full border-2 border-black">
-            <p class="text-[#301e16] font-bold">{{ gameService.opponent?.userName || 'Oponente' }}</p>
-          </div>
-          <div class="bg-[#737171] text-white rounded-md p-2 text-xl font-bold">
-            {{ gameService.opponentTimer | pipeTimer }}
-          </div>
-        </div>
+    <div class="flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-7xl space-y-6">
 
-        <!-- Tablero de juego -->
-        <div *ngFor="let row of rows; let i = index" class="flex gap-2">
-          <div *ngFor="let col of columns; let j = index"
-            class="w-16 h-16 flex items-center justify-center">
-            <div class="w-full h-full border-4 border-brown-900 rounded-full flex items-center justify-center bg-brown-600 cursor-pointer hover:border-brown-800 transition duration-200"
-              (click)="dropPiece(col)">
-              @for (piece of connectService.pieces; track $index) {
-                @if (piece.Position.X == i && piece.Position.Y == j) {
-                  @switch (piece.Color) {
-                    @case (PieceColor.RED) {
-                      <div class="size-full bg-red-500 shadow-lg transform transition-transform duration-200 hover:scale-110 rounded-full"></div>
-                    }
-                    @case (PieceColor.YELLOW) {
-                      <div class="size-full bg-yellow-500 shadow-lg transform transition-transform duration-200 hover:scale-110 rounded-full"></div>
-                    }
-                  }
-                }
-              }
+        <!-- Contenedor para Tablero y Chat -->
+        <div class="flex justify-center items-center gap-8 w-full">
+
+            <!-- Tablero -->
+            <div class="grid grid-rows-6 gap-y-2 bg-brown-600 p-4 rounded-lg shadow-lg w-[80vh] justify-center">
+
+                <!-- Cabecera del oponente -->
+                <div class="flex items-center justify-between w-full mb-6">
+                    <div class="flex items-center space-x-3">
+                        <img *ngIf="gameService.opponent?.avatarImageUrl"
+                            [src]="baseUrl + gameService.opponent.avatarImageUrl" alt="Opponent"
+                            class="w-12 h-12 rounded-full border-2 border-black">
+                        <p class="text-[#301e16] font-bold">{{ gameService.opponent?.userName || 'Oponente' }}</p>
+                    </div>
+                    <div class="bg-[#737171] text-white rounded-md p-2 text-xl font-bold">
+                        {{ gameService.opponentTimer | pipeTimer }}
+                    </div>
+                </div>
+
+                <!-- Tablero de juego -->
+                <div *ngFor="let row of rows; let i = index" class="flex gap-2">
+                    <div *ngFor="let col of columns; let j = index" class="w-16 h-16 flex items-center justify-center">
+                        <div class="w-full h-full border-4 border-brown-900 rounded-full flex items-center justify-center bg-brown-600 cursor-pointer hover:border-brown-800 transition duration-200"
+                            (click)="dropPiece(col)">
+                            @for (piece of connectService.pieces; track $index) {
+                            @if (piece.Position.X == i && piece.Position.Y == j) {
+                            @if (piece.Player1Piece) {
+                            <div
+                                class="size-full bg-yellow-500 shadow-lg transform transition-transform duration-200 hover:scale-110 rounded-full">
+                            </div>
+                            }
+                            @else {
+                            <div
+                                class="size-full bg-red-500 shadow-lg transform transition-transform duration-200 hover:scale-110 rounded-full">
+                            </div>
+
+                            }
+                            }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cabecera del jugador -->
+                <div class="mt-6 flex items-center justify-between w-full">
+                    <div class="flex items-center space-x-3">
+                        <img [src]="baseUrl + authService.currentUser?.avatarImageUrl" alt="Player"
+                            class="w-12 h-12 rounded-full border-2 border-black">
+                        <p class="text-[#301e16] font-bold">{{ authService.currentUser?.userName || 'Jugador' }}</p>
+                    </div>
+                    <div class="bg-[#b8b5b5] text-white rounded-md p-2 text-xl font-bold">
+                        {{ gameService.currentPlayerTimer | pipeTimer }}
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Cabecera del jugador -->
-        <div class="mt-6 flex items-center justify-between w-full">
-          <div class="flex items-center space-x-3">
-            <img [src]="baseUrl + authService.currentUser?.avatarImageUrl" alt="Player"
-              class="w-12 h-12 rounded-full border-2 border-black">
-            <p class="text-[#301e16] font-bold">{{ authService.currentUser?.userName || 'Jugador' }}</p>
-          </div>
-          <div class="bg-[#b8b5b5] text-white rounded-md p-2 text-xl font-bold">
-            {{ gameService.currentPlayerTimer | pipeTimer }}
-          </div>
+            <!-- Chat -->
+            <app-chat></app-chat>
         </div>
-      </div>
-
-      <!-- Chat -->
-      <app-chat></app-chat>
     </div>
-  </div>
 </div>

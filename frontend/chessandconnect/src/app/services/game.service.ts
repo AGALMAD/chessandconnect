@@ -21,7 +21,7 @@ export class GameService {
   currentPlayerTimer: number
   opponentTimer: number
 
-  turn: boolean
+  turn: boolean = true
   playerColor: boolean
 
 

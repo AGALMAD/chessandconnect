@@ -52,6 +52,8 @@ namespace chess4connect.Services
                    new ConnectGame(DateTime.Now,
                    new ConnectBoard()));
 
+                room.Game.Board.StartTurnDateTime = DateTime.Now;
+
                 connectRooms.Add(room);
 
                 await room.SendConnectRoom();

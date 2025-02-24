@@ -19,18 +19,17 @@ public class ConnectBoard
     public ConnectPiece LastPiece { get; set; }
 
     // Tiempo en segundos de cada turno
-    public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(300);
-    public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(300);
+    public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(180);
+    public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(180);
 
     // Fecha de inicio de cada turno
     public DateTime StartTurnDateTime { get; set; }
 
     public int DropPiece(int colum)
     {
-        if (colum < 1 || colum > COLUMNS)
+        if (colum < 0 || colum > COLUMNS)
             return -1;
 
-        colum --; 
 
         for (int i = ROWS - 1; i >= 0; i--)
         {
@@ -42,6 +41,14 @@ public class ConnectBoard
 
                 Player1Turn = !Player1Turn;
                 turnsCounter++;
+
+                // Update time
+                TimeSpan timeSpent = DateTime.Now.Subtract(StartTurnDateTime);
+                if (piece.Player1Piece)
+                    Player1Time -= timeSpent;
+                else
+                    Player2Time -= timeSpent;
+
 
                 if (turnsCounter >= 8 && CheckVictory(colum, i))
                 {

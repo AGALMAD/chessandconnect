@@ -20,7 +20,7 @@ export class ConnectService {
   messageReceived$: Subscription;
 
 
-  pieces: ConnectPiece[]
+  pieces: ConnectPiece[] = []
 
   constructor(
     public webSocketService: WebsocketService,
@@ -66,7 +66,7 @@ export class ConnectService {
         console.log("CONNECT BOARD", board)
 
 
-        this.pieces = board.Pieces
+        this.pieces.push(board.LastPiece)
         this.gameService.turn = board.Player1Turn
         this.gameService.currentPlayerTimer = this.gameService.playerColor ? board.Player1Time : board.Player2Time
         this.gameService.opponentTimer = this.gameService.playerColor ? board.Player2Time : board.Player1Time

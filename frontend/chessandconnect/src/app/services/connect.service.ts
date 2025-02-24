@@ -6,8 +6,10 @@ import { Subscription } from 'rxjs';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { GameService } from './game.service';
+
 import { ConnectBoard } from '../models/Games/Connect/connect-board';
 import { ConnectPiece } from '../models/Games/Connect/connect-piece';
+
 
 
 @Injectable({

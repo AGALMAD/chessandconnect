@@ -11,6 +11,7 @@ import { ChessBoard } from '../models/Games/Chess/chess-board';
 import { ChessPieceMovements } from '../models/Games/Chess/chess-pieces-movements';
 
 
+
 @Injectable({
   providedIn: 'root'
 })

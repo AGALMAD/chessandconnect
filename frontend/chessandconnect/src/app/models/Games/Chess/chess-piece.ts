@@ -1,7 +1,5 @@
 import { Point } from "../Base/Point"
-import { PieceType } from "./Enums/piece-type"
-
-
+import { PieceType } from "../../../enums/piece-type"
 
 export interface ChessPiece {
     Id:number,

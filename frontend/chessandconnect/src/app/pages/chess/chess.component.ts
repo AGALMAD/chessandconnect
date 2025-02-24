@@ -10,7 +10,8 @@ import { SocketCommunicationType } from '../../enums/SocketCommunicationType';
 import { ChatComponent } from "../../components/chat/chat.component";
 import { ChessService } from '../../services/chess.service';
 import { PipeTimerPipe } from '../../pipes/pipe-timer.pipe';
-import { PieceType } from '../../models/Games/Chess/Enums/piece-type';
+
+import { PieceType } from '../../enums/piece-type';
 import { ChessPiece } from '../../models/Games/Chess/chess-piece';
 import { ChessMoveRequest } from '../../models/Games/Chess/chess-move-request';
 

@@ -145,6 +145,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                         int intermediateX = piece.Position.X + direction;
 
                         if (Board[intermediateX, newY] != null)
+                     
                             continue;
                     }
 
@@ -272,6 +273,13 @@ namespace chess4connect.Models.Games.Chess.Chess
             else
                 Player2Time -= timeSpent;
 
+            
+            // Check if the move results in checkmate
+            if (IsCheckmate())
+            {
+                return 1;
+            }
+
             // Change turn
             Turn = Turn == PieceColor.BLACK ? PieceColor.WHITE : PieceColor.BLACK;
             StartTurnDateTime = DateTime.Now;
@@ -279,58 +287,69 @@ namespace chess4connect.Models.Games.Chess.Chess
             // Recalculate all possible moves for the new position
             GetAllPieceMovements();
 
-            // Check if the move results in checkmate
-            if (IsCheckmate())
-            {
-                return 1;
-            }
 
             return 0;
         }
+
+
 
         // check for checkmate
         private bool IsCheckmate()
         {
             // Get the opponent's king
-            var opponentColor = Turn;
-            var king = convertBoardToList()
-                .FirstOrDefault(p => p.PieceType == PieceType.KING && p.Color == opponentColor);
+            var opponentColor = Turn == PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE;
+            var king = convertBoardToList().FirstOrDefault(p => p.PieceType == PieceType.KING && p.Color == opponentColor);
 
             if (king == null) return false;
 
-            // If king has no valid moves and is under attack, it's checkmate
-            var kingMoves = ChessPiecesMovements
-                .FirstOrDefault(p => p.Piece.Id == king.Id);
+            // Check if the king is under attack
+            if (!IsKingUnderAttack(king)) return false;
 
-            // Check if king is under attack and has no valid moves
-            return IsKingUnderAttack(king) &&
-                   (kingMoves == null || !kingMoves.Movements.Any());
+            // Get possible moves for the king
+            var kingMoves = new List<Point>();
+            CalculateKingMoves(king, kingMoves);
+
+            // If the king can move to a safe position, it's not checkmate
+            foreach (var move in kingMoves)
+            {
+                // Temporarily move the king to the new position
+                var originalPosition = king.Position;
+                king.Position = move;
+
+                if (!IsKingUnderAttack(king))
+                {
+                    king.Position = originalPosition;
+                    return false;
+                }
+
+                // Restore original position
+                king.Position = originalPosition;
+            }
+
+            return true;
         }
 
         private bool IsKingUnderAttack(ChessBasePiece king)
         {
-            // Change turn temporarily to calculate opponent's moves
-            var originalTurn = Turn;
-            Turn = Turn == PieceColor.BLACK ? PieceColor.WHITE : PieceColor.BLACK;
-
             GetAllPieceMovements();
-
 
             // Check if any opponent piece can capture the king's position
-            bool isUnderAttack = ChessPiecesMovements
-                .Any(p => p.Movements.Contains(king.Position));
+            bool isUnderAttack = ChessPiecesMovements.Any(p => p.Movements.Contains(king.Position));
 
-            // Restore original turn
-            Turn = originalTurn;
-            GetAllPieceMovements();
-
-            return isUnderAttack;
+             return isUnderAttack;
         }
+
 
 
 
         public async Task RandomMovement()
         {
+            var random = new Random();
+
+
+            //Delay del bot al mover una ficha
+            await Task.Delay(random.Next(1000, 5000));
+
             // Calculate possible movements
             GetAllPieceMovements();
 
@@ -345,7 +364,6 @@ namespace chess4connect.Models.Games.Chess.Chess
                 return;
             }
 
-            var random = new Random();
             int maxAttempts = 100; 
             int attempts = 0;
 

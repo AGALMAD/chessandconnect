@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/dto/user';
-import { ChessPiece } from '../models/Games/Chess/chess-piece';
 import { WebsocketService } from './websocket.service';
 import { interval, Subscription } from 'rxjs';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
-import { PieceColor } from '../models/Games/Chess/Enums/Color';
-import { ChessPieceMovements } from '../models/Games/Chess/chess-pieces-movements';
-import { ChessBoard } from '../models/Games/Chess/chess-board';
+import { PieceColor } from '../models/games/chess/Enums/piece-color';
 import { AuthService } from './auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChessResultComponent } from '../components/chess-result/chess-result.component';

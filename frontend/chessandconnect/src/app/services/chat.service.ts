@@ -7,6 +7,8 @@ import { MatchMakingService } from './match-making.service';
 import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
+import { User_Chat } from '../models/dto/user-chat';
+import { GameService } from './game.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,13 +17,14 @@ export class ChatService {
 
   messageReceived$: Subscription;
 
-  messages: Chat[] = []
+  messages: User_Chat[] = []
 
   constructor(
     private api: ApiService,
     public webSocketService: WebsocketService,
     private matchMatchMakingService: MatchMakingService,
-    private authService: AuthService
+    private authService: AuthService,
+    private gameService: GameService
 
   ) {
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
@@ -67,7 +70,12 @@ export class ChatService {
     switch (message.Type) {
       case SocketCommunicationType.CHAT:
 
-        this.messages.push(message.Data)
+        const user_chat: User_Chat = {
+          userId: this.gameService.opponent.id,
+          Message: message.Data.Message
+        }
+
+        this.messages.push(user_chat)
         console.log("Chat3", this.messages)
 
         break

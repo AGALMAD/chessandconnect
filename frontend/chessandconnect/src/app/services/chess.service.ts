@@ -5,11 +5,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { GameService } from './game.service';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
-import { ChessBoard } from '../models/Games/Chess/chess-board';
 import { Subscription } from 'rxjs';
-import { ChessPiece } from '../models/Games/Chess/chess-piece';
-import { ChessPieceMovements } from '../models/Games/Chess/chess-pieces-movements';
-import { PieceColor } from '../models/Games/Chess/Enums/Color';
+import { ChessPiece } from '../models/games/chess/chess-piece';
+import { ChessBoard } from '../models/games/chess/chess-board';
+import { ChessPieceMovements } from '../models/games/chess/chess-pieces-movements';
+import { PieceColor } from '../models/games/chess/Enums/piece-color';
+
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,7 @@ export class ChessService {
 
   pieces: ChessPiece[]
   movements: ChessPieceMovements[]
+  showMovements: ChessPieceMovements
 
 
   constructor(
@@ -70,6 +72,11 @@ export class ChessService {
         this.gameService.currentPlayerTimer = this.gameService.playerColor == PieceColor.WHITE ? board.Player1Time : board.Player2Time
         this.gameService.opponentTimer = this.gameService.playerColor == PieceColor.WHITE ? board.Player2Time : board.Player1Time
 
+        this.showMovements = null
+
+        //Audio when u move a piece
+        this.movementSound()
+
         this.gameService.startCountdown();
 
         break
@@ -87,5 +94,11 @@ export class ChessService {
 
 
   }
+
+  movementSound(): void {
+    const audio = new Audio('audio/sonido_mover_pieza.webm')
+    audio.play()
+  }
+  
 
 }

@@ -19,6 +19,7 @@ export const routes: Routes = [
     {path: "chess", component: MatchMakingChessComponent, canActivate: [redirectionGuard]},
     {path: "connect", component: MatchMakingConnect4Component, canActivate: [redirectionGuard]},
 
+    //Games
     {path: "chessGame", component: ChessComponent, canActivate: [redirectionGuard]},
     {path: "connectGame", component: Connect4Component, canActivate: [redirectionGuard]},
 

@@ -1,6 +1,6 @@
-import { PieceColor } from "./Enums/piece-color"
-import { PieceType } from "./Enums/piece-type"
 import { Point } from "../base/point"
+import { PieceType } from "./enums/piece-type"
+import { PieceColor } from "./enums/pieceColor"
 
 export interface ChessPiece {
     Id:number,

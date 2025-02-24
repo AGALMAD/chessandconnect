@@ -1,4 +1,6 @@
+
 import { Point } from "../Base/Point";
+
 
 export interface ConnectPiece {
     Id:number,

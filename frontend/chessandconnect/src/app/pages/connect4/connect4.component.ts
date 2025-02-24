@@ -7,7 +7,9 @@ import { AuthService } from '../../services/auth.service';
 import { ConnectService } from '../../services/connect.service';
 import { SocketMessageGeneric } from '../../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../../enums/SocketCommunicationType';
+
 import { ConnectDropPieceRequest } from '../../models/Games/Connect/connect-drop-piece-request';
+
 
 @Component({
   selector: 'app-connect4',

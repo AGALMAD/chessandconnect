@@ -1,3 +1,4 @@
+
 import { Point } from "../Base/Point"
 import { PieceType } from "./Enums/piece-type"
 

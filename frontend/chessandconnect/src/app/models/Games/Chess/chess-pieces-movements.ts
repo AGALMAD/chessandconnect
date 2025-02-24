@@ -1,5 +1,4 @@
-import { Point } from "../base/point"
-import { ChessPiece } from "./chess-piece"
+import { Point } from "../Base/Point"
 
 export interface ChessPieceMovements {
     Id: number,

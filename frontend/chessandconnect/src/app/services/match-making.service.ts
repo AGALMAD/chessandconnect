@@ -10,9 +10,9 @@ import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage'
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { GameType } from '../enums/game';
 import { GameService } from './game.service';
-import { PieceColor } from '../models/games/chess/Enums/piece-color';
-import { Room } from '../models/games/room';
-import { RoomRequest } from '../models/games/room-request';
+import { Room } from '../models/Games/room';
+import { RoomRequest } from '../models/Games/room-request';
+
 
 @Injectable({
   providedIn: 'root'
@@ -86,14 +86,14 @@ export class MatchMakingService {
         
         if(newRoom.GameType == GameType.Chess)
         {
-          this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id ? PieceColor.WHITE : PieceColor.BLACK 
+          this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id 
           this.router.navigate(
            ['/chessGame'],
           );
         }
         else if (newRoom.GameType == GameType.Connect4){
 
-          this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id ? PieceColor.YELLOW : PieceColor.RED 
+          this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id 
           this.router.navigate(
             ['/connectGame'],
           );

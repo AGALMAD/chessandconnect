@@ -56,7 +56,10 @@
               "src/styles.css"
             ],
             "scripts": [
-               "./node_modules/flowbite/dist/flowbite.min.js"
+              "./node_modules/flowbite/dist/flowbite.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "sweetalert2"
             ]
           },
           "configurations": {

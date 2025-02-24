@@ -37,7 +37,6 @@ export class ConnectService {
 
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Masage:', message);
 
     try {
       // Paso del mensaje a objeto
@@ -57,8 +56,6 @@ export class ConnectService {
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
 
-    console.log("BOARD:", message)
-
     switch (message.Type) {
       case SocketCommunicationType.CONNECT_BOARD:
 
@@ -67,6 +64,7 @@ export class ConnectService {
 
 
         this.pieces.push(board.LastPiece)
+        console.log("CONNECT PIECES", this.pieces)
         this.gameService.turn = board.Player1Turn
         this.gameService.currentPlayerTimer = this.gameService.playerColor ? board.Player1Time : board.Player2Time
         this.gameService.opponentTimer = this.gameService.playerColor ? board.Player2Time : board.Player1Time

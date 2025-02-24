@@ -21,12 +21,12 @@
                 </div>
 
                 <!-- Tablero de juego -->
-                <div *ngFor="let row of rows; let i = index" class="flex gap-2">
-                    <div *ngFor="let col of columns; let j = index" class="w-16 h-16 flex items-center justify-center">
+                <div *ngFor="let row of rows; let y = index" class="flex gap-2">
+                    <div *ngFor="let col of columns; let x = index" class="w-16 h-16 flex items-center justify-center">
                         <div class="w-full h-full border-4 border-brown-900 rounded-full flex items-center justify-center bg-brown-600 cursor-pointer hover:border-brown-800 transition duration-200"
                             (click)="dropPiece(col)">
                             @for (piece of connectService.pieces; track $index) {
-                            @if (piece.Position.X == i && piece.Position.Y == j) {
+                            @if (piece.Position.X == x && piece.Position.Y == y) {
                             @if (piece.Player1Piece) {
                             <div
                                 class="size-full bg-yellow-500 shadow-lg transform transition-transform duration-200 hover:scale-110 rounded-full">

@@ -31,12 +31,12 @@ namespace chess4connect.Models.Games.Chess.Chess
         {
 
             await SendRoom(GameType.Chess);
-            await SendBoard();
+            await SendDropPiece();
             await SendMovementsMessageAsync();
         }
 
 
-        public override async Task SendBoard()
+        public override async Task SendDropPiece()
         {
             //Lista de piezas original
             List<ChessBasePiece> pieces = Game.Board.convertBoardToList();
@@ -83,7 +83,7 @@ namespace chess4connect.Models.Games.Chess.Chess
             }
             else { 
                 await Game.Board.RandomMovement();
-                await SendBoard();
+                await SendDropPiece();
                 await SendMovementsMessageAsync();
             }
 
@@ -99,7 +99,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             if (response == 0)
             {
-                await SendBoard();
+                await SendDropPiece();
 
                 await SendMovementsMessageAsync();
 

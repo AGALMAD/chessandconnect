@@ -31,7 +31,7 @@ public class ConnectRoom: BaseRoom
 
         if (response == 0)
         {
-            await SendBoard();
+            await SendDropPiece();
 
         }
 
@@ -44,10 +44,8 @@ public class ConnectRoom: BaseRoom
 
     }
 
-    public override async Task SendBoard()
+    public override async Task SendDropPiece()
     {
-        //Lista de piezas original
-        List<ConnectPiece> pieces = Game.Board.convertBoardToList();
 
         //Lista de piezas sin  los movimientos básicos
         var roomMessage = new SocketMessage<ConnectBoardDto>
@@ -56,7 +54,7 @@ public class ConnectRoom: BaseRoom
 
             Data = new ConnectBoardDto
             {
-                Pieces = pieces,
+                LastPiece = Game.Board.LastPiece,
                 Player1Turn = Game.Board.Player1Turn,
                 Player1Time = (int)Game.Board.Player1Time.TotalSeconds,
                 Player2Time = (int)Game.Board.Player2Time.TotalSeconds,

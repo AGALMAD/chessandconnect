@@ -16,6 +16,8 @@ public class ConnectBoard
     public bool Player1Turn { get; set; } = true;
     public int turnsCounter {  get; set; } = 1;
 
+    public ConnectPiece LastPiece { get; set; }
+
 
     //Tiempo en segundo de cada turno
     public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(300);
@@ -30,8 +32,9 @@ public class ConnectBoard
         {
             if (colum <= COLUMNS && Board[colum,i] == null)
             {
-                Board[colum -1, i] = new ConnectPiece(Player1Turn, new Point(colum -1,i));
-
+                ConnectPiece piece = new ConnectPiece(Player1Turn, new Point(colum - 1, i));
+                Board[colum -1, i] = piece;
+                LastPiece = piece;
             }
 
             Player1Turn = !Player1Turn;
@@ -97,25 +100,6 @@ public class ConnectBoard
     }
 
 
-
-
-    public List<ConnectPiece> convertBoardToList()
-    {
-        List<ConnectPiece> piecesInBoard = new List<ConnectPiece>();
-
-        for (int i = 0; i < Board.GetLength(0); i++)
-        {
-            for (int j = 0; j < Board.GetLength(1); j++)
-            {
-                if (Board[i, j] != null)
-                    piecesInBoard.Add(Board[i, j]);
-            }
-        }
-
-
-        return piecesInBoard;
-
-    }
 }
 
 

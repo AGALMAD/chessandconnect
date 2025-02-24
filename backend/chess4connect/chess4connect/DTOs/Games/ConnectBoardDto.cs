@@ -5,7 +5,7 @@ namespace chess4connect.DTOs.Games;
 
 public class ConnectBoardDto
 {
-    public List<ConnectPiece> Pieces { get; set; }
+    public ConnectPiece LastPiece { get; set; }
     public bool Player1Turn { get; set; }
     public int Player1Time { get; set; }
     public int Player2Time { get; set; }

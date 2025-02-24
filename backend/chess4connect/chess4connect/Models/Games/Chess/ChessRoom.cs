@@ -49,7 +49,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                 Data = new ChessBoardDto
                 {
                     Pieces = ChessPieceMapper.ToDto(pieces),
-                    Turn = Game.Board.Turn,
+                    Player1Turn = Game.Board.Player1Turn,
                     Player1Time = (int)Game.Board.Player1Time.TotalSeconds,
                     Player2Time = (int)Game.Board.Player2Time.TotalSeconds,
 
@@ -74,7 +74,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             string stringBoardMessage = JsonSerializer.Serialize(roomMessage);
 
-            WebSocketHandler playerSocket = Game.Board.Turn == PieceColor.WHITE ? Player1Handler : Player2Handler;
+            WebSocketHandler playerSocket = Game.Board.Player1Turn ? Player1Handler : Player2Handler;
 
             //Envia los movimientos al jugador
             if (playerSocket != null)
@@ -152,14 +152,14 @@ namespace chess4connect.Models.Games.Chess.Chess
             PlayDetail playDetailUser1 = new PlayDetail
             {
                 PlayId = play.Id,
-                UserId = Game.Board.Turn == PieceColor.WHITE ? Player1Handler.Id : Player2Handler.Id,
+                UserId = Game.Board.Player1Turn ? Player1Handler.Id : Player2Handler.Id,
                 GameResult = gameResult
             };
 
             PlayDetail playDetailUser2 = new PlayDetail
             {
                 PlayId = play.Id,
-                UserId = Game.Board.Turn == PieceColor.WHITE ? Player2Handler.Id : Player1Handler.Id,
+                UserId = Game.Board.Player1Turn ? Player2Handler.Id : Player1Handler.Id,
                 GameResult = gameResult == GameResult.DRAW ? gameResult : GameResult.LOSE
             };
 
@@ -175,7 +175,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         public override async Task SendWinMessage()
         {
-            int winnerId = Game.Board.Turn == PieceColor.WHITE ? Player1Handler.Id : Player2Handler.Id;
+            int winnerId = Game.Board.Player1Turn ? Player1Handler.Id : Player2Handler.Id;
 
 
             //Mensaje con el id del ganador

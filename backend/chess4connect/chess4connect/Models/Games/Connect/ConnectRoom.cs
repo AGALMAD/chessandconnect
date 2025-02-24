@@ -57,7 +57,7 @@ public class ConnectRoom: BaseRoom
             Data = new ConnectBoardDto
             {
                 Pieces = pieces,
-                Turn = Game.Board.Turn,
+                Player1Turn = Game.Board.Player1Turn,
                 Player1Time = (int)Game.Board.Player1Time.TotalSeconds,
                 Player2Time = (int)Game.Board.Player2Time.TotalSeconds,
 
@@ -76,7 +76,7 @@ public class ConnectRoom: BaseRoom
 
     public override async Task SendWinMessage()
     {
-        int winnerId = Game.Board.Turn == PieceColor.WHITE ? Player1Handler.Id : Player2Handler.Id;
+        int winnerId = Game.Board.Player1Turn ? Player1Handler.Id : Player2Handler.Id;
 
 
         //Mensaje con el id del ganador
@@ -129,14 +129,14 @@ public class ConnectRoom: BaseRoom
         PlayDetail playDetailUser1 = new PlayDetail
         {
             PlayId = play.Id,
-            UserId = Game.Board.Turn == PieceColor.YELLOW ? Player1Handler.Id : Player2Handler.Id,
+            UserId = Game.Board.Player1Turn ? Player1Handler.Id : Player2Handler.Id,
             GameResult = gameResult
         };
 
         PlayDetail playDetailUser2 = new PlayDetail
         {
             PlayId = play.Id,
-            UserId = Game.Board.Turn == PieceColor.YELLOW ? Player2Handler.Id : Player1Handler.Id,
+            UserId = Game.Board.Player1Turn ? Player2Handler.Id : Player1Handler.Id,
             GameResult = gameResult == GameResult.DRAW ? gameResult : GameResult.LOSE
         };
 

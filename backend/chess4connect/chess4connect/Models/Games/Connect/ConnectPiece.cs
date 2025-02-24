@@ -4,8 +4,15 @@ using System.Drawing;
 
 namespace chess4connect.Models.Games.Connect
 {
-    public class ConnectPiece: BasePiece
+    public class ConnectPiece
     {
-        public ConnectPiece(int id, PieceColor color, Point position) : base(id,color,position) { }
+        public bool Player1Piece { get; set; }
+        public Point Position { get; set; }
+
+        public ConnectPiece(bool pieceColor, Point position)
+        {
+            Player1Piece = pieceColor;
+            Position = position;
+        }
     }
 }

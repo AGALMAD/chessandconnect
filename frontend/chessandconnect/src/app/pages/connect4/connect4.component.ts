@@ -4,12 +4,12 @@ import { WebsocketService } from '../../services/websocket.service';
 import { GameService } from '../../services/game.service';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
-import { ChessService } from '../../services/chess.service';
 import { ConnectService } from '../../services/connect.service';
 import { SocketMessageGeneric } from '../../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../../enums/SocketCommunicationType';
-import { ConnectDropPieceRequest } from '../../models/games/connect/connect-drop-piece-request';
-import { PieceColor } from '../../models/games/chess/enums/piece-color';
+
+import { ConnectDropPieceRequest } from '../../models/Games/Connect/connect-drop-piece-request';
+
 
 @Component({
   selector: 'app-connect4',
@@ -20,8 +20,6 @@ import { PieceColor } from '../../models/games/chess/enums/piece-color';
 export class Connect4Component {
   public baseUrl = environment.apiUrl;
 
-
-  PieceColor = PieceColor;
 
   
   constructor(

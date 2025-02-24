@@ -13,4 +13,5 @@ public enum SocketCommunicationType
     CHESS_MOVEMENTS= 9,
     CONNECT4_MOVEMENTS = 10,
     END_GAME = 11,
+    DRAW_REQUEST = 12,
 }

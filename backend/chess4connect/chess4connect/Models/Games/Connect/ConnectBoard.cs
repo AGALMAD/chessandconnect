@@ -13,8 +13,10 @@ public class ConnectBoard
     private ConnectPiece[,] Board = new ConnectPiece[COLUMNS, ROWS];
 
 
-    public PieceColor Turn { get; set; } = PieceColor.YELLOW;
+    public bool Player1Turn { get; set; } = true;
     public int turnsCounter {  get; set; } = 1;
+
+    public ConnectPiece LastPiece { get; set; }
 
 
     //Tiempo en segundo de cada turno
@@ -26,16 +28,17 @@ public class ConnectBoard
 
     public int DropPiece(int colum)
     {
-        for (int i = 0; i < ROWS; i++)
+        for (int i = ROWS; i > 0; i--)
         {
             if (colum <= COLUMNS && Board[colum,i] == null)
             {
-                Board[colum -1, i] = new ConnectPiece(turnsCounter, Turn, new Point(colum -1,i));
-
+                ConnectPiece piece = new ConnectPiece(Player1Turn, new Point(colum - 1, i));
+                Board[colum -1, i] = piece;
+                LastPiece = piece;
             }
 
-            Turn = Turn == PieceColor.YELLOW ? PieceColor.RED : PieceColor.YELLOW;
-            turnsCounter++;
+            Player1Turn = !Player1Turn;
+            turnsCounter++; 
 
             if( turnsCounter >= 8 && CheckVictory(colum, i))
             {
@@ -56,7 +59,7 @@ public class ConnectBoard
         if (Board[col, row] == null)
             return false;
 
-        PieceColor color = Board[col, row].Color;
+        bool color = Board[col, row].Player1Piece;
 
         return CheckDirection(col, row, 1, 0, color) ||  // Horizontal
                CheckDirection(col, row, 0, 1, color) ||  // Vertical
@@ -64,7 +67,7 @@ public class ConnectBoard
                CheckDirection(col, row, 1, -1, color);   // Diagonal ↗
     }
 
-    private bool CheckDirection(int col, int row, int dCol, int dRow, PieceColor color)
+    private bool CheckDirection(int col, int row, int dCol, int dRow, bool color)
     {
         int count = 1;
 
@@ -75,7 +78,7 @@ public class ConnectBoard
         return count >= 4;
     }
 
-    private int CountPieces(int col, int row, int dCol, int dRow, PieceColor color)
+    private int CountPieces(int col, int row, int dCol, int dRow, bool color)
     {
         int count = 0;
 
@@ -87,7 +90,7 @@ public class ConnectBoard
             if (newCol < 0 || newCol >= COLUMNS || newRow < 0 || newRow >= ROWS)
                 break;
 
-            if (Board[newCol, newRow] == null || Board[newCol, newRow].Color != color)
+            if (Board[newCol, newRow] == null || Board[newCol, newRow].Player1Piece != color)
                 break;
 
             count++;
@@ -97,25 +100,6 @@ public class ConnectBoard
     }
 
 
-
-
-    public List<ConnectPiece> convertBoardToList()
-    {
-        List<ConnectPiece> piecesInBoard = new List<ConnectPiece>();
-
-        for (int i = 0; i < Board.GetLength(0); i++)
-        {
-            for (int j = 0; j < Board.GetLength(1); j++)
-            {
-                if (Board[i, j] != null)
-                    piecesInBoard.Add(Board[i, j]);
-            }
-        }
-
-
-        return piecesInBoard;
-
-    }
 }
 
 

@@ -6,10 +6,9 @@ import { GameService } from './game.service';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { Subscription } from 'rxjs';
-import { ChessPiece } from '../models/games/chess/chess-piece';
-import { ChessBoard } from '../models/games/chess/chess-board';
-import { ChessPieceMovements } from '../models/games/chess/chess-pieces-movements';
-import { PieceColor } from '../models/games/chess/enums/piece-color';
+import { ChessPiece } from '../models/Games/Chess/chess-piece';
+import { ChessBoard } from '../models/Games/Chess/chess-board';
+import { ChessPieceMovements } from '../models/Games/Chess/chess-pieces-movements';
 
 
 
@@ -69,9 +68,9 @@ export class ChessService {
 
 
         this.pieces = board.Pieces
-        this.gameService.turn = board.Turn
-        this.gameService.currentPlayerTimer = this.gameService.playerColor == PieceColor.WHITE ? board.Player1Time : board.Player2Time
-        this.gameService.opponentTimer = this.gameService.playerColor == PieceColor.WHITE ? board.Player2Time : board.Player1Time
+        this.gameService.turn = board.Player1Turn
+        this.gameService.currentPlayerTimer = this.gameService.playerColor ? board.Player1Time : board.Player2Time
+        this.gameService.opponentTimer = this.gameService.playerColor ? board.Player2Time : board.Player1Time
 
         this.showMovements = null
 

@@ -10,11 +10,11 @@ import { SocketCommunicationType } from '../../enums/SocketCommunicationType';
 import { ChatComponent } from "../../components/chat/chat.component";
 import { ChessService } from '../../services/chess.service';
 import { PipeTimerPipe } from '../../pipes/pipe-timer.pipe';
-import { ChessMoveRequest } from '../../models/games/chess/chess-move-request';
 
-import { PieceType } from '../../models/games/chess/enums/piece-type';
-import { ChessPiece } from '../../models/games/chess/chess-piece';
-import { PieceColor } from '../../models/games/chess/enums/piece-color';
+import { PieceType } from '../../models/Games/Chess/Enums/piece-type';
+import { ChessPiece } from '../../models/Games/Chess/chess-piece';
+import { ChessMoveRequest } from '../../models/Games/Chess/chess-move-request';
+
 
 
 
@@ -30,8 +30,6 @@ export class ChessComponent implements OnInit {
 
   public baseUrl = environment.apiUrl;
 
-
-  ChessPieceColor = PieceColor;
   selectedPiece: ChessPiece | null = null;
 
   constructor(

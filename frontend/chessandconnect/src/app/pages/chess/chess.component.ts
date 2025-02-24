@@ -1,11 +1,8 @@
 import { Component, OnInit, Type } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { CommonModule } from '@angular/common';
-import { PieceColor } from '../../models/Games/Chess/Enums/Color';
-import { PieceType } from '../../models/Games/Chess/Enums/PieceType';
-import { ChessPiece } from '../../models/Games/Chess/chess-piece';
-import { Point } from '../../models/Games/Base/point';
-import { ChessMoveRequest } from '../../models/Games/Chess/chess-move-request'
+import { PieceColor } from '../../models/games/chess/Enums/piece-color';
+import { PieceType } from '../../models/games/chess/Enums/piece-type';
 import { ApiService } from '../../services/api.service';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
@@ -14,13 +11,19 @@ import { SocketMessage, SocketMessageGeneric } from '../../models/WebSocketMessa
 import { SocketCommunicationType } from '../../enums/SocketCommunicationType';
 import { ChatComponent } from "../../components/chat/chat.component";
 import { ChessService } from '../../services/chess.service';
+
 import { ChessPieceMovements } from '../../models/Games/Chess/chess-pieces-movements';
+import { PipeTimerPipe } from '../../pipes/pipe-timer.pipe';
+
+import { ChessPiece } from '../../models/games/chess/chess-piece';
+import { ChessMoveRequest } from '../../models/games/chess/chess-move-request';
+
 
 
 
 @Component({
   selector: 'app-chess',
-  imports: [CommonModule, ChatComponent],
+  imports: [CommonModule, ChatComponent, PipeTimerPipe],
   templateUrl: './chess.component.html',
   styleUrl: './chess.component.css'
 })

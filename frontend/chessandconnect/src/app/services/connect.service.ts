@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { WebsocketService } from './websocket.service';
 import { AuthService } from './auth.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConnectPiece } from '../models/Games/Connect/connect-piece';
 import { Subscription } from 'rxjs';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
-import { ConnectBoard } from '../models/Games/Connect/connect-board';
 import { GameService } from './game.service';
-import { PieceColor } from '../models/Games/Chess/Enums/Color';
+import { PieceColor } from '../models/games/chess/Enums/piece-color';
+import { ConnectPiece } from '../models/games/connect/connect-piece';
+import { ConnectBoard } from '../models/games/connect/connect-board';
 
 @Injectable({
   providedIn: 'root'

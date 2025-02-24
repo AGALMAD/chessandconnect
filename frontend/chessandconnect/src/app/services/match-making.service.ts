@@ -8,11 +8,11 @@ import { WebsocketService } from './websocket.service';
 import { AuthService } from './auth.service';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
-import { Room } from '../models/Games/room';
-import { RoomRequest} from '../models/Games/room-request'
 import { GameType } from '../enums/game';
 import { GameService } from './game.service';
-import { PieceColor } from '../models/Games/Chess/Enums/Color';
+import { PieceColor } from '../models/games/chess/Enums/piece-color';
+import { Room } from '../models/games/room';
+import { RoomRequest } from '../models/games/room-request';
 
 @Injectable({
   providedIn: 'root'

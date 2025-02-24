@@ -1,5 +1,5 @@
+import { PieceColor } from "./Enums/piece-color";
 import { ChessPiece } from "./chess-piece";
-import { PieceColor } from "./Enums/Color";
 
 export interface ChessBoard {
     Pieces: ChessPiece[],

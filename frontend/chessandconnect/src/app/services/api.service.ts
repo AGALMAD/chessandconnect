@@ -8,7 +8,7 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable, lastValueFrom } from 'rxjs';
 import { Result } from '../models/result';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import Swal from 'sweetalert2';
 import { User } from '../models/dto/user';
 

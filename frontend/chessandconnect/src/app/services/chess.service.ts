@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import { ChessPiece } from '../models/games/chess/chess-piece';
 import { ChessBoard } from '../models/games/chess/chess-board';
 import { ChessPieceMovements } from '../models/games/chess/chess-pieces-movements';
-import { PieceColor } from '../models/games/chess/Enums/piece-color';
+import { PieceColor } from '../models/games/chess/enums/pieceColor';
 
 
 @Injectable({

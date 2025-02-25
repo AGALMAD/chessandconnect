@@ -7,6 +7,7 @@ import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { AuthService } from './auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChessResultComponent } from '../components/chess-result/chess-result.component';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,8 @@ export class GameService {
   constructor(
     public webSocketService: WebsocketService,
     private authService: AuthService,
-    private dialog: MatDialog,
+    public dialog: MatDialog,
+    private router: Router
   ) {
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
@@ -111,4 +113,16 @@ export class GameService {
   }
 
 
+  leaveGame() {
+    this.router.navigate(['/menus']);
+  }
+
+
+  rematchRequest() {
+    const message: SocketMessage = {
+      Type: SocketCommunicationType.REMATCH_REQUEST,
+    };
+
+    this.webSocketService.sendRxjs(JSON.stringify(message));
+  }
 }

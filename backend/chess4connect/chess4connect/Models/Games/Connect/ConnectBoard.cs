@@ -39,7 +39,6 @@ public class ConnectBoard
                 Board[i, colum] = piece;
                 LastPiece = piece;
 
-                Player1Turn = !Player1Turn;
                 turnsCounter++;
 
                 // Update time
@@ -54,6 +53,9 @@ public class ConnectBoard
                 {
                     return 1;
                 }
+
+                Player1Turn = !Player1Turn;
+
 
                 return 0;
             }
@@ -105,6 +107,15 @@ public class ConnectBoard
         }
 
         return count;
+    }
+
+    public async Task RandomDrop()
+    {
+        Random random = new Random();
+
+        await Task.Delay(random.Next(1000, 5000));
+
+        while (DropPiece(random.Next(0, 7)) == -1) ;
     }
 }
 

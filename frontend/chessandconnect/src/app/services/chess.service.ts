@@ -9,6 +9,9 @@ import { Subscription } from 'rxjs';
 import { ChessPiece } from '../models/Games/Chess/chess-piece';
 import { ChessBoard } from '../models/Games/Chess/chess-board';
 import { ChessPieceMovements } from '../models/Games/Chess/chess-pieces-movements';
+import { Room } from '../models/Games/room';
+import { GameType } from '../enums/game';
+import { Router } from '@angular/router';
 
 
 
@@ -16,7 +19,7 @@ import { ChessPieceMovements } from '../models/Games/Chess/chess-pieces-movement
   providedIn: 'root'
 })
 export class ChessService {
-  
+
   messageReceived$: Subscription;
 
 
@@ -30,6 +33,7 @@ export class ChessService {
     private authService: AuthService,
     private gameService: GameService,
     private dialog: MatDialog,
+    private router: Router,
   ) {
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
@@ -89,6 +93,19 @@ export class ChessService {
 
         break
 
+      case SocketCommunicationType.GAME_START:
+
+        const newRoom = message.Data as Room;
+
+
+        if (newRoom.GameType == GameType.Chess) {
+          this.pieces = []
+          this.movements = []
+        }
+
+        this.gameService.dialog.closeAll()
+        break
+
     }
 
 
@@ -98,6 +115,6 @@ export class ChessService {
     const audio = new Audio('audio/sonido_mover_pieza.webm')
     audio.play()
   }
-  
+
 
 }

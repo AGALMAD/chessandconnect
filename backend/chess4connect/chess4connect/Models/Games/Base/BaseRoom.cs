@@ -15,8 +15,8 @@ public abstract class BaseRoom
     public WebSocketHandler? Player2Handler { get; set; }
 
     //Ids de los jugadores
-    public int Player1Id { get; set; }
-    public int Player2Id { get; set; }
+    public int Player1Id { get; set; } = 0;
+    public int Player2Id { get; set; } = 0;
 
     public int DrawRequests { get; set; } = 0;
 

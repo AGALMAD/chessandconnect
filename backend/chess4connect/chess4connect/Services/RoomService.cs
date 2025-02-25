@@ -40,6 +40,10 @@ namespace chess4connect.Services
                         StartTurnDateTime = DateTime.Now,
                     }));
 
+                room.Player1Id = player1Hadler.Id;
+
+                if (player2Handler != null)
+                    room.Player2Id = player2Handler.Id;
 
                 chessRooms.Add(room);
 
@@ -50,9 +54,16 @@ namespace chess4connect.Services
             {
                 var room = new ConnectRoom(player1Hadler, player2Handler,
                    new ConnectGame(DateTime.Now,
-                   new ConnectBoard()));
+                   new ConnectBoard()
+                   {
+                       StartTurnDateTime = DateTime.Now
+                   }));
 
-                room.Game.Board.StartTurnDateTime = DateTime.Now;
+
+                room.Player1Id = player1Hadler.Id;
+
+                if (player2Handler != null)
+                    room.Player2Id = player2Handler.Id;
 
                 connectRooms.Add(room);
 

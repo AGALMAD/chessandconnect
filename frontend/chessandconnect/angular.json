@@ -40,6 +40,7 @@
           "options": {
             "outputPath": "dist/chessandconnect",
             "index": "src/index.html",
+            "baseHref": "/",
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
@@ -56,7 +57,10 @@
               "src/styles.css"
             ],
             "scripts": [
-               "./node_modules/flowbite/dist/flowbite.min.js"
+              "./node_modules/flowbite/dist/flowbite.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "sweetalert2"
             ]
           },
           "configurations": {
@@ -65,12 +69,12 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumError": "2MB"
                 },
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumError": "100kB"
                 }
               ],
               "outputHashing": "all"
@@ -81,8 +85,8 @@
               "sourceMap": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
+                  "replace": "src/environments/environment.development.ts",
+                  "with": "src/environments/environment.ts"
                 }
               ]
             }

@@ -1,9 +1,10 @@
-import { PieceColor } from "../Chess/Enums/Color";
-import { ConnectPiece } from "./connect-piece";
+
+import { ConnectPiece } from "./connect-piece"
+
 
 export interface ConnectBoard {
-    Pieces: ConnectPiece[]
-    Turn: PieceColor
+    LastPiece: ConnectPiece
+    Player1Turn: boolean
     Player1Time: number
     Player2Time: number
 }

@@ -5,11 +5,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { GameService } from './game.service';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
-import { ChessBoard } from '../models/Games/Chess/chess-board';
 import { Subscription } from 'rxjs';
 import { ChessPiece } from '../models/Games/Chess/chess-piece';
+import { ChessBoard } from '../models/Games/Chess/chess-board';
 import { ChessPieceMovements } from '../models/Games/Chess/chess-pieces-movements';
-import { PieceColor } from '../models/Games/Chess/Enums/Color';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +38,6 @@ export class ChessService {
   }
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Masage:', message);
 
     try {
       // Paso del mensaje a objeto
@@ -67,9 +67,9 @@ export class ChessService {
 
 
         this.pieces = board.Pieces
-        this.gameService.turn = board.Turn
-        this.gameService.currentPlayerTimer = this.gameService.playerColor == PieceColor.WHITE ? board.Player1Time : board.Player2Time
-        this.gameService.opponentTimer = this.gameService.playerColor == PieceColor.WHITE ? board.Player2Time : board.Player1Time
+        this.gameService.turn = board.Player1Turn
+        this.gameService.currentPlayerTimer = this.gameService.playerColor ? board.Player1Time : board.Player2Time
+        this.gameService.opponentTimer = this.gameService.playerColor ? board.Player2Time : board.Player1Time
 
         this.showMovements = null
 
@@ -95,7 +95,7 @@ export class ChessService {
   }
 
   movementSound(): void {
-    const audio = new Audio('audio/sonido_mover_pieza.mp4')
+    const audio = new Audio('audio/sonido_mover_pieza.webm')
     audio.play()
   }
   

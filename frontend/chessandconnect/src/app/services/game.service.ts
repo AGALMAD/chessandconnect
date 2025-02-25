@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/dto/user';
-import { ChessPiece } from '../models/Games/Chess/chess-piece';
 import { WebsocketService } from './websocket.service';
 import { interval, Subscription } from 'rxjs';
-import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
+import { SocketMessage, SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
-import { PieceColor } from '../models/Games/Chess/Enums/Color';
-import { ChessPieceMovements } from '../models/Games/Chess/chess-pieces-movements';
-import { ChessBoard } from '../models/Games/Chess/chess-board';
 import { AuthService } from './auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChessResultComponent } from '../components/chess-result/chess-result.component';
@@ -25,8 +21,8 @@ export class GameService {
   currentPlayerTimer: number
   opponentTimer: number
 
-  turn: PieceColor
-  playerColor: PieceColor
+  turn: boolean = true
+  playerColor: boolean
 
 
   winner: User = null
@@ -65,7 +61,6 @@ export class GameService {
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
 
-    console.log("BOARD:", message)
 
     switch (message.Type) {
       case SocketCommunicationType.END_GAME:
@@ -97,7 +92,7 @@ export class GameService {
     }
 
     this.timerSubscription = interval(1000).subscribe(() => {
-      if (this.turn === PieceColor.WHITE && this.playerColor == PieceColor.WHITE) {
+      if (this.turn && this.playerColor) {
         this.currentPlayerTimer = Math.max(0, this.currentPlayerTimer - 1);
       } else {
         this.opponentTimer = Math.max(0, this.opponentTimer - 1);
@@ -106,5 +101,14 @@ export class GameService {
       console.log(this.currentPlayerTimer, this.opponentTimer)
     });
   }
+
+
+  drawRequest(){
+
+    const message : SocketMessage = {
+      Type : SocketCommunicationType.DRAW_REQUEST,
+    }
+  }
+
 
 }

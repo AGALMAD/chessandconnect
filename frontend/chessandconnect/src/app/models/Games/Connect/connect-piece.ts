@@ -1,8 +1,9 @@
-import { Point } from "../Base/point";
-import { PieceColor } from "../Chess/Enums/Color";
+
+import { Point } from "../Base/Point";
+
 
 export interface ConnectPiece {
     Id:number,
-    Color: PieceColor,
+    Player1Piece: boolean,
     Position: Point
 }

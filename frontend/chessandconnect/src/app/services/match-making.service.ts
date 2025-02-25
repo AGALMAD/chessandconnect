@@ -8,11 +8,13 @@ import { WebsocketService } from './websocket.service';
 import { AuthService } from './auth.service';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
-import { Room } from '../models/Games/room';
-import { RoomRequest} from '../models/Games/room-request'
 import { GameType } from '../enums/game';
 import { GameService } from './game.service';
-import { PieceColor } from '../models/Games/Chess/Enums/Color';
+
+import { Room } from '../models/Games/room';
+import { RoomRequest } from '../models/Games/room-request';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -61,13 +63,10 @@ export class MatchMakingService {
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
 
-    console.log("GAME:", message)
     switch (message.Type) {
       case SocketCommunicationType.GAME_START:
 
         const newRoom = message.Data as Room;
-
-        console.log("ROOOOOM", newRoom)
 
         //Oponente
         const opponentId = newRoom.Player1Id != this.authService.currentUser.id ? newRoom.Player1Id : newRoom.Player2Id
@@ -86,14 +85,20 @@ export class MatchMakingService {
         
         if(newRoom.GameType == GameType.Chess)
         {
-          this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id ? PieceColor.WHITE : PieceColor.BLACK 
+          this.gameService.playerColor = newRoom.Player1Id === this.authService.currentUser.id 
           this.router.navigate(
            ['/chessGame'],
           );
         }
         else if (newRoom.GameType == GameType.Connect4){
 
-          this.gameService.playerColor = newRoom.Player1Id == this.authService.currentUser.id ? PieceColor.YELLOW : PieceColor.RED 
+          this.gameService.playerColor = newRoom.Player1Id === this.authService.currentUser.id 
+
+          this.gameService.currentPlayerTimer = 180
+          this.gameService.opponentTimer = 180
+
+          this.gameService.startCountdown()
+
           this.router.navigate(
             ['/connectGame'],
           );

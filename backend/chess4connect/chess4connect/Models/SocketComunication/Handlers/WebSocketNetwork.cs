@@ -129,6 +129,7 @@ public class WebSocketNetwork
         await Broadcast(allHandlers, disconnectedHandler, stringDisconnectionMessage);
 
         Console.WriteLine("Usuario desconectado");
+        await _roomService.MessageHandler(disconnectedHandler.Id, stringDisconnectionMessage);
 
     }
 

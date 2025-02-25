@@ -7,12 +7,12 @@ namespace chess4connect.Models.Games.Chess.Chess.Pieces
 {
     public class Pawn : ChessBasePiece
     {
-        public Pawn(int id, PieceColor color, Point position) : base(id, PieceType.PAWN, color, position) { }
+        public Pawn(int id, bool color, Point position) : base(id, PieceType.PAWN, color, position) { }
         public bool FirstMove { get; set; } = true;
 
         protected override void GetBasicMovements()
         {
-            int direction = Color == PieceColor.WHITE ? -1 : 1;
+            int direction = Player1Piece ? -1 : 1;
 
             BasicMovements = new List<Point>()
             {

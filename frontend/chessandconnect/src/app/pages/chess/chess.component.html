@@ -15,7 +15,7 @@
       </div>
     </div>
     <!--Tablero normal-->
-    @if (gameService.playerColor == ChessPieceColor.WHITE) {
+    @if (gameService.playerColor) {
 
 
 
@@ -50,7 +50,7 @@
           [class.bg-brown-600]="(i + j) % 2 !== 0" (click)="movePiece(i, j)">
           @for (piece of chessService.pieces; track $index) {
           @if (piece.Position.X === i && piece.Position.Y === j) {
-          @if (piece.Color == ChessPieceColor.BLACK) {
+          @if (!piece.Player1Piece) {
           <span class=" cursor-pointer text-6xl text-black">{{getPieceSymbol(piece.PieceType)}}</span>
           }
           @else {
@@ -124,13 +124,13 @@
           [class.bg-brown-600]="(i + j) % 2 === 0" (click)="movePiece(row, col)">
           @for (piece of chessService.pieces; track $index) {
           @if (piece.Position.X === row && piece.Position.Y === col) {
-          @if (piece.Color == ChessPieceColor.BLACK) {
+          @if (!piece.Player1Piece) {
           <span (click)="selectPiece(piece)"
-            class="cursor-pointer text-6xl  text-black !important cursor-pointer">{{getPieceSymbol(piece.PieceType)}}
+            class="text-6xl  text-black !important cursor-pointer">{{getPieceSymbol(piece.PieceType)}}
           </span>
           }
           @else {
-          <span class="cursor-pointer text-6xl text-white cursor-pointer">{{getPieceSymbol(piece.PieceType)}}
+          <span class="text-6xl text-white cursor-pointer">{{getPieceSymbol(piece.PieceType)}}
 
           </span>
           }

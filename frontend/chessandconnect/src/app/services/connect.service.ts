@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { WebsocketService } from './websocket.service';
 import { AuthService } from './auth.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConnectPiece } from '../models/Games/Connect/connect-piece';
 import { Subscription } from 'rxjs';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
-import { ConnectBoard } from '../models/Games/Connect/connect-board';
 import { GameService } from './game.service';
-import { PieceColor } from '../models/Games/Chess/Enums/Color';
+
+import { ConnectBoard } from '../models/Games/Connect/connect-board';
+import { ConnectPiece } from '../models/Games/Connect/connect-piece';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,7 @@ export class ConnectService {
   messageReceived$: Subscription;
 
 
-  pieces: ConnectPiece[]
+  pieces: ConnectPiece[] = []
 
   constructor(
     public webSocketService: WebsocketService,
@@ -35,7 +37,6 @@ export class ConnectService {
 
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Masage:', message);
 
     try {
       // Paso del mensaje a objeto
@@ -55,8 +56,6 @@ export class ConnectService {
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
 
-    console.log("BOARD:", message)
-
     switch (message.Type) {
       case SocketCommunicationType.CONNECT_BOARD:
 
@@ -64,10 +63,11 @@ export class ConnectService {
         console.log("CONNECT BOARD", board)
 
 
-        this.pieces = board.Pieces
-        this.gameService.turn = board.Turn
-        this.gameService.currentPlayerTimer = this.gameService.playerColor == PieceColor.YELLOW ? board.Player1Time : board.Player2Time
-        this.gameService.opponentTimer = this.gameService.playerColor == PieceColor.YELLOW ? board.Player2Time : board.Player1Time
+        this.pieces.push(board.LastPiece)
+        console.log("CONNECT PIECES", this.pieces)
+        this.gameService.turn = board.Player1Turn
+        this.gameService.currentPlayerTimer = this.gameService.playerColor ? board.Player1Time : board.Player2Time
+        this.gameService.opponentTimer = this.gameService.playerColor ? board.Player2Time : board.Player1Time
 
         this.gameService.startCountdown();
 

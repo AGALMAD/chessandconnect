@@ -187,7 +187,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         }
 
-        public override async Task LeaveGame(int userId, IServiceProvider serviceProvider)
+        public override async Task Surrender(int userId, IServiceProvider serviceProvider)
         {
             bool userColor = Player1Id == userId;
 

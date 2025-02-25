@@ -33,7 +33,7 @@ public abstract class BaseRoom
     public abstract Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult);
     public abstract Task SendWinMessage();
     public abstract Task MessageHandler( string message);
-    public abstract Task LeaveGame(int userId, IServiceProvider serviceProvider);
+    public abstract Task Surrender(int userId, IServiceProvider serviceProvider);
 
 
 

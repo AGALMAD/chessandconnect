@@ -211,13 +211,13 @@ namespace chess4connect.Services
 
                     if (leaveRoom != null)
                     {
-                        await leaveRoom.LeaveGame(userId, _serviceProvider);
+                        await leaveRoom.Surrender(userId, _serviceProvider);
                     }
 
                     else
                     {
                         ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
-                        await connectRoom.LeaveGame(userId, _serviceProvider);
+                        await connectRoom.Surrender(userId, _serviceProvider);
 
                     }
 

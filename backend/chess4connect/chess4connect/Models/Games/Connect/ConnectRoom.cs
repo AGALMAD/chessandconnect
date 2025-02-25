@@ -80,7 +80,7 @@ public class ConnectRoom: BaseRoom
 
     public override async Task SendWinMessage()
     {
-        int winnerId = Game.Board.Player1Turn ? Player1Handler.Id : Player2Handler.Id;
+        int winnerId = Game.Board.Player1Turn ? Player1Id : Player2Id;
 
 
         //Mensaje con el id del ganador
@@ -131,14 +131,19 @@ public class ConnectRoom: BaseRoom
 
         await unitOfWork.SaveAsync();
 
-        PlayDetail playDetailUser1 = new PlayDetail
-        {
-            PlayId = play.Id,
-            UserId = Game.Board.Player1Turn ? Player1Id : Player2Id,
-            GameResult = gameResult
-        };
+        int winnerId = Game.Board.Player1Turn ? Player1Id : Player2Id;
 
-        unitOfWork.PlayDetailRepository.Add(playDetailUser1);
+        if(winnerId != 0)
+        {
+            PlayDetail playDetailUser1 = new PlayDetail
+            {
+                PlayId = play.Id,
+                UserId = Game.Board.Player1Turn ? Player1Id : Player2Id,
+                GameResult = gameResult
+            };
+            unitOfWork.PlayDetailRepository.Add(playDetailUser1);
+
+        }
 
 
         if (Player2Id != 0)
@@ -159,10 +164,9 @@ public class ConnectRoom: BaseRoom
         await SendWinMessage();
     }
 
-    public override async Task LeaveGame(int userId, IServiceProvider serviceProvider)
+    public override async Task Surrender(int userId, IServiceProvider serviceProvider)
     {
         bool userColor = Player1Id == userId;
-
         Game.Board.Player1Turn = !userColor;
 
         await SaveGame(serviceProvider, GameResult.WIN);

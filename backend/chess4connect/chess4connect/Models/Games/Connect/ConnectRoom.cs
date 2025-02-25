@@ -158,4 +158,13 @@ public class ConnectRoom: BaseRoom
 
         await SendWinMessage();
     }
+
+    public override async Task LeaveGame(int userId, IServiceProvider serviceProvider)
+    {
+        bool userColor = Player1Id == userId;
+
+        Game.Board.Player1Turn = !userColor;
+
+        await SaveGame(serviceProvider, GameResult.WIN);
+    }
 }

@@ -1,30 +1,47 @@
-      <!-- Vista de chat -->
-      <div class="bg-brown-600 text-brown-100 w-[350px] h-[500px] flex flex-col shadow-lg rounded-lg p-4">
-        <div class="overflow-y-auto flex-1 p-2 space-y-2">
-          @for (m of chatService.messages; track $index) {
-            @if (authService.currentUser.id != m.userId) {
-            <!-- Mensaje del usuario -->
-            <div class="flex items-start justify-start">
-              <div class="bg-brown-100 p-2 rounded-lg text-brown-600 max-w-[80%]">
-                {{m.Message}}
+<!-- Vista de chat -->
+<div class="bg-brown-600 text-brown-100 w-[350px] h-[500px] flex flex-col shadow-lg rounded-lg p-4">
+  <div class="overflow-y-auto flex-1 p-2 space-y-2">
+      @for (m of chatService.messages; track $index) {
+          @if (authService.currentUser.id != m.userId) {
+              <!-- Mensaje del usuario -->
+              <div class="flex items-start justify-start">
+                  <div class="bg-brown-100 p-2 rounded-lg text-brown-600 max-w-[80%]">
+                      {{m.Message}}
+                  </div>
               </div>
-            </div>
-            }@else {
-            <!-- Mensaje del otro usuario -->
-            <div class="flex items-start justify-end">
-              <div class="bg-brown-100 p-2 rounded-lg text-brown-600 max-w-[80%]">  
-                {{m.Message}}      
+          }@else {
+              <!-- Mensaje del otro usuario -->
+              <div class="flex items-start justify-end">
+                  <div class="bg-brown-100 p-2 rounded-lg text-brown-600 max-w-[80%]">
+                      {{m.Message}}
+                  </div>
               </div>
-            </div>
-            }
           }
-        </div>
+      }
+  </div>
 
-        <div class="flex items-center space-x-2 mt-2 p-2 border-t border-brown-500">
-          <input 
-            type="text" 
-            class="flex-1 p-2 border border-brown-200 rounded-lg text-brown-700 bg-brown-200 placeholder-brown-500"
-            placeholder="Escribe un mensaje..." [(ngModel)]="message">
-          <button (click)="sendMessage()" class="bg-brown-200 text-brown-700 py-2 px-4 rounded-lg hover:bg-brown-300 transition">Enviar</button>
-        </div>
-      </div>
+  <!-- Input de chat y botones alineados -->
+  <div class="flex items-center space-x-2 mt-2 p-2 border-t border-brown-500">
+      <input 
+          type="text" 
+          class="flex-1 p-2 border border-brown-200 rounded-lg text-brown-700 bg-brown-200 placeholder-brown-500"
+          placeholder="Escribe un mensaje..." [(ngModel)]="message">
+      <button (click)="sendMessage()"
+          class="bg-brown-200 text-brown-700 py-2 px-4 rounded-lg hover:bg-brown-300 transition-all duration-300">
+          Enviar
+      </button>
+  </div>
+
+
+  <div class="flex items-center justify-center gap-2 mt-2">
+      <button (click)="gameService.leaveGame()"
+          class="flex-1 px-4 py-2 bg-brown-700 text-brown-100 font-bold rounded-lg shadow-md hover:bg-brown-800 transition-all duration-300">
+          ❌ Abandonar
+      </button>
+
+      <button (click)="gameService.offerDraw()"
+          class="flex-1 px-4 py-2 bg-brown-600 text-brown-100 font-bold rounded-lg shadow-md hover:bg-brown-700 transition-all duration-300">
+          🤝 Tablas
+      </button>
+  </div>
+</div>

@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { Chat } from '../../models/dto/chat';
 import { User } from '../../models/dto/user';
 import { User_Chat } from '../../models/dto/user-chat';
+import { GameService } from '../../services/game.service';
 
 @Component({
   selector: 'app-chat',
@@ -16,7 +17,7 @@ export class ChatComponent {
 
   message: string
 
-  constructor(public chatService: ChatService, public authService: AuthService) { }
+  constructor(public chatService: ChatService, public authService: AuthService, public gameService: GameService) { }
 
   OnInit() {
     console.log(this.chatService.messages)

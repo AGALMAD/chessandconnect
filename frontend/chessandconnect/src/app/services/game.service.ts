@@ -113,7 +113,7 @@ export class GameService {
   }
 
 
-  leaveGame() {
+  backToMenu() {
     this.router.navigate(['/menus']);
   }
 
@@ -121,6 +121,22 @@ export class GameService {
   rematchRequest() {
     const message: SocketMessage = {
       Type: SocketCommunicationType.REMATCH_REQUEST,
+    };
+
+    this.webSocketService.sendRxjs(JSON.stringify(message));
+  }
+
+  offerDraw(){
+    const message: SocketMessage = {
+      Type: SocketCommunicationType.DRAW_REQUEST,
+    };
+
+    this.webSocketService.sendRxjs(JSON.stringify(message));
+  }
+
+  leaveGame(){
+    const message: SocketMessage = {
+      Type: SocketCommunicationType.LEAVE_GAME,
     };
 
     this.webSocketService.sendRxjs(JSON.stringify(message));

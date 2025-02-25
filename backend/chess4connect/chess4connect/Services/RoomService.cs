@@ -204,6 +204,25 @@ namespace chess4connect.Services
 
 
                     break;
+
+                case SocketCommunicationType.LEAVE_GAME:
+
+                    ChessRoom leaveRoom = GetChessRoomByUserId(userId);
+
+                    if (leaveRoom != null)
+                    {
+                        await leaveRoom.LeaveGame(userId, _serviceProvider);
+                    }
+
+                    else
+                    {
+                        ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+                        await connectRoom.LeaveGame(userId, _serviceProvider);
+
+                    }
+
+
+                    break;
             }
 
 

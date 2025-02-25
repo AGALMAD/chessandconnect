@@ -10,8 +10,13 @@ namespace chess4connect.Models.Games.Base;
 
 public abstract class BaseRoom
 {
+    //Sockets de los jugadores
     public WebSocketHandler Player1Handler { get; set; }
     public WebSocketHandler? Player2Handler { get; set; }
+
+    //Ids de los jugadores
+    public int Player1Id { get; set; }
+    public int Player2Id { get; set; }
 
     public int DrawRequests { get; set; } = 0;
 

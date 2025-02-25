@@ -13,11 +13,17 @@ public abstract class BaseRoom
     public WebSocketHandler Player1Handler { get; set; }
     public WebSocketHandler? Player2Handler { get; set; }
 
+    public int DrawRequests { get; set; } = 0;
+
+    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+
+
     public BaseRoom(WebSocketHandler player1Handler, WebSocketHandler? player2Handler) {
         Player1Handler = player1Handler;
         Player2Handler = player2Handler;
     }
-    public abstract Task SendBoard();
+    public abstract Task SendDropPiece();
+    public abstract Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult);
     public abstract Task SendWinMessage();
     public abstract Task MessageHandler( string message);
 
@@ -79,6 +85,18 @@ public abstract class BaseRoom
         }
     }
 
+
+    public async Task<bool> NewDrawRequest()
+    {
+        await _semaphore.WaitAsync();
+
+        DrawRequests++;
+
+        _semaphore.Release();
+
+        return DrawRequests == 2;
+
+    }
 
 }
 

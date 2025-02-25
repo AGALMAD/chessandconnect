@@ -16,11 +16,17 @@ namespace chess4connect.Services
 {
     public class RoomService
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IServiceProvider _serviceProvider;
 
 
         private List<ChessRoom> chessRooms = new List<ChessRoom>();
         private List<ConnectRoom> connectRooms = new List<ConnectRoom>();
+
+        public RoomService(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
 
         public async Task CreateRoomAsync(GameType gamemode, WebSocketHandler player1Hadler, WebSocketHandler player2Handler = null)
         {
@@ -58,6 +64,7 @@ namespace chess4connect.Services
         {
             SocketMessage recived = JsonSerializer.Deserialize<SocketMessage>(message);
 
+
             switch (recived.Type)
             {
                 case SocketCommunicationType.CHAT:
@@ -79,6 +86,63 @@ namespace chess4connect.Services
 
                 case SocketCommunicationType.CONNECT4_MOVEMENTS:
                     await GetConnectRoomByUserId(userId).MessageHandler(message);
+                    break;
+
+                //Si el compañero se desconecta, elimina la sala y envía mensaje de victoria al usuario
+                case SocketCommunicationType.CONNECTION:
+                    ConnectionSocketMessage<ConnectionModel> connectioMessage = JsonSerializer.Deserialize<ConnectionSocketMessage<ConnectionModel>>(message);
+
+                    if (connectioMessage.Data.Type == ConnectionType.Disconnected)
+                    {
+                        ChessRoom chessRoom1 = GetChessRoomByUserId(userId);
+
+                        if (chessRoom1 != null)
+                        {
+                            await chessRoom1.SaveGame(_serviceProvider, GameResult.WIN);
+                            chessRooms.Remove(chessRoom1);
+                        }
+
+                        else
+                        {
+                            ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+
+                            if (connectRoom != null)
+                            {
+                                await connectRoom.SaveGame(_serviceProvider, GameResult.WIN);
+                                connectRooms.Remove(connectRoom);
+                            }
+
+                        }
+                    }
+
+                    break;
+                case SocketCommunicationType.DRAW_REQUEST:
+
+                    ChessRoom room = GetChessRoomByUserId(userId);
+
+                    if (room != null)
+                    {
+                        if (await room.NewDrawRequest())
+                        {
+                            await room.SaveGame(_serviceProvider,GameResult.DRAW);
+                        }
+                    }
+
+                    else
+                    {
+                        ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+
+                        if (connectRoom != null)
+                        {
+                            if (await room.NewDrawRequest())
+                            {
+                                await room.SaveGame(_serviceProvider, GameResult.DRAW);
+                            }
+                        }
+
+                    }
+
+
                     break;
             }
 

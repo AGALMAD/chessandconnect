@@ -10,7 +10,7 @@ public static class ChessPieceMapper
         return new ChessPieceDto
         {
             Id = piece.Id,
-            Color = piece.Color,
+            Player1Piece = piece.Player1Piece,
             Position = piece.Position,
             PieceType = piece.PieceType
         };

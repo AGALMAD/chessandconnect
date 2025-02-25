@@ -6,9 +6,11 @@ import { Subscription } from 'rxjs';
 import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { GameService } from './game.service';
-import { PieceColor } from '../models/games/chess/Enums/piece-color';
-import { ConnectPiece } from '../models/games/connect/connect-piece';
-import { ConnectBoard } from '../models/games/connect/connect-board';
+
+import { ConnectBoard } from '../models/Games/Connect/connect-board';
+import { ConnectPiece } from '../models/Games/Connect/connect-piece';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -65,9 +67,9 @@ export class ConnectService {
 
 
         this.pieces = board.Pieces
-        this.gameService.turn = board.Turn
-        this.gameService.currentPlayerTimer = this.gameService.playerColor == PieceColor.YELLOW ? board.Player1Time : board.Player2Time
-        this.gameService.opponentTimer = this.gameService.playerColor == PieceColor.YELLOW ? board.Player2Time : board.Player1Time
+        this.gameService.turn = board.Player1Turn
+        this.gameService.currentPlayerTimer = this.gameService.playerColor ? board.Player1Time : board.Player2Time
+        this.gameService.opponentTimer = this.gameService.playerColor ? board.Player2Time : board.Player1Time
 
         this.gameService.startCountdown();
 

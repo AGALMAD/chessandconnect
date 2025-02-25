@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { User } from '../models/dto/user';
 import { WebsocketService } from './websocket.service';
 import { interval, Subscription } from 'rxjs';
-import { SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
+import { SocketMessage, SocketMessageGeneric } from '../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../enums/SocketCommunicationType';
-import { PieceColor } from '../models/games/chess/Enums/piece-color';
 import { AuthService } from './auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChessResultComponent } from '../components/chess-result/chess-result.component';
+import { PieceColor } from '../models/games/chess/enums/piece-color';
+
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,8 @@ export class GameService {
   currentPlayerTimer: number
   opponentTimer: number
 
-  turn: PieceColor
-  playerColor: PieceColor
+  turn: boolean
+  playerColor: boolean
 
 
   winner: User = null
@@ -94,7 +95,7 @@ export class GameService {
     }
 
     this.timerSubscription = interval(1000).subscribe(() => {
-      if (this.turn === PieceColor.WHITE && this.playerColor == PieceColor.WHITE) {
+      if (this.turn && this.playerColor) {
         this.currentPlayerTimer = Math.max(0, this.currentPlayerTimer - 1);
       } else {
         this.opponentTimer = Math.max(0, this.opponentTimer - 1);
@@ -103,5 +104,14 @@ export class GameService {
       console.log(this.currentPlayerTimer, this.opponentTimer)
     });
   }
+
+
+  drawRequest(){
+
+    const message : SocketMessage = {
+      Type : SocketCommunicationType.DRAW_REQUEST,
+    }
+  }
+
 
 }

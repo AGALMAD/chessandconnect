@@ -157,7 +157,55 @@ namespace chess4connect.Services
 
 
                     break;
+                case SocketCommunicationType.REMATCH_REQUEST:
+
+                    ChessRoom rematchRoom = GetChessRoomByUserId(userId);
+
+                    if (rematchRoom != null)
+                    {
+                        if (await rematchRoom.NewRematchRequest())
+                        {
+                            rematchRoom.Game = new ChessGame(DateTime.Now,
+                                                new ChessBoard()
+                                                {
+                                                    StartTurnDateTime = DateTime.Now,
+                                                });
+
+
+                            await rematchRoom.SendChessRoom();
+
+                        }
+                    }
+
+                    else
+                    {
+                        ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+
+                        if (connectRoom != null)
+                        {
+                            if (await connectRoom.NewDrawRequest())
+                            {
+                                connectRoom.Game = new ConnectGame(DateTime.Now,
+                                   new ConnectBoard()
+                                   {
+                                       StartTurnDateTime = DateTime.Now
+                                   });
+
+                                await connectRoom.SendConnectRoom();
+
+                            }
+
+
+
+
+                        }
+
+                    }
+
+
+                    break;
             }
+
 
         }
 

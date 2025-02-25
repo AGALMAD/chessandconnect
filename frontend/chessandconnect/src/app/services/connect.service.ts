@@ -9,6 +9,9 @@ import { GameService } from './game.service';
 
 import { ConnectBoard } from '../models/Games/Connect/connect-board';
 import { ConnectPiece } from '../models/Games/Connect/connect-piece';
+import { Router } from '@angular/router';
+import { Room } from '../models/Games/room';
+import { GameType } from '../enums/game';
 
 
 
@@ -26,13 +29,14 @@ export class ConnectService {
     public webSocketService: WebsocketService,
     private authService: AuthService,
     private dialog: MatDialog,
-    public gameService: GameService
+    public gameService: GameService,
+    private router: Router
   ) {
-    
+
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
     );
-    
+
   }
 
 
@@ -70,6 +74,24 @@ export class ConnectService {
         this.gameService.opponentTimer = this.gameService.playerColor ? board.Player2Time : board.Player1Time
 
         this.gameService.startCountdown();
+
+        break
+
+      case SocketCommunicationType.GAME_START:
+
+        const newRoom = message.Data as Room;
+        if (newRoom.GameType == GameType.Connect4) {
+
+          this.pieces = []
+
+          this.gameService.currentPlayerTimer = 180
+          this.gameService.opponentTimer = 180
+
+          this.gameService.startCountdown()
+          
+          this.gameService.dialog.closeAll()
+
+        }
 
         break
 

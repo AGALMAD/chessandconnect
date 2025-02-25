@@ -19,6 +19,8 @@ public abstract class BaseRoom
     public int Player2Id { get; set; } = 0;
 
     public int DrawRequests { get; set; } = 0;
+    public int RemathcRequests { get; set; } = 0;
+
 
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
@@ -100,6 +102,18 @@ public abstract class BaseRoom
         _semaphore.Release();
 
         return DrawRequests == 2;
+
+    }
+
+    public async Task<bool> NewRematchRequest()
+    {
+        await _semaphore.WaitAsync();
+
+        RemathcRequests++;
+
+        _semaphore.Release();
+
+        return RemathcRequests == 2;
 
     }
 

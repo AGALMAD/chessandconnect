@@ -10,10 +10,17 @@ namespace chess4connect.Models.Games.Base;
 
 public abstract class BaseRoom
 {
+    //Sockets de los jugadores
     public WebSocketHandler Player1Handler { get; set; }
     public WebSocketHandler? Player2Handler { get; set; }
 
+    //Ids de los jugadores
+    public int Player1Id { get; set; } = 0;
+    public int Player2Id { get; set; } = 0;
+
     public int DrawRequests { get; set; } = 0;
+    public int RemathcRequests { get; set; } = 0;
+
 
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
@@ -22,7 +29,7 @@ public abstract class BaseRoom
         Player1Handler = player1Handler;
         Player2Handler = player2Handler;
     }
-    public abstract Task SendDropPiece();
+    public abstract Task SendBoard();
     public abstract Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult);
     public abstract Task SendWinMessage();
     public abstract Task MessageHandler( string message);
@@ -95,6 +102,18 @@ public abstract class BaseRoom
         _semaphore.Release();
 
         return DrawRequests == 2;
+
+    }
+
+    public async Task<bool> NewRematchRequest()
+    {
+        await _semaphore.WaitAsync();
+
+        RemathcRequests++;
+
+        _semaphore.Release();
+
+        return RemathcRequests == 2;
 
     }
 

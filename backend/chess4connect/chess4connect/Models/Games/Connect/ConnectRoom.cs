@@ -29,22 +29,28 @@ public class ConnectRoom: BaseRoom
     {
         int response = Game.Board.DropPiece(column);
 
-        if (response == 0)
-        {
-            await SendDropPiece();
+        if(response != -1)
+            await SendBoard();
 
-        }
 
         if (response == 1)
         {
             await SendWinMessage();
+            return;
+        }
+
+        if (Player2Handler == null)
+        {
+            await Game.Board.RandomDrop();
+            await SendBoard();
 
         }
 
 
     }
 
-    public override async Task SendDropPiece()
+
+    public override async Task SendBoard()
     {
 
         //Lista de piezas sin  los movimientos básicos
@@ -101,6 +107,7 @@ public class ConnectRoom: BaseRoom
                 ConnectDropPieceRequest request = JsonSerializer.Deserialize<SocketMessage<ConnectDropPieceRequest>>(message).Data;
 
                 await DropConnectPiece(request.Column);
+                
 
                 break;
 
@@ -127,19 +134,25 @@ public class ConnectRoom: BaseRoom
         PlayDetail playDetailUser1 = new PlayDetail
         {
             PlayId = play.Id,
-            UserId = Game.Board.Player1Turn ? Player1Handler.Id : Player2Handler.Id,
+            UserId = Game.Board.Player1Turn ? Player1Id : Player2Id,
             GameResult = gameResult
         };
 
-        PlayDetail playDetailUser2 = new PlayDetail
-        {
-            PlayId = play.Id,
-            UserId = Game.Board.Player1Turn ? Player2Handler.Id : Player1Handler.Id,
-            GameResult = gameResult == GameResult.DRAW ? gameResult : GameResult.LOSE
-        };
-
         unitOfWork.PlayDetailRepository.Add(playDetailUser1);
-        unitOfWork.PlayDetailRepository.Add(playDetailUser2);
+
+
+        if (Player2Id != 0)
+        {
+            PlayDetail playDetailUser2 = new PlayDetail
+            {
+                PlayId = play.Id,
+                UserId = Game.Board.Player1Turn ? Player2Id : Player1Id,
+                GameResult = gameResult == GameResult.DRAW ? gameResult : GameResult.LOSE
+            };
+            unitOfWork.PlayDetailRepository.Add(playDetailUser2);
+
+        }
+
         await unitOfWork.SaveAsync();
 
 

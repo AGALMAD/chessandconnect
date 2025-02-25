@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { ApiService } from './api.service';
 
 @Injectable({

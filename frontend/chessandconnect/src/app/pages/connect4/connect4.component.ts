@@ -7,19 +7,24 @@ import { AuthService } from '../../services/auth.service';
 import { ConnectService } from '../../services/connect.service';
 import { SocketMessageGeneric } from '../../models/WebSocketMessages/SocketMessage';
 import { SocketCommunicationType } from '../../enums/SocketCommunicationType';
+import { CommonModule } from '@angular/common';
+import { ChatComponent } from '../../components/chat/chat.component';
+import { PipeTimerPipe } from "../../pipes/pipe-timer.pipe";
 
 import { ConnectDropPieceRequest } from '../../models/Games/Connect/connect-drop-piece-request';
 
 
 @Component({
   selector: 'app-connect4',
-  imports: [],
+  imports: [CommonModule, ChatComponent, PipeTimerPipe],
   templateUrl: './connect4.component.html',
   styleUrl: './connect4.component.css'
 })
 export class Connect4Component {
   public baseUrl = environment.apiUrl;
 
+  rows: number[] = [0, 1, 2, 3, 4, 5];  // 6 filas
+  columns: number[] = [0, 1, 2, 3, 4, 5, 6];  // 7 columnas
 
   
   constructor(
@@ -27,11 +32,15 @@ export class Connect4Component {
     public gameService: GameService, 
     private api: ApiService, 
     public authService : AuthService,
-    public chessService: ConnectService
+    public connectService: ConnectService
   ) { }
 
 
   dropPiece(col: number){
+
+    if(this.gameService.turn != this.gameService.playerColor)
+      return
+
     const moveRequest: ConnectDropPieceRequest = { Column: col};
 
     const message : SocketMessageGeneric<ConnectDropPieceRequest> = {

@@ -1,43 +1,44 @@
-<div class=" min-h-96 min-w-96 fixed inset-0 z-50 flex justify-center items-center bg-brown-800 bg-opacity-50">
-    <div class=" bg-brown-100 p-6 rounded-xl shadow-lg relative">
-        <!-- Close button -->
-        <button class="absolute top-4 right-4 text-brown-600 hover:text-brown-800" (click)="closeModal()">
+<div class="min-h-96 min-w-96 fixed inset-0 z-50 flex justify-center items-center bg-brown-800 bg-opacity-50">
+    <div class="bg-brown-100 p-6 rounded-xl shadow-lg relative">
+        <!-- Botón de cierre -->
+        <button class="absolute top-4 right-4 text-brown-700 hover:text-brown-900 transition-all duration-200" (click)="closeModal()">
             ✕
         </button>
 
-        <h2 class="text-brown-800 font-bold text-2xl mb-4">Resultado</h2>
+        <h2 class="text-brown-800 font-bold text-2xl mb-4 text-center">Resultado</h2>
 
-        <div class=" flex flex-row">
-            <!--Ganador-->
-            <div>
-                <img src="/public/GameResult/crown.png" alt="">
-
-                <div class=" mt-6 flex items-center justify-between w-[80vh] ">
-                    <div class="flex items-center space-x-3">
-                        <img [src]="baseUrl + winner.avatarImageUrl" alt="Player"
-                            class=" size-40 rounded-full border-2 border-black">
-                        <p class="text-[#301e16] font-bold">{{ winner.userName || 'Jugador' }}</p>
-                    </div>
+        <div class="flex flex-row justify-center space-x-12">
+            <!-- Ganador -->
+            <div class="text-center">
+                <img src="/public/GameResult/crown.png" alt="Crown" class="mx-auto mb-2">
+                <div class="mt-6 flex flex-col items-center">
+                    <img [src]="baseUrl + winner.avatarImageUrl" alt="Player"
+                        class="size-40 rounded-full border-4 border-brown-700 shadow-lg">
+                    <p class="text-brown-900 font-bold mt-2">{{ winner.userName || 'Jugador' }}</p>
                 </div>
-
             </div>
 
-            <!--Perdedor-->
-            <div>
-                <div class=" mt-6 flex items-center justify-between w-[80vh] ">
-                    <div class="flex items-center space-x-3">
-                        <img [src]="baseUrl + looser?.avatarImageUrl" alt="Player"
-                            class=" size-40 rounded-full border-2 border-black">
-                        <p class="text-[#301e16] font-bold">{{ looser?.userName || 'Jugador' }}</p>
-                    </div>
+            <!-- Perdedor -->
+            <div class="text-center">
+                <div class="mt-6 flex flex-col items-center">
+                    <img [src]="baseUrl + looser?.avatarImageUrl" alt="Player"
+                        class="size-40 rounded-full border-4 border-brown-600 shadow-md">
+                    <p class="text-brown-900 font-bold mt-2">{{ looser?.userName || 'Jugador' }}</p>
                 </div>
-
             </div>
         </div>
 
+        <!-- Botones estilizados -->
+        <div class="mt-6 flex justify-center space-x-6">
+            <button (click)="gameService.leaveGame()" 
+                class="px-6 py-3 bg-brown-700 text-brown-100 font-bold rounded-lg shadow-md hover:bg-brown-800 hover:text-white transition-all duration-300">
+                ❌ Abandonar
+            </button>
 
-
-
-
+            <button (click)="gameService.rematchRequest()" 
+                class="px-6 py-3 bg-brown-600 text-brown-100 font-bold rounded-lg shadow-md hover:bg-brown-700 hover:text-white transition-all duration-300">
+                🔄 Revancha
+            </button>
+        </div>
     </div>
 </div>

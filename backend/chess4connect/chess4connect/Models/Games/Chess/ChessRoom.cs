@@ -3,14 +3,9 @@ using chess4connect.Enums;
 using chess4connect.Mappers;
 using chess4connect.Models.Database.Entities;
 using chess4connect.Models.Games.Base;
-using chess4connect.Models.Games.Chess.Chess.Pieces;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
-using chess4connect.Models.Games.Chess.Chess.Pieces.Types;
 using chess4connect.Models.SocketComunication.Handlers;
 using chess4connect.Models.SocketComunication.MessageTypes;
-using chess4connect.Services;
-using Microsoft.OpenApi.Writers;
-using System.Security.AccessControl;
 using System.Text.Json;
 
 namespace chess4connect.Models.Games.Chess.Chess
@@ -31,12 +26,12 @@ namespace chess4connect.Models.Games.Chess.Chess
         {
 
             await SendRoom(GameType.Chess);
-            await SendDropPiece();
+            await SendBoard();
             await SendMovementsMessageAsync();
         }
 
 
-        public override async Task SendDropPiece()
+        public override async Task SendBoard()
         {
             //Lista de piezas original
             List<ChessBasePiece> pieces = Game.Board.convertBoardToList();
@@ -83,7 +78,7 @@ namespace chess4connect.Models.Games.Chess.Chess
             }
             else { 
                 await Game.Board.RandomMovement();
-                await SendDropPiece();
+                await SendBoard();
                 await SendMovementsMessageAsync();
             }
 
@@ -99,7 +94,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             if (response == 0)
             {
-                await SendDropPiece();
+                await SendBoard();
 
                 await SendMovementsMessageAsync();
 

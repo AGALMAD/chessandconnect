@@ -40,6 +40,10 @@ namespace chess4connect.Services
                         StartTurnDateTime = DateTime.Now,
                     }));
 
+                room.Player1Id = player1Hadler.Id;
+
+                if (player2Handler != null)
+                    room.Player2Id = player2Handler.Id;
 
                 chessRooms.Add(room);
 
@@ -50,7 +54,16 @@ namespace chess4connect.Services
             {
                 var room = new ConnectRoom(player1Hadler, player2Handler,
                    new ConnectGame(DateTime.Now,
-                   new ConnectBoard()));
+                   new ConnectBoard()
+                   {
+                       StartTurnDateTime = DateTime.Now
+                   }));
+
+
+                room.Player1Id = player1Hadler.Id;
+
+                if (player2Handler != null)
+                    room.Player2Id = player2Handler.Id;
 
                 connectRooms.Add(room);
 
@@ -144,7 +157,55 @@ namespace chess4connect.Services
 
 
                     break;
+                case SocketCommunicationType.REMATCH_REQUEST:
+
+                    ChessRoom rematchRoom = GetChessRoomByUserId(userId);
+
+                    if (rematchRoom != null)
+                    {
+                        if (await rematchRoom.NewRematchRequest())
+                        {
+                            rematchRoom.Game = new ChessGame(DateTime.Now,
+                                                new ChessBoard()
+                                                {
+                                                    StartTurnDateTime = DateTime.Now,
+                                                });
+
+
+                            await rematchRoom.SendChessRoom();
+
+                        }
+                    }
+
+                    else
+                    {
+                        ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+
+                        if (connectRoom != null)
+                        {
+                            if (await connectRoom.NewDrawRequest())
+                            {
+                                connectRoom.Game = new ConnectGame(DateTime.Now,
+                                   new ConnectBoard()
+                                   {
+                                       StartTurnDateTime = DateTime.Now
+                                   });
+
+                                await connectRoom.SendConnectRoom();
+
+                            }
+
+
+
+
+                        }
+
+                    }
+
+
+                    break;
             }
+
 
         }
 

@@ -7,8 +7,7 @@ import { SocketCommunicationType } from '../enums/SocketCommunicationType';
 import { AuthService } from './auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChessResultComponent } from '../components/chess-result/chess-result.component';
-import { PieceColor } from '../models/games/chess/enums/piece-color';
-
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +22,7 @@ export class GameService {
   currentPlayerTimer: number
   opponentTimer: number
 
-  turn: boolean
+  turn: boolean = true
   playerColor: boolean
 
 
@@ -34,7 +33,8 @@ export class GameService {
   constructor(
     public webSocketService: WebsocketService,
     private authService: AuthService,
-    private dialog: MatDialog,
+    public dialog: MatDialog,
+    private router: Router
   ) {
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
@@ -63,7 +63,6 @@ export class GameService {
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
 
-    console.log("BOARD:", message)
 
     switch (message.Type) {
       case SocketCommunicationType.END_GAME:
@@ -114,4 +113,16 @@ export class GameService {
   }
 
 
+  leaveGame() {
+    this.router.navigate(['/menus']);
+  }
+
+
+  rematchRequest() {
+    const message: SocketMessage = {
+      Type: SocketCommunicationType.REMATCH_REQUEST,
+    };
+
+    this.webSocketService.sendRxjs(JSON.stringify(message));
+  }
 }

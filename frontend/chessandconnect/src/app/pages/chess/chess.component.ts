@@ -11,9 +11,10 @@ import { ChatComponent } from "../../components/chat/chat.component";
 import { ChessService } from '../../services/chess.service';
 import { PipeTimerPipe } from '../../pipes/pipe-timer.pipe';
 
-import { PieceType } from '../../models/Games/Chess/Enums/piece-type';
+import { PieceType } from '../../enums/piece-type';
 import { ChessPiece } from '../../models/Games/Chess/chess-piece';
 import { ChessMoveRequest } from '../../models/Games/Chess/chess-move-request';
+import { MatchMakingService } from '../../services/match-making.service';
 
 
 
@@ -37,13 +38,15 @@ export class ChessComponent implements OnInit {
     public gameService: GameService, 
     private api: ApiService, 
     public authService : AuthService,
-    public chessService: ChessService
+    public chessService: ChessService,
+    private matchMakingService: MatchMakingService
   ) { }
 
 
   ngOnInit(): void {
     console.log("Opponent:", this.gameService.opponent)
     console.log("PIECES:", this.chessService.pieces)
+    console.log("COLOR", this.gameService.playerColor)
   }
 
 

@@ -14,7 +14,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         private ChessBasePiece[,] Board = new ChessBasePiece[ROWS, COLUMNS];
 
-        public bool Player1Turn { get; set; }
+        public bool Player1Turn { get; set; } = true;
 
 
         //Tiempo en segundo de cada turno

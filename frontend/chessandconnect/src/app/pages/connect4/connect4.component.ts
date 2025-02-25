@@ -37,6 +37,10 @@ export class Connect4Component {
 
 
   dropPiece(col: number){
+
+    if(this.gameService.turn != this.gameService.playerColor)
+      return
+
     const moveRequest: ConnectDropPieceRequest = { Column: col};
 
     const message : SocketMessageGeneric<ConnectDropPieceRequest> = {

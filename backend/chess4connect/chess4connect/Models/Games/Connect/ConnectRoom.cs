@@ -29,20 +29,26 @@ public class ConnectRoom: BaseRoom
     {
         int response = Game.Board.DropPiece(column);
 
-        if (response == 0)
-        {
+        if(response != -1)
             await SendBoard();
 
-        }
 
         if (response == 1)
         {
             await SendWinMessage();
+            return;
+        }
+
+        if (Player2Handler == null)
+        {
+            await Game.Board.RandomDrop();
+            await SendBoard();
 
         }
 
 
     }
+
 
     public override async Task SendBoard()
     {
@@ -101,6 +107,7 @@ public class ConnectRoom: BaseRoom
                 ConnectDropPieceRequest request = JsonSerializer.Deserialize<SocketMessage<ConnectDropPieceRequest>>(message).Data;
 
                 await DropConnectPiece(request.Column);
+                
 
                 break;
 

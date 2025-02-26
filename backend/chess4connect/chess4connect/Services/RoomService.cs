@@ -282,6 +282,40 @@ namespace chess4connect.Services
 
 
                     break;
+
+                case SocketCommunicationType.REMATCH_DECLINED:
+
+                    ChessRoom rematchDeclinedRoom = GetChessRoomByUserId(userId);
+
+                    var rematchDeclinedMessage = new SocketMessage
+                    {
+                        Type = SocketCommunicationType.REMATCH_DECLINED,
+                    };
+
+                    if (rematchDeclinedRoom != null)
+                    {
+                        WebSocketHandler opponentSocket = userId == rematchDeclinedRoom.Player1Id ? rematchDeclinedRoom.Player2Handler : rematchDeclinedRoom.Player1Handler;
+
+                        if (opponentSocket != null)
+                            await opponentSocket.SendAsync(JsonSerializer.Serialize(rematchDeclinedMessage));
+
+                        chessRooms.Remove(rematchDeclinedRoom);
+                    }
+
+                    else
+                    {
+                        ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+                        WebSocketHandler opponentSocket = userId == connectRoom.Player1Id ? connectRoom.Player2Handler : connectRoom.Player1Handler;
+                        
+                        if(opponentSocket != null)
+                            await opponentSocket.SendAsync(JsonSerializer.Serialize(rematchDeclinedMessage));
+
+                        connectRooms.Remove(connectRoom);
+
+                    }
+
+
+                    break;
             }
 
 

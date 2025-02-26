@@ -16,5 +16,7 @@ public enum SocketCommunicationType
     DRAW_REQUEST = 12,
     REMATCH_REQUEST = 13,
     SURRENDER = 14,
+    REMATCH_DECLINED = 15,
+
 
 }

@@ -133,11 +133,29 @@ namespace chess4connect.Services
 
                     ChessRoom room = GetChessRoomByUserId(userId);
 
+                   
+
                     if (room != null)
                     {
                         if (await room.NewDrawRequest())
                         {
                             await room.SaveGame(_serviceProvider,GameResult.DRAW);
+                            
+                        }
+                        else
+                        {
+                            WebSocketHandler opponentSocket = userId == room.Player1Id ? room.Player2Handler : room.Player1Handler;
+                            if(opponentSocket != null)
+                            {
+                                var drawRequestMessage = new SocketMessage
+                                {
+                                    Type = SocketCommunicationType.DRAW_REQUEST,
+                                };
+
+
+                                await opponentSocket.SendAsync(JsonSerializer.Serialize(drawRequestMessage));
+                            }
+                            
                         }
                     }
 
@@ -147,9 +165,23 @@ namespace chess4connect.Services
 
                         if (connectRoom != null)
                         {
-                            if (await room.NewDrawRequest())
+                            if (await connectRoom.NewDrawRequest())
                             {
-                                await room.SaveGame(_serviceProvider, GameResult.DRAW);
+                                await connectRoom.SaveGame(_serviceProvider, GameResult.DRAW);
+                            }
+                            else
+                            {
+                                WebSocketHandler opponentSocket = userId == connectRoom.Player1Id ? connectRoom.Player2Handler : connectRoom.Player1Handler;
+                                if (opponentSocket != null)
+                                {
+                                    var drawRequestMessage = new SocketMessage
+                                    {
+                                        Type = SocketCommunicationType.DRAW_REQUEST,
+                                    };
+
+
+                                    await opponentSocket.SendAsync(JsonSerializer.Serialize(drawRequestMessage));
+                                }
                             }
                         }
 

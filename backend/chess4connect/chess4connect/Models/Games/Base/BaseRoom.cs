@@ -66,7 +66,6 @@ public abstract class BaseRoom
 
     public async Task SendMessage(string message)
     {
-        //Envia los movimientos al jugador
         await Player1Handler.SendAsync(message);
 
 

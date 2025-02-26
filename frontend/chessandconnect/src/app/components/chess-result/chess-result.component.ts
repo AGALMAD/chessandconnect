@@ -23,6 +23,8 @@ export class ChessResultComponent {
 
   public winner: User;
   public looser: User;
+  public isDraw: boolean;
+
 
   constructor(
     private websocketService: WebsocketService,
@@ -32,6 +34,7 @@ export class ChessResultComponent {
     public authService: AuthService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    this.isDraw = data.isDraw
     this.winner = data.winner;
     this.looser = data.looser;
   }

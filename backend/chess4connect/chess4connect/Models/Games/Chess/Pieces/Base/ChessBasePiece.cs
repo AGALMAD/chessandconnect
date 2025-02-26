@@ -11,6 +11,7 @@ public abstract class ChessBasePiece
     public Point Position { get; set; }
     public PieceType PieceType { get; set; }
     public List<Point> BasicMovements { get; set; }
+    public bool HasMoved { get; set; } = false;
 
     public ChessBasePiece(int id, PieceType pieceType, bool pieceColor, Point position)
     {

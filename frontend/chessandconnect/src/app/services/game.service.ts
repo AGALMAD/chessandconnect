@@ -77,8 +77,22 @@ export class GameService {
         this.dialog.open(ChessResultComponent, {
           width: '800px',
           data: {
+            isDraw: false,
             winner: this.winner,
             looser: this.looser
+          }
+        });
+
+        break
+        
+        case SocketCommunicationType.DRAW:
+        
+        this.dialog.open(ChessResultComponent, {
+          width: '800px',
+          data: {
+            isDraw: true,
+            winner: this.authService.currentUser,
+            looser: this.opponent
           }
         });
 

@@ -163,7 +163,15 @@ namespace chess4connect.Models.Games.Chess.Chess
             await unitOfWork.SaveAsync();
 
 
-            await SendWinMessage();
+            if (gameResult == GameResult.DRAW)
+            {
+                await SendDrawMessage();
+            }
+            else
+            {
+                await SendWinMessage();
+
+            }
 
         }
 
@@ -194,6 +202,19 @@ namespace chess4connect.Models.Games.Chess.Chess
             Game.Board.Player1Turn = !userColor;
 
             await SaveGame(serviceProvider, GameResult.WIN);
+        }
+
+        public override async Task SendDrawMessage()
+        {
+            var drawMessage = new SocketMessage
+            {
+                Type = SocketCommunicationType.DRAW,
+
+            };
+
+            string stringWinnerMessage = JsonSerializer.Serialize(drawMessage);
+
+            await SendMessage(stringWinnerMessage);
         }
     }
 }

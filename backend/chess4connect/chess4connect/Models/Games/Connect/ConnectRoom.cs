@@ -12,7 +12,7 @@ using System.Text.Json;
 
 namespace chess4connect.Models.Games.Connect;
 
-public class ConnectRoom: BaseRoom
+public class ConnectRoom : BaseRoom
 {
     public ConnectGame Game { get; set; }
 
@@ -96,6 +96,20 @@ public class ConnectRoom: BaseRoom
         await SendMessage(stringWinnerMessage);
     }
 
+    public override async Task SendDrawMessage()
+    {
+
+        var drawMessage = new SocketMessage
+        {
+            Type = SocketCommunicationType.DRAW,
+
+        };
+
+        string stringWinnerMessage = JsonSerializer.Serialize(drawMessage);
+
+        await SendMessage(stringWinnerMessage);
+    }
+
 
     public override async Task MessageHandler(string message)
     {
@@ -161,7 +175,16 @@ public class ConnectRoom: BaseRoom
         await unitOfWork.SaveAsync();
 
 
-        await SendWinMessage();
+        if(gameResult == GameResult.DRAW)
+        {
+            await SendDrawMessage();
+        }
+        else
+        {
+            await SendWinMessage();
+
+        }
+
     }
 
     public override async Task Surrender(int userId, IServiceProvider serviceProvider)
@@ -171,4 +194,5 @@ public class ConnectRoom: BaseRoom
 
         await SaveGame(serviceProvider, GameResult.WIN);
     }
+
 }

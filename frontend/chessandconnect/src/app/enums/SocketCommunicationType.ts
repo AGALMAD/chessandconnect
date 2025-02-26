@@ -14,5 +14,6 @@ export enum SocketCommunicationType {
   REMATCH_REQUEST = 13,
   SURRENDER = 14,
   REMATCH_DECLINED = 15,
+  DRAW = 16,
 
 }

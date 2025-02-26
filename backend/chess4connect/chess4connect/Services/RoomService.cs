@@ -207,6 +207,20 @@ namespace chess4connect.Services
                             await rematchRoom.SendChessRoom();
 
                         }
+                        else
+                        {
+                            WebSocketHandler opponentSocket = userId == rematchRoom.Player1Id ? rematchRoom.Player2Handler : rematchRoom.Player1Handler;
+                            if (opponentSocket != null)
+                            {
+                                var rematchRequestMessage = new SocketMessage
+                                {
+                                    Type = SocketCommunicationType.REMATCH_REQUEST,
+                                };
+
+
+                                await opponentSocket.SendAsync(JsonSerializer.Serialize(rematchRequestMessage));
+                            }
+                        }
                     }
 
                     else
@@ -226,7 +240,20 @@ namespace chess4connect.Services
                                 await connectRoom.SendConnectRoom();
 
                             }
+                            else
+                            {
+                                WebSocketHandler opponentSocket = userId == connectRoom.Player1Id ? connectRoom.Player2Handler : connectRoom.Player1Handler;
+                                if (opponentSocket != null)
+                                {
+                                    var rematchRequestMessage = new SocketMessage
+                                    {
+                                        Type = SocketCommunicationType.REMATCH_REQUEST,
+                                    };
 
+
+                                    await opponentSocket.SendAsync(JsonSerializer.Serialize(rematchRequestMessage));
+                                }
+                            }
 
 
 
@@ -237,7 +264,7 @@ namespace chess4connect.Services
 
                     break;
 
-                case SocketCommunicationType.LEAVE_GAME:
+                case SocketCommunicationType.SURRENDER:
 
                     ChessRoom leaveRoom = GetChessRoomByUserId(userId);
 

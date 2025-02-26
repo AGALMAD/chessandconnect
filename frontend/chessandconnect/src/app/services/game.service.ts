@@ -112,6 +112,39 @@ export class GameService {
 
         break;
 
+        case SocketCommunicationType.REMATCH_REQUEST:
+        Swal.fire({
+          title: '<i class="fa-solid fa-chess-board"></i> ¡Solicitud de Revancha!',
+          text: `${this.opponent?.userName ?? "Tu oponente"} propone revancha.`,
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Aceptar',
+          cancelButtonText: 'Rechazar',
+          timer: 10000,
+          timerProgressBar: true,
+          background: '#301e16',
+          color: '#E8D5B5',
+          customClass: {
+            popup: 'rounded-lg shadow-lg',
+            title: 'font-bold text-lg',
+            confirmButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+            cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+            timerProgressBar: 'bg-[#E8D5B5]'
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.rematchRequest();
+          }
+          else{
+            this.backToMenu()
+          }
+        });
+
+        break;
+
+
 
     }
 
@@ -160,7 +193,7 @@ export class GameService {
 
   leaveGame() {
     const message: SocketMessage = {
-      Type: SocketCommunicationType.LEAVE_GAME,
+      Type: SocketCommunicationType.SURRENDER,
     };
 
     this.webSocketService.sendRxjs(JSON.stringify(message));

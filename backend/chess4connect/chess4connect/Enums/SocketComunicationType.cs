@@ -15,6 +15,6 @@ public enum SocketCommunicationType
     END_GAME = 11,
     DRAW_REQUEST = 12,
     REMATCH_REQUEST = 13,
-    LEAVE_GAME = 14,
+    SURRENDER = 14,
 
 }

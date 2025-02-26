@@ -17,6 +17,10 @@ export class ChatComponent {
 
   message: string
 
+  isModalOpen = false;
+  modalMessage = "";
+  modalAction: string = "";
+
   constructor(public chatService: ChatService, public authService: AuthService, public gameService: GameService) { }
 
   OnInit() {
@@ -24,11 +28,42 @@ export class ChatComponent {
   }
 
   sendMessage() {
+    if (!this.message.trim()) return; 
+
     const user_chat: User_Chat = {
-      userId: this.authService.currentUser.id,
-      Message: this.message
+        userId: this.authService.currentUser.id,
+        Message: this.message
+    };
+
+    this.chatService.messages.push(user_chat);
+    this.chatService.SendMessage(this.message);
+
+    this.message = ""; 
+}
+
+
+  openModal(action: string) {
+    this.modalAction = action;
+    this.isModalOpen = true;
+    
+    if (action === "leave") {
+      this.modalMessage = "¿Seguro que quieres rendirte?";
+    } else if (action === "draw") {
+      this.modalMessage = "¿Quieres proponer tablas?";
     }
-    this.chatService.messages.push(user_chat)
-    this.chatService.SendMessage(this.message)
   }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  confirmAction() {
+    if (this.modalAction === "leave") {
+      this.gameService.leaveGame();
+    } else if (this.modalAction === "draw") {
+      this.gameService.offerDraw();
+    }
+    this.isModalOpen = false;
+  }
+  
 }

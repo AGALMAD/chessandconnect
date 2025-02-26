@@ -198,7 +198,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
                         // Verificar si el rey estaría en jaque después del movimiento
                         bool kingInCheck = IsSquareUnderAttack(newX, newY, piece.Player1Piece);
-                        Console.WriteLine("king in check:" + kingInCheck);
+
                         // Restaurar el tablero
                         Board[newX, newY] = capturedPiece;
                         Board[originalPos.X, originalPos.Y] = piece;
@@ -398,15 +398,17 @@ namespace chess4connect.Models.Games.Chess.Chess
             else
                 Player2Time -= timeSpent;
 
-            // Change turn
-            Player1Turn = !Player1Turn;
-            StartTurnDateTime = DateTime.Now;
+
 
             // Check if the move results in checkmate
             if (IsCheckmate())
             {
                 return 1; // Checkmate
             }
+
+            // Change turn
+            Player1Turn = !Player1Turn;
+            StartTurnDateTime = DateTime.Now;
 
             // Recalculate all possible moves for the new position
             GetAllPieceMovements();
@@ -465,6 +467,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
                     // checking if after moving king still in check
                     bool kingStillInCheck = IsKingUnderAttack(opponentColor);
+
 
                     // restore board
                     Board[move.X, move.Y] = targetPiece;

@@ -14,14 +14,18 @@ namespace chess4connect.Models.Games.Connect;
 
 public class ConnectRoom : BaseRoom
 {
+    private readonly IServiceProvider _serviceProvider;
+
+
     public ConnectGame Game { get; set; }
 
-    public ConnectRoom(WebSocketHandler player1Handler, WebSocketHandler player2Handler, ConnectGame game): base(player1Handler, player2Handler)
+    public ConnectRoom( WebSocketHandler player1Handler, WebSocketHandler player2Handler, ConnectGame game, IServiceProvider serviceProvider) : base(player1Handler, player2Handler)
     {
         Player1Handler = player1Handler;
         Player2Handler = player2Handler;
 
         Game = game;
+        _serviceProvider = serviceProvider;
     }
 
 
@@ -35,6 +39,7 @@ public class ConnectRoom : BaseRoom
 
         if (response == 1)
         {
+            await SaveGame(_serviceProvider, GameResult.WIN);
             await SendWinMessage();
             return;
         }

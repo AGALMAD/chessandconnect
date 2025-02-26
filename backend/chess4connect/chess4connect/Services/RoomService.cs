@@ -38,7 +38,9 @@ namespace chess4connect.Services
                     new ChessBoard()
                     {
                         StartTurnDateTime = DateTime.Now,
-                    }));
+                    }),
+                    _serviceProvider
+                    );
 
                 room.Player1Id = player1Hadler.Id;
 
@@ -57,7 +59,9 @@ namespace chess4connect.Services
                    new ConnectBoard()
                    {
                        StartTurnDateTime = DateTime.Now
-                   }));
+                   }),
+                   _serviceProvider
+                   );
 
 
                 room.Player1Id = player1Hadler.Id;

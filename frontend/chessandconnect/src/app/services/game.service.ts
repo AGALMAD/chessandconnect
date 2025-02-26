@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChessResultComponent } from '../components/chess-result/chess-result.component';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
@@ -82,6 +83,36 @@ export class GameService {
 
         break
 
+      case SocketCommunicationType.DRAW_REQUEST:
+        Swal.fire({
+          title: '<i class="fa-solid fa-chess-board"></i> ¡Solicitud de Tablas!',
+          text: `${this.opponent?.userName ?? "Tu oponente"} propone tablas.`,
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Aceptar',
+          cancelButtonText: 'Rechazar',
+          timer: 10000,
+          timerProgressBar: true,
+          background: '#301e16',
+          color: '#E8D5B5',
+          customClass: {
+            popup: 'rounded-lg shadow-lg',
+            title: 'font-bold text-lg',
+            confirmButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+            cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
+            timerProgressBar: 'bg-[#E8D5B5]'
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.drawRequest();
+          }
+        });
+
+        break;
+
+
     }
 
 
@@ -105,13 +136,6 @@ export class GameService {
   }
 
 
-  drawRequest(){
-
-    const message : SocketMessage = {
-      Type : SocketCommunicationType.DRAW_REQUEST,
-    }
-  }
-
 
   backToMenu() {
     this.router.navigate(['/menus']);
@@ -126,7 +150,7 @@ export class GameService {
     this.webSocketService.sendRxjs(JSON.stringify(message));
   }
 
-  offerDraw(){
+  drawRequest() {
     const message: SocketMessage = {
       Type: SocketCommunicationType.DRAW_REQUEST,
     };
@@ -134,11 +158,14 @@ export class GameService {
     this.webSocketService.sendRxjs(JSON.stringify(message));
   }
 
-  leaveGame(){
+  leaveGame() {
     const message: SocketMessage = {
       Type: SocketCommunicationType.LEAVE_GAME,
     };
 
     this.webSocketService.sendRxjs(JSON.stringify(message));
   }
+
+
+
 }

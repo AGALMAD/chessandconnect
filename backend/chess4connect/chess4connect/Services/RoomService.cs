@@ -137,7 +137,7 @@ namespace chess4connect.Services
 
                     if (room != null)
                     {
-                        if (await room.NewDrawRequest())
+                        if (room.NewDrawRequest(userId))
                         {
                             await room.SaveGame(_serviceProvider,GameResult.DRAW);
                             
@@ -165,7 +165,7 @@ namespace chess4connect.Services
 
                         if (connectRoom != null)
                         {
-                            if (await connectRoom.NewDrawRequest())
+                            if (connectRoom.NewDrawRequest(userId))
                             {
                                 await connectRoom.SaveGame(_serviceProvider, GameResult.DRAW);
                             }
@@ -195,7 +195,7 @@ namespace chess4connect.Services
 
                     if (rematchRoom != null)
                     {
-                        if (await rematchRoom.NewRematchRequest())
+                        if (rematchRoom.NewRematchRequest(userId))
                         {
                             rematchRoom.Game = new ChessGame(DateTime.Now,
                                                 new ChessBoard()
@@ -215,7 +215,7 @@ namespace chess4connect.Services
 
                         if (connectRoom != null)
                         {
-                            if (await connectRoom.NewDrawRequest())
+                            if (connectRoom.NewDrawRequest(userId))
                             {
                                 connectRoom.Game = new ConnectGame(DateTime.Now,
                                    new ConnectBoard()

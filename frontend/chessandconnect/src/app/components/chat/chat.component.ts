@@ -61,7 +61,7 @@ export class ChatComponent {
     if (this.modalAction === "leave") {
       this.gameService.leaveGame();
     } else if (this.modalAction === "draw") {
-      this.gameService.offerDraw();
+      this.gameService.drawRequest();
     }
     this.isModalOpen = false;
   }

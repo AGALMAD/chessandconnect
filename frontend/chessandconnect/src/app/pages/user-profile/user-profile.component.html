@@ -1,2 +1,56 @@
-    <!-- Barra de navegación -->
-    <app-navbar></app-navbar>
+<app-navbar></app-navbar>
+<div class="bg-brown-100 text-brown-900 min-h-screen p-6">
+    <div class="max-w-4xl mx-auto bg-brown-200 rounded-lg p-6 shadow-lg relative">
+      <!-- Imagen de fondo -->
+      <div class="absolute top-0 left-0 w-full h-32 bg-cover bg-center rounded-t-lg"
+        style="background-image: url('https://source.unsplash.com/1600x900/?gaming');">
+      </div>
+  
+      <!-- Contenedor de información del perfil -->
+      <div class="relative mt-20 flex items-center">
+        <img [src]="baseUrl + authService.currentUser.avatarImageUrl" alt="User Avatar"
+          class="w-24 h-24 rounded-full border-4 border-brown-700 shadow-lg">
+        <div class="ml-4">
+          <h2 class="text-2xl font-bold text-brown-800">{{authService.currentUser.userName}}</h2>
+          <p class="text-brown-700">{{authService.currentUser.email}}</p>
+        </div>
+      </div>
+  
+      <!-- Pestañas para cambiar el historial de juegos -->
+      <div class="mt-6" *ngIf="true">
+        <h3 class="text-xl font-bold mb-4 text-brown-800">Historial de partidas</h3>
+        <div class="flex border-b border-brown-700 mb-4">
+          <button 
+            class="px-4 py-2 text-brown-200 hover:text-brown-900 focus:text-brown-900 focus:outline-none"
+            [ngClass]="{'bg-brown-600 text-brown-100 rounded-t-lg': activeTab === 'chess'}" 
+            (click)="cambiarTab('chess')">
+            Ajedrez
+          </button>
+          <button 
+            class="px-4 py-2 text-brown-700 hover:text-brown-900 focus:text-brown-900 focus:outline-none"
+            [ngClass]="{'bg-brown-600 text-brown-100 rounded-t-lg': activeTab === 'connect4'}" 
+            (click)="cambiarTab('connect4')">
+            Conecta 4
+          </button>
+        </div>
+        
+        <div *ngIf="activeTab === 'chess'">
+          <div class="bg-brown-600 p-4 rounded-lg flex items-center">
+            <div class="ml-4">
+              <p class="text-lg font-semibold text-brown-100">Ajedrez</p>
+              <p class="text-brown-200">Última partida: 21/02/2025</p>
+            </div>
+          </div>
+        </div>
+        
+        <div *ngIf="activeTab === 'connect4'">
+          <div class="bg-brown-600 p-4 rounded-lg flex items-center">
+            <div class="ml-4">
+              <p class="text-lg font-semibold text-brown-100">Conecta 4</p>
+              <p class="text-brown-200">Última partida: 19/02/2025</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

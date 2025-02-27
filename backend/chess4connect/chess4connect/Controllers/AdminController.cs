@@ -18,6 +18,7 @@ namespace chess4connect.Controllers
             _adminService = adminService;
         }
 
+        [Authorize]
         [HttpGet ("allusers")]
         public async Task<IEnumerable<UserDto>> AllUsers()
         {
@@ -26,7 +27,7 @@ namespace chess4connect.Controllers
 
         [Authorize]
         [HttpPut ("editrole")]
-        public async Task<ActionResult> EditRole(int userId)
+        public async Task<ActionResult<UserDto>> EditRole(int userId)
         {
             
             UserDto user = await _adminService.ChangeRole(userId);
@@ -34,12 +35,13 @@ namespace chess4connect.Controllers
             return Ok(user);
         }
 
+        [Authorize]
         [HttpPut("editstatus")]
-        public async Task<ActionResult> EditStatus(int userId)
+        public async Task<ActionResult<UserDto>> EditStatus(int userId)
         {
-            await _adminService.ChangeStatus(userId);
+            UserDto user = await _adminService.ChangeStatus(userId);
 
-            return Ok(new { message = $"El estado del usuario con id {userId} se ha actualizado correctamente." });
+            return Ok(user);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace chess4connect.Services
             return _adminMapper.ToDto(user);
         }
 
-        public async Task ChangeStatus (int userId)
+        public async Task<UserDto> ChangeStatus (int userId)
         {
             User user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
@@ -47,6 +47,8 @@ namespace chess4connect.Services
 
             _unitOfWork.Context.Users.Update(user);
             await _unitOfWork.SaveAsync();
+
+            return _adminMapper.ToDto(user);
         }
 
 

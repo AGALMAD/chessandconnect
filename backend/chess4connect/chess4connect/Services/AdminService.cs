@@ -21,13 +21,33 @@ namespace chess4connect.Services
             return _adminMapper.ToDto(users);
         }
 
-        public async Task ChangeRole(int userId)
+        public async Task<UserDto> ChangeRole(int userId)
         {
             User user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
             user.Role = user.Role.Equals("user") ? "admin" : "user";
+
+            _unitOfWork.Context.Users.Update(user);
+            await _unitOfWork.SaveAsync();
+
+            return _adminMapper.ToDto(user);
         }
 
+        public async Task ChangeStatus (int userId)
+        {
+            User user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+
+            if (!user.Banned)
+            {
+                user.Banned = true;
+            } else
+            {
+                user.Banned = false;
+            }
+
+            _unitOfWork.Context.Users.Update(user);
+            await _unitOfWork.SaveAsync();
+        }
 
 
     }

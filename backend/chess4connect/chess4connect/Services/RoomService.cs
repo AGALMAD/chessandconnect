@@ -329,11 +329,11 @@ namespace chess4connect.Services
 
         public ChessRoom GetChessRoomByUserId(int userId)
         {
-            return chessRooms.FirstOrDefault(r => r.Player1Handler.Id == userId || r.Player2Handler.Id == userId);
+            return chessRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
         }
         public ConnectRoom GetConnectRoomByUserId(int userId)
         {
-            return connectRooms.FirstOrDefault(r => r.Player1Handler.Id == userId || r.Player2Handler.Id == userId);
+            return connectRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
         }
 
 

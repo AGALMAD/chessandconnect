@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
@@ -16,7 +16,7 @@ import { FriendsService } from '../../services/friends.service';
   templateUrl: './match-making-chess.component.html',
   styleUrl: './match-making-chess.component.css'
 })
-export class MatchMakingChessComponent {
+export class MatchMakingChessComponent implements OnInit {
 
   public baseUrl = environment.apiUrl;
   private gamemode = GameType.Chess 
@@ -33,6 +33,14 @@ export class MatchMakingChessComponent {
   ) {
     
   }
+  
+  async ngOnInit(): Promise<void> {
+
+    this.authService.getCurrentUser();
+    await this.webSocketService.connectRxjs()
+
+  }
+
 
 
   async openLoadMatchMaking() {
@@ -82,8 +90,9 @@ export class MatchMakingChessComponent {
     await this.api.post('MatchMaking/IAGame', this.gamemode)
   }
 
-
-
+  openFriendInvitationModal(){
+    this.menuService.openFriendInvitationModal(GameType.Chess)
+  }
 
   
 }

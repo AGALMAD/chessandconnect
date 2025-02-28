@@ -10,6 +10,7 @@ import { GameInvitationComponent } from '../components/game-invitation/game-invi
 import { NavigationStart, Router } from '@angular/router';
 import { RequestListComponent } from '../components/request-list/request-list.component';
 import { InviteListComponent } from '../components/invite-list/invite-list.component';
+import { GameType } from '../enums/game';
 
 @Injectable({
   providedIn: 'root'
@@ -90,11 +91,17 @@ export class MenuService {
     });
   }
 
-  public openFriendInvitationModal() {
+  public openFriendInvitationModal(game: GameType) {
     this.dialog.open(InviteListComponent, {
       width: '400px',
-      data: {} 
+      data: {
+        game
+      } 
     });
+  }
+
+  public closeModal(){
+    this.dialog.closeAll()
   }
 
   openRequestModal() {

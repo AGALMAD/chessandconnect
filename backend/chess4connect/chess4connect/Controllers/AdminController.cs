@@ -18,14 +18,13 @@ namespace chess4connect.Controllers
             _adminService = adminService;
         }
 
-        [Authorize]
+        
         [HttpGet ("allusers")]
         public async Task<IEnumerable<UserDto>> AllUsers()
         {
             return await _adminService.GetAllUsers();
         }
 
-        [Authorize]
         [HttpPut ("editrole")]
         public async Task<ActionResult<UserDto>> EditRole(int userId)
         {
@@ -34,9 +33,8 @@ namespace chess4connect.Controllers
 
             return Ok(user);
         }
-
-        [Authorize]
-        [HttpPut("editstatus")]
+        
+        [HttpPut("{userId}/editstatus")]
         public async Task<ActionResult<UserDto>> EditStatus(int userId)
         {
             UserDto user = await _adminService.ChangeStatus(userId);

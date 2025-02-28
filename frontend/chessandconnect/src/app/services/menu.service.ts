@@ -97,6 +97,10 @@ export class MenuService {
     });
   }
 
+  public closeModal(){
+    this.dialog.closeAll()
+  }
+
   openRequestModal() {
     this.dialog.open(RequestListComponent, {
       width: '400px',

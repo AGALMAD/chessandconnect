@@ -18,6 +18,7 @@ import { RequestFriendship } from '../models/dto/request-friendship';
 import { MatchMakingService } from './match-making.service';
 import { GameType } from '../enums/game';
 import { AuthService } from './auth.service';
+import { MenuService } from './menu.service';
 
 
 @Injectable({
@@ -39,7 +40,9 @@ export class FriendsService {
     private router: Router,
     public webSocketService: WebsocketService,
     public matchMakingService: MatchMakingService,
-    public authService: AuthService
+    public authService: AuthService,
+    private menuService: MenuService,
+
   ) {
     this.messageReceived$ = this.webSocketService.messageReceived.subscribe(async message =>
       await this.readMessage(message)
@@ -266,10 +269,13 @@ export class FriendsService {
 
           const friend = this.connectedFriends.find(friend => friend.id === gameInvitation.FriendId);
           this.matchMakingService.friendOpponent = friend
+          this.matchMakingService.isHost = true
           
           this.router.navigate(
             gameInvitation.Game == GameType.Chess ? ['/chess'] : ['/connect'],
           );
+
+          this.menuService.closeModal()
         }
 
       
@@ -340,7 +346,6 @@ export class FriendsService {
         Game: game,
       };
 
-      console.log("Aceptada : ", acceptInvitation)
 
       try {
         const result = await this.api.post(`MatchMaking/acceptInvitation`, acceptInvitation);

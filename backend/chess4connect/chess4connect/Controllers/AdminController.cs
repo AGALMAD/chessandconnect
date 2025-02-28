@@ -25,7 +25,7 @@ namespace chess4connect.Controllers
             return await _adminService.GetAllUsers();
         }
 
-        [HttpPut ("editrole")]
+        [HttpPut ("{userId}/editrole")]
         public async Task<ActionResult<UserDto>> EditRole(int userId)
         {
             

@@ -20,7 +20,18 @@ export class AdminService {
 
   public async changeUserState(id:number): Promise<UserDto>{
     const result = await this.api.put<UserDto>(`Admin/${id}/editstatus`);
-    return result.data;
+    if (!result.success) {
+      this.handleError('Error al cambiar el estado del usuario');
+    } 
+    return result.data; 
+  }
+
+  public async changeUserRole(id:number): Promise<UserDto>{
+    const result = await this.api.put<UserDto>(`Admin/${id}/editrole`);
+    if (!result.success) {
+      this.handleError('Error al cambiar el rol del usuario');
+    } 
+    return result.data; 
   }
 
 

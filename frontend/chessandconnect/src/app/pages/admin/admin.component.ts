@@ -28,13 +28,15 @@ export class AdminComponent implements OnInit {
   }
 
 
-  async userState(id:number) {
+  async changeState(id:number) {
     const result = await this.adminService.changeUserState(id);
     const index = this.users.findIndex((user) => user.id === id);
     this.users[index] = result;
     }
     
-    changeUserRole(arg0: any,arg1: string) {
-    throw new Error('Method not implemented.');
+    async changeRole(id:number) {
+    const result = await this.adminService.changeUserRole(id);
+    const index = this.users.findIndex((user) => user.id === id);
+    this.users[index] = result;
     }
 }

@@ -38,7 +38,7 @@
                         name="role-{{ user.id }}"
                         class="text-[#FBEED0] focus:ring-[#E8D5B5]"
                         [checked]="user.role === 'admin'"
-                        (change)="changeUserRole(user.email, 'admin')"
+                        (change)="changeRole(user.id)"
                       />
                       <span class="text-[#FBEED0]">Admin</span>
                     </label>
@@ -48,7 +48,7 @@
                         name="role-{{ user.id }}"
                         class="text-[#FBEED0] focus:ring-[#E8D5B5]"
                         [checked]="user.role === 'user'"
-                        (change)="changeUserRole(user.email, 'user')"
+                        (change)="changeRole(user.id)"
                       />
                       <span class="text-[#FBEED0]">User</span>
                     </label>
@@ -58,7 +58,7 @@
                   @if (!user.banned) {
                     <button
                     class="bg-red-700 text-white py-2 px-4 rounded-lg hover:bg-red-800 transition shadow-md"
-                    (click)="userState(user.id)"
+                    (click)="changeState(user.id)"
                   >
                     Banear
                   </button>
@@ -66,7 +66,7 @@
                   @if (user.banned) {
                     <button
                     class="bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-800 transition shadow-md"
-                    (click)="userState(user.id)"
+                    (click)="changeState(user.id)"
                   >
                     Quitar Ban
                   </button>

@@ -1,40 +1,38 @@
-    <nav class="fixed top-0 left-0 w-full bg-[#301e16] text-[#E8D5B5] shadow-lg z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center py-4 px-6">
-            <a [routerLink]="'/'">
-                <h1 class="text-xl font-bold tracking-wide hover:text-[#CBA77B]">
-                    Chess 4 Connect
-                </h1>
-            </a>
-            @if (authService.currentUser) {
-                <div class="relative space-x-6">
-                    <input type="checkbox" id="dropdownToggle" class="hidden" />
-                    <label for="dropdownToggle" class="text-sm font-medium hover:text-[#CBA77B] cursor-pointer flex items-center" title="Ver perfil de salguero">
-                        <img [src]="baseUrl + authService.currentUser.avatarImageUrl"
-                            alt="Avatar" 
-                            class="w-10 h-10 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
-                        <span>{{authService.currentUser.userName}}</span> 
-                    </label>
-                    <div
-                        id="dropdownMenu"
-                        class="absolute right-0 mt-2 bg-[#301e16] border border-[#CBA77B] rounded shadow-lg z-10 hidden w-[200px]"
-                    >
-                        <a
-                            class="block px-4 py-2 text-sm hover:bg-[#CBA77B] hover:text-[#301e16]"
-                            (click)="goToProfile(authService.currentUser.id)"
-                        >
-                            Mi Perfil
-                        </a>
-                        <a
-                            [routerLink]="'/'"
-                            class="block px-4 py-2 text-sm hover:bg-[#CBA77B] hover:text-[#301e16]"
-                            (click)="closeSession()"
-                        >
-                            Cerrar Sesión
-                        </a>
-                    </div>
-                </div>
-            }@else {
-                <a [routerLink]="'/login'" class="text-sm font-medium hover:text-[#CBA77B]">Iniciar Sesión</a>
-            }
+<nav class="fixed top-0 left-0 w-full bg-[#301e16] text-[#E8D5B5] shadow-lg z-50">
+    <div class="max-w-6xl mx-auto flex justify-between items-center py-4 px-6">
+        <a [routerLink]="'/'">
+            <h1 class="text-xl font-bold tracking-wide hover:text-[#CBA77B]">
+                Chess 4 Connect
+            </h1>
+        </a>
+        @if (authService.currentUser) {
+        <div class="relative space-x-6">
+            <input type="checkbox" id="dropdownToggle" class="hidden" />
+            <label for="dropdownToggle"
+                class="text-sm font-medium hover:text-[#CBA77B] cursor-pointer flex items-center"
+                title="Ver perfil de salguero">
+                <img [src]="baseUrl + authService.currentUser.avatarImageUrl" alt="Avatar"
+                    class="w-10 h-10 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
+                <span>{{authService.currentUser.userName}}</span>
+            </label>
+            <div id="dropdownMenu"
+                class="absolute right-0 mt-2 bg-[#301e16] border border-[#CBA77B] rounded shadow-lg z-10 hidden w-[200px]">
+                <a (click)="goToProfile(authService.currentUser.id)" class="block px-4 py-2 text-sm hover:bg-[#CBA77B] hover:text-[#301e16]">
+                    Mi Perfil
+                </a>
+                @if(authService.currentUser?.role === 'admin') {
+                <a [routerLink]="'/admin'" class="block px-4 py-2 text-sm hover:bg-[#CBA77B] hover:text-[#301e16]">
+                    Administrador
+                </a>}
+                <a [routerLink]="'/'" class="block px-4 py-2 text-sm hover:bg-[#CBA77B] hover:text-[#301e16]"
+                    (click)="closeSession()">
+                    Cerrar Sesión
+                </a>
+            </div>
+
         </div>
-    </nav>
+        }@else {
+        <a [routerLink]="'/login'" class="text-sm font-medium hover:text-[#CBA77B]">Iniciar Sesión</a>
+        }
+    </div>
+</nav>

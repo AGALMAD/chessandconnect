@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { GameType } from '../../enums/game';
 import { MenuService } from '../../services/menu.service';
@@ -16,7 +16,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './match-making-connect4.component.html',
   styleUrl: './match-making-connect4.component.css'
 })
-export class MatchMakingConnect4Component {
+export class MatchMakingConnect4Component implements OnInit{
 
 
   public baseUrl = environment.apiUrl;
@@ -32,6 +32,13 @@ export class MatchMakingConnect4Component {
     public authService: AuthService,
     private friendsService: FriendsService
   ) {
+  }
+
+  async ngOnInit(): Promise<void> {
+
+    this.authService.getCurrentUser();
+    await this.webSocketService.connectRxjs()
+
   }
 
   async openLoadMatchMaking() {
@@ -81,4 +88,8 @@ export class MatchMakingConnect4Component {
     await this.api.post('MatchMaking/IAGame', this.gamemode)
   }
 
+
+  openFriendInvitationModal(){
+    this.menuService.openFriendInvitationModal(GameType.Connect4)
+  }
 }

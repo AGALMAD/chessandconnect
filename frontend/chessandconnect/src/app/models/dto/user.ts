@@ -6,7 +6,8 @@ export interface User {
     userName?: string,
     email?: string,
     avatarImageUrl?: string,
-    plays?: Play[]
-    friends?: Friend[]
+    role?: string,
+    plays?: Play[],
+    friends?: Friend[],
     friendRequest?: Friend[]
 }

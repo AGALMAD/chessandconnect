@@ -12,13 +12,14 @@ namespace chess4connect.Models.Games.Chess.Chess
 {
     public class ChessRoom : BaseRoom
     {
-        private readonly IServiceProvider serviceProvider;
+        private readonly IServiceProvider _serviceProvider;
 
         public ChessGame Game { get; set; }
 
-        public  ChessRoom (WebSocketHandler player1Handler, WebSocketHandler? player2Handler, ChessGame game): base(player1Handler, player2Handler)
+        public  ChessRoom (WebSocketHandler player1Handler, WebSocketHandler? player2Handler, ChessGame game, IServiceProvider serviceProvider) : base(player1Handler, player2Handler)
         {
             Game = game;
+            _serviceProvider = serviceProvider;
         }
 
 
@@ -102,7 +103,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             if (response == 1)
             {
-                await SaveGame(serviceProvider, GameResult.WIN);
+                await SaveGame(_serviceProvider, GameResult.WIN);
 
             }
 
@@ -163,7 +164,15 @@ namespace chess4connect.Models.Games.Chess.Chess
             await unitOfWork.SaveAsync();
 
 
-            await SendWinMessage();
+            if (gameResult == GameResult.DRAW)
+            {
+                await SendDrawMessage();
+            }
+            else
+            {
+                await SendWinMessage();
+
+            }
 
         }
 
@@ -194,6 +203,19 @@ namespace chess4connect.Models.Games.Chess.Chess
             Game.Board.Player1Turn = !userColor;
 
             await SaveGame(serviceProvider, GameResult.WIN);
+        }
+
+        public override async Task SendDrawMessage()
+        {
+            var drawMessage = new SocketMessage
+            {
+                Type = SocketCommunicationType.DRAW,
+
+            };
+
+            string stringWinnerMessage = JsonSerializer.Serialize(drawMessage);
+
+            await SendMessage(stringWinnerMessage);
         }
     }
 }

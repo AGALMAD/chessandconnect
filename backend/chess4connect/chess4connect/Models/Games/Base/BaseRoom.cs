@@ -38,6 +38,8 @@ public abstract class BaseRoom
     public abstract Task SendBoard();
     public abstract Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult);
     public abstract Task SendWinMessage();
+    public abstract Task SendDrawMessage();
+
     public abstract Task MessageHandler( string message);
     public abstract Task Surrender(int userId, IServiceProvider serviceProvider);
 

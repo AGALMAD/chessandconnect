@@ -1,0 +1,85 @@
+
+<app-navbar></app-navbar>
+<div class="min-h-screen bg-[#301e16] text-[#E8D5B5] flex justify-center items-center px-4">
+  <div class="container mx-auto my-8 px-4">
+    <div class="flex flex-col md:flex-row gap-6 justify-center">
+      
+      <div class="w-full md:w-3/4 lg:w-5/6 bg-[#3b251c] shadow-2xl rounded-xl p-6">
+        <h2 class="text-3xl font-bold text-[#E8D5B5] mb-6 text-center">
+          Gestión de Usuarios
+        </h2>
+        
+        <div class="overflow-x-auto bg-[#4a2e1a] shadow-lg rounded-lg">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-[#6f4320] text-[#FBEED0]">
+              <tr>
+                <th class="py-3 px-4">#</th>
+                <th class="py-3 px-4">Avatar</th>
+                <th class="py-3 px-4">Apodo</th>
+                <th class="py-3 px-4">Email</th>
+                <th class="py-3 px-4">Rol</th>
+                <th class="py-3 px-4">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (user of users; track user.id) {
+              <tr class="border-b border-[#6f4320]">
+                <td class="py-3 px-4">{{ user.id }}</td>
+                <td class="py-3 px-4">
+                  <img class="w-10 h-10 rounded-full" src="{{ user.avatarImageUrl }}" alt="Avatar" />
+                </td>
+                <td class="py-3 px-4 text-[#FBEED0]">{{ user.userName }}</td>
+                <td class="py-3 px-4 text-[#FBEED0]">{{ user.email }}</td>
+                <td class="py-3 px-4">
+                  <div class="flex items-center gap-3">
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="role-{{ user.id }}"
+                        class="text-[#FBEED0] focus:ring-[#E8D5B5]"
+                        [checked]="user.role === 'admin'"
+                        (change)="changeRole(user.id)"
+                      />
+                      <span class="text-[#FBEED0]">Admin</span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="role-{{ user.id }}"
+                        class="text-[#FBEED0] focus:ring-[#E8D5B5]"
+                        [checked]="user.role === 'user'"
+                        (change)="changeRole(user.id)"
+                      />
+                      <span class="text-[#FBEED0]">User</span>
+                    </label>
+                  </div>
+                </td>
+                <td class="py-3 px-4 flex gap-2">
+                  @if (!user.banned) {
+                    <button
+                    class="bg-red-700 text-white py-2 px-4 rounded-lg hover:bg-red-800 transition shadow-md"
+                    (click)="changeState(user.id)"
+                  >
+                    Banear
+                  </button>
+                  }
+                  @if (user.banned) {
+                    <button
+                    class="bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-800 transition shadow-md"
+                    (click)="changeState(user.id)"
+                  >
+                    Quitar Ban
+                  </button>
+                  }
+                  
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>

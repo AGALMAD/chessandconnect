@@ -14,4 +14,11 @@ public enum SocketCommunicationType
     CONNECT4_MOVEMENTS = 10,
     END_GAME = 11,
     DRAW_REQUEST = 12,
+    REMATCH_REQUEST = 13,
+    SURRENDER = 14,
+    REMATCH_DECLINED = 15,
+    DRAW = 16,
+
+
+
 }

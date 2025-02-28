@@ -10,10 +10,23 @@ namespace chess4connect.Models.Games.Base;
 
 public abstract class BaseRoom
 {
+    //Sockets de los jugadores
     public WebSocketHandler Player1Handler { get; set; }
     public WebSocketHandler? Player2Handler { get; set; }
 
-    public int DrawRequests { get; set; } = 0;
+    //Ids de los jugadores
+    public int Player1Id { get; set; } = 0;
+    public int Player2Id { get; set; } = 0;
+
+    //Peticiones de tablas
+    public bool Player1DrawRequest { get; set; } = false;
+    public bool Player2DrawRequest { get; set; } = false;
+
+    //Peticiones de revancha
+    public bool Player1RemathcRequest { get; set; } = false;
+    public bool Player2RemathcRequest { get; set; } = false;
+
+
 
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
@@ -22,10 +35,14 @@ public abstract class BaseRoom
         Player1Handler = player1Handler;
         Player2Handler = player2Handler;
     }
-    public abstract Task SendDropPiece();
+    public abstract Task SendBoard();
     public abstract Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult);
     public abstract Task SendWinMessage();
+    public abstract Task SendDrawMessage();
+
     public abstract Task MessageHandler( string message);
+    public abstract Task Surrender(int userId, IServiceProvider serviceProvider);
+
 
 
     public async Task SendRoom(GameType gameType)
@@ -57,7 +74,6 @@ public abstract class BaseRoom
 
     public async Task SendMessage(string message)
     {
-        //Envia los movimientos al jugador
         await Player1Handler.SendAsync(message);
 
 
@@ -86,15 +102,30 @@ public abstract class BaseRoom
     }
 
 
-    public async Task<bool> NewDrawRequest()
+    public bool NewDrawRequest(int userId)
     {
-        await _semaphore.WaitAsync();
 
-        DrawRequests++;
+        if (userId == Player1Id)
+            Player1DrawRequest = true;
 
-        _semaphore.Release();
+        if (userId == Player2Id)
+            Player2DrawRequest = true;
 
-        return DrawRequests == 2;
+
+        return Player1DrawRequest && Player2DrawRequest;
+
+    }
+
+    public bool NewRematchRequest(int userId)
+    {
+
+        if (userId == Player1Id)
+            Player1RemathcRequest = true;
+
+        if (userId == Player2Id)
+            Player2RemathcRequest = true;
+
+        return Player1RemathcRequest && Player2RemathcRequest;
 
     }
 

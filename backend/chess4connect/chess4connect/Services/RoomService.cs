@@ -38,8 +38,14 @@ namespace chess4connect.Services
                     new ChessBoard()
                     {
                         StartTurnDateTime = DateTime.Now,
-                    }));
+                    }),
+                    _serviceProvider
+                    );
 
+                room.Player1Id = player1Hadler.Id;
+
+                if (player2Handler != null)
+                    room.Player2Id = player2Handler.Id;
 
                 chessRooms.Add(room);
 
@@ -50,7 +56,18 @@ namespace chess4connect.Services
             {
                 var room = new ConnectRoom(player1Hadler, player2Handler,
                    new ConnectGame(DateTime.Now,
-                   new ConnectBoard()));
+                   new ConnectBoard()
+                   {
+                       StartTurnDateTime = DateTime.Now
+                   }),
+                   _serviceProvider
+                   );
+
+
+                room.Player1Id = player1Hadler.Id;
+
+                if (player2Handler != null)
+                    room.Player2Id = player2Handler.Id;
 
                 connectRooms.Add(room);
 
@@ -120,11 +137,29 @@ namespace chess4connect.Services
 
                     ChessRoom room = GetChessRoomByUserId(userId);
 
+                   
+
                     if (room != null)
                     {
-                        if (await room.NewDrawRequest())
+                        if (room.NewDrawRequest(userId))
                         {
                             await room.SaveGame(_serviceProvider,GameResult.DRAW);
+                            
+                        }
+                        else
+                        {
+                            WebSocketHandler opponentSocket = userId == room.Player1Id ? room.Player2Handler : room.Player1Handler;
+                            if(opponentSocket != null)
+                            {
+                                var drawRequestMessage = new SocketMessage
+                                {
+                                    Type = SocketCommunicationType.DRAW_REQUEST,
+                                };
+
+
+                                await opponentSocket.SendAsync(JsonSerializer.Serialize(drawRequestMessage));
+                            }
+                            
                         }
                     }
 
@@ -134,9 +169,23 @@ namespace chess4connect.Services
 
                         if (connectRoom != null)
                         {
-                            if (await room.NewDrawRequest())
+                            if (connectRoom.NewDrawRequest(userId))
                             {
-                                await room.SaveGame(_serviceProvider, GameResult.DRAW);
+                                await connectRoom.SaveGame(_serviceProvider, GameResult.DRAW);
+                            }
+                            else
+                            {
+                                WebSocketHandler opponentSocket = userId == connectRoom.Player1Id ? connectRoom.Player2Handler : connectRoom.Player1Handler;
+                                if (opponentSocket != null)
+                                {
+                                    var drawRequestMessage = new SocketMessage
+                                    {
+                                        Type = SocketCommunicationType.DRAW_REQUEST,
+                                    };
+
+
+                                    await opponentSocket.SendAsync(JsonSerializer.Serialize(drawRequestMessage));
+                                }
                             }
                         }
 
@@ -144,7 +193,135 @@ namespace chess4connect.Services
 
 
                     break;
+                case SocketCommunicationType.REMATCH_REQUEST:
+
+                    ChessRoom rematchRoom = GetChessRoomByUserId(userId);
+
+                    if (rematchRoom != null)
+                    {
+                        if (rematchRoom.NewRematchRequest(userId))
+                        {
+                            rematchRoom.Game = new ChessGame(DateTime.Now,
+                                                new ChessBoard()
+                                                {
+                                                    StartTurnDateTime = DateTime.Now,
+                                                });
+
+
+                            await rematchRoom.SendChessRoom();
+
+                        }
+                        else
+                        {
+                            WebSocketHandler opponentSocket = userId == rematchRoom.Player1Id ? rematchRoom.Player2Handler : rematchRoom.Player1Handler;
+                            if (opponentSocket != null)
+                            {
+                                var rematchRequestMessage = new SocketMessage
+                                {
+                                    Type = SocketCommunicationType.REMATCH_REQUEST,
+                                };
+
+
+                                await opponentSocket.SendAsync(JsonSerializer.Serialize(rematchRequestMessage));
+                            }
+                        }
+                    }
+
+                    else
+                    {
+                        ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+
+                        if (connectRoom != null)
+                        {
+                            if (connectRoom.NewDrawRequest(userId))
+                            {
+                                connectRoom.Game = new ConnectGame(DateTime.Now,
+                                   new ConnectBoard()
+                                   {
+                                       StartTurnDateTime = DateTime.Now
+                                   });
+
+                                await connectRoom.SendConnectRoom();
+
+                            }
+                            else
+                            {
+                                WebSocketHandler opponentSocket = userId == connectRoom.Player1Id ? connectRoom.Player2Handler : connectRoom.Player1Handler;
+                                if (opponentSocket != null)
+                                {
+                                    var rematchRequestMessage = new SocketMessage
+                                    {
+                                        Type = SocketCommunicationType.REMATCH_REQUEST,
+                                    };
+
+
+                                    await opponentSocket.SendAsync(JsonSerializer.Serialize(rematchRequestMessage));
+                                }
+                            }
+
+
+
+                        }
+
+                    }
+
+
+                    break;
+
+                case SocketCommunicationType.SURRENDER:
+
+                    ChessRoom leaveRoom = GetChessRoomByUserId(userId);
+
+                    if (leaveRoom != null)
+                    {
+                        await leaveRoom.Surrender(userId, _serviceProvider);
+                    }
+
+                    else
+                    {
+                        ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+                        await connectRoom.Surrender(userId, _serviceProvider);
+
+                    }
+
+
+                    break;
+
+                case SocketCommunicationType.REMATCH_DECLINED:
+
+                    ChessRoom rematchDeclinedRoom = GetChessRoomByUserId(userId);
+
+                    var rematchDeclinedMessage = new SocketMessage
+                    {
+                        Type = SocketCommunicationType.REMATCH_DECLINED,
+                    };
+
+                    if (rematchDeclinedRoom != null)
+                    {
+                        WebSocketHandler opponentSocket = userId == rematchDeclinedRoom.Player1Id ? rematchDeclinedRoom.Player2Handler : rematchDeclinedRoom.Player1Handler;
+
+                        if (opponentSocket != null)
+                            await opponentSocket.SendAsync(JsonSerializer.Serialize(rematchDeclinedMessage));
+
+                        chessRooms.Remove(rematchDeclinedRoom);
+                    }
+
+                    else
+                    {
+                        ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+                        WebSocketHandler opponentSocket = userId == connectRoom.Player1Id ? connectRoom.Player2Handler : connectRoom.Player1Handler;
+                        
+                        if(opponentSocket != null)
+                            await opponentSocket.SendAsync(JsonSerializer.Serialize(rematchDeclinedMessage));
+
+                        connectRooms.Remove(connectRoom);
+
+                    }
+
+
+                    break;
             }
+
 
         }
 

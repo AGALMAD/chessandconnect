@@ -63,8 +63,6 @@ namespace chess4connect.Services
 
 
         //Añadir a una sala la pareja de jugadores 
-
-
         private async Task AddToRoom(GameType gamemode)
 
         {

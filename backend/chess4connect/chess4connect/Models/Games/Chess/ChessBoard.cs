@@ -14,7 +14,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         private ChessBasePiece[,] Board = new ChessBasePiece[ROWS, COLUMNS];
 
-        public bool Player1Turn { get; set; }
+        public bool Player1Turn { get; set; } = true;
 
 
         //Tiempo en segundo de cada turno
@@ -36,37 +36,34 @@ namespace chess4connect.Models.Games.Chess.Chess
             Board = new ChessBasePiece[ROWS, COLUMNS];
 
             //Black pieces initialized in Board
-            Board[0, 0] = new Rook(8, false, new Point(0, 0));
-            Board[0, 1] = new Knight(9, false, new Point(0, 1));
-            Board[0, 2] = new Bishop(10, false, new Point(0, 2));
-            Board[0, 3] = new Queen(11, false, new Point(0, 3));
-            Board[0, 4] = new King(12, false, new Point(0, 4));
-            Board[0, 5] = new Bishop(13, false, new Point(0, 5));
-            Board[0, 6] = new Knight(14, false, new Point(0, 6));
-            Board[0, 7] = new Rook(15, false, new Point(0, 7));
+            Board[0, 0] = new Rook(8, false, new Point(0, 0)) { HasMoved = false };
+            Board[0, 1] = new Knight(9, false, new Point(0, 1)) { HasMoved = false };
+            Board[0, 2] = new Bishop(10, false, new Point(0, 2)) { HasMoved = false };
+            Board[0, 3] = new Queen(11, false, new Point(0, 3)) { HasMoved = false };
+            Board[0, 4] = new King(12, false, new Point(0, 4)) { HasMoved = false };
+            Board[0, 5] = new Bishop(13, false, new Point(0, 5)) { HasMoved = false };
+            Board[0, 6] = new Knight(14, false, new Point(0, 6)) { HasMoved = false };
+            Board[0, 7] = new Rook(15, false, new Point(0, 7)) { HasMoved = false };
 
             for (int i = 0; i < COLUMNS; i++)
             {
-                Board[1, i] = new Pawn(16 + i, false, new Point(1, i));
+                Board[1, i] = new Pawn(16 + i, false, new Point(1, i)) { HasMoved = false };
             }
-
 
             //White pieces initialized in Board
-            Board[7, 0] = new Rook(24, true, new Point(7, 0));
-            Board[7, 1] = new Knight(25, true, new Point(7, 1));
-            Board[7, 2] = new Bishop(26, true, new Point(7, 2));
-            Board[7, 3] = new Queen(27, true, new Point(7, 3));
-            Board[7, 4] = new King(28, true, new Point(7, 4));
-            Board[7, 5] = new Bishop(29, true, new Point(7, 5));
-            Board[7, 6] = new Knight(30, true, new Point(7, 6));
-            Board[7, 7] = new Rook(31, true, new Point(7, 7));
+            Board[7, 0] = new Rook(24, true, new Point(7, 0)) { HasMoved = false };
+            Board[7, 1] = new Knight(25, true, new Point(7, 1)) { HasMoved = false };
+            Board[7, 2] = new Bishop(26, true, new Point(7, 2)) { HasMoved = false };
+            Board[7, 3] = new Queen(27, true, new Point(7, 3)) { HasMoved = false };
+            Board[7, 4] = new King(28, true, new Point(7, 4)) { HasMoved = false };
+            Board[7, 5] = new Bishop(29, true, new Point(7, 5)) { HasMoved = false };
+            Board[7, 6] = new Knight(30, true, new Point(7, 6)) { HasMoved = false };
+            Board[7, 7] = new Rook(31, true, new Point(7, 7)) { HasMoved = false };
 
             for (int i = 0; i < COLUMNS; i++)
             {
-                Board[6, i] = new Pawn(32 + i, true, new Point(6, i));
+                Board[6, i] = new Pawn(32 + i, true, new Point(6, i)) { HasMoved = false };
             }
-
-
         }
 
 
@@ -180,6 +177,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         private void CalculateKingMoves(ChessBasePiece piece, List<Point> movementList)
         {
+            // Movimientos normales del rey
             foreach (Point move in piece.BasicMovements)
             {
                 int newX = piece.Position.X + move.X;
@@ -189,8 +187,107 @@ namespace chess4connect.Models.Games.Chess.Chess
                 {
                     if (Board[newX, newY] == null || Board[newX, newY].Player1Piece != piece.Player1Piece)
                     {
-                        movementList.Add(new Point(newX, newY));
+                        // Verificar si el movimiento pondría al rey en jaque
+                        var originalPos = piece.Position;
+                        var capturedPiece = Board[newX, newY];
+
+                        // Simular el movimiento en el tablero
+                        Board[originalPos.X, originalPos.Y] = null;
+                        Board[newX, newY] = piece;
+                        piece.Position = new Point(newX, newY);
+
+                        // Verificar si el rey estaría en jaque después del movimiento
+                        bool kingInCheck = IsSquareUnderAttack(newX, newY, piece.Player1Piece);
+
+                        // Restaurar el tablero
+                        Board[newX, newY] = capturedPiece;
+                        Board[originalPos.X, originalPos.Y] = piece;
+                        piece.Position = originalPos;
+
+                        // Solo añadir el movimiento si no pone al rey en jaque
+                        if (!kingInCheck)
+                        {
+                            movementList.Add(new Point(newX, newY));
+                        }
                     }
+                }
+            }
+
+            // Verificar enroque (solo si el rey no ha movido)
+            if (!piece.HasMoved && !IsKingUnderAttack(piece.Player1Piece))
+            {
+                CheckCastling(piece, movementList);
+            }
+        }
+
+        private void CheckCastling(ChessBasePiece king, List<Point> movementList)
+        {
+            int row = king.Position.X;
+            int col = king.Position.Y;
+
+            // Enroque corto (hacia la derecha, columna 7)
+            if (Board[row, 7] is Rook rightRook && !rightRook.HasMoved && rightRook.Player1Piece == king.Player1Piece)
+            {
+                bool pathClear = true;
+                // Verificar que no hay piezas entre el rey y la torre
+                for (int y = col + 1; y < 7; y++)
+                {
+                    if (Board[row, y] != null)
+                    {
+                        pathClear = false;
+                        break;
+                    }
+                }
+
+                // Verificar que el rey no pasa por jaque
+                bool kingPassesThroughCheck = false;
+                if (pathClear)
+                {
+                    // Comprobar las casillas intermedias
+                    if (IsSquareUnderAttack(row, col + 1, king.Player1Piece) ||
+                        IsSquareUnderAttack(row, col + 2, king.Player1Piece))
+                    {
+                        kingPassesThroughCheck = true;
+                    }
+                }
+
+                if (pathClear && !kingPassesThroughCheck)
+                {
+                    // Marcar el movimiento de enroque (dos a la derecha)
+                    movementList.Add(new Point(row, col + 2));
+                }
+            }
+
+            // Enroque largo (hacia la izquierda, columna 0)
+            if (Board[row, 0] is Rook leftRook && !leftRook.HasMoved && leftRook.Player1Piece == king.Player1Piece)
+            {
+                bool pathClear = true;
+                // Verificar que no hay piezas entre el rey y la torre
+                for (int y = col - 1; y > 0; y--)
+                {
+                    if (Board[row, y] != null)
+                    {
+                        pathClear = false;
+                        break;
+                    }
+                }
+
+                // Verificar que el rey no pasa por jaque
+                bool kingPassesThroughCheck = false;
+                if (pathClear)
+                {
+                    // Comprobar las casillas intermedias
+                    if (IsSquareUnderAttack(row, col - 1, king.Player1Piece) ||
+                        IsSquareUnderAttack(row, col - 2, king.Player1Piece))
+                    {
+                        kingPassesThroughCheck = true;
+                    }
+                }
+
+                if (pathClear && !kingPassesThroughCheck)
+                {
+                    // Marcar el movimiento de enroque (dos a la izquierda)
+                    movementList.Add(new Point(row, col - 2));
                 }
             }
         }
@@ -226,8 +323,7 @@ namespace chess4connect.Models.Games.Chess.Chess
             var piece = convertBoardToList().FirstOrDefault(p => p.Id == moveRequest.PieceId);
             if (piece == null) return -1;
 
-
-            // Verify if movement is valid
+            // Verify if there's valid movement
             var chessPieceMovements = ChessPiecesMovements.FirstOrDefault(p => p.Piece.Id == piece.Id);
             if (chessPieceMovements == null ||
                 !chessPieceMovements.Movements.Contains(new Point(moveRequest.MovementX, moveRequest.MovementY)))
@@ -235,9 +331,15 @@ namespace chess4connect.Models.Games.Chess.Chess
                 return -1;
             }
 
-
             // Store the old position
             Point oldPosition = piece.Position;
+
+            // Check for castling (king moving 2 squares horizontally)
+            bool isCastling = false;
+            if (piece.PieceType == PieceType.KING && Math.Abs(moveRequest.MovementY - oldPosition.Y) == 2)
+            {
+                isCastling = true;
+            }
 
             // Execute the move
             Board[oldPosition.X, oldPosition.Y] = null;
@@ -245,7 +347,7 @@ namespace chess4connect.Models.Games.Chess.Chess
             // Pawn promotion
             if (piece.PieceType == PieceType.PAWN &&
                 ((piece.Player1Piece && moveRequest.MovementX == 0) ||
-                 (piece.Player1Piece && moveRequest.MovementX == ROWS - 1)))
+                 (!piece.Player1Piece && moveRequest.MovementX == ROWS - 1)))
             {
                 // Create new queen and update board
                 var queen = new Queen(piece.Id, piece.Player1Piece, new Point(moveRequest.MovementX, moveRequest.MovementY));
@@ -259,11 +361,34 @@ namespace chess4connect.Models.Games.Chess.Chess
                 Board[moveRequest.MovementX, moveRequest.MovementY] = piece;
                 piece.Position = new Point(moveRequest.MovementX, moveRequest.MovementY);
 
-                // Update FirstMove flag for pawns
-                if (piece.PieceType == PieceType.PAWN && piece is Pawn pawn)
+                // Handle castling movement (move the rook too)
+                if (isCastling)
                 {
-                    pawn.FirstMove = false;
+                    int rookY;
+                    int newRookY;
+
+                    //short castling
+                    if (moveRequest.MovementY > oldPosition.Y) 
+                    {
+                        rookY = 7; // Posición inicial de la torre del lado corto
+                        newRookY = moveRequest.MovementY - 1; 
+                    }
+                    else // long castling
+                    {
+                        rookY = 0; 
+                        newRookY = moveRequest.MovementY + 1; 
+                    }
+
+                    // Mover la torre
+                    var rook = Board[oldPosition.X, rookY];
+                    Board[oldPosition.X, rookY] = null;
+                    Board[oldPosition.X, newRookY] = rook;
+                    rook.Position = new Point(oldPosition.X, newRookY);
+                    rook.HasMoved = true;
                 }
+
+                // Update HasMoved flag
+                piece.HasMoved = true;
             }
 
             // Update time
@@ -273,11 +398,12 @@ namespace chess4connect.Models.Games.Chess.Chess
             else
                 Player2Time -= timeSpent;
 
-            
+
+
             // Check if the move results in checkmate
             if (IsCheckmate())
             {
-                return 1;
+                return 1; // Checkmate
             }
 
             // Change turn
@@ -287,7 +413,6 @@ namespace chess4connect.Models.Games.Chess.Chess
             // Recalculate all possible moves for the new position
             GetAllPieceMovements();
 
-
             return 0;
         }
 
@@ -296,50 +421,276 @@ namespace chess4connect.Models.Games.Chess.Chess
         // check for checkmate
         private bool IsCheckmate()
         {
-            // Get the opponent's king
-            var opponentColor = !Player1Turn;
-            var king = convertBoardToList().FirstOrDefault(p => p.PieceType == PieceType.KING && p.Player1Piece == opponentColor);
+            
+            bool opponentColor = !Player1Turn;
 
-            if (king == null) return false;
+            // checking check
+            if (!IsKingUnderAttack(opponentColor))
+                return false;
 
-            // Check if the king is under attack
-            if (!IsKingUnderAttack(king)) return false;
+            // opponent pieces
+            var opponentPieces = convertBoardToList().Where(p => p.Player1Piece == opponentColor).ToList();
 
-            // Get possible moves for the king
-            var kingMoves = new List<Point>();
-            CalculateKingMoves(king, kingMoves);
-
-            // If the king can move to a safe position, it's not checkmate
-            foreach (var move in kingMoves)
+            // checking if some piece can block check
+            foreach (var piece in opponentPieces)
             {
-                // Temporarily move the king to the new position
-                var originalPosition = king.Position;
-                king.Position = move;
+                List<Point> possibleMoves = new List<Point>();
 
-                if (!IsKingUnderAttack(king))
+                switch (piece.PieceType)
                 {
-                    king.Position = originalPosition;
-                    return false;
+                    case PieceType.PAWN:
+                        CalculatePawnMovesForCheck(piece, possibleMoves);
+                        break;
+                    case PieceType.KNIGHT:
+                        CalculateKnightMovesForCheck(piece, possibleMoves);
+                        break;
+                    case PieceType.KING:
+                        CalculateKingMovesForCheck(piece, possibleMoves);
+                        break;
+                    case PieceType.ROOK:
+                    case PieceType.BISHOP:
+                    case PieceType.QUEEN:
+                        CalculateSlidingMovesForCheck(piece, possibleMoves);
+                        break;
                 }
 
-                // Restore original position
-                king.Position = originalPosition;
+                foreach (var move in possibleMoves)
+                {
+                    // save original position
+                    var originalPiecePosition = piece.Position;
+                    var targetPiece = Board[move.X, move.Y];
+
+                    // simulate movement
+                    Board[originalPiecePosition.X, originalPiecePosition.Y] = null;
+                    Board[move.X, move.Y] = piece;
+                    piece.Position = move;
+
+                    // checking if after moving king still in check
+                    bool kingStillInCheck = IsKingUnderAttack(opponentColor);
+
+
+                    // restore board
+                    Board[move.X, move.Y] = targetPiece;
+                    Board[originalPiecePosition.X, originalPiecePosition.Y] = piece;
+                    piece.Position = originalPiecePosition;
+
+                    // if there is possible movement, invalid checkmate
+                    if (!kingStillInCheck)
+                        return false;
+                }
             }
 
+            // if there is no possible movement, checkmate true
             return true;
         }
 
-        private bool IsKingUnderAttack(ChessBasePiece king)
+
+        private void CalculatePawnMovesForCheck(ChessBasePiece piece, List<Point> movementList)
         {
-            GetAllPieceMovements();
+            foreach (Point move in piece.BasicMovements)
+            {
+                int newX = piece.Position.X + move.X;
+                int newY = piece.Position.Y + move.Y;
 
-            // Check if any opponent piece can capture the king's position
-            bool isUnderAttack = ChessPiecesMovements.Any(p => p.Movements.Contains(king.Position));
+                
+                if (newX < 0 || newX >= 8 || newY < 0 || newY >= 8)
+                    continue;
 
-             return isUnderAttack;
+                
+                if (move.Y == 0)
+                {
+                    
+                    if (Board[newX, newY] != null)
+                        continue;
+
+                    
+                    if (Math.Abs(move.X) == 2)
+                    {
+                        int direction = piece.Player1Piece ? -1 : 1;
+                        int intermediateX = piece.Position.X + direction;
+
+                        if (Board[intermediateX, newY] != null)
+                            continue;
+                    }
+
+                    movementList.Add(new Point(newX, newY));
+                }
+                
+                else if (Board[newX, newY]?.Player1Piece != piece.Player1Piece && Board[newX, newY] != null)
+                {
+                    movementList.Add(new Point(newX, newY));
+                }
+            }
+        }
+
+        private void CalculateKnightMovesForCheck(ChessBasePiece piece, List<Point> movementList)
+        {
+            foreach (Point move in piece.BasicMovements)
+            {
+                int newX = piece.Position.X + move.X;
+                int newY = piece.Position.Y + move.Y;
+
+                if (newX >= 0 && newX < 8 && newY >= 0 && newY < 8)
+                {
+                    if (Board[newX, newY] == null || Board[newX, newY].Player1Piece != piece.Player1Piece)
+                    {
+                        movementList.Add(new Point(newX, newY));
+                    }
+                }
+            }
+        }
+
+        private void CalculateKingMovesForCheck(ChessBasePiece piece, List<Point> movementList)
+        {
+            foreach (Point move in piece.BasicMovements)
+            {
+                int newX = piece.Position.X + move.X;
+                int newY = piece.Position.Y + move.Y;
+
+                if (newX >= 0 && newX < 8 && newY >= 0 && newY < 8)
+                {
+                    if (Board[newX, newY] == null || Board[newX, newY].Player1Piece != piece.Player1Piece)
+                    {
+                        
+                        movementList.Add(new Point(newX, newY));
+                    }
+                }
+            }
+        }
+
+        private void CalculateSlidingMovesForCheck(ChessBasePiece piece, List<Point> movementList)
+        {
+            foreach (Point direction in piece.BasicMovements)
+            {
+                for (int distance = 1; distance < 8; distance++)
+                {
+                    int newX = piece.Position.X + (direction.X * distance);
+                    int newY = piece.Position.Y + (direction.Y * distance);
+
+                    if (newX < 0 || newX >= 8 || newY < 0 || newY >= 8)
+                        break;
+
+                    if (Board[newX, newY] != null)
+                    {
+                        if (Board[newX, newY].Player1Piece != piece.Player1Piece)
+                            movementList.Add(new Point(newX, newY));
+                        break;
+                    }
+
+                    movementList.Add(new Point(newX, newY));
+                }
+            }
+        }
+
+        // king position
+        private (int, int) FindKingPosition(bool isPlayer1)
+        {
+            for (int x = 0; x < ROWS; x++)
+            {
+                for (int y = 0; y < COLUMNS; y++)
+                {
+                    var piece = Board[x, y];
+                    if (piece != null && piece.PieceType == PieceType.KING && piece.Player1Piece == isPlayer1)
+                    {
+                        return (x, y); 
+                    }
+                }
+            }
+            throw new Exception($"Rey no encontrado para el jugador {(isPlayer1 ? "blanco" : "negro")}. Revisa el tablero.");
         }
 
 
+        private bool IsSquareUnderAttack(int row, int col, bool isPlayerSquare)
+        {
+           
+            int pawnDirection = isPlayerSquare ? 1 : -1; 
+            if (row + pawnDirection >= 0 && row + pawnDirection < ROWS)
+            {
+                
+                if (col - 1 >= 0 &&
+                    Board[row + pawnDirection, col - 1] is Pawn &&
+                    Board[row + pawnDirection, col - 1].Player1Piece != isPlayerSquare)
+                    return true;
+
+                if (col + 1 < COLUMNS &&
+                    Board[row + pawnDirection, col + 1] is Pawn &&
+                    Board[row + pawnDirection, col + 1].Player1Piece != isPlayerSquare)
+                    return true;
+            }
+
+            
+            int[,] knightMoves = { { -2, -1 }, { -2, 1 }, { -1, -2 }, { -1, 2 }, { 1, -2 }, { 1, 2 }, { 2, -1 }, { 2, 1 } };
+            for (int i = 0; i < 8; i++)
+            {
+                int newRow = row + knightMoves[i, 0];
+                int newCol = col + knightMoves[i, 1];
+
+                if (newRow >= 0 && newRow < ROWS && newCol >= 0 && newCol < COLUMNS &&
+                    Board[newRow, newCol] is Knight &&
+                    Board[newRow, newCol].Player1Piece != isPlayerSquare)
+                    return true;
+            }
+
+            
+            int[,] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 } };
+            for (int i = 0; i < 8; i++)
+            {
+                int dx = directions[i, 0];
+                int dy = directions[i, 1];
+
+                
+                for (int distance = 1; distance < 8; distance++)
+                {
+                    int newRow = row + dx * distance;
+                    int newCol = col + dy * distance;
+
+                    if (newRow < 0 || newRow >= ROWS || newCol < 0 || newCol >= COLUMNS)
+                        break; 
+
+                    if (Board[newRow, newCol] == null)
+                        continue; 
+
+                    if (Board[newRow, newCol].Player1Piece == isPlayerSquare)
+                        break; 
+
+                    bool isRook = Board[newRow, newCol] is Rook;
+                    bool isBishop = Board[newRow, newCol] is Bishop;
+                    bool isQueen = Board[newRow, newCol] is Queen;
+                                        
+                    if ((isRook && i < 4) || (isBishop && i >= 4) || isQueen)
+                        return true;
+
+                    break; 
+                }
+            }
+
+            
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    if (dx == 0 && dy == 0) continue;
+
+                    int newRow = row + dx;
+                    int newCol = col + dy;
+
+                    if (newRow >= 0 && newRow < ROWS && newCol >= 0 && newCol < COLUMNS &&
+                        Board[newRow, newCol] is King &&
+                        Board[newRow, newCol].Player1Piece != isPlayerSquare)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        
+        public bool IsKingUnderAttack(bool isPlayer1)
+        {            
+            (int kingRow, int kingCol) = FindKingPosition(isPlayer1);
+
+            return IsSquareUnderAttack(kingRow, kingCol, isPlayer1);
+        }
 
 
         public async Task RandomMovement()

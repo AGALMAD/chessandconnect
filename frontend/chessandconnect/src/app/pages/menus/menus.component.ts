@@ -18,7 +18,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './menus.component.html',
   styleUrl: './menus.component.css'
 })
-export class MenusComponent {
+export class MenusComponent implements OnInit{
   constructor(
     public menuService: MenuService,
     private api: ApiService,
@@ -29,9 +29,10 @@ export class MenusComponent {
   ) {
     
   }
+
   async ngOnInit(): Promise<void> {
-    await this.webSocketService.connectRxjs()
     this.authService.getCurrentUser();
+    await this.webSocketService.connectRxjs()
 
   }
 }

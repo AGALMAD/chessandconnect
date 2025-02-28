@@ -80,6 +80,7 @@ public class Program {
 
         // Servicios
         builder.Services.AddScoped<AuthService>();
+        builder.Services.AddScoped<AdminService>();
         builder.Services.AddScoped<PasswordService>();
         builder.Services.AddScoped<FriendshipService>();
         builder.Services.AddScoped<UserService>();
@@ -104,6 +105,7 @@ public class Program {
         builder.Services.AddTransient<UserMapper>();
         builder.Services.AddTransient<PlayMapper>();
         builder.Services.AddTransient<FriendMapper>();
+        builder.Services.AddTransient<AdminMapper>();
 
         //Administrador de todos los websockets
         builder.Services.AddSingleton<WebSocketNetwork>();

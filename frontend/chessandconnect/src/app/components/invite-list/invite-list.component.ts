@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FriendsService } from '../../services/friends.service';
 import { GameType } from '../../enums/game';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-invite-list',
@@ -9,10 +10,18 @@ import { GameType } from '../../enums/game';
   styleUrl: './invite-list.component.css'
 })
 export class InviteListComponent {
-  constructor(
-    public friendService: FriendsService) { }
 
-    async newGameInvitation(friendId: number){
-      await this.friendService.newGameInvitation(friendId,GameType.Chess)
-    }
+  game: GameType
+
+  constructor(
+    public friendService: FriendsService,
+    @Inject(MAT_DIALOG_DATA) public data: any
+
+  ) { 
+    this.game = data.game
+  }
+
+  async newGameInvitation(friendId: number) {
+    await this.friendService.newGameInvitation(friendId, this.game)
+  }
 }

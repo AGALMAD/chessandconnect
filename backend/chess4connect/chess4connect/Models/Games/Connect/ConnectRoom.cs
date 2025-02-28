@@ -12,16 +12,20 @@ using System.Text.Json;
 
 namespace chess4connect.Models.Games.Connect;
 
-public class ConnectRoom: BaseRoom
+public class ConnectRoom : BaseRoom
 {
+    private readonly IServiceProvider _serviceProvider;
+
+
     public ConnectGame Game { get; set; }
 
-    public ConnectRoom(WebSocketHandler player1Handler, WebSocketHandler player2Handler, ConnectGame game): base(player1Handler, player2Handler)
+    public ConnectRoom( WebSocketHandler player1Handler, WebSocketHandler player2Handler, ConnectGame game, IServiceProvider serviceProvider) : base(player1Handler, player2Handler)
     {
         Player1Handler = player1Handler;
         Player2Handler = player2Handler;
 
         Game = game;
+        _serviceProvider = serviceProvider;
     }
 
 
@@ -35,6 +39,7 @@ public class ConnectRoom: BaseRoom
 
         if (response == 1)
         {
+            await SaveGame(_serviceProvider, GameResult.WIN);
             await SendWinMessage();
             return;
         }
@@ -80,7 +85,7 @@ public class ConnectRoom: BaseRoom
 
     public override async Task SendWinMessage()
     {
-        int winnerId = Game.Board.Player1Turn ? Player1Handler.Id : Player2Handler.Id;
+        int winnerId = Game.Board.Player1Turn ? Player1Id : Player2Id;
 
 
         //Mensaje con el id del ganador
@@ -92,6 +97,20 @@ public class ConnectRoom: BaseRoom
         };
 
         string stringWinnerMessage = JsonSerializer.Serialize(winnerMessage);
+
+        await SendMessage(stringWinnerMessage);
+    }
+
+    public override async Task SendDrawMessage()
+    {
+
+        var drawMessage = new SocketMessage
+        {
+            Type = SocketCommunicationType.DRAW,
+
+        };
+
+        string stringWinnerMessage = JsonSerializer.Serialize(drawMessage);
 
         await SendMessage(stringWinnerMessage);
     }
@@ -131,14 +150,19 @@ public class ConnectRoom: BaseRoom
 
         await unitOfWork.SaveAsync();
 
-        PlayDetail playDetailUser1 = new PlayDetail
-        {
-            PlayId = play.Id,
-            UserId = Game.Board.Player1Turn ? Player1Id : Player2Id,
-            GameResult = gameResult
-        };
+        int winnerId = Game.Board.Player1Turn ? Player1Id : Player2Id;
 
-        unitOfWork.PlayDetailRepository.Add(playDetailUser1);
+        if(winnerId != 0)
+        {
+            PlayDetail playDetailUser1 = new PlayDetail
+            {
+                PlayId = play.Id,
+                UserId = Game.Board.Player1Turn ? Player1Id : Player2Id,
+                GameResult = gameResult
+            };
+            unitOfWork.PlayDetailRepository.Add(playDetailUser1);
+
+        }
 
 
         if (Player2Id != 0)
@@ -156,6 +180,24 @@ public class ConnectRoom: BaseRoom
         await unitOfWork.SaveAsync();
 
 
-        await SendWinMessage();
+        if(gameResult == GameResult.DRAW)
+        {
+            await SendDrawMessage();
+        }
+        else
+        {
+            await SendWinMessage();
+
+        }
+
     }
+
+    public override async Task Surrender(int userId, IServiceProvider serviceProvider)
+    {
+        bool userColor = Player1Id == userId;
+        Game.Board.Player1Turn = !userColor;
+
+        await SaveGame(serviceProvider, GameResult.WIN);
+    }
+
 }

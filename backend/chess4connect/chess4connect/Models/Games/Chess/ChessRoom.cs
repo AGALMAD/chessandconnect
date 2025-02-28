@@ -12,13 +12,14 @@ namespace chess4connect.Models.Games.Chess.Chess
 {
     public class ChessRoom : BaseRoom
     {
-        private readonly IServiceProvider serviceProvider;
+        private readonly IServiceProvider _serviceProvider;
 
         public ChessGame Game { get; set; }
 
-        public  ChessRoom (WebSocketHandler player1Handler, WebSocketHandler? player2Handler, ChessGame game): base(player1Handler, player2Handler)
+        public  ChessRoom (WebSocketHandler player1Handler, WebSocketHandler? player2Handler, ChessGame game, IServiceProvider serviceProvider) : base(player1Handler, player2Handler)
         {
             Game = game;
+            _serviceProvider = serviceProvider;
         }
 
 
@@ -102,7 +103,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             if (response == 1)
             {
-                await SaveGame(serviceProvider, GameResult.WIN);
+                await SaveGame(_serviceProvider, GameResult.WIN);
 
             }
 
@@ -147,14 +148,14 @@ namespace chess4connect.Models.Games.Chess.Chess
             PlayDetail playDetailUser1 = new PlayDetail
             {
                 PlayId = play.Id,
-                UserId = Game.Board.Player1Turn ? Player1Handler.Id : Player2Handler.Id,
+                UserId = Game.Board.Player1Turn ? Player1Id : Player2Id,
                 GameResult = gameResult
             };
 
             PlayDetail playDetailUser2 = new PlayDetail
             {
                 PlayId = play.Id,
-                UserId = Game.Board.Player1Turn ? Player2Handler.Id : Player1Handler.Id,
+                UserId = Game.Board.Player1Turn ? Player2Id : Player1Id,
                 GameResult = gameResult == GameResult.DRAW ? gameResult : GameResult.LOSE
             };
 
@@ -163,14 +164,22 @@ namespace chess4connect.Models.Games.Chess.Chess
             await unitOfWork.SaveAsync();
 
 
-            await SendWinMessage();
+            if (gameResult == GameResult.DRAW)
+            {
+                await SendDrawMessage();
+            }
+            else
+            {
+                await SendWinMessage();
+
+            }
 
         }
 
 
         public override async Task SendWinMessage()
         {
-            int winnerId = Game.Board.Player1Turn ? Player1Handler.Id : Player2Handler.Id;
+            int winnerId = Game.Board.Player1Turn ? Player1Id : Player2Id;
 
 
             //Mensaje con el id del ganador
@@ -187,5 +196,26 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         }
 
+        public override async Task Surrender(int userId, IServiceProvider serviceProvider)
+        {
+            bool userColor = Player1Id == userId;
+
+            Game.Board.Player1Turn = !userColor;
+
+            await SaveGame(serviceProvider, GameResult.WIN);
+        }
+
+        public override async Task SendDrawMessage()
+        {
+            var drawMessage = new SocketMessage
+            {
+                Type = SocketCommunicationType.DRAW,
+
+            };
+
+            string stringWinnerMessage = JsonSerializer.Serialize(drawMessage);
+
+            await SendMessage(stringWinnerMessage);
+        }
     }
 }

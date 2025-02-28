@@ -96,7 +96,7 @@ export class RegisterComponent {
   }
 
   onFileSelected(event: any) {
-    const image = event.target.files[0] as File; // Here we use only the first file (single file)
+    const image = event.target.files[0] as File; 
     this.image = image
     console.log(this.image)
   }

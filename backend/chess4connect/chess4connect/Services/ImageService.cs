@@ -40,23 +40,6 @@ public class ImageService
         return null;
         
     }
-    public async Task<User> UpdateAsync(int id, CreateUpdateImageRequest image)
-    {
-        User entity = await _unitOfWork.UserRepository.GetByIdAsync(id);
-
-        string relativePath = $"{IMAGES_FOLDER}/{Guid.NewGuid()}_{image.File.FileName}";
-
-        entity.AvatarImageUrl = relativePath;
-
-        _unitOfWork.UserRepository.Update(entity);
-
-        if (await _unitOfWork.SaveAsync() && image.File != null)
-        {
-            await StoreImageAsync(entity.AvatarImageUrl, image.File);
-        }
-
-        return entity;
-    }
 
     public async Task DeleteAsync(int id)
     {
@@ -71,11 +54,6 @@ public class ImageService
         using Stream stream = file.OpenReadStream();
 
         await FileHelper.SaveAsync(stream, relativePath);
-    }
-
-    internal async Task<string> InsertAsync(object png)
-    {
-        throw new NotImplementedException();
     }
 }
 

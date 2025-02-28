@@ -1,2 +1,235 @@
-    <!-- Barra de navegación -->
-    <app-navbar></app-navbar>
+<app-navbar></app-navbar>
+@if (authService.currentUser.id == profileId) {
+  <div class="bg-brown-100 text-brown-900 min-h-screen p-6">
+    <div class="max-w-4xl mx-auto bg-brown-200 rounded-lg p-6 shadow-lg relative">
+      <!-- Imagen de fondo -->
+      <div class="absolute top-0 left-0 w-full h-32 bg-cover bg-center rounded-t-lg"
+        style="background-image: url('https://source.unsplash.com/1600x900/?gaming');">
+      </div>
+  
+      <!-- Contenedor de información del perfil -->
+      <div class="relative mt-20 flex items-center">
+        <div class="relative">
+          <img [src]="baseUrl + authService.currentUser.avatarImageUrl" alt="User Avatar"
+            class="w-24 h-24 rounded-full border-4 border-brown-700 shadow-lg">
+            <div class="absolute top-0 right-0">
+              <label for="profile-picture" class="flex items-center justify-center w-8 h-8 bg-brown-600 text-white rounded-full shadow-lg cursor-pointer hover:bg-brown-700">
+                <span class="sr-only">Cambiar imagen de perfil</span> <!-- Texto alternativo para accesibilidad -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 4a2 2 0 011.414.586l3 3a2 2 0 010 2.828l-10 10a2 2 0 01-1.414.586H5a2 2 0 01-2-2v-3a2 2 0 01.586-1.414l10-10a2 2 0 012.828 0l3 3A2 2 0 0116 4z" />
+                </svg>
+              </label>
+              <input type="file" accept="image/png, image/jpeg, image/jpg" name="Imagen" id="profile-picture"
+                     (change)="onFileSelected($event)"
+                     class="hidden"
+                     aria-label="Cambiar imagen de perfil">
+            </div>
+            
+            
+            <div class="absolute bottom-0 right-0">
+              <button class="w-8 h-8 flex items-center justify-center bg-brown-600 text-white rounded-full shadow-lg cursor-pointer hover:bg-brown-700" (click)="deleteAvatar()">
+                <span class="sr-only">Eliminar imagen de perfil</span> <!-- Texto alternativo para accesibilidad -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+        </div>
+        <div class="ml-4">
+          <div class="flex items-center">
+            <h2 class="text-2xl font-bold text-brown-800">{{authService.currentUser.userName}}</h2>
+            <button class="ml-2 px-1 py-0.5 text-xs text-white bg-brown-600 rounded" (click)="openModal('name')">✏️</button>
+          </div>
+          <div class="flex items-center">
+            <p class="text-brown-700">{{authService.currentUser.email}}</p>
+            <button class="ml-2 px-1 py-0.5 text-xs text-white bg-brown-600 rounded" (click)="openModal('email')">✏️</button>
+          </div>
+          <button class="mt-2 px-4 py-2 bg-brown-700 text-white rounded" (click)="openModal('password')">Cambiar contraseña</button>
+        </div>
+      </div>
+      
+      <!-- MODAL -->
+      <div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+          <h2 class="text-xl font-bold mb-2">
+            {{ editType === 'name' ? 'Editar Nombre' : editType === 'email' ? 'Editar Correo' : 'Cambiar Contraseña' }}
+          </h2>
+      
+          <!-- Input para nombre y correo -->
+          <input *ngIf="editType !== 'password'" [(ngModel)]="newValue" class="border p-2 rounded w-full" />
+      
+          <!-- Inputs para contraseña -->
+          <div *ngIf="editType === 'password'">
+            <input type="password" placeholder="Nueva contraseña" [(ngModel)]="newPassword" class="border p-2 rounded w-full mt-2" />
+            <input type="password" placeholder="Confirmar contraseña" [(ngModel)]="confirmPassword" class="border p-2 rounded w-full mt-2" />
+            <p *ngIf="passwordError" class="text-red-500 text-sm mt-1">{{ passwordError }}</p>
+          </div>
+      
+          <div class="mt-4 flex justify-end space-x-2">
+            <button class="px-4 py-2 bg-gray-400 text-white rounded" (click)="closeModal()">Cancelar</button>
+            <button class="px-4 py-2 bg-green-600 text-white rounded" (click)="saveChanges()">Guardar</button>
+          </div>
+        </div>
+      </div>
+      
+  
+      <!-- Pestañas para cambiar el historial de juegos -->
+      <div class="mt-6" *ngIf="true">
+        <h3 class="text-xl font-bold mb-4 text-brown-800">Historial de partidas</h3>
+        <div class="flex border-b border-brown-700 mb-4">
+          <button 
+            class="px-4 py-2 text-brown-200 hover:text-brown-900 focus:text-brown-900 focus:outline-none"
+            [ngClass]="{'bg-brown-600 text-brown-100 rounded-t-lg': activeTab === 'chess'}" 
+            (click)="changeTab('chess')">
+            Ajedrez
+          </button>
+          <button 
+            class="px-4 py-2 text-brown-700 hover:text-brown-900 focus:text-brown-900 focus:outline-none"
+            [ngClass]="{'bg-brown-600 text-brown-100 rounded-t-lg': activeTab === 'connect4'}" 
+            (click)="changeTab('connect4')">
+            Conecta 4
+          </button>
+        </div>
+        
+        <!-- CHESS -->
+        <div *ngIf="activeTab === 'chess'">
+          <div class="bg-brown-600 p-4 rounded-lg flex items-center">
+            @for (game of chessGames; track $index) {
+              <div class="ml-4">
+                <p class="text-xl font-bold text-brown-100">Chess</p>
+                <p class="text-lg font-medium text-brown-100">
+                  <span class="font-semibold">{{ getPlayerName(game.userId) }}</span> 
+                  VS 
+                  <span class="font-semibold">{{ getPlayerName(game.opponentId) }}</span>
+                </p>
+                <p class="text-lg font-medium text-brown-100">
+                  <span class="font-semibold">Resultado:</span> Partida {{ getResultGame(game.playState) }}
+                </p>
+                <p class="text-brown-200">
+                  <span class="font-semibold">Duración:</span> {{ getTimeDifference(game.startDate, game.endDate) | pipeTimer }}
+                </p>
+              </div>
+          }
+          </div>
+        </div>
+        
+        <!-- CONNECT 4 -->
+        <div *ngIf="activeTab === 'connect4'">
+          <div class="bg-brown-600 p-4 rounded-lg flex items-center">
+            @for (game of connect4Games; track $index) {
+              <div class="ml-4">
+                <p class="text-xl font-bold text-brown-100">Connect4</p>
+                <p class="text-lg font-medium text-brown-100">
+                  <span class="font-semibold">{{ getPlayerName(game.userId) }}</span> 
+                  VS 
+                  <span class="font-semibold">{{ getPlayerName(game.opponentId) }}</span>
+                </p>
+                <p class="text-lg font-medium text-brown-100">
+                  <span class="font-semibold">Resultado:</span> Partida {{ getResultGame(game.playState) }}
+                </p>
+                <p class="text-brown-200">
+                  <span class="font-semibold">Duración:</span> {{ getTimeDifference(game.startDate, game.endDate) | pipeTimer }}
+                </p>
+              </div>
+          }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+}@else {
+  <app-navbar></app-navbar>
+  <div class="bg-brown-100 text-brown-900 min-h-screen p-6">
+      <div class="max-w-4xl mx-auto bg-brown-200 rounded-lg p-6 shadow-lg relative">
+        <!-- Imagen de fondo -->
+        <div class="absolute top-0 left-0 w-full h-32 bg-cover bg-center rounded-t-lg"
+          style="background-image: url('https://source.unsplash.com/1600x900/?gaming');">
+        </div>
+    
+        <!-- Contenedor de información del perfil -->
+        <div class="relative mt-20 flex items-center">
+          <div class="relative">
+            <img [src]="baseUrl + user.avatarImageUrl" alt="User Avatar"
+              class="w-24 h-24 rounded-full border-4 border-brown-700 shadow-lg">
+          </div>
+          <div class="ml-4">
+            <h2 class="text-2xl font-bold text-brown-800">{{user.userName}}</h2>
+            <p class="text-brown-700">{{user.email}}</p>
+            <div class="mt-4 flex space-x-2">
+              @if (isFriend) {
+                <button class="px-4 py-2 bg-red-600 text-white rounded" (click)="removeFriend(user.id)">Eliminar amigo</button>
+              }@else {
+                <button class="px-4 py-2 bg-green-600 text-white rounded" (click)="addFriend(user.id)">Añadir amigo</button>
+              }
+            </div>
+          </div>
+        </div>
+    
+        <!-- Pestañas para cambiar el historial de juegos -->
+        <div class="mt-6" *ngIf="true">
+          <h3 class="text-xl font-bold mb-4 text-brown-800">Historial de partidas</h3>
+          <div class="flex border-b border-brown-700 mb-4">
+            <button 
+              class="px-4 py-2 text-brown-200 hover:text-brown-900 focus:text-brown-900 focus:outline-none"
+              [ngClass]="{'bg-brown-600 text-brown-100 rounded-t-lg': activeTab === 'chess'}" 
+              (click)="changeTab('chess')">
+              Ajedrez
+            </button>
+            <button 
+              class="px-4 py-2 text-brown-700 hover:text-brown-900 focus:text-brown-900 focus:outline-none"
+              [ngClass]="{'bg-brown-600 text-brown-100 rounded-t-lg': activeTab === 'connect4'}" 
+              (click)="changeTab('connect4')">
+              Conecta 4
+            </button>
+          </div>
+          
+          <!-- CHESS -->
+          <div *ngIf="activeTab === 'chess'">
+            <div class="bg-brown-600 p-4 rounded-lg flex items-center">
+              @for (game of chessGames; track $index) {
+                  <div class="ml-4">
+                    <p class="text-xl font-bold text-brown-100">Chess</p>
+                    <p class="text-lg font-medium text-brown-100">
+                      <span class="font-semibold">{{ getPlayerName(game.userId) }}</span> 
+                      VS 
+                      <span class="font-semibold">{{ getPlayerName(game.opponentId) }}</span>
+                    </p>
+                    <p class="text-lg font-medium text-brown-100">
+                      <span class="font-semibold">Resultado:</span> Partida {{ getResultGame(game.playState) }}
+                    </p>
+                    <p class="text-brown-200">
+                      <span class="font-semibold">Duración:</span> {{ getTimeDifference(game.startDate, game.endDate) | pipeTimer }}
+                    </p>
+                  </div>
+              }
+            </div>
+          </div>
+          
+          <!-- CONNECT 4 -->
+          <div *ngIf="activeTab === 'connect4'">
+            <div class="bg-brown-600 p-4 rounded-lg flex items-center">
+              @for (game of connect4Games; track $index) {
+                <div class="ml-4">
+                  <p class="text-xl font-bold text-brown-100">Connect4</p>
+                  <p class="text-lg font-medium text-brown-100">
+                    <span class="font-semibold">{{ getPlayerName(game.userId) }}</span> 
+                    VS 
+                    <span class="font-semibold">{{ getPlayerName(game.opponentId) }}</span>
+                  </p>
+                  <p class="text-lg font-medium text-brown-100">
+                    <span class="font-semibold">Resultado:</span> Partida {{ getResultGame(game.playState) }}
+                  </p>
+                  <p class="text-brown-200">
+                    <span class="font-semibold">Duración:</span> {{ getTimeDifference(game.startDate, game.endDate) | pipeTimer }}
+                  </p>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+}

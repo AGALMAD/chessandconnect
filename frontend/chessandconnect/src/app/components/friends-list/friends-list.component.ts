@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { GameType } from '../../enums/game';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-friends-list',
@@ -14,6 +15,9 @@ import { GameType } from '../../enums/game';
   styleUrl: './friends-list.component.css'
 })
 export class FriendsListComponent implements OnInit {
+
+    public baseUrl = environment.apiUrl; 
+  
 
   searchQuery: string;
   private searchTimeout: any;

@@ -289,6 +289,7 @@ export class FriendsService {
   // SEND FRIEND REQUEST
 
   async makeFriendshipRequest(id: number): Promise<Result<Friendship>> {
+    console.log(id)
     const result = await this.api.post<Friendship>(`Friendship/makerequest?friendId=${id}`)
     if (!result.success) {
       this.handleError('No se pudo realizar la petición')

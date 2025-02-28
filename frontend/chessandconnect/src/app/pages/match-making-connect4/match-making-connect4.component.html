@@ -33,7 +33,7 @@
             alt="Jugar con Amigos" class="w-full h-48 object-cover" />
           <div class="p-6 text-center">
             <h2 class="text-2xl font-semibold text-white">Jugar con Amigos</h2>
-            <button (click)="menuService.openFriendInvitationModal()"
+            <button (click)="openFriendInvitationModal()"
               class="mt-4 px-6 py-3 bg-white text-brown-500 font-semibold rounded-xl hover:bg-gray-300 transition">
               Invitar Amigos
             </button>
@@ -71,14 +71,14 @@
     <div class="flex justify-start items-center w-full mb-4">
       <!-- Avatar Oponente -->
       <div class="flex items-center">
-        <img [src]="baseUrl + matchMakingService.friendOpponent" alt="Opponent"
+        <img [src]="baseUrl + matchMakingService.friendOpponent.avatarImageUrl" alt="Opponent"
           class="w-12 h-12 rounded-full border-2 border-black">
-        <p class="text-[#301e16] font-bold ml-3 ">{{ matchMakingService.friendOpponent }}</p>
+        <p class="text-[#301e16] font-bold ml-3 ">{{ matchMakingService.friendOpponent.userName }}</p>
       </div>
 
       <!-- Contador Oponente -->
       <div class=" bg-[#737171] text-white rounded-md p-2 text-xl font-bold ml-auto">
-        10:00
+        3:00
       </div>
     </div>
 
@@ -101,17 +101,19 @@
 
       <!-- Contador Jugador -->
       <div class=" bg-[#b8b5b5] text-white rounded-md p-2 text-xl font-bold ml-auto">
-        10:00
+        3:00
       </div>
     </div>
 
   </div>
 
 
-  <button (click)="startGameWithFriend()"
-    class="mt-4 px-6 py-3 bg-white text-brown-600 font-semibold rounded-xl hover:bg-gray-300 transition">
+  @if (matchMakingService.isHost) {
+    <button (click)="startGameWithFriend()"
+    class="mt-4 px-6 py-3 bg-brown-700 text-white font-semibold rounded-xl hover:bg-brown-600  transition">
     Empezar Partida
   </button>
+  }
 </section>
 }
 

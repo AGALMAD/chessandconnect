@@ -82,8 +82,9 @@ export class MatchMakingChessComponent {
     await this.api.post('MatchMaking/IAGame', this.gamemode)
   }
 
-
-
+  openFriendInvitationModal(){
+    this.menuService.openFriendInvitationModal(GameType.Chess)
+  }
 
   
 }

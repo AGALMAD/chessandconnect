@@ -20,10 +20,10 @@
                 <a [routerLink]="'/profile'" class="block px-4 py-2 text-sm hover:bg-[#CBA77B] hover:text-[#301e16]">
                     Mi Perfil
                 </a>
-                
+                @if(authService.currentUser?.role === 'admin') {
                 <a [routerLink]="'/admin'" class="block px-4 py-2 text-sm hover:bg-[#CBA77B] hover:text-[#301e16]">
                     Administrador
-                </a>
+                </a>}
                 <a [routerLink]="'/'" class="block px-4 py-2 text-sm hover:bg-[#CBA77B] hover:text-[#301e16]"
                     (click)="closeSession()">
                     Cerrar Sesión

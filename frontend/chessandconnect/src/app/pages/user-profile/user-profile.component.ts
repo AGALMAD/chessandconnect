@@ -5,16 +5,20 @@ import { User } from '../../models/dto/user';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router, ROUTER_CONFIGURATION } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FriendsService } from '../../services/friends.service';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Register } from '../../models/dto/register';
+import { Play } from '../../models/play';
+import { GameType } from '../../enums/game';
+import { PipeTimerPipe } from "../../pipes/pipe-timer.pipe";
+import { playState } from '../../enums/playState';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [NavbarComponent, CommonModule, FormsModule],
+  imports: [NavbarComponent, CommonModule, FormsModule, PipeTimerPipe],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css'
 })
@@ -33,6 +37,8 @@ newPassword: string = '';
 confirmPassword: string = '';
 passwordError: string = '';
 isModalOpen = false;
+chessGames: Play[]
+connect4Games: Play[]
 
 
 constructor(
@@ -53,6 +59,41 @@ async getQueryId(queryMap: ParamMap) {
   this.user = (await this.userService.getUser(this.profileId)).data;
   this.checkFriendship();
 }
+
+showGames(){
+  this.authService.currentUser.plays.forEach(game => {
+    if(game.game == GameType.Chess){
+      this.chessGames.push(game)
+    }else{
+      this.connect4Games.push(game)
+    }
+  });
+}
+
+getTimeDifference(startDate: Date, endDate: Date): number {
+  if (!startDate || !endDate) return 0;
+  return endDate.getTime() - startDate.getTime();
+}
+
+async getPlayerName(id: number){
+  return (await this.userService.getUser(this.profileId)).data.userName
+}
+
+getResultGame(result: playState){
+  switch(result){
+    case(-1):
+      return "Perdida"
+    
+    case(0):
+      return "Empatada"
+
+    case(1):
+      return "Ganada"
+  }
+
+ return null
+}
+
 
 changeTab(tab: string) {
   this.activeTab = tab;

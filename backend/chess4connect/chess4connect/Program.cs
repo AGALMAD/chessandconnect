@@ -143,6 +143,8 @@ public class Program {
             app.UseSwaggerUI();
         }
 
+        app.UseHttpsRedirection();
+
         app.UseCors();
         // Indicamos que active el servicio para archivos estáticos (wwwroot)
         app.UseStaticFiles();
@@ -154,7 +156,7 @@ public class Program {
         //MiddleWare 
         app.UseMiddleware<WebSocketMiddleWare>();
 
-        app.UseHttpsRedirection();
+        
 
         app.UseRouting();
 

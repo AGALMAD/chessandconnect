@@ -120,8 +120,8 @@ public class UserService
             {
                 var game = new GameHistoryDto
                 {
-                    UserId = userId,
-                    OpponentId = opponentId,
+                    User = GetUserById(userId).Result,
+                    Opponent = GetUserById(opponentId).Result,
                     Duration = (int)(play.EndDate - play.StartDate).TotalSeconds,
                     PlayState = item.GameResult,
                     Game = pagination.GameType

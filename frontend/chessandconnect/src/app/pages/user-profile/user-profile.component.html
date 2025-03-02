@@ -89,12 +89,12 @@
 
       <div class="flex border-b border-brown-700 mb-4">
         <button class="px-4 py-2 text-brown-200 hover:text-brown-900 focus:text-brown-900 focus:outline-none"
-          [ngClass]="{'bg-brown-600 text-brown-100 rounded-t-lg': activeTab === 'chess'}" (click)="changeTab('chess')">
+          [ngClass]="{'bg-brown-600 text-brown-100 rounded-t-lg': activeTab === GameType.Chess}" (click)="changeTab(GameType.Chess)">
           Ajedrez
         </button>
         <button class="px-4 py-2 text-brown-700 hover:text-brown-900 focus:text-brown-900 focus:outline-none"
-          [ngClass]="{'bg-brown-600 text-brown-100 rounded-t-lg': activeTab === 'connect4'}"
-          (click)="changeTab('connect4')">
+          [ngClass]="{'bg-brown-600 text-brown-100 rounded-t-lg': activeTab === GameType.Connect4}"
+          (click)="changeTab(GameType.Connect4)">
           Conecta 4
         </button>
       </div>
@@ -113,22 +113,25 @@
       
 
       <!-- CHESS -->
-      <div *ngIf="activeTab === 'chess'">
-        <div class="bg-brown-600 p-4 rounded-lg flex items-center">
+      <div *ngIf="activeTab === GameType.Chess">
+        <div class="bg-brown-600 p-4 rounded-lg flex flex-col space-y-4">
           @for (game of games; track $index) {
           <div class="ml-4">
             <p class="text-xl font-bold text-brown-100">Chess</p>
             <p class="text-lg font-medium text-brown-100">
-              <span class="font-semibold">{{ getPlayerName(game.userId) }}</span>
+              <span class="font-semibold">{{ game.user.userName }}</span>
               VS
-              <span class="font-semibold">{{ getPlayerName(game.opponentId) }}</span>
+              @if(game.opponent == null){
+                <span class="font-semibold">Bot</span>
+            }@else{ 
+              <span class="font-semibold" (click)="userlistcomponent.goToProfile(game.opponent.id)">{{game.opponent.userName }}</span>
+            }
             </p>
             <p class="text-lg font-medium text-brown-100">
               <span class="font-semibold">Resultado:</span> Partida {{ getResultGame(game.playState) }}
             </p>
             <p class="text-brown-200">
-              <span class="font-semibold">Duración:</span> {{ getTimeDifference(game.startDate, game.endDate) |
-              pipeTimer }}
+              <span class="font-semibold">Duración:</span> {{ game.duration | pipeTimer }}
             </p>
           </div>
           }
@@ -140,22 +143,25 @@
       </div>
 
       <!-- CONNECT 4 -->
-      <div *ngIf="activeTab === 'connect4'">
-        <div class="bg-brown-600 p-4 rounded-lg flex items-center">
+      <div *ngIf="activeTab === GameType.Connect4">
+        <div class="bg-brown-600 p-4 rounded-lg flex flex-col space-y-4">
           @for (game of games; track $index) {
           <div class="ml-4">
             <p class="text-xl font-bold text-brown-100">Connect4</p>
             <p class="text-lg font-medium text-brown-100">
-              <span class="font-semibold">{{ getPlayerName(game.userId) }}</span>
+              <span class="font-semibold">{{ game.user.userName }}</span>
               VS
-              <span class="font-semibold">{{ getPlayerName(game.opponentId) }}</span>
+              @if(game.opponent == null){
+                <span class="font-semibold">Bot</span>
+            }@else{ 
+              <span class="font-semibold" (click)="userlistcomponent.goToProfile(game.opponent.id)">{{game.opponent.userName }}</span>
+            }
             </p>
             <p class="text-lg font-medium text-brown-100">
               <span class="font-semibold">Resultado:</span> Partida {{ getResultGame(game.playState) }}
             </p>
             <p class="text-brown-200">
-              <span class="font-semibold">Duración:</span> {{ getTimeDifference(game.startDate, game.endDate) |
-              pipeTimer }}
+              <span class="font-semibold">Duración:</span> {{ game.duration | pipeTimer }}
             </p>
           </div>
           }
@@ -203,12 +209,12 @@
       <h3 class="text-xl font-bold mb-4 text-brown-800">Historial de partidas</h3>
       <div class="flex border-b border-brown-700 mb-4">
         <button class="px-4 py-2 text-brown-200 hover:text-brown-900 focus:text-brown-900 focus:outline-none"
-          [ngClass]="{'bg-brown-600 text-brown-100 rounded-t-lg': activeTab === 'chess'}" (click)="changeTab('chess')">
+          [ngClass]="{'bg-brown-600 text-brown-100 rounded-t-lg': activeTab === GameType.Chess}" (click)="changeTab(GameType.Chess)">
           Ajedrez
         </button>
         <button class="px-4 py-2 text-brown-700 hover:text-brown-900 focus:text-brown-900 focus:outline-none"
-          [ngClass]="{'bg-brown-600 text-brown-100 rounded-t-lg': activeTab === 'connect4'}"
-          (click)="changeTab('connect4')">
+          [ngClass]="{'bg-brown-600 text-brown-100 rounded-t-lg': activeTab === GameType.Connect4}"
+          (click)="changeTab(GameType.Connect4)">
           Conecta 4
         </button>
       </div>
@@ -226,22 +232,25 @@
       
 
       <!-- CHESS -->
-      <div *ngIf="activeTab === 'chess'">
-        <div class="bg-brown-600 p-4 rounded-lg flex items-center">
+      <div *ngIf="activeTab === GameType.Chess">
+        <div class="bg-brown-600 p-4 rounded-lg flex flex-col space-y-4">
           @for (game of games; track $index) {
           <div class="ml-4">
             <p class="text-xl font-bold text-brown-100">Chess</p>
             <p class="text-lg font-medium text-brown-100">
-              <span class="font-semibold">{{ getPlayerName(game.userId) }}</span>
+              <span class="font-semibold">{{ game.user.userName }}</span>
               VS
-              <span class="font-semibold">{{ getPlayerName(game.opponentId) }}</span>
+                @if(game.opponent == null){
+                  <span class="font-semibold">Bot</span>
+              }@else{ 
+                <span class="font-semibold" (click)="userlistcomponent.goToProfile(game.opponent.id)">{{game.opponent.userName }}</span>
+              }
             </p>
             <p class="text-lg font-medium text-brown-100">
               <span class="font-semibold">Resultado:</span> Partida {{ getResultGame(game.playState) }}
             </p>
             <p class="text-brown-200">
-              <span class="font-semibold">Duración:</span> {{ getTimeDifference(game.startDate, game.endDate) |
-              pipeTimer }}
+              <span class="font-semibold">Duración:</span> {{ game.duration | pipeTimer }}
             </p>
           </div>
           }
@@ -253,22 +262,25 @@
       </div>
 
       <!-- CONNECT 4 -->
-      <div *ngIf="activeTab === 'connect4'">
-        <div class="bg-brown-600 p-4 rounded-lg flex items-center">
+      <div *ngIf="activeTab === GameType.Connect4">
+        <div class="bg-brown-600 p-4 rounded-lg flex flex-col space-y-4">
           @for (game of games; track $index) {
           <div class="ml-4">
             <p class="text-xl font-bold text-brown-100">Connect4</p>
             <p class="text-lg font-medium text-brown-100">
-              <span class="font-semibold">{{ getPlayerName(game.userId) }}</span>
+              <span class="font-semibold">{{ game.user.userName }}</span>
               VS
-              <span class="font-semibold">{{ getPlayerName(game.opponentId) }}</span>
+              @if(game.opponent == null){
+                <span class="font-semibold">Bot</span>
+            }@else{ 
+              <span class="font-semibold" (click)="userlistcomponent.goToProfile(game.opponent.id)">{{game.opponent.userName }}</span>
+            }
             </p>
             <p class="text-lg font-medium text-brown-100">
               <span class="font-semibold">Resultado:</span> Partida {{ getResultGame(game.playState) }}
             </p>
             <p class="text-brown-200">
-              <span class="font-semibold">Duración:</span> {{ getTimeDifference(game.startDate, game.endDate) |
-              pipeTimer }}
+              <span class="font-semibold">Duración:</span> {{ game.duration | pipeTimer }}
             </p>
           </div>
           }

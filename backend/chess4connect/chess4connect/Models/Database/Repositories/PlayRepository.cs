@@ -12,7 +12,7 @@ namespace chess4connect.Models.Database.Repositories
 
         public async Task<Play> GetPlaybyId(int id)
         {
-            return await GetQueryable().FirstOrDefaultAsync(play => play.Id == id);
+            return await GetQueryable().Include(play => play.PlayDetails).FirstOrDefaultAsync(play => play.Id == id);
         }
     }
 }

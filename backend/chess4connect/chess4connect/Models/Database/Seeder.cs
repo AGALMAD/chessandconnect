@@ -58,6 +58,7 @@ public class Seeder
                 AvatarImageUrl = "UserProfilePicture/perfil_por_defecto.png",
                 Banned = false,
 
+
             },
             new User(){
                 UserName = "manu",

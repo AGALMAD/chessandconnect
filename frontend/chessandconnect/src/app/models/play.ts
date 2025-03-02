@@ -4,10 +4,9 @@ import { GameType } from "../enums/game";
 
 export interface Play {
     id: number,
-    userId: number,
-    opponentId: number,
-    startDate: Date,
-    endDate: Date,
+    user: User,
+    opponent: User,
+    duration: number
     playState: playState,
     game: GameType
 }

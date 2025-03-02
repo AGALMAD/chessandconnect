@@ -16,6 +16,7 @@ import { GameType } from '../../enums/game';
 import { PipeTimerPipe } from "../../pipes/pipe-timer.pipe";
 import { playState } from '../../enums/playState';
 import { Pagination } from '../../models/dto/pagination';
+import { UserListComponent } from '../../components/user-list/user-list.component';
 
 @Component({
   selector: 'app-user-profile',
@@ -24,7 +25,7 @@ import { Pagination } from '../../models/dto/pagination';
   styleUrl: './user-profile.component.css'
 })
 export class UserProfileComponent {
-  activeTab: string = 'chess';
+activeTab: GameType = GameType.Chess;
 public baseUrl = environment.apiUrl;
 
 queryMap: ParamMap;
@@ -55,13 +56,13 @@ constructor(
     private userService: UserService,
     private router: Router,
     private route: ActivatedRoute,
-    private friendService: FriendsService
+    private friendService: FriendsService,
+    public  userlistcomponent : UserListComponent
 ) {}
 
 ngOnInit() {
   this.routeQueryMap$ = this.route.queryParamMap.subscribe(queryMap => this.getQueryId(queryMap));
   this.loadGames(GameType.Chess)
-  console.log(this.games  )
 }
 
 async getQueryId(queryMap: ParamMap) {
@@ -70,13 +71,16 @@ async getQueryId(queryMap: ParamMap) {
   this.checkFriendship();
 }
 
-getTimeDifference(startDate: Date, endDate: Date): number {
-  if (!startDate || !endDate) return 0;
-  return endDate.getTime() - startDate.getTime();
-}
 
 async getPlayerName(id: number){
-  return (await this.userService.getUser(this.profileId)).data.userName
+
+  const result = await this.userService.getUser(id)
+
+  if(result.success){
+    const name = (result.data.userName)
+    return name
+  }
+  return ""
 }
 
 getResultGame(result: playState){
@@ -116,17 +120,20 @@ nextPage(gameType: GameType) {
 
 async loadGames(gameType: GameType) {
   const response = await this.userService.getGamesHistory(this.savePagination(gameType));
-    
-  if (response && response.data) {
-    this.games = Array.isArray(response.data) ? response.data : [response.data];
+  console.log(response)
+
+  if (response.success) {
+    this.games = response.data;
   } else {
     this.games = [];
   }
+  console.log(this.games)
 }
 
-changeTab(tab: string) {
-  this.activeTab = tab;
+changeTab(gameType: GameType) {
+  this.activeTab = gameType;
   this.actualPage = 1;
+  this.loadGames(gameType)
 }
 
 savePagination(gameType: GameType){

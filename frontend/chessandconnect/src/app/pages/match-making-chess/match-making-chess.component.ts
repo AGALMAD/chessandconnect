@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
@@ -16,10 +16,12 @@ import { FriendsService } from '../../services/friends.service';
   templateUrl: './match-making-chess.component.html',
   styleUrl: './match-making-chess.component.css'
 })
-export class MatchMakingChessComponent implements OnInit {
+export class MatchMakingChessComponent implements OnInit, OnDestroy {
 
   public baseUrl = environment.apiUrl;
   private gamemode = GameType.Chess 
+
+  private inQueue = false
 
 
   constructor(
@@ -33,12 +35,18 @@ export class MatchMakingChessComponent implements OnInit {
   ) {
     
   }
+
   
   async ngOnInit(): Promise<void> {
 
     this.authService.getCurrentUser();
     await this.webSocketService.connectRxjs()
 
+  }
+
+  async ngOnDestroy(): Promise<void> {
+    if(this.inQueue)
+      await this.api.post(`MatchMaking/cancelQueue`, this.gamemode)
   }
 
 
@@ -57,6 +65,7 @@ export class MatchMakingChessComponent implements OnInit {
 
     //Añade el jugador a la cola
     const result = await this.api.post(`MatchMaking/queueGame`, this.gamemode)
+    this.inQueue = true
 
   }
 
@@ -72,6 +81,7 @@ export class MatchMakingChessComponent implements OnInit {
 
     //Elimina el jugador a la cola
     const result = await this.api.post(`MatchMaking/cancelQueue`, this.gamemode)
+    this.inQueue = false
   }
 
 

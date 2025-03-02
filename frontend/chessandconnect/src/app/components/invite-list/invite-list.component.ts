@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FriendsService } from '../../services/friends.service';
 import { GameType } from '../../enums/game';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-invite-list',
@@ -10,6 +11,8 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrl: './invite-list.component.css'
 })
 export class InviteListComponent {
+
+  public baseUrl = environment.apiUrl;
 
   game: GameType
 

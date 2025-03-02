@@ -21,8 +21,8 @@
         @for (item of users; track $index) {
           <li class="p-3 bg-brown-200 rounded-md shadow-sm hover:bg-brown-300 cursor-pointer flex items-center justify-between">
             <div class="flex items-center" (click)="goToProfile(item.id)">
-              <img src="https://localhost:7089/{{item.avatarImageUrl}}" 
-                  alt="Avatar de usuario salguero" 
+              <img [src]="baseUrl + item.avatarImageUrl"
+                  alt="Avatar de Usuario" 
                   class="w-10 h-10 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
               <span>{{item.userName}}</span> 
             </div>

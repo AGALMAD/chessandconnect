@@ -1,4 +1,3 @@
-
 <!-- Barra de navegación -->
 <app-navbar></app-navbar>
 
@@ -13,9 +12,7 @@
       <!-- Jugar Online -->
       <div class="relative group cursor-pointer w-full md:w-1/3">
         <div class="bg-brown-600 rounded-2xl shadow-lg overflow-hidden transform transition-transform hover:scale-105">
-          <img
-            src="/matchmaking/connect_normal_image.png"
-            alt="Jugar Online" class="w-full h-48 object-cover" />
+          <img src="/matchmaking/connect_normal_image.png" alt="Jugar Online" class="w-full h-48 object-cover" />
           <div class="p-6 text-center">
             <h2 class="text-2xl font-semibold text-white">Jugar Online</h2>
             <button (click)="openLoadMatchMaking()"
@@ -29,8 +26,7 @@
       <!-- Jugar con Amigos -->
       <div class="relative group cursor-pointer w-full md:w-1/3">
         <div class="bg-brown-600 rounded-2xl shadow-lg overflow-hidden transform transition-transform hover:scale-105">
-          <img src="/matchmaking/connect_friends_image.png"
-            alt="Jugar con Amigos" class="w-full h-48 object-cover" />
+          <img src="/matchmaking/connect_friends_image.png" alt="Jugar con Amigos" class="w-full h-48 object-cover" />
           <div class="p-6 text-center">
             <h2 class="text-2xl font-semibold text-white">Jugar con Amigos</h2>
             <button (click)="openFriendInvitationModal()"
@@ -44,8 +40,7 @@
       <!-- Jugar contra IA -->
       <div class="relative group cursor-pointer w-full md:w-1/3">
         <div class="bg-brown-600 rounded-2xl shadow-lg overflow-hidden transform transition-transform hover:scale-105">
-          <img src="/matchmaking/connect_ia_image.png" alt="Jugar contra IA"
-            class="w-full h-48 object-cover" />
+          <img src="/matchmaking/connect_ia_image.png" alt="Jugar contra IA" class="w-full h-48 object-cover" />
           <div class="p-6 text-center">
             <h2 class="text-2xl font-semibold text-white">Jugar contra IA</h2>
             <button (click)="startGameWithBot()"
@@ -86,8 +81,8 @@
 
     <!-- Tablero de conecta 4 -->
     <div class="relative w-full aspect-square">
-      <img [src]="'/matchmaking/connect4.png'"
-        alt="Tablero de Conecta 4" class="w-full h-full object-cover border-brown-900  border-8 ">
+      <img [src]="'/matchmaking/connect4.png'" alt="Tablero de Conecta 4"
+        class="w-full h-full object-cover border-brown-900  border-8 ">
     </div>
 
     <!-- Jugador -->
@@ -109,7 +104,7 @@
 
 
   @if (matchMakingService.isHost) {
-    <button (click)="startGameWithFriend()"
+  <button (click)="startGameWithFriend()"
     class="mt-4 px-6 py-3 bg-brown-700 text-white font-semibold rounded-xl hover:bg-brown-600  transition">
     Empezar Partida
   </button>
@@ -132,12 +127,12 @@
       <div class="absolute inset-0 border-t-4 border-[#251d1d] rounded-full animate-spin"></div>
     </div>
 
+
+    <button (click)="closeLoadMatchMaking()"
+      class="mt-12 px-6 py-3 bg-brown-700 text-white text-xl font-semibold rounded-xl hover:bg-[#6f5f5f] transition">
+      Cancelar
+    </button>
+
   </div>
-
-
-  <button  (click)="closeLoadMatchMaking()"
-    class="mt-12 px-6 py-3 bg-brown-700 text-white text-xl font-semibold rounded-xl hover:bg-[#6f5f5f] transition">
-    Cancelar
-  </button>
 
 </section>

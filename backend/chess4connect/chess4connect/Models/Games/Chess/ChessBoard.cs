@@ -398,7 +398,7 @@ namespace chess4connect.Models.Games.Chess.Chess
             else
                 Player2Time -= timeSpent;
 
-
+            StartTurnDateTime = DateTime.Now;
 
             // Check if the move results in checkmate
             if (IsCheckmate())

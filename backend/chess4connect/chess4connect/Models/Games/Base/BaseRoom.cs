@@ -28,16 +28,13 @@ public abstract class BaseRoom
 
 
 
-    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-
-
     public BaseRoom(WebSocketHandler player1Handler, WebSocketHandler? player2Handler) {
         Player1Handler = player1Handler;
         Player2Handler = player2Handler;
     }
     public abstract Task SendBoard();
-    public abstract Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult);
-    public abstract Task SendWinMessage();
+    public abstract Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult, int winnerId);
+    public abstract Task SendWinMessage(int winnerId);
     public abstract Task SendDrawMessage();
 
     public abstract Task MessageHandler( string message);

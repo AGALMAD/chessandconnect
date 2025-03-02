@@ -21,6 +21,8 @@ export class MatchMakingChessComponent implements OnInit, OnDestroy {
   public baseUrl = environment.apiUrl;
   private gamemode = GameType.Chess 
 
+  private inQueue = false
+
 
   constructor(
     public menuService: MenuService,
@@ -43,7 +45,8 @@ export class MatchMakingChessComponent implements OnInit, OnDestroy {
   }
 
   async ngOnDestroy(): Promise<void> {
-    const result = await this.api.post(`MatchMaking/cancelQueue`, this.gamemode)
+    if(this.inQueue)
+      await this.api.post(`MatchMaking/cancelQueue`, this.gamemode)
   }
 
 
@@ -62,6 +65,7 @@ export class MatchMakingChessComponent implements OnInit, OnDestroy {
 
     //Añade el jugador a la cola
     const result = await this.api.post(`MatchMaking/queueGame`, this.gamemode)
+    this.inQueue = true
 
   }
 
@@ -77,6 +81,7 @@ export class MatchMakingChessComponent implements OnInit, OnDestroy {
 
     //Elimina el jugador a la cola
     const result = await this.api.post(`MatchMaking/cancelQueue`, this.gamemode)
+    this.inQueue = false
   }
 
 

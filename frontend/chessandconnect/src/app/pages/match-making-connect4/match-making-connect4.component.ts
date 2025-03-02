@@ -22,6 +22,7 @@ export class MatchMakingConnect4Component implements OnInit, OnDestroy{
   public baseUrl = environment.apiUrl;
   private gamemode = GameType.Connect4 
 
+  private inQueue = false
 
   constructor(
     public menuService: MenuService,
@@ -44,7 +45,8 @@ export class MatchMakingConnect4Component implements OnInit, OnDestroy{
   }
 
   async ngOnDestroy(): Promise<void> {
-    const result = await this.api.post(`MatchMaking/cancelQueue`, this.gamemode)
+    if(this.inQueue)
+      await this.api.post(`MatchMaking/cancelQueue`, this.gamemode)
   }
 
   async openLoadMatchMaking() {
@@ -61,6 +63,7 @@ export class MatchMakingConnect4Component implements OnInit, OnDestroy{
 
     //Añade el jugador a la cola
     const result = await this.api.post(`MatchMaking/queueGame`, this.gamemode)
+    this.inQueue = true
 
   }
 
@@ -76,6 +79,7 @@ export class MatchMakingConnect4Component implements OnInit, OnDestroy{
 
     //Elimina el jugador a la cola
     const result = await this.api.post(`MatchMaking/cancelQueue`, this.gamemode)
+    this.inQueue = false
   }
 
 

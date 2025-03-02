@@ -131,6 +131,13 @@ namespace chess4connect.Controllers
             await _userService.UpdateUserPassword(id, user.Password);
         }
 
+        [HttpPost("gamesHistory")]
+        public List<Play> getGamesHistory([FromBody] Pagination pagination)
+        { 
+
+            return _userService.getGamesHistory(pagination);
+        }
+
 
 
 

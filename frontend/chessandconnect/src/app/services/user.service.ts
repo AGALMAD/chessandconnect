@@ -4,6 +4,8 @@ import { User } from '../models/dto/user';
 import { Result } from '../models/result';
 import Swal from 'sweetalert2';
 import { Register } from '../models/dto/register';
+import { Pagination } from '../models/dto/pagination';
+import { Play } from '../models/play';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +36,10 @@ export class UserService {
     const formData = new FormData();
     formData.append('ImagePath', image);
     this.api.post<File>('User/updateAvatar', formData)
+  }
+
+  async getGamesHistory(pagination: Pagination){
+    return await this.api.post<Play[]>('User/gamesHistory', pagination)
   }
 
 

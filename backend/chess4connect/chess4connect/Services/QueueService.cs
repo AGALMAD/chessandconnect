@@ -12,7 +12,7 @@ namespace chess4connect.Services
         private List<WebSocketHandler> _queueChess = new List<WebSocketHandler> { };
         private List<WebSocketHandler> _queueConnect = new List<WebSocketHandler> { };
 
-        public QueueService(WebSocketNetwork webSocketNetwork, RoomService roomService) 
+        public QueueService(WebSocketNetwork webSocketNetwork, RoomService roomService)
         {
             _network = webSocketNetwork;
             _roomService = roomService;
@@ -32,6 +32,11 @@ namespace chess4connect.Services
             {
                 case GameType.Chess://Ajedrez
 
+                    //Si ya está en la cola no lo añade
+                    WebSocketHandler chessUserSocket = _queueChess.FirstOrDefault(q => q.Id == userId);
+                    if (chessUserSocket != null)
+                        return;
+
                     _queueChess.Add(_network.GetSocketByUserId(userId));//añadir a la cola
 
                     //Si hay más de un jugador en la cola entrar en una sala
@@ -41,9 +46,15 @@ namespace chess4connect.Services
                     }
 
 
+
                     break;
 
                 case GameType.Connect4://Conecta 4
+
+                    //Si ya está en la cola no lo añade
+                    WebSocketHandler connectUserSocket = _queueConnect.FirstOrDefault(q => q.Id == userId);
+                    if (connectUserSocket != null)
+                        return;
 
                     _queueConnect.Add(_network.GetSocketByUserId(userId));//añadir a la cola
 
@@ -75,12 +86,12 @@ namespace chess4connect.Services
 
                     WebSocketHandler chess2 = _queueChess[1];//Encuentra segundo jugador
 
-                    _queueChess.RemoveRange(0,2);//Sacar dos primeros jugadores
+                    _queueChess.RemoveRange(0, 2);//Sacar dos primeros jugadores
 
                     await _roomService.CreateRoomAsync(gamemode, chess1, chess2);
 
                     break;
-                   
+
 
 
                 case GameType.Connect4://Conecta 4

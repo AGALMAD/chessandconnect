@@ -79,6 +79,47 @@ public class UserService
         await _unitOfWork.SaveAsync();
     }
 
+    public  List<Play> getGamesHistory(Pagination pagination)    
+    {
+
+        List<Play> listToShow = [];
+        List<Play> list = [];
+
+        foreach (var item in GetUserById(pagination.UserId).Result.Plays)
+        {
+            if (item.Game == pagination.GameType)
+            {
+                list.Add(item);
+            }
+        }
+
+        //List<Play> list = GetUserById(pagination.UserId).Result.Plays;
+
+        int totalPages = (int)Math.Ceiling(list.Count() / (decimal)pagination.GamesCuantity);
+
+        for (int i = 0; i < totalPages; i++)
+        {
+            if (i == pagination.ActualPage - 1)
+            {
+                for (int j = 0; j < pagination.GamesCuantity; j++)
+                {
+                    try
+                    {
+                        listToShow.Add(list[j + (i * pagination.GamesCuantity)]);
+                    }
+                    catch
+                    {
+                        // aquí implicaría que no partidas que mostrar
+                    }
+                }
+            }
+        }
+
+
+
+        return listToShow;
+    }
+
     public async Task<List<FriendModel>> GetAllFriendsWithState(int userId)
     {
         List<Friendship> acceptedFriedships = await _unitOfWork.FriendshipRepository.GetAllAcceptedFriendshipsByUserId(userId);

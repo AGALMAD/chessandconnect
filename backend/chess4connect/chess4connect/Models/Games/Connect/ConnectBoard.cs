@@ -43,7 +43,7 @@ public class ConnectBoard
 
                 // Update time
                 TimeSpan timeSpent = DateTime.Now.Subtract(StartTurnDateTime);
-                if (piece.Player1Piece)
+                if (Player1Turn)
                     Player1Time -= timeSpent;
                 else
                     Player2Time -= timeSpent;
@@ -55,7 +55,7 @@ public class ConnectBoard
                 }
 
                 Player1Turn = !Player1Turn;
-
+                StartTurnDateTime = DateTime.Now;
 
                 return 0;
             }
@@ -109,13 +109,22 @@ public class ConnectBoard
         return count;
     }
 
-    public async Task RandomDrop()
+    public async Task<int> RandomDrop()
     {
         Random random = new Random();
 
         await Task.Delay(random.Next(1000, 5000));
 
-        while (DropPiece(random.Next(0, 7)) == -1) ;
+        int result;
+
+        do
+        {
+            result = DropPiece(random.Next(0, 7));
+        } while (result == -1);
+
+
+        return result;
+
     }
 }
 

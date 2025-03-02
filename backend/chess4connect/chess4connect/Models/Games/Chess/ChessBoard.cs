@@ -406,7 +406,8 @@ namespace chess4connect.Models.Games.Chess.Chess
             else
                 Player2Time -= timeSpent;
 
-            
+
+            StartTurnDateTime = DateTime.Now;
 
 
             // Check if the move results in checkmate
@@ -714,7 +715,7 @@ namespace chess4connect.Models.Games.Chess.Chess
         }
 
 
-        public async Task RandomMovement()
+        public async Task<bool> RandomMovement()
         {
             var random = new Random();
 
@@ -733,7 +734,7 @@ namespace chess4connect.Models.Games.Chess.Chess
             // If no valid moves available, return
             if (!playerPiecesMovements.Any())
             {
-                return;
+                return false;
             }
 
             int maxAttempts = 100; 
@@ -768,8 +769,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
                     if (result == 0)
                     {
-                        // Move successful
-                        return;
+                        return IsCheckmate();
                     }
 
                     attempts++;
@@ -779,6 +779,8 @@ namespace chess4connect.Models.Games.Chess.Chess
                     attempts++;
                 }
             }
+
+            return false;
         }
 
         public List<ChessBasePiece> convertBoardToList()

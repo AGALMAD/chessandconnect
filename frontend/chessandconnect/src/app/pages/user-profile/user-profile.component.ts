@@ -15,6 +15,7 @@ import { Play } from '../../models/play';
 import { GameType } from '../../enums/game';
 import { PipeTimerPipe } from "../../pipes/pipe-timer.pipe";
 import { playState } from '../../enums/playState';
+import { Pagination } from '../../models/dto/pagination';
 
 @Component({
   selector: 'app-user-profile',
@@ -28,17 +29,25 @@ public baseUrl = environment.apiUrl;
 
 queryMap: ParamMap;
 routeQueryMap$: Subscription;
+GameType = GameType
+
+
 profileId: number;
 user: User;
 isFriend: boolean;
+
+
 editType: 'name' | 'email' | 'password' = 'name';
 newValue: string = '';
 newPassword: string = '';
 confirmPassword: string = '';
 passwordError: string = '';
 isModalOpen = false;
-chessGames: Play[]
-connect4Games: Play[]
+
+games: Play[] = []
+
+actualPage: number = 1;
+pageSize: number = 5;
 
 
 constructor(
@@ -52,22 +61,13 @@ constructor(
 ngOnInit() {
   console.log(this.authService.currentUser.plays)
   this.routeQueryMap$ = this.route.queryParamMap.subscribe(queryMap => this.getQueryId(queryMap));
+  this.loadGames(GameType.Chess)
 }
 
 async getQueryId(queryMap: ParamMap) {
   this.profileId = parseInt(queryMap.get('id'));
   this.user = (await this.userService.getUser(this.profileId)).data;
   this.checkFriendship();
-}
-
-showGames(){
-  this.authService.currentUser.plays.forEach(game => {
-    if(game.game == GameType.Chess){
-      this.chessGames.push(game)
-    }else{
-      this.connect4Games.push(game)
-    }
-  });
 }
 
 getTimeDifference(startDate: Date, endDate: Date): number {
@@ -94,9 +94,52 @@ getResultGame(result: playState){
  return null
 }
 
+prevPage(gameType: GameType) {
+  if (gameType === GameType.Chess && this.actualPage > 1) {
+    this.actualPage--;
+    this.loadGames(gameType);
+  } else if (gameType === GameType.Connect4 && this.actualPage > 1) {
+    this.actualPage--;
+    this.loadGames(gameType);
+  }
+}
+
+nextPage(gameType: GameType) {
+  if (gameType === GameType.Chess) {
+    this.actualPage++;
+    this.loadGames(gameType);
+  } else if (gameType === GameType.Connect4) {
+    this.actualPage++;
+    this.loadGames(gameType);
+  }
+}
+
+async loadGames(gameType: GameType) {
+  const response = await this.userService.getGamesHistory(this.savePagination(gameType));
+    
+  if (response && response.data) {
+    this.games = Array.isArray(response.data) ? response.data : [response.data];
+  } else {
+    this.games = [];
+  }
+}
 
 changeTab(tab: string) {
   this.activeTab = tab;
+  this.actualPage = 1;
+}
+
+savePagination(gameType: GameType){
+  const pagination: Pagination = {
+    UserId: this.profileId,
+    GameType: gameType,
+    GamesCuantity: this.pageSize,
+    ActualPage: this.actualPage,
+  }
+
+  sessionStorage.setItem("pagination", JSON.stringify(pagination))
+
+  return pagination
 }
 
 async checkFriendship() {

@@ -115,17 +115,19 @@ namespace chess4connect.Services
 
                         if (chessRoom1 != null)
                         {
-                            await chessRoom1.SaveGame(_serviceProvider, GameResult.WIN);
+                            int winnerId = connectioMessage.Data.UserId == chessRoom1.Player1Id ? chessRoom1.Player2Id : chessRoom1.Player1Id;
+                            await chessRoom1.SaveGame(_serviceProvider, GameResult.WIN, winnerId);
                             chessRooms.Remove(chessRoom1);
                         }
 
                         else
                         {
                             ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+                            int winnerId = connectioMessage.Data.UserId == connectRoom.Player1Id ? connectRoom.Player2Id : connectRoom.Player1Id;
 
                             if (connectRoom != null)
                             {
-                                await connectRoom.SaveGame(_serviceProvider, GameResult.WIN);
+                                await connectRoom.SaveGame(_serviceProvider, GameResult.WIN, winnerId);
                                 connectRooms.Remove(connectRoom);
                             }
 
@@ -143,7 +145,7 @@ namespace chess4connect.Services
                     {
                         if (room.NewDrawRequest(userId))
                         {
-                            await room.SaveGame(_serviceProvider,GameResult.DRAW);
+                            await room.SaveGame(_serviceProvider,GameResult.DRAW,userId);
                             
                         }
                         else
@@ -171,7 +173,7 @@ namespace chess4connect.Services
                         {
                             if (connectRoom.NewDrawRequest(userId))
                             {
-                                await connectRoom.SaveGame(_serviceProvider, GameResult.DRAW);
+                                await connectRoom.SaveGame(_serviceProvider, GameResult.DRAW,userId);
                             }
                             else
                             {
@@ -329,11 +331,11 @@ namespace chess4connect.Services
 
         public ChessRoom GetChessRoomByUserId(int userId)
         {
-            return chessRooms.FirstOrDefault(r => r.Player1Handler.Id == userId || r.Player2Handler.Id == userId);
+            return chessRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
         }
         public ConnectRoom GetConnectRoomByUserId(int userId)
         {
-            return connectRooms.FirstOrDefault(r => r.Player1Handler.Id == userId || r.Player2Handler.Id == userId);
+            return connectRooms.FirstOrDefault(r => r.Player1Id == userId || r.Player2Id == userId);
         }
 
 

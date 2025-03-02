@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
@@ -16,7 +16,7 @@ import { FriendsService } from '../../services/friends.service';
   templateUrl: './match-making-chess.component.html',
   styleUrl: './match-making-chess.component.css'
 })
-export class MatchMakingChessComponent implements OnInit {
+export class MatchMakingChessComponent implements OnInit, OnDestroy {
 
   public baseUrl = environment.apiUrl;
   private gamemode = GameType.Chess 
@@ -33,12 +33,17 @@ export class MatchMakingChessComponent implements OnInit {
   ) {
     
   }
+
   
   async ngOnInit(): Promise<void> {
 
     this.authService.getCurrentUser();
     await this.webSocketService.connectRxjs()
 
+  }
+
+  async ngOnDestroy(): Promise<void> {
+    const result = await this.api.post(`MatchMaking/cancelQueue`, this.gamemode)
   }
 
 

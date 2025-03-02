@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-friends-list',
-  imports: [RouterLink, FormsModule],
+  imports: [FormsModule],
   templateUrl: './friends-list.component.html',
   styleUrl: './friends-list.component.css'
 })

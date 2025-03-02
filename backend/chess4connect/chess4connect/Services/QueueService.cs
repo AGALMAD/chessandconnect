@@ -112,20 +112,26 @@ namespace chess4connect.Services
 
         public async Task cancelGame(int userId, GameType game)
         {
-            WebSocketHandler socket = _network.GetSocketByUserId(userId);
-
             //Abrimos el semáforo
             await _semaphore.WaitAsync();
 
             switch (game)
             {
                 case GameType.Chess:
-                    _queueChess.Remove(socket);
+
+                    WebSocketHandler chessUserSocket = _queueChess.FirstOrDefault(q => q.Id == userId);
+                    if (chessUserSocket != null)
+                        _queueChess.Remove(chessUserSocket);
 
                     break;
 
                 case GameType.Connect4:
-                    _queueConnect.Remove(socket);
+
+                    //Si ya está en la cola no lo añade
+                    WebSocketHandler connectUserSocket = _queueConnect.FirstOrDefault(q => q.Id == userId);
+                    if (connectUserSocket != null)
+                        _queueConnect.Remove(connectUserSocket);
+
                     break;
             }
 

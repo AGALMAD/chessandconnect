@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { GameType } from '../../enums/game';
 import { MenuService } from '../../services/menu.service';
@@ -16,7 +16,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './match-making-connect4.component.html',
   styleUrl: './match-making-connect4.component.css'
 })
-export class MatchMakingConnect4Component implements OnInit{
+export class MatchMakingConnect4Component implements OnInit, OnDestroy{
 
 
   public baseUrl = environment.apiUrl;
@@ -34,11 +34,17 @@ export class MatchMakingConnect4Component implements OnInit{
   ) {
   }
 
+
+
   async ngOnInit(): Promise<void> {
 
     this.authService.getCurrentUser();
     await this.webSocketService.connectRxjs()
 
+  }
+
+  async ngOnDestroy(): Promise<void> {
+    const result = await this.api.post(`MatchMaking/cancelQueue`, this.gamemode)
   }
 
   async openLoadMatchMaking() {

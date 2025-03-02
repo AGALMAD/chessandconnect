@@ -10,6 +10,7 @@ import { MatchMakingConnect4Component } from './pages/match-making-connect4/matc
 import { ChessComponent } from './pages/chess/chess.component';
 import { Connect4Component } from './pages/connect4/connect4.component';
 import { AdminComponent } from './pages/admin/admin.component';
+import { BannedViewComponent } from './components/banned-view/banned-view.component';
 
 export const routes: Routes = [
     {path: "", component: HomeComponent},
@@ -28,5 +29,9 @@ export const routes: Routes = [
     //Games
     {path: "chessGame", component: ChessComponent, canActivate: [redirectionGuard]},
     {path: "connectGame", component: Connect4Component, canActivate: [redirectionGuard]},
+
+    //Banned View
+    {path: "banned", component: BannedViewComponent},
+
 
 ];

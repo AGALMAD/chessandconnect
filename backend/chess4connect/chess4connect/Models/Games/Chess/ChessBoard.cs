@@ -1,6 +1,7 @@
 ﻿using chess4connect.Models.Games.Chess.Chess.Pieces;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Types;
+using chess4connect.Services;
 using System.Drawing;
 
 namespace chess4connect.Models.Games.Chess.Chess
@@ -9,7 +10,7 @@ namespace chess4connect.Models.Games.Chess.Chess
     {
         public static int ROWS = 8;
         public static int COLUMNS = 8;
-
+        public ChessTimer remainingTime;
         public List<ChessPiecesMovements> ChessPiecesMovements { get; set; }
 
         private ChessBasePiece[,] Board = new ChessBasePiece[ROWS, COLUMNS];
@@ -29,6 +30,7 @@ namespace chess4connect.Models.Games.Chess.Chess
         public ChessBoard()
         {
             PlacePiecesInBoard();
+            remainingTime = new ChessTimer();
         }
 
         private void PlacePiecesInBoard()
@@ -319,6 +321,12 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         public int MovePiece(ChessMoveRequest moveRequest)
         {
+
+            remainingTime.OnTimeExpired += (isPlayer1Turn) =>
+            {
+                Console.WriteLine($"[Código Principal] {(isPlayer1Turn ? "Jugador 1" : "Jugador 2")} ha perdido por tiempo.");
+            };
+
             // Find the piece
             var piece = convertBoardToList().FirstOrDefault(p => p.Id == moveRequest.PieceId);
             if (piece == null) return -1;
@@ -398,7 +406,9 @@ namespace chess4connect.Models.Games.Chess.Chess
             else
                 Player2Time -= timeSpent;
 
+
             StartTurnDateTime = DateTime.Now;
+
 
             // Check if the move results in checkmate
             if (IsCheckmate())
@@ -409,9 +419,21 @@ namespace chess4connect.Models.Games.Chess.Chess
             // Change turn
             Player1Turn = !Player1Turn;
             StartTurnDateTime = DateTime.Now;
+            Console.WriteLine($"Tiempo inicial Jugador 1: {Player1Time.TotalSeconds}");
+            Console.WriteLine($"Tiempo inicial Jugador 2: {Player2Time.TotalSeconds}");
 
-            // Recalculate all possible moves for the new position
-            GetAllPieceMovements();
+            if (Player1Turn)
+            {
+                remainingTime.remainingTime(Player1Time, Player1Turn);
+                Console.WriteLine(Player1Time);
+            } else
+            {
+                remainingTime.remainingTime(Player2Time, !Player1Turn);
+            }
+
+
+                // Recalculate all possible moves for the new position
+                GetAllPieceMovements();
 
             return 0;
         }

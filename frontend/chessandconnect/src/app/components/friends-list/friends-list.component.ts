@@ -10,14 +10,14 @@ import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-friends-list',
-  imports: [RouterLink, FormsModule],
+  imports: [FormsModule],
   templateUrl: './friends-list.component.html',
   styleUrl: './friends-list.component.css'
 })
 export class FriendsListComponent implements OnInit {
 
-    public baseUrl = environment.apiUrl; 
-  
+  public baseUrl = environment.apiUrl;
+
 
   searchQuery: string;
   private searchTimeout: any;
@@ -62,7 +62,7 @@ export class FriendsListComponent implements OnInit {
     }
   }
 
-  goToProfile(id: number){
+  goToProfile(id: number) {
     this.router.navigate(
       ['/profile'],
       { queryParams: { 'id': id, } }

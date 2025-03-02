@@ -74,7 +74,8 @@ export class LoginComponent {
         timer: 1100
       });
 
-      await this.router.navigateByUrl(this.redirectTo)      
+      await this.router.navigate([this.redirectTo || '/']);
+
     }
   
   }

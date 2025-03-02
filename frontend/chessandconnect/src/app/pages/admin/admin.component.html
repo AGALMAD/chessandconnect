@@ -26,7 +26,7 @@
               <tr class="border-b border-[#6f4320]">
                 <td class="py-3 px-4">{{ user.id }}</td>
                 <td class="py-3 px-4">
-                  <img class="w-10 h-10 rounded-full" src="{{ user.avatarImageUrl }}" alt="Avatar" />
+                  <img class="w-10 h-10 rounded-full" [src]="baseUrl + user.avatarImageUrl" alt="Avatar" />
                 </td>
                 <td class="py-3 px-4 text-[#FBEED0]">{{ user.userName }}</td>
                 <td class="py-3 px-4 text-[#FBEED0]">{{ user.email }}</td>
@@ -58,7 +58,7 @@
                   @if (!user.banned) {
                     <button
                     class="bg-red-700 text-white py-2 px-4 rounded-lg hover:bg-red-800 transition shadow-md"
-                    (click)="changeState(user.id)"
+                    (click)="banUser(user.id, user.userName)"
                   >
                     Banear
                   </button>
@@ -66,7 +66,7 @@
                   @if (user.banned) {
                     <button
                     class="bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-800 transition shadow-md"
-                    (click)="changeState(user.id)"
+                    (click)="unbanUser(user.id, user.userName)"
                   >
                     Quitar Ban
                   </button>

@@ -8,10 +8,14 @@ namespace chess4connect.Services
     {
         private Timer gameTimer;
      
-        public ChessTimer(TimeSpan timeLeft)
+        public void remainingTime(TimeSpan timeLeft)
         {
-            gameTimer = new Timer(timeLeft);
-            gameTimer.Elapsed += TurnTimerElapsed;             
+            gameTimer?.Stop();
+
+            gameTimer = new Timer(timeLeft.TotalMicroseconds);
+            gameTimer.Elapsed += TurnTimerElapsed;
+            gameTimer.AutoReset = false;
+            gameTimer.Start();
         }
 
 

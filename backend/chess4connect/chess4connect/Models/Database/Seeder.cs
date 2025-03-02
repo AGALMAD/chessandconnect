@@ -2,6 +2,7 @@
 using chess4connect.Models.Database.Entities;
 using chess4connect.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace chess4connect.Models.Database;
@@ -22,6 +23,8 @@ public class Seeder
         await SeedUsersAsync();
         await _chessAndConnectContext.SaveChangesAsync();
         await SeedFriendshipsAsync();
+        await _chessAndConnectContext.SaveChangesAsync();
+        await SeedPlayDetailsAsync();
         await _chessAndConnectContext.SaveChangesAsync();
     }
 
@@ -54,31 +57,6 @@ public class Seeder
                 Role = "user",
                 AvatarImageUrl = "UserProfilePicture/perfil_por_defecto.png",
                 Banned = false,
-                Plays = new List<Play>
-                {
-                    new Play
-                    {
-                        StartDate = DateTime.Now,
-                        EndDate = DateTime.Now.AddHours(1),
-                        Game = GameType.Chess,
-                        PlayDetails = new List<PlayDetail>
-                        {
-                            new PlayDetail { PlayId = 1, UserId = 3, GameResult = GameResult.WIN },
-                            new PlayDetail { PlayId = 1, UserId = 4, GameResult = GameResult.LOSE }
-                        }
-                    },
-                    new Play
-                    {
-                        StartDate = DateTime.Now,
-                        EndDate = DateTime.Now.AddHours(1),
-                        Game = GameType.Connect4,
-                        PlayDetails = new List<PlayDetail>
-                        {
-                            new PlayDetail { PlayId = 2, UserId = 3, GameResult = GameResult.DRAW },
-                            new PlayDetail { PlayId = 2, UserId = 4, GameResult = GameResult.DRAW }
-                        }
-                    }
-                }
 
             },
             new User(){
@@ -123,6 +101,26 @@ public class Seeder
 
 
     }
+
+    private async Task SeedPlayDetailsAsync()
+    {
+        var playDetails1 = new List<PlayDetail>
+        {
+                new PlayDetail { PlayId = 1, UserId = 3, GameResult = GameResult.WIN },
+                new PlayDetail { PlayId = 1, UserId = 4, GameResult = GameResult.LOSE }
+            };
+
+        var playDetails2 = new List<PlayDetail>
+        {
+                new PlayDetail { PlayId = 2, UserId = 3, GameResult = GameResult.LOSE },
+                new PlayDetail { PlayId = 2, UserId = 4, GameResult = GameResult.WIN }
+            };
+
+        await _chessAndConnectContext.PlayDetails.AddRangeAsync(playDetails1);
+        await _chessAndConnectContext.PlayDetails.AddRangeAsync(playDetails2);
+    }
+
+
 
 
 

@@ -132,10 +132,10 @@ namespace chess4connect.Controllers
         }
 
         [HttpPost("gamesHistory")]
-        public async Task<List<GameHistoryDto>> getGamesHistoryAsync([FromBody] Pagination pagination)
+        public async Task<List<GameHistoryDto>> getGamesHistory([FromBody] Pagination pagination)
         { 
 
-            return await _userService.GetGamesHistoryAsync(pagination);
+            return await _userService.getGamesHistory(pagination);
         }
 
 

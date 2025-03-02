@@ -19,12 +19,16 @@ import { MatchMakingService } from './match-making.service';
 import { GameType } from '../enums/game';
 import { AuthService } from './auth.service';
 import { MenuService } from './menu.service';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class FriendsService {
+
+  public baseUrl = environment.apiUrl;
+
 
   public connectedFriends: Friend[]
   public disconnectedFriends: Friend[]
@@ -233,7 +237,7 @@ export class FriendsService {
           // 🔹 Mostrar alerta para aceptar o rechazar
           Swal.fire({
             title: ` <div class="flex items-center"
-            <img src="https://localhost:7089/${friend?.avatarImageUrl}" class="w-10 h-10 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">  
+            <img src="${environment}/${friend?.avatarImageUrl}" class="w-10 h-10 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">  
             <span>${friend?.userName}</span> 
             </div>`,
             text: `Invitación de juego.`,
@@ -289,6 +293,7 @@ export class FriendsService {
   // SEND FRIEND REQUEST
 
   async makeFriendshipRequest(id: number): Promise<Result<Friendship>> {
+    console.log(id)
     const result = await this.api.post<Friendship>(`Friendship/makerequest?friendId=${id}`)
     if (!result.success) {
       this.handleError('No se pudo realizar la petición')

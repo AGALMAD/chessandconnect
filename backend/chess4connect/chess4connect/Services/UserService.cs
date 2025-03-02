@@ -13,13 +13,18 @@ public class UserService
     private readonly UnitOfWork _unitOfWork;
     private readonly UserMapper _mapper;
     private readonly WebSocketNetwork _webSocketNetwork;
+    private readonly PasswordService _passwordService;
+    private readonly ImageService _imageService;
     
 
-    public UserService(UnitOfWork unitOfWork, UserMapper mapper, WebSocketNetwork webSocketNetwork)
+    public UserService(UnitOfWork unitOfWork, UserMapper mapper, WebSocketNetwork webSocketNetwork, PasswordService passwordService,
+         ImageService imageService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _webSocketNetwork = webSocketNetwork;
+        _passwordService = passwordService;
+        _imageService = imageService;
     }
 
     public async Task<User> GetUserById(int id)
@@ -33,6 +38,86 @@ public class UserService
         List<User> user = await _unitOfWork.UserRepository.GetAllUsers(id);
 
         return _mapper.ToDto(user).ToList() ;
+    }
+
+    public async Task<UserAfterLoginDto> GetUser(int id)
+    {
+        User user = await _unitOfWork.UserRepository.GetUserById(id);
+
+        return _mapper.ToDto(user);
+    }
+
+    public async Task UpdateUser(UserSignUpDto user, int id)
+    {
+        UserAfterLoginDto userToUpdate = await GetUser(id);
+
+        userToUpdate.UserName = user.UserName;
+        userToUpdate.Email = user.Email;
+
+        _unitOfWork.UserRepository.Update(_mapper.ToEntity(userToUpdate));
+        await _unitOfWork.SaveAsync();
+
+    }
+
+        public async Task UpdateAvatar(IFormFile ImagePath, int id)
+        {
+            UserAfterLoginDto userToUpdate = await GetUser(id);
+
+            userToUpdate.AvatarImageUrl = await _imageService.InsertAsync(ImagePath);
+
+            _unitOfWork.UserRepository.Update(_mapper.ToEntity(userToUpdate));
+            await _unitOfWork.SaveAsync();
+    }
+
+    public async Task UpdateUserPassword(int id,string password)
+    {
+        User userToUpdate = await GetUserById(id);
+
+        userToUpdate.Password = _passwordService.Hash(password);
+
+        _unitOfWork.UserRepository.Update(userToUpdate);
+        await _unitOfWork.SaveAsync();
+    }
+
+    public  List<Play> getGamesHistory(Pagination pagination)    
+    {
+
+        List<Play> listToShow = [];
+        List<Play> list = [];
+
+        foreach (var item in GetUserById(pagination.UserId).Result.Plays)
+        {
+            if (item.Game == pagination.GameType)
+            {
+                list.Add(item);
+            }
+        }
+
+        //List<Play> list = GetUserById(pagination.UserId).Result.Plays;
+
+        int totalPages = (int)Math.Ceiling(list.Count() / (decimal)pagination.GamesCuantity);
+
+        for (int i = 0; i < totalPages; i++)
+        {
+            if (i == pagination.ActualPage - 1)
+            {
+                for (int j = 0; j < pagination.GamesCuantity; j++)
+                {
+                    try
+                    {
+                        listToShow.Add(list[j + (i * pagination.GamesCuantity)]);
+                    }
+                    catch
+                    {
+                        // aquí implicaría que no partidas que mostrar
+                    }
+                }
+            }
+        }
+
+
+
+        return listToShow;
     }
 
     public async Task<List<FriendModel>> GetAllFriendsWithState(int userId)

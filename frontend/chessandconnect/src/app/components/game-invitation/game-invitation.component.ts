@@ -3,6 +3,7 @@ import { FriendsService } from '../../services/friends.service';
 import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Friend } from '../../models/dto/friend';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-game-invitation',
@@ -12,6 +13,9 @@ import { Friend } from '../../models/dto/friend';
 })
 export class GameInvitationComponent {
 
+  public baseUrl = environment.apiUrl;
+
+
   friend: Friend
 
   constructor(
@@ -19,11 +23,11 @@ export class GameInvitationComponent {
     public friendService: FriendsService,
     public dialogRef: MatDialogRef<Friend>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ){}
+  ) { }
 
 
 
-  getConnectedFriendById(friendId: number){
+  getConnectedFriendById(friendId: number) {
     this.friend = this.friendService.getConnectedFriendById(friendId)
   }
 

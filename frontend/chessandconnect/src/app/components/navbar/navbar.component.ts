@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -14,7 +14,8 @@ export class NavbarComponent {
   public baseUrl = environment.apiUrl; 
 
   constructor(
-    public authService: AuthService
+    public authService: AuthService,
+    private router: Router
   ) {
   }
 
@@ -28,5 +29,12 @@ export class NavbarComponent {
 
   closeSession() {
     this.authService.logout()
+  }
+
+  goToProfile(id: number){
+    this.router.navigate(
+      ['/profile'],
+      { queryParams: { 'id': id, } }
+    );
   }
 }

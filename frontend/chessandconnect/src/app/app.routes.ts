@@ -16,7 +16,11 @@ export const routes: Routes = [
     {path: "login", component: LoginComponent},
     {path: "register", component: RegisterComponent},
     {path: "menus", component: MenusComponent, canActivate: [redirectionGuard]},
+
+    //Profile
     {path: "profile", component: UserProfileComponent,canActivate: [redirectionGuard]},
+
+    //Match Making
     {path: "chess", component: MatchMakingChessComponent, canActivate: [redirectionGuard]},
     {path: "connect", component: MatchMakingConnect4Component, canActivate: [redirectionGuard]},
     {path: "admin", component: AdminComponent, canActivate: [redirectionGuard]},

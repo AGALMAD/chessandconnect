@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FriendsService } from '../../services/friends.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -15,6 +16,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrl: './user-list.component.css'
 })
 export class UserListComponent {
+
+
+  public baseUrl = environment.apiUrl;
 
   users: User[] = []
   searchQuery: string;
@@ -26,27 +30,27 @@ export class UserListComponent {
     private friendService: FriendsService,
     public dialogRef: MatDialogRef<UserListComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ){}
+  ) { }
 
-  async onSearch(){
+  async onSearch() {
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(async () => {
-        this.users = [];
+      this.users = [];
 
-        if (!this.searchQuery) {
-            this.searchQuery = '';
-        }
+      if (!this.searchQuery) {
+        this.searchQuery = '';
+      }
 
-        const users: Result<User> = await this.userService.getSearchUsers(this.searchQuery);
-        this.users = this.users.concat(users.data);;
+      const users: Result<User> = await this.userService.getSearchUsers(this.searchQuery);
+      this.users = this.users.concat(users.data);;
     }, 500); // Espera 500ms antes de ejecutar
   }
 
-  sendFriendRequest(destination_id: number){
+  sendFriendRequest(destination_id: number) {
     this.friendService.makeFriendshipRequest(destination_id)
   }
 
-  goToProfile(id: number){
+  goToProfile(id: number) {
     this.router.navigate(
       ['/profile'],
       { queryParams: { 'id': id, } }

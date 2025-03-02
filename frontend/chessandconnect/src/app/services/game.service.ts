@@ -74,6 +74,8 @@ export class GameService {
         this.winner = winnerId == this.authService.currentUser.id ? this.authService.currentUser : this.opponent
         this.looser = winnerId == this.authService.currentUser.id ? this.opponent : this.authService.currentUser
 
+        this.stopCountdown()
+
         this.dialog.open(ChessResultComponent, {
           width: '800px',
           data: {
@@ -87,6 +89,8 @@ export class GameService {
         
         case SocketCommunicationType.DRAW:
         
+        this.stopCountdown()
+
         this.dialog.open(ChessResultComponent, {
           width: '800px',
           data: {
@@ -96,6 +100,7 @@ export class GameService {
           }
         });
 
+        
         break
 
       case SocketCommunicationType.DRAW_REQUEST:
@@ -233,12 +238,17 @@ export class GameService {
   }
 
 
+  public stopCountdown(){
+    this.timerSubscription.unsubscribe();
+  }
+
 
 
   backToMenu() {
+    this.opponent = null
+    this.stopCountdown()
     this.router.navigate(['/menus']);
 
-    this.opponent = null
 
   }
 
@@ -274,6 +284,7 @@ export class GameService {
     };
 
     this.webSocketService.sendRxjs(JSON.stringify(message));
+
   }
 
 

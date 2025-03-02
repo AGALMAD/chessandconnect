@@ -59,9 +59,9 @@ constructor(
 ) {}
 
 ngOnInit() {
-  console.log(this.authService.currentUser.plays)
   this.routeQueryMap$ = this.route.queryParamMap.subscribe(queryMap => this.getQueryId(queryMap));
   this.loadGames(GameType.Chess)
+  console.log(this.games  )
 }
 
 async getQueryId(queryMap: ParamMap) {

@@ -1,4 +1,5 @@
-﻿using chess4connect.Models.Database.Entities;
+﻿using chess4connect.Enums;
+using chess4connect.Models.Database.Entities;
 using chess4connect.Services;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
@@ -53,6 +54,31 @@ public class Seeder
                 Role = "user",
                 AvatarImageUrl = "UserProfilePicture/perfil_por_defecto.png",
                 Banned = false,
+                Plays = new List<Play>
+                {
+                    new Play
+                    {
+                        StartDate = DateTime.Now,
+                        EndDate = DateTime.Now.AddHours(1),
+                        Game = GameType.Chess,
+                        PlayDetails = new List<PlayDetail>
+                        {
+                            new PlayDetail { PlayId = 1, UserId = 3, GameResult = GameResult.WIN },
+                            new PlayDetail { PlayId = 1, UserId = 4, GameResult = GameResult.LOSE }
+                        }
+                    },
+                    new Play
+                    {
+                        StartDate = DateTime.Now,
+                        EndDate = DateTime.Now.AddHours(1),
+                        Game = GameType.Connect4,
+                        PlayDetails = new List<PlayDetail>
+                        {
+                            new PlayDetail { PlayId = 2, UserId = 3, GameResult = GameResult.DRAW },
+                            new PlayDetail { PlayId = 2, UserId = 4, GameResult = GameResult.DRAW }
+                        }
+                    }
+                }
 
             },
             new User(){

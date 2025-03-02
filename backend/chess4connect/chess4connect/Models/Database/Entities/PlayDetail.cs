@@ -10,8 +10,6 @@ namespace chess4connect.Models.Database.Entities
 
         public int UserId { get; set; }
 
-        public User User { get; set; }
-
         public GameResult GameResult { get; set; }
     }
 }

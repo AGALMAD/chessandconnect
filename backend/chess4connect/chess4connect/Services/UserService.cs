@@ -79,46 +79,61 @@ public class UserService
         await _unitOfWork.SaveAsync();
     }
 
-    public  List<Play> getGamesHistory(Pagination pagination)    
+    public async Task<List<GameHistoryDto>> GetGamesHistoryAsync(Pagination pagination)
     {
+        List<GameHistoryDto> listToShow = new();
+        List<GameHistoryDto> list = new();
 
-        List<Play> listToShow = [];
-        List<Play> list = [];
+        var user = await GetUserById(pagination.UserId); // Evita el bloqueo
+        if (user?.Plays == null) return listToShow; // Validación para evitar errores
 
-        foreach (var item in GetUserById(pagination.UserId).Result.Plays)
+        foreach (var item in user.Plays)
         {
-            if (item.Game == pagination.GameType)
+            int userId = 0;
+            int opponentId = 0;
+            GameResult playstate = GameResult.DRAW;
+
+            foreach (var item1 in item.PlayDetails)
             {
-                list.Add(item);
-            }
-        }
-
-        //List<Play> list = GetUserById(pagination.UserId).Result.Plays;
-
-        int totalPages = (int)Math.Ceiling(list.Count() / (decimal)pagination.GamesCuantity);
-
-        for (int i = 0; i < totalPages; i++)
-        {
-            if (i == pagination.ActualPage - 1)
-            {
-                for (int j = 0; j < pagination.GamesCuantity; j++)
+                if (item1.UserId == pagination.UserId)
                 {
-                    try
-                    {
-                        listToShow.Add(list[j + (i * pagination.GamesCuantity)]);
-                    }
-                    catch
-                    {
-                        // aquí implicaría que no partidas que mostrar
-                    }
+                    userId = item1.UserId;
+                    playstate = item1.GameResult;
+                }
+                else
+                {
+                    opponentId = item1.UserId;
                 }
             }
+
+            if (item.Game == pagination.GameType)
+            {
+                list.Add(new GameHistoryDto
+                {
+                    UserId = userId,
+                    OpponentId = opponentId,
+                    Duration = (int)(item.EndDate - item.StartDate).TotalSeconds,
+                    PlayState = playstate,
+                    Game = pagination.GameType
+                });
+            }
         }
 
+        // Evita dividir por cero si GamesCuantity es 0
+        if (pagination.GamesCuantity <= 0) return listToShow;
 
+        int totalPages = (int)Math.Ceiling(list.Count / (decimal)pagination.GamesCuantity);
+        int startIndex = (pagination.ActualPage - 1) * pagination.GamesCuantity;
+
+        // Verifica que el índice esté dentro del rango
+        if (startIndex < list.Count)
+        {
+            listToShow = list.Skip(startIndex).Take(pagination.GamesCuantity).ToList();
+        }
 
         return listToShow;
     }
+
 
     public async Task<List<FriendModel>> GetAllFriendsWithState(int userId)
     {

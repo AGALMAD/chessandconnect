@@ -16,8 +16,8 @@ import { environment } from '../../../environments/environment';
 })
 export class FriendsListComponent implements OnInit {
 
-    public baseUrl = environment.apiUrl; 
-  
+  public baseUrl = environment.apiUrl;
+
 
   searchQuery: string;
   private searchTimeout: any;
@@ -62,7 +62,7 @@ export class FriendsListComponent implements OnInit {
     }
   }
 
-  goToProfile(id: number){
+  goToProfile(id: number) {
     this.router.navigate(
       ['/profile'],
       { queryParams: { 'id': id, } }

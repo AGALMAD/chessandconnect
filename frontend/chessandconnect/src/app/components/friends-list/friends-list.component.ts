@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FriendsService } from '../../services/friends.service';
 import { Friend } from '../../models/dto/friend';
 import { User } from '../../models/dto/user';
-import { RouterLink } from '@angular/router';
+import { Route, Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { GameType } from '../../enums/game';
@@ -23,7 +23,9 @@ export class FriendsListComponent implements OnInit {
   private searchTimeout: any;
 
   constructor(
-    public friendService: FriendsService) { }
+    public friendService: FriendsService,
+    private router: Router
+  ) { }
 
 
   async ngOnInit(): Promise<void> {
@@ -58,6 +60,13 @@ export class FriendsListComponent implements OnInit {
     } else {
       console.log("Eliminación cancelada")
     }
+  }
+
+  goToProfile(id: number){
+    this.router.navigate(
+      ['/profile'],
+      { queryParams: { 'id': id, } }
+    );
   }
 
   async onSearch() {

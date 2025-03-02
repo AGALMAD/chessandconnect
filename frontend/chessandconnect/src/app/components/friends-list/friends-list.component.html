@@ -14,8 +14,11 @@
     @for(friend of friendService.connectedFriends; track friend.id){
       <li class="p-2 rounded-lg shadow flex items-center bg-[#301e16] text-[#E8D5B5] cursor-pointer">
         <img 
-        [routerLink]="'/profile'"
-          [src]="baseUrl + friend.avatarImageUrl" 
+
+             (click)="goToProfile(friend.id)"
+          [src]="'https://localhost:7089/' + friend.avatarImageUrl" 
+
+        
           alt="Avatar de {{ friend.userName }}"
           class="w-10 h-10 rounded-full object-cover border-2 border-gray-500 shadow-md opacity-60 hover:scale-110"
         >
@@ -31,8 +34,9 @@
     @for(friend of friendService.disconnectedFriends; track friend.id){
       <li class="p-2 rounded-lg shadow flex items-center bg-[#abaaaa] text-[#301e16] cursor-pointer">
         <img
-          [routerLink]="'/profile'"
-          [src]="baseUrl + friend.avatarImageUrl" 
+        (click)="goToProfile(friend.id)"
+          [src]="'https://localhost:7089/' + friend.avatarImageUrl" 
+
           alt="Avatar de {{ friend.userName }}"
           class="w-10 h-10 rounded-full object-cover border-2 border-gray-500 shadow-md opacity-60 hover:scale-110"
         >

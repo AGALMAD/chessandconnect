@@ -78,9 +78,17 @@ namespace chess4connect.Models.Games.Chess.Chess
                 await playerSocket.SendAsync(stringBoardMessage);
             }
             else { 
-                await Game.Board.RandomMovement();
+                //Si el bot gana, termina la partida
+                if(await Game.Board.RandomMovement())
+                {
+                    await SaveGame(_serviceProvider,GameResult.WIN, 0);
+                }
+                else
+                {
+                    await SendMovementsMessageAsync();
+                }
+
                 await SendBoard();
-                await SendMovementsMessageAsync();
             }
 
         }

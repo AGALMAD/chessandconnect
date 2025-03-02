@@ -43,7 +43,7 @@ public class ConnectBoard
 
                 // Update time
                 TimeSpan timeSpent = DateTime.Now.Subtract(StartTurnDateTime);
-                if (piece.Player1Piece)
+                if (Player1Turn)
                     Player1Time -= timeSpent;
                 else
                     Player2Time -= timeSpent;
@@ -55,7 +55,7 @@ public class ConnectBoard
                 }
 
                 Player1Turn = !Player1Turn;
-
+                StartTurnDateTime = DateTime.Now;
 
                 return 0;
             }

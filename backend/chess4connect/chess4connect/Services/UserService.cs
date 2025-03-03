@@ -59,8 +59,8 @@ public class UserService
 
     }
 
-        public async Task UpdateAvatar(IFormFile ImagePath, int id)
-        {
+    public async Task UpdateAvatar(IFormFile ImagePath, int id)
+    {
             UserAfterLoginDto userToUpdate = await GetUser(id);
 
             userToUpdate.AvatarImageUrl = await _imageService.InsertAsync(ImagePath);
@@ -79,17 +79,55 @@ public class UserService
         await _unitOfWork.SaveAsync();
     }
 
-    public  List<Play> getGamesHistory(Pagination pagination)    
+    public async Task<GameHistoryDto> getGamesHistory(Pagination pagination)
     {
 
-        List<Play> listToShow = [];
-        List<Play> list = [];
+        List<GameHistoryDetailDto> listTemporal = [];
+        List<GameHistoryDetailDto> list = [];
 
-        foreach (var item in GetUserById(pagination.UserId).Result.Plays)
+        User user = GetUserById(pagination.UserId).Result;
+       
+
+
+        //tengo lista de playdetails del usuario en la que esta el id de la partida, entonces cojo la partida y cada partida tiene
+        //dos play detail y uno es del usuaio y otro del oponente
+
+        foreach (var item in user.Plays)
         {
-            if (item.Game == pagination.GameType)
+
+            Play play = await _unitOfWork.PlayRepository.GetPlaybyId(item.PlayId);
+
+            int userId = 0;
+            int opponentId = 0;
+            GameResult playstate = GameResult.DRAW;
+
+
+            foreach (var item1 in play.PlayDetails)
             {
-                list.Add(item);
+                if (item1.UserId == pagination.UserId)
+                {
+                    userId = item1.UserId;
+                    playstate = item1.GameResult;
+                }
+                else
+                {
+                    opponentId = item1.UserId;
+                }
+            }
+
+
+            if (play.Game == pagination.GameType)
+            {
+                var game = new GameHistoryDetailDto
+                {
+                    User = GetUserById(userId).Result,
+                    Opponent = GetUserById(opponentId).Result,
+                    Duration = (int)(play.EndDate - play.StartDate).TotalSeconds,
+                    PlayState = item.GameResult,
+                    Game = pagination.GameType
+                };
+
+                list.Add(game);
             }
         }
 
@@ -105,7 +143,7 @@ public class UserService
                 {
                     try
                     {
-                        listToShow.Add(list[j + (i * pagination.GamesCuantity)]);
+                        listTemporal.Add(list[j + (i * pagination.GamesCuantity)]);
                     }
                     catch
                     {
@@ -115,10 +153,17 @@ public class UserService
             }
         }
 
+        listTemporal.Reverse();
 
+        var listToShow = new GameHistoryDto
+        {
+            TotalPages = totalPages,
+            Details = listTemporal.ToList()
+        };
 
         return listToShow;
     }
+
 
     public async Task<List<FriendModel>> GetAllFriendsWithState(int userId)
     {

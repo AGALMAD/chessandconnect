@@ -7,26 +7,28 @@ namespace chess4connect.Services
     public class ChessTimer
     {
         private Timer gameTimer;
-        public event Action<bool> OnTimeExpired;
+        public event Action? OnTimeExpired; // Evento sin parámetros
 
-        public void remainingTime(TimeSpan timeLeft, bool isPlayer1turn)
+        public ChessTimer()
         {
-            gameTimer?.Stop();
-
-            gameTimer = new Timer(timeLeft);
-            gameTimer.Elapsed += (sender, e) => TurnTimerElapsed(isPlayer1turn);
+            gameTimer = new Timer();
+            gameTimer.Elapsed += TurnTimerElapsed;
             gameTimer.AutoReset = false;
+        }
+
+        public void StartTimer(TimeSpan timeLeft)
+        {
+            gameTimer.Stop();
+            gameTimer.Interval = timeLeft.TotalMilliseconds; // Convertir TimeSpan a milisegundos
             gameTimer.Start();
         }
 
-
-        private void TurnTimerElapsed(bool isPlayer1turn)
+        private void TurnTimerElapsed(object? sender, ElapsedEventArgs e)
         {
-            Console.WriteLine("El tiempo ha expirado");
-            OnTimeExpired?.Invoke(isPlayer1turn);
+            Console.WriteLine("El tiempo ha expirado.");
+             // Llamar al evento cuando el tiempo se acabe
+             gameTimer.Stop();
         }
-
-        
-
     }
 }
+

@@ -1,6 +1,7 @@
-<app-navbar></app-navbar>
+
 @if (authService.currentUser.id == profileId) {
 <div class="bg-brown-100 text-brown-900 min-h-screen p-6">
+  <app-navbar></app-navbar>
   <div class="max-w-4xl mx-auto bg-brown-200 rounded-lg p-6 shadow-lg relative">
     <!-- Imagen de fondo -->
     <div class="absolute top-0 left-0 w-full h-32 bg-cover bg-center rounded-t-lg"

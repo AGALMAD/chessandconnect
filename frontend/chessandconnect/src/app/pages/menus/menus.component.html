@@ -1,7 +1,6 @@
-<!-- Barra de navegación -->
-<app-navbar></app-navbar>
 <div class="min-h-screen bg-brown-100 flex items-center justify-center py-16 px-6 md:py-24 md:px-10">
-    <div class="bg-brown-200 p-8 rounded-2xl shadow-lg w-full max-w-6xl flex flex-row gap-8">
+    <app-navbar></app-navbar>
+    <div class="bg-brown-200 p-8 rounded-2xl shadow-lg w-full max-w-6xl flex flex-col md:flex-row gap-8">
         <!-- Sección principal -->
         <div class="flex-1 flex flex-col gap-8">
             <h1 class="text-4xl font-bold text-center text-brown-800">Modos de Juego</h1>
@@ -49,7 +48,7 @@
         </div>
 
         <!-- Lista de amigos e invitaciones (columna derecha) -->
-        <div class="w-80 bg-brown-300 p-6 rounded-lg shadow-inner flex flex-col items-center">
+        <div class="w-full md:w-80 bg-brown-300 p-6 rounded-lg shadow-inner flex flex-col items-center">
             <app-friends-list></app-friends-list>
 
             <div class="w-full mt-4 flex flex-col gap-4">

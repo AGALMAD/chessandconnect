@@ -1,5 +1,5 @@
 <!-- Vista de chat -->
-<div class="bg-brown-600 text-brown-100 w-[350px] h-[500px] flex flex-col shadow-lg rounded-lg p-4">
+<div class="bg-brown-600 text-brown-100 w-full sm:w-[350px] h-[500px] sm:h-[500px] md:w-[400px] lg:w-[450px] xl:w-[500px] flex flex-col shadow-lg rounded-lg p-4">
     <div class="overflow-y-auto flex-1 p-2 space-y-2">
         @for (m of chatService.messages; track $index) {
         @if (authService.currentUser.id != m.userId) {
@@ -23,49 +23,43 @@
     <!-- Input de chat y botón enviar -->
     <div class="flex items-center space-x-2 mt-2 p-2 border-t border-brown-500">
         <input type="text"
-            class="flex-1 p-2 border border-brown-200 rounded-lg text-brown-700 bg-brown-200 placeholder-brown-500"
+            class="flex-1 p-2 border border-brown-200 rounded-lg text-brown-700 bg-brown-200 placeholder-brown-500 text-sm sm:text-base"
             placeholder="Escribe un mensaje..." [(ngModel)]="message" (keydown.enter)="sendMessage()">
 
         <button (click)="sendMessage()"
-            class="bg-brown-200 text-brown-700 py-2 px-4 rounded-lg hover:bg-brown-300 transition-all duration-300">
+            class="bg-brown-200 text-brown-700 py-2 px-4 rounded-lg hover:bg-brown-300 transition-all duration-300 text-sm sm:text-base">
             Enviar
         </button>
     </div>
 
-
-
-
     <!-- Botones para rendirse y tablas -->
     <div class="flex items-center justify-center gap-2 mt-2 relative">
         <button (click)="openModal('leave')"
-            class="flex-1 px-4 py-2 bg-brown-700 text-white font-bold rounded-lg shadow-md hover:bg-brown-800 transition-all duration-300">
+            class="flex-1 px-4 py-2 bg-brown-700 text-white font-bold rounded-lg shadow-md hover:bg-brown-800 transition-all duration-300 text-sm sm:text-base">
             ❌ Rendirse
         </button>
 
         <button (click)="openModal('draw')"
-            class="flex-1 px-4 py-2 bg-brown-700 text-white font-bold rounded-lg shadow-md hover:bg-brown-700 transition-all duration-300">
+            class="flex-1 px-4 py-2 bg-brown-700 text-white font-bold rounded-lg shadow-md hover:bg-brown-700 transition-all duration-300 text-sm sm:text-base">
             🤝 Tablas
         </button>
 
         <!--Modal de confirmación-->
         @if (isModalOpen) {
         <div
-            class="absolute bottom-14 left-1/2 transform -translate-x-1/2 bg-brown-100 p-4 rounded-lg shadow-lg w-72 border border-brown-300">
+            class="absolute bottom-14 left-1/2 transform -translate-x-1/2 bg-brown-100 p-4 rounded-lg shadow-lg w-72 sm:w-80 md:w-96 border border-brown-300">
             <p class="text-lg font-bold text-brown-800 text-center">{{ modalMessage }}</p>
             <div class="flex justify-end gap-2 mt-4">
                 <button (click)="closeModal()"
-                    class="px-4 py-2 bg-brown-600 text-white font-bold rounded-lg hover:bg-brown-400 transition-all duration-200">
+                    class="px-4 py-2 bg-brown-600 text-white font-bold rounded-lg hover:bg-brown-400 transition-all duration-200 text-sm sm:text-base">
                     Cancelar
                 </button>
                 <button (click)="confirmAction()"
-                    class="px-4 py-2 bg-brown-600 text-white font-bold rounded-lg hover:bg-brown-800 transition-all duration-200">
+                    class="px-4 py-2 bg-brown-600 text-white font-bold rounded-lg hover:bg-brown-800 transition-all duration-200 text-sm sm:text-base">
                     Confirmar
                 </button>
             </div>
         </div>
         }
     </div>
-
-
-
 </div>

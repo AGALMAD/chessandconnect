@@ -123,14 +123,19 @@ namespace chess4connect.Services
                         else
                         {
                             ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
-                            int winnerId = connectioMessage.Data.UserId == connectRoom.Player1Id ? connectRoom.Player2Id : connectRoom.Player1Id;
 
-                            if (connectRoom != null)
+                            if(connectRoom != null)
                             {
-                                await connectRoom.SaveGame(_serviceProvider, GameResult.WIN, winnerId);
-                                connectRooms.Remove(connectRoom);
+                                int winnerId = connectioMessage.Data.UserId == connectRoom.Player1Id ? connectRoom.Player2Id : connectRoom.Player1Id;
+
+                                if (connectRoom != null)
+                                {
+                                    await connectRoom.SaveGame(_serviceProvider, GameResult.WIN, winnerId);
+                                    connectRooms.Remove(connectRoom);
+                                }
                             }
 
+                           
                         }
                     }
 

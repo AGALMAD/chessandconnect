@@ -8,5 +8,5 @@ public class FriendDto
     public string UserName { get; set; }
     public string Email { get; set; }
     public string AvatarImageUrl { get; set; }
-    public List<Play> Plays { get; set; } = new List<Play>();
+    public List<PlayDetail> Plays { get; set; } = new List<PlayDetail>();
 }

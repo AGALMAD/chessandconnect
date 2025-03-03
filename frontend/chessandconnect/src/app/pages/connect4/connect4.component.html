@@ -2,10 +2,10 @@
     <div class="flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-7xl space-y-6">
 
         <!-- Contenedor para Tablero y Chat -->
-        <div class="flex justify-center items-center gap-8 w-full">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-8 w-full">
 
             <!-- Tablero -->
-            <div class="grid grid-rows-6 gap-y-2 bg-brown-600 p-4 rounded-lg shadow-lg w-[80vh] justify-center">
+            <div class="grid grid-rows-6 gap-y-2 bg-brown-600 p-4 rounded-lg shadow-lg w-full md:w-[60vh] lg:w-[50vh] xl:w-[40vh] justify-center">
 
                 <!-- Cabecera del oponente -->
                 <div class="flex items-center justify-between w-full mb-6">
@@ -21,9 +21,9 @@
                 </div>
 
                 <!-- Tablero de juego -->
-                <div *ngFor="let row of rows; let y = index" class="flex gap-2">
-                    <div *ngFor="let col of columns; let x = index" class="w-16 h-16 flex items-center justify-center">
-                        <div class="w-full h-full border-4 border-brown-900 rounded-full flex items-center justify-center bg-brown-600 cursor-pointer hover:border-brown-800 transition duration-200"
+                <div *ngFor="let row of rows; let y = index" class="flex gap-1">
+                    <div *ngFor="let col of columns; let x = index" class="w-12 h-12 flex items-center justify-center">
+                        <div class="w-full h-full border-2 border-brown-900 rounded-full flex items-center justify-center bg-brown-600 cursor-pointer hover:border-brown-800 transition duration-200"
                             (click)="dropPiece(col)">
                             @for (piece of connectService.pieces; track $index) {
                             @if (piece.Position.X == x && piece.Position.Y == y) {
@@ -36,13 +36,13 @@
                             <div
                                 class="size-full bg-red-500 shadow-lg transform transition-transform duration-200 hover:scale-110 rounded-full">
                             </div>
-
                             }
                             }
                             }
                         </div>
                     </div>
                 </div>
+                
 
                 <!-- Cabecera del jugador -->
                 <div class="mt-6 flex items-center justify-between w-full">
@@ -58,7 +58,10 @@
             </div>
 
             <!-- Chat -->
-            <app-chat></app-chat>
+            <div class="w-full md:w-[350px] lg:w-[400px] xl:w-[450px]">
+                <app-chat></app-chat>
+            </div>
+
         </div>
     </div>
 </div>

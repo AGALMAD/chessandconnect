@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using chess4connect.Models.SocketComunication.MessageTypes;
 using Microsoft.AspNetCore.Authorization;
 using chess4connect.DTOs;
+using chess4connect.Enums;
+using chess4connect.Models.SocketComunication.Handlers;
+using System.Text.Json;
 
 namespace chess4connect.Controllers
 {
@@ -20,13 +23,15 @@ namespace chess4connect.Controllers
         private SmartSearchUsers _smartSearch;
         private UserMapper _userMapper;
         private SmartSearchFriends _smartSearchFriends;
+        private WebSocketNetwork _webSocketNetwork;
 
-        public UserController(UserService userService, SmartSearchUsers smartSearch, UserMapper userMapper, SmartSearchFriends smartSearchFriends) 
+        public UserController(UserService userService, SmartSearchUsers smartSearch, UserMapper userMapper, SmartSearchFriends smartSearchFriends, WebSocketNetwork webSocketNetwork) 
         { 
             _userService = userService;
             _smartSearch = smartSearch;
             _userMapper = userMapper;
             _smartSearchFriends = smartSearchFriends;
+            _webSocketNetwork = webSocketNetwork;
         }
 
         [Authorize]
@@ -103,6 +108,27 @@ namespace chess4connect.Controllers
 
             await _userService.DeleteFriend(Int32.Parse(userId), friendId);
 
+            var friendshipSocketMessage = new FriendshipSocketMessage<FriendshipRequestModel>
+            {
+                Data = new FriendshipRequestModel
+                {
+                    State = FriendshipState.Accepted,
+                    UserId = friendId,
+                    FriendId = int.Parse(userId),
+                }
+            };
+
+            string message = JsonSerializer.Serialize(friendshipSocketMessage);
+
+            WebSocketHandler handler = _webSocketNetwork.GetSocketByUserId(friendId);
+
+            if (handler == null)
+            {
+                _webSocketNetwork.StorePendingMessage(friendId, message);
+            }
+
+            await handler.SendAsync(message);
+
 
         }
 
@@ -132,10 +158,10 @@ namespace chess4connect.Controllers
         }
 
         [HttpPost("gamesHistory")]
-        public List<Play> getGamesHistory([FromBody] Pagination pagination)
+        public async Task<GameHistoryDto> getGamesHistory([FromBody] Pagination pagination)
         { 
 
-            return _userService.getGamesHistory(pagination);
+            return await _userService.getGamesHistory(pagination);
         }
 
 

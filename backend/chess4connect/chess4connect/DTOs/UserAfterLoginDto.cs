@@ -13,5 +13,5 @@ public class UserAfterLoginDto
 
     public List<UserAfterLoginDto> Friends { get; set; } = new List<UserAfterLoginDto>();
     public List<Friendship> Requests { get; set; } = new List<Friendship>();
-    public List<Play> Plays { get; set; } = new List<Play>();
+    public List<PlayDetail> Plays { get; set; } = new List<PlayDetail>();
 }

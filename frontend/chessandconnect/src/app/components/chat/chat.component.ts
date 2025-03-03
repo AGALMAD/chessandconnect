@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../services/chat.service';
 import { AuthService } from '../../services/auth.service';
@@ -13,7 +13,7 @@ import { GameService } from '../../services/game.service';
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
 })
-export class ChatComponent {
+export class ChatComponent implements OnDestroy {
 
   message: string
 
@@ -23,9 +23,11 @@ export class ChatComponent {
 
   constructor(public chatService: ChatService, public authService: AuthService, public gameService: GameService) { }
 
-  OnInit() {
-    console.log(this.chatService.messages)
+  ngOnDestroy(): void {
+    this.chatService.messages = []
   }
+
+
 
   sendMessage() {
     if (!this.message.trim()) return; 

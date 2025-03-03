@@ -1,6 +1,8 @@
-﻿using chess4connect.Models.Database.Entities;
+﻿using chess4connect.Enums;
+using chess4connect.Models.Database.Entities;
 using chess4connect.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace chess4connect.Models.Database;
@@ -54,6 +56,7 @@ public class Seeder
                 AvatarImageUrl = "UserProfilePicture/perfil_por_defecto.png",
                 Banned = false,
 
+
             },
             new User(){
                 UserName = "manu",
@@ -97,6 +100,8 @@ public class Seeder
 
 
     }
+
+
 
 
 

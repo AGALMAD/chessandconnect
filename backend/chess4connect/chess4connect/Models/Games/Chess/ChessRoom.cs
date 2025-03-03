@@ -20,8 +20,13 @@ namespace chess4connect.Models.Games.Chess.Chess
         {
             Game = game;
             _serviceProvider = serviceProvider;
+            SubscribeToGameEvents(Game.Board);
         }
 
+        public void SubscribeToGameEvents(ChessBoard chessGame)
+        {
+            chessGame.OnTimeExpired += async () => await HandleTimeExpired();
+        }
 
         public async Task SendChessRoom()
         {
@@ -29,6 +34,15 @@ namespace chess4connect.Models.Games.Chess.Chess
             await SendRoom(GameType.Chess);
             await SendBoard();
             await SendMovementsMessageAsync();
+        }
+
+
+
+        private async Task HandleTimeExpired()
+        {
+            Console.WriteLine($"El juego ha terminado. {(Game.Board.Player1Turn ? "Jugador 1" : "Jugador 2")} ha perdido por tiempo.");
+
+            await SaveGame(_serviceProvider, GameResult.WIN, Game.Board.Player1Turn ? Player2Id : Player1Id);
         }
 
 
@@ -78,16 +92,22 @@ namespace chess4connect.Models.Games.Chess.Chess
                 await playerSocket.SendAsync(stringBoardMessage);
             }
             else { 
-                await Game.Board.RandomMovement();
+                //Si el bot gana, termina la partida
+                if(await Game.Board.RandomMovement())
+                {
+                    await SaveGame(_serviceProvider,GameResult.WIN, 0);
+                }
+                else
+                {
+                    await SendMovementsMessageAsync();
+                }
+
                 await SendBoard();
-                await SendMovementsMessageAsync();
             }
 
         }
 
-
-
-
+        
         public async Task MoveChessPiece(ChessMoveRequest moveRequest)
         {
 
@@ -101,9 +121,12 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             }
 
+
             if (response == 1)
             {
-                await SaveGame(_serviceProvider, GameResult.WIN);
+                await SendBoard();
+                int winnerId = Game.Board.Player1Turn ? Player1Id : Player2Id;
+                await SaveGame(_serviceProvider, GameResult.WIN, winnerId);
 
             }
 
@@ -129,7 +152,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         }
 
-        public override async Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult)
+        public override async Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult, int winnerId)
         {
             using var scope = serviceProvider.CreateAsyncScope();
             var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
@@ -142,26 +165,37 @@ namespace chess4connect.Models.Games.Chess.Chess
             };
 
             unitOfWork.PlayRepository.Add(play);
+            await unitOfWork.SaveAsync();
+
+            if (winnerId != 0)
+            {
+                PlayDetail playDetailUser1 = new PlayDetail
+                {
+                    PlayId = play.Id,
+                    UserId = winnerId,
+                    GameResult = gameResult
+                };
+                unitOfWork.PlayDetailRepository.Add(playDetailUser1);
+
+            }
+
+            int looserId = Player1Id == winnerId ? Player2Id : Player1Id;
+
+            if (looserId != 0)
+            {
+                PlayDetail playDetailLooser = new PlayDetail
+                {
+                    PlayId = play.Id,
+                    UserId = looserId,
+                    GameResult = gameResult == GameResult.DRAW ? gameResult : GameResult.LOSE
+                };
+
+                unitOfWork.PlayDetailRepository.Add(playDetailLooser);
+
+            }
 
             await unitOfWork.SaveAsync();
 
-            PlayDetail playDetailUser1 = new PlayDetail
-            {
-                PlayId = play.Id,
-                UserId = Game.Board.Player1Turn ? Player1Id : Player2Id,
-                GameResult = gameResult
-            };
-
-            PlayDetail playDetailUser2 = new PlayDetail
-            {
-                PlayId = play.Id,
-                UserId = Game.Board.Player1Turn ? Player2Id : Player1Id,
-                GameResult = gameResult == GameResult.DRAW ? gameResult : GameResult.LOSE
-            };
-
-            unitOfWork.PlayDetailRepository.Add(playDetailUser1);
-            unitOfWork.PlayDetailRepository.Add(playDetailUser2);
-            await unitOfWork.SaveAsync();
 
 
             if (gameResult == GameResult.DRAW)
@@ -170,17 +204,15 @@ namespace chess4connect.Models.Games.Chess.Chess
             }
             else
             {
-                await SendWinMessage();
+                await SendWinMessage(winnerId);
 
             }
 
         }
 
 
-        public override async Task SendWinMessage()
+        public override async Task SendWinMessage(int winnerId)
         {
-            int winnerId = Game.Board.Player1Turn ? Player1Id : Player2Id;
-
 
             //Mensaje con el id del ganador
             var winnerMessage = new SocketMessage<int>
@@ -202,7 +234,8 @@ namespace chess4connect.Models.Games.Chess.Chess
 
             Game.Board.Player1Turn = !userColor;
 
-            await SaveGame(serviceProvider, GameResult.WIN);
+            int winnerId = Player1Id == userId ? Player2Id : Player1Id;
+            await SaveGame(serviceProvider, GameResult.WIN, winnerId);
         }
 
         public override async Task SendDrawMessage()

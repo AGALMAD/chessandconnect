@@ -39,15 +39,23 @@ public class ConnectRoom : BaseRoom
 
         if (response == 1)
         {
-            await SaveGame(_serviceProvider, GameResult.WIN);
-            await SendWinMessage();
+            int winnerId = Game.Board.Player1Turn ? Player1Id : Player2Id;
+            await SaveGame(_serviceProvider, GameResult.WIN, winnerId);
+            await SendWinMessage(winnerId);
             return;
         }
 
         if (Player2Handler == null)
         {
-            await Game.Board.RandomDrop();
+            int result = await Game.Board.RandomDrop();
             await SendBoard();
+
+            if(result == 1)
+            {
+                int winnerId = Game.Board.Player1Turn ? Player1Id : Player2Id;
+                await SaveGame(_serviceProvider, GameResult.WIN, winnerId);
+                await SendWinMessage(winnerId);
+            }
 
         }
 
@@ -83,16 +91,13 @@ public class ConnectRoom : BaseRoom
     }
 
 
-    public override async Task SendWinMessage()
+    public override async Task SendWinMessage(int winnerId)
     {
-        int winnerId = Game.Board.Player1Turn ? Player1Id : Player2Id;
-
 
         //Mensaje con el id del ganador
         var winnerMessage = new SocketMessage<int>
         {
             Type = SocketCommunicationType.END_GAME,
-
             Data = winnerId,
         };
 
@@ -134,7 +139,7 @@ public class ConnectRoom : BaseRoom
         }
     }
 
-    public override async Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult)
+    public override async Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult, int winnerId)
     {
         using var scope = serviceProvider.CreateAsyncScope();
         var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
@@ -147,10 +152,7 @@ public class ConnectRoom : BaseRoom
         };
 
         unitOfWork.PlayRepository.Add(play);
-
         await unitOfWork.SaveAsync();
-
-        int winnerId = Game.Board.Player1Turn ? Player1Id : Player2Id;
 
         if(winnerId != 0)
         {
@@ -164,18 +166,21 @@ public class ConnectRoom : BaseRoom
 
         }
 
+        int looserId = Player1Id == winnerId ? Player2Id : Player1Id;
 
-        if (Player2Id != 0)
+        if(looserId != 0)
         {
-            PlayDetail playDetailUser2 = new PlayDetail
+            PlayDetail playDetailLooser = new PlayDetail
             {
                 PlayId = play.Id,
-                UserId = Game.Board.Player1Turn ? Player2Id : Player1Id,
+                UserId = looserId,
                 GameResult = gameResult == GameResult.DRAW ? gameResult : GameResult.LOSE
             };
-            unitOfWork.PlayDetailRepository.Add(playDetailUser2);
+
+            unitOfWork.PlayDetailRepository.Add(playDetailLooser);
 
         }
+
 
         await unitOfWork.SaveAsync();
 
@@ -186,7 +191,7 @@ public class ConnectRoom : BaseRoom
         }
         else
         {
-            await SendWinMessage();
+            await SendWinMessage(winnerId);
 
         }
 
@@ -197,7 +202,9 @@ public class ConnectRoom : BaseRoom
         bool userColor = Player1Id == userId;
         Game.Board.Player1Turn = !userColor;
 
-        await SaveGame(serviceProvider, GameResult.WIN);
+        int winnerId = Player1Id == userId ? Player2Id : Player1Id;
+
+        await SaveGame(serviceProvider, GameResult.WIN, winnerId);
     }
 
 }

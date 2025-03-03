@@ -20,10 +20,7 @@ export class ChatService {
   messages: User_Chat[] = []
 
   constructor(
-    private api: ApiService,
     public webSocketService: WebsocketService,
-    private matchMatchMakingService: MatchMakingService,
-    private authService: AuthService,
     private gameService: GameService
 
   ) {

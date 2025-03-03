@@ -185,9 +185,7 @@ export class GameService {
               cancelButton: 'bg-[#CBA77B] hover:bg-[#A68556] text-[#301e16] font-medium py-2 px-4 rounded-lg',
               timerProgressBar: 'bg-[#E8D5B5]'
             }
-          }).then(() => {
-            this.backToMenu();
-          });
+          })
         }
 
         break;

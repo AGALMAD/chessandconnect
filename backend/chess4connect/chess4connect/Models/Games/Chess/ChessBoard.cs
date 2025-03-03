@@ -1,7 +1,9 @@
 ﻿using chess4connect.Models.Games.Chess.Chess.Pieces;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Types;
+using chess4connect.Services;
 using System.Drawing;
+using System.IO.Pipelines;
 
 namespace chess4connect.Models.Games.Chess.Chess
 {
@@ -9,27 +11,38 @@ namespace chess4connect.Models.Games.Chess.Chess
     {
         public static int ROWS = 8;
         public static int COLUMNS = 8;
-
+        public GameTimer remainingTime;
         public List<ChessPiecesMovements> ChessPiecesMovements { get; set; }
 
         private ChessBasePiece[,] Board = new ChessBasePiece[ROWS, COLUMNS];
 
+        public event Action OnTimeExpired;
         public bool Player1Turn { get; set; } = true;
 
+        public delegate void TimeExpiredEventHandler(bool isPlayer1Turn);
 
+        private System.Timers.Timer _timer;
+
+        public event Action<bool> TimeExpired;
         //Tiempo en segundo de cada turno
-        public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(300);
-        public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(300);
+        public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(60);
+        public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(60);
 
         //Fecha de inicio de cada turno
         public DateTime StartTurnDateTime { get; set; }
 
-
+        protected virtual void OnTimeExpiredEvent()
+        {
+            OnTimeExpired?.Invoke();
+        }
 
         public ChessBoard()
         {
             PlacePiecesInBoard();
+            remainingTime = new GameTimer();
+            remainingTime.OnTimeExpired += CheckTimeExpired; // Suscribimos el evento del Timer
         }
+
 
         private void PlacePiecesInBoard()
         {
@@ -64,11 +77,32 @@ namespace chess4connect.Models.Games.Chess.Chess
             {
                 Board[6, i] = new Pawn(32 + i, true, new Point(6, i)) { HasMoved = false };
             }
-        }
 
+            remainingTime = new GameTimer();
+
+            //timmer
+            _timer = new System.Timers.Timer(1000); 
+            _timer.AutoReset = true;
+            _timer.Enabled = true;
+        }
+        private void OnTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            CheckTimeExpired(); 
+        }
 
         public void GetAllPieceMovements()
         {
+            if (Player1Turn)
+            {
+                remainingTime.StartTimer(Player1Time);
+                Console.WriteLine(Player1Time);
+            }
+            else
+            {
+                remainingTime.StartTimer(Player2Time);
+            }
+
+
             ChessPiecesMovements = new List<ChessPiecesMovements>();
 
             foreach (ChessBasePiece piece in Board)
@@ -142,7 +176,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                         int intermediateX = piece.Position.X + direction;
 
                         if (Board[intermediateX, newY] != null)
-                     
+
                             continue;
                     }
 
@@ -316,9 +350,17 @@ namespace chess4connect.Models.Games.Chess.Chess
             }
         }
 
+        public void CheckTimeExpired()
+        {
+            _timer.Stop();
+            OnTimeExpiredEvent();
+        }
+
 
         public int MovePiece(ChessMoveRequest moveRequest)
         {
+            
+
             // Find the piece
             var piece = convertBoardToList().FirstOrDefault(p => p.Id == moveRequest.PieceId);
             if (piece == null) return -1;
@@ -368,15 +410,15 @@ namespace chess4connect.Models.Games.Chess.Chess
                     int newRookY;
 
                     //short castling
-                    if (moveRequest.MovementY > oldPosition.Y) 
+                    if (moveRequest.MovementY > oldPosition.Y)
                     {
                         rookY = 7; // Posición inicial de la torre del lado corto
-                        newRookY = moveRequest.MovementY - 1; 
+                        newRookY = moveRequest.MovementY - 1;
                     }
                     else // long castling
                     {
-                        rookY = 0; 
-                        newRookY = moveRequest.MovementY + 1; 
+                        rookY = 0;
+                        newRookY = moveRequest.MovementY + 1;
                     }
 
                     // Mover la torre
@@ -398,7 +440,9 @@ namespace chess4connect.Models.Games.Chess.Chess
             else
                 Player2Time -= timeSpent;
 
+
             StartTurnDateTime = DateTime.Now;
+
 
             // Check if the move results in checkmate
             if (IsCheckmate())
@@ -409,6 +453,9 @@ namespace chess4connect.Models.Games.Chess.Chess
             // Change turn
             Player1Turn = !Player1Turn;
             StartTurnDateTime = DateTime.Now;
+            Console.WriteLine($"Tiempo inicial Jugador 1: {Player1Time.TotalSeconds}");
+            Console.WriteLine($"Tiempo inicial Jugador 2: {Player2Time.TotalSeconds}");
+
 
             // Recalculate all possible moves for the new position
             GetAllPieceMovements();
@@ -421,7 +468,7 @@ namespace chess4connect.Models.Games.Chess.Chess
         // check for checkmate
         private bool IsCheckmate()
         {
-            
+
             bool opponentColor = !Player1Turn;
 
             // checking check
@@ -492,18 +539,18 @@ namespace chess4connect.Models.Games.Chess.Chess
                 int newX = piece.Position.X + move.X;
                 int newY = piece.Position.Y + move.Y;
 
-                
+
                 if (newX < 0 || newX >= 8 || newY < 0 || newY >= 8)
                     continue;
 
-                
+
                 if (move.Y == 0)
                 {
-                    
+
                     if (Board[newX, newY] != null)
                         continue;
 
-                    
+
                     if (Math.Abs(move.X) == 2)
                     {
                         int direction = piece.Player1Piece ? -1 : 1;
@@ -515,7 +562,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
                     movementList.Add(new Point(newX, newY));
                 }
-                
+
                 else if (Board[newX, newY]?.Player1Piece != piece.Player1Piece && Board[newX, newY] != null)
                 {
                     movementList.Add(new Point(newX, newY));
@@ -551,7 +598,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                 {
                     if (Board[newX, newY] == null || Board[newX, newY].Player1Piece != piece.Player1Piece)
                     {
-                        
+
                         movementList.Add(new Point(newX, newY));
                     }
                 }
@@ -592,7 +639,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                     var piece = Board[x, y];
                     if (piece != null && piece.PieceType == PieceType.KING && piece.Player1Piece == isPlayer1)
                     {
-                        return (x, y); 
+                        return (x, y);
                     }
                 }
             }
@@ -602,11 +649,11 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         private bool IsSquareUnderAttack(int row, int col, bool isPlayerSquare)
         {
-           
-            int pawnDirection = isPlayerSquare ? 1 : -1; 
+
+            int pawnDirection = isPlayerSquare ? 1 : -1;
             if (row + pawnDirection >= 0 && row + pawnDirection < ROWS)
             {
-                
+
                 if (col - 1 >= 0 &&
                     Board[row + pawnDirection, col - 1] is Pawn &&
                     Board[row + pawnDirection, col - 1].Player1Piece != isPlayerSquare)
@@ -618,7 +665,7 @@ namespace chess4connect.Models.Games.Chess.Chess
                     return true;
             }
 
-            
+
             int[,] knightMoves = { { -2, -1 }, { -2, 1 }, { -1, -2 }, { -1, 2 }, { 1, -2 }, { 1, 2 }, { 2, -1 }, { 2, 1 } };
             for (int i = 0; i < 8; i++)
             {
@@ -631,40 +678,40 @@ namespace chess4connect.Models.Games.Chess.Chess
                     return true;
             }
 
-            
+
             int[,] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 } };
             for (int i = 0; i < 8; i++)
             {
                 int dx = directions[i, 0];
                 int dy = directions[i, 1];
 
-                
+
                 for (int distance = 1; distance < 8; distance++)
                 {
                     int newRow = row + dx * distance;
                     int newCol = col + dy * distance;
 
                     if (newRow < 0 || newRow >= ROWS || newCol < 0 || newCol >= COLUMNS)
-                        break; 
+                        break;
 
                     if (Board[newRow, newCol] == null)
-                        continue; 
+                        continue;
 
                     if (Board[newRow, newCol].Player1Piece == isPlayerSquare)
-                        break; 
+                        break;
 
                     bool isRook = Board[newRow, newCol] is Rook;
                     bool isBishop = Board[newRow, newCol] is Bishop;
                     bool isQueen = Board[newRow, newCol] is Queen;
-                                        
+
                     if ((isRook && i < 4) || (isBishop && i >= 4) || isQueen)
                         return true;
 
-                    break; 
+                    break;
                 }
             }
 
-            
+
             for (int dx = -1; dx <= 1; dx++)
             {
                 for (int dy = -1; dy <= 1; dy++)
@@ -684,16 +731,16 @@ namespace chess4connect.Models.Games.Chess.Chess
             return false;
         }
 
-        
+
         public bool IsKingUnderAttack(bool isPlayer1)
-        {            
+        {
             (int kingRow, int kingCol) = FindKingPosition(isPlayer1);
 
             return IsSquareUnderAttack(kingRow, kingCol, isPlayer1);
         }
 
 
-        public async Task RandomMovement()
+        public async Task<bool> RandomMovement()
         {
             var random = new Random();
 
@@ -712,10 +759,10 @@ namespace chess4connect.Models.Games.Chess.Chess
             // If no valid moves available, return
             if (!playerPiecesMovements.Any())
             {
-                return;
+                return false;
             }
 
-            int maxAttempts = 100; 
+            int maxAttempts = 100;
             int attempts = 0;
 
 
@@ -747,8 +794,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
                     if (result == 0)
                     {
-                        // Move successful
-                        return;
+                        return IsCheckmate();
                     }
 
                     attempts++;
@@ -758,6 +804,8 @@ namespace chess4connect.Models.Games.Chess.Chess
                     attempts++;
                 }
             }
+
+            return false;
         }
 
         public List<ChessBasePiece> convertBoardToList()

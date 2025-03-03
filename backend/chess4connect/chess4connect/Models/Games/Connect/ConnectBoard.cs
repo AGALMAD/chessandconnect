@@ -109,13 +109,22 @@ public class ConnectBoard
         return count;
     }
 
-    public async Task RandomDrop()
+    public async Task<int> RandomDrop()
     {
         Random random = new Random();
 
         await Task.Delay(random.Next(1000, 5000));
 
-        while (DropPiece(random.Next(0, 7)) == -1) ;
+        int result;
+
+        do
+        {
+            result = DropPiece(random.Next(0, 7));
+        } while (result == -1);
+
+
+        return result;
+
     }
 }
 

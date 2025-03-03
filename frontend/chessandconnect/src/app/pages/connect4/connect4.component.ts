@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
   templateUrl: './connect4.component.html',
   styleUrl: './connect4.component.css'
 })
-export class Connect4Component  implements OnInit {
+export class Connect4Component  implements OnInit,OnDestroy {
   public baseUrl = environment.apiUrl;
 
   rows: number[] = [0, 1, 2, 3, 4, 5];  // 6 filas
@@ -31,25 +31,32 @@ export class Connect4Component  implements OnInit {
   constructor(
     private websocketService:WebsocketService, 
     public gameService: GameService, 
-    private api: ApiService, 
     public authService : AuthService,
     public connectService: ConnectService,
     private router: Router
   ) { }
   
   ngOnInit(): void {
-    //Si recarga la página redirige al menú
-    if (localStorage.getItem('reloadToMenu') === 'true') {
-      localStorage.removeItem('reloadToMenu');
-      this.router.navigate(['/menus']);  
+    // Si la página se recarga, redirigir al menú
+    if (sessionStorage.getItem('reloadToMenu') === 'true') {
+      sessionStorage.removeItem('reloadToMenu');
+      this.router.navigate(['/menus']);
     }
 
     window.addEventListener('beforeunload', this.handleBeforeUnload);
   }
 
   handleBeforeUnload = (): void => {
-    localStorage.setItem('reloadToMenu', 'true');
+    setTimeout(() => {
+      this.gameService.leaveGame()
+      sessionStorage.setItem('reloadToMenu', 'true');
+    }, 3);
   };
+
+  ngOnDestroy(): void {
+
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
+  }
 
 
  

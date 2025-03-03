@@ -3,6 +3,7 @@ using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Types;
 using chess4connect.Services;
 using System.Drawing;
+using System.IO.Pipelines;
 
 namespace chess4connect.Models.Games.Chess.Chess
 {
@@ -10,12 +11,12 @@ namespace chess4connect.Models.Games.Chess.Chess
     {
         public static int ROWS = 8;
         public static int COLUMNS = 8;
-        public ChessTimer remainingTime;
+        public GameTimer remainingTime;
         public List<ChessPiecesMovements> ChessPiecesMovements { get; set; }
 
         private ChessBasePiece[,] Board = new ChessBasePiece[ROWS, COLUMNS];
 
-        public event Action<bool> OnTimeExpired;
+        public event Action OnTimeExpired;
         public bool Player1Turn { get; set; } = true;
 
         public delegate void TimeExpiredEventHandler(bool isPlayer1Turn);
@@ -30,17 +31,18 @@ namespace chess4connect.Models.Games.Chess.Chess
         //Fecha de inicio de cada turno
         public DateTime StartTurnDateTime { get; set; }
 
-        protected virtual void OnTimeExpiredEvent(bool isPlayer1Turn)
+        protected virtual void OnTimeExpiredEvent()
         {
-            OnTimeExpired?.Invoke(isPlayer1Turn);
+            OnTimeExpired?.Invoke();
         }
 
         public ChessBoard()
         {
             PlacePiecesInBoard();
-            remainingTime = new ChessTimer();
-
+            remainingTime = new GameTimer();
+            remainingTime.OnTimeExpired += CheckTimeExpired; // Suscribimos el evento del Timer
         }
+
 
         private void PlacePiecesInBoard()
         {
@@ -76,11 +78,10 @@ namespace chess4connect.Models.Games.Chess.Chess
                 Board[6, i] = new Pawn(32 + i, true, new Point(6, i)) { HasMoved = false };
             }
 
-            remainingTime = new ChessTimer();
+            remainingTime = new GameTimer();
 
             //timmer
             _timer = new System.Timers.Timer(1000); 
-            _timer.Elapsed += OnTimerElapsed;
             _timer.AutoReset = true;
             _timer.Enabled = true;
         }
@@ -91,6 +92,17 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         public void GetAllPieceMovements()
         {
+            if (Player1Turn)
+            {
+                remainingTime.StartTimer(Player1Time);
+                Console.WriteLine(Player1Time);
+            }
+            else
+            {
+                remainingTime.StartTimer(Player2Time);
+            }
+
+
             ChessPiecesMovements = new List<ChessPiecesMovements>();
 
             foreach (ChessBasePiece piece in Board)
@@ -340,17 +352,8 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         public void CheckTimeExpired()
         {
-            
-            if (Player1Time <= TimeSpan.Zero)
-            {
-                _timer.Stop();
-                OnTimeExpiredEvent(true); 
-            }
-            else if (Player2Time <= TimeSpan.Zero)
-            {
-                _timer.Stop();
-                OnTimeExpiredEvent(false);
-            }
+            _timer.Stop();
+            OnTimeExpiredEvent();
         }
 
 
@@ -452,16 +455,6 @@ namespace chess4connect.Models.Games.Chess.Chess
             StartTurnDateTime = DateTime.Now;
             Console.WriteLine($"Tiempo inicial Jugador 1: {Player1Time.TotalSeconds}");
             Console.WriteLine($"Tiempo inicial Jugador 2: {Player2Time.TotalSeconds}");
-
-            if (Player1Turn)
-            {
-                remainingTime.StartTimer(Player1Time);
-                Console.WriteLine(Player1Time);
-            }
-            else
-            {
-                remainingTime.StartTimer(Player2Time);
-            }
 
 
             // Recalculate all possible moves for the new position

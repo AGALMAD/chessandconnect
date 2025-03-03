@@ -1,4 +1,4 @@
-import { Component, OnInit, Type } from '@angular/core';
+import { Component, OnDestroy, OnInit, Type } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
@@ -15,6 +15,7 @@ import { PieceType } from '../../enums/piece-type';
 import { ChessPiece } from '../../models/Games/Chess/chess-piece';
 import { ChessMoveRequest } from '../../models/Games/Chess/chess-move-request';
 import { MatchMakingService } from '../../services/match-making.service';
+import { Router } from '@angular/router';
 
 
 
@@ -27,7 +28,7 @@ import { MatchMakingService } from '../../services/match-making.service';
   styleUrl: './chess.component.css'
 })
 
-export class ChessComponent implements OnInit {
+export class ChessComponent implements OnInit,OnDestroy {
 
   public baseUrl = environment.apiUrl;
 
@@ -36,17 +37,34 @@ export class ChessComponent implements OnInit {
   constructor(
     private websocketService:WebsocketService, 
     public gameService: GameService, 
-    private api: ApiService, 
     public authService : AuthService,
     public chessService: ChessService,
-    private matchMakingService: MatchMakingService
+    private router: Router
+    
   ) { }
 
 
   ngOnInit(): void {
-    console.log("Opponent:", this.gameService.opponent)
-    console.log("PIECES:", this.chessService.pieces)
-    console.log("COLOR", this.gameService.playerColor)
+    // Si la página se recarga, redirigir al menú
+    if (sessionStorage.getItem('reloadToMenu') === 'true') {
+      sessionStorage.removeItem('reloadToMenu');
+      this.router.navigate(['/menus']);
+    }
+
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
+  }
+
+  handleBeforeUnload = (): void => {
+    setTimeout(() => {
+      this.gameService.leaveGame()
+      sessionStorage.setItem('reloadToMenu', 'true');
+
+    }, 3);
+  };
+
+  ngOnDestroy(): void {
+
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
   }
 
 

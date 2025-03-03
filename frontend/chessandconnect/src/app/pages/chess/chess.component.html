@@ -1,190 +1,196 @@
 <div class="h-screen w-screen flex flex-col items-center justify-center bg-brown-700">
 
   <!-- Contenedor del tablero -->
-  <div class="relative flex flex-col items-center justify-center w-[90vh] h-[90vh]">
+  <div class="relative flex flex-col items-center justify-center w-full h-full sm:w-[90vh] sm:h-[90vh]">
 
-    <!-- Oponente -->
-    <div class=" mb-6 flex items-center justify-between w-[80vh] ">
+    <div class="mb-6 flex items-center justify-between w-auto sm:w-[80vh] mx-auto space-x-10">
+
+      <!-- Avatar y nombre del oponente -->
       <div class="flex items-center space-x-3">
         <img *ngIf="gameService.opponent?.avatarImageUrl" [src]="baseUrl + gameService.opponent.avatarImageUrl"
-          alt="Opponent" class="w-12 h-12 rounded-full border-2 border-black">
-        <p class="text-[#301e16] font-bold">{{ gameService.opponent?.userName || 'Oponente' }}</p>
+          alt="Opponent" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-black">
+        <p class="text-[#301e16] font-bold text-sm sm:text-base">{{ gameService.opponent?.userName || 'Oponente' }}</p>
       </div>
-      <div class="bg-[#737171] text-white rounded-md p-2 text-xl font-bold">
+    
+      <!-- Temporizador del oponente -->
+      <div class="bg-[#737171] text-white rounded-md p-2 text-sm sm:text-xl font-bold">
         {{ gameService.opponentTimer | pipeTimer}}
       </div>
+    
     </div>
+    
+    
     <!--Tablero normal-->
     @if (gameService.playerColor) {
+      <div class="w-full h-full flex justify-center items-center">
 
-
-
-
-    <div class="relative w-[80vh] h-[80vh] ">
-
-      <!-- Coordenadas a la izquierda (columna) -->
-      <div
-        class="absolute top-0 bottom-0 left-0 flex flex-col justify-between items-center bg-brown-100 text-brown-700 font-bold">
-        <div class="h-full flex items-center justify-center text-lg px-2" *ngFor="let row of numbers">
-          {{ row }}
-        </div>
-      </div>
-
-
-      <!-- Coordenadas en la parte superior (fila) -->
-      <div class="absolute top-0 left-0 right-0 flex justify-between bg-brown-100 text-brown-700 font-bold">
-        <div class="flex items-center justify-center"></div> <!-- Esquina vacía superior izquierda -->
-        <div *ngFor="let letter of letters" class="flex items-center justify-center w-full text-lg px-2">{{ letter }}
-        </div>
-        <div class="flex items-center justify-center"></div> <!-- Esquina vacía superior derecha -->
-      </div>
-
-
-      <!-- Tablero de ajedrez con celdas -->
-      <div
-        class="grid grid-cols-8 grid-rows-8 gap-0 absolute top-[2rem] left-[2rem] w-[calc(100%-4rem)] h-[calc(100%-4rem)]">
-        @for (row of rows; track $index; let i = $index) {
-        @for (col of cols; track $index; let j = $index) {
-        <div class="w-full h-full flex items-center justify-center" 
-          [class.bg-brown-200]="(i + j) % 2 === 0"
-          [class.bg-brown-600]="(i + j) % 2 !== 0" (click)="movePiece(i, j)">
-          @for (piece of chessService.pieces; track $index) {
-          @if (piece.Position.X === i && piece.Position.Y === j) {
-          @if (!piece.Player1Piece) {
-          <span class=" cursor-pointer text-6xl text-black">{{getPieceSymbol(piece.PieceType)}}</span>
-          }
-          @else {
-          <span (click)="selectPiece(piece)"
-            class="cursor-pointer text-6xl text-white">{{getPieceSymbol(piece.PieceType)}}</span>
-          }
-
-          }
-          }
-
-          @if (chessService.showMovements != null) {
-            @for (movements of chessService.showMovements.Movements; track $index) {
-              @if (movements.X == i && movements.Y == j) {
-                <div class="cursor-pointer flex items-center justify-center fixed z-40" (click)="movePiece(i, j)">
-                  <div class="w-12 h-12 rounded-full bg-white opacity-75"></div>
-                </div>
+        <!-- Contenedor de ajedrez responsivo -->
+        <div class="relative w-full h-full max-w-[30vh] max-h-[30vh] sm:max-w-[35vh] sm:max-h-[35vh] md:max-w-[40vh] md:max-h-[40vh] lg:max-w-[50vh] lg:max-h-[50vh] xl:max-w-[60vh] xl:max-h-[60vh]">
+      
+          <!-- Coordenadas a la izquierda (columna) -->
+          <div class="absolute top-0 bottom-0 left-0 flex flex-col justify-between items-center bg-brown-100 text-brown-700 font-bold">
+            <div class="h-full flex items-center justify-center text-lg px-2" *ngFor="let row of numbers">
+              {{ row }}
+            </div>
+          </div>
+      
+          <!-- Coordenadas en la parte superior (fila) -->
+          <div class="absolute top-0 left-0 right-0 flex justify-between bg-brown-100 text-brown-700 font-bold">
+            <div class="flex items-center justify-center w-1/12 sm:w-auto"></div> <!-- Esquina vacía superior izquierda -->
+            <div *ngFor="let letter of letters" class="flex items-center justify-center w-1/8 sm:w-auto text-lg px-2">{{ letter }}</div>
+            <div class="flex items-center justify-center w-1/12 sm:w-auto"></div> <!-- Esquina vacía superior derecha -->
+          </div>
+      
+          <!-- Tablero de ajedrez con celdas responsivas -->
+          <div class="grid grid-cols-8 grid-rows-8 gap-0 absolute top-[2rem] left-[2rem] w-[calc(100%-4rem)] h-[calc(100%-4rem)]">
+            @for (row of rows; track $index; let i = $index) {
+            @for (col of cols; track $index; let j = $index) {
+            <div class="w-full h-full flex items-center justify-center"
+              [class.bg-brown-200]="(i + j) % 2 === 0"
+              [class.bg-brown-600]="(i + j) % 2 !== 0" (click)="movePiece(i, j)">
+              @for (piece of chessService.pieces; track $index) {
+              @if (piece.Position.X === i && piece.Position.Y === j) {
+              @if (!piece.Player1Piece) {
+              <span class="cursor-pointer text-xs sm:text-sm md:text-lg lg:text-2xl xl:text-3xl text-black">{{getPieceSymbol(piece.PieceType)}}</span>
+              }
+              @else {
+              <span (click)="selectPiece(piece)" class="cursor-pointer text-xs sm:text-sm md:text-lg lg:text-2xl xl:text-3xl text-white">{{getPieceSymbol(piece.PieceType)}}</span>
               }
               }
-          }
+              }
+      
+              @if (chessService.showMovements != null) {
+                @for (movements of chessService.showMovements.Movements; track $index) {
+                  @if (movements.X == i && movements.Y == j) {
+                    <div class="cursor-pointer flex items-center justify-center fixed z-40" (click)="movePiece(i, j)">
+                      <div class="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full bg-white opacity-75"></div>
+                    </div>
+                    
+                    
+                    
+                  }
+                }
+              }
+            </div>
+            }
+            }
+          </div>
+      
+          <!-- Coordenadas a la derecha (columna) -->
+          <div class="absolute top-0 bottom-0 right-0 flex flex-col justify-between items-center bg-brown-100 text-brown-700 font-bold">
+            <div class="h-full flex items-center justify-center text-lg px-2" *ngFor="let row of numbers">
+              {{ row }}
+            </div>
+          </div>
+      
+          <!-- Coordenadas en la parte inferior (fila) -->
+          <div class="absolute bottom-0 left-0 right-0 flex justify-between bg-brown-100 text-brown-700 font-bold">
+            <div class="flex items-center justify-center w-1/12 sm:w-auto"></div> <!-- Esquina vacía inferior izquierda -->
+            <div *ngFor="let letter of letters" class="flex items-center justify-center w-1/8 sm:w-auto text-lg px-2">{{ letter }}</div>
+            <div class="flex items-center justify-center w-1/12 sm:w-auto"></div> <!-- Esquina vacía inferior derecha -->
+          </div>
+      
         </div>
-        }
-        }
+      
       </div>
 
-      <!-- Coordenadas a la derecha (columna) -->
-      <div
-        class="absolute top-0 bottom-0 right-0 flex flex-col justify-between items-center bg-brown-100 text-brown-700 font-bold">
-        <div class="h-full flex items-center justify-center text-lg px-2" *ngFor="let row of numbers">
-          {{ row }}
-        </div>
-      </div>
-
-      <!-- Coordenadas en la parte inferior (fila) -->
-      <div class="absolute bottom-0 left-0 right-0 flex justify-between bg-brown-100 text-brown-700 font-bold">
-        <div class="flex items-center justify-center"></div> <!-- Esquina vacía inferior izquierda -->
-        <div *ngFor="let letter of letters" class="flex items-center justify-center w-full text-lg px-2">{{ letter }}
-        </div>
-        <div class="flex items-center justify-center"></div> <!-- Esquina vacía inferior derecha -->
-      </div>
-
-    </div>
+      
     }
     <!-- tablero invertido -->
     @else {
-    <div class="relative w-[80vh] h-[80vh] ">
+      <div class="w-full h-full flex justify-center items-center">
 
-      <!-- Coordenadas a la izquierda (columna) -->
-      <div
-        class="absolute top-0 bottom-0 left-0 flex flex-col justify-between items-center bg-brown-100 text-brown-700 font-bold">
-        <div class="h-full flex items-center justify-center text-lg px-2" *ngFor="let row of numbersReverse">
-          {{ row }}
-        </div>
-      </div>
-
-      <!-- Coordenadas en la parte superior (fila) -->
-      <div class="absolute top-0 left-0 right-0 flex justify-between bg-brown-100 text-brown-700 font-bold">
-        <div class="flex items-center justify-center"></div> <!-- Esquina vacía superior izquierda -->
-        <div *ngFor="let letter of lettersReverse" class="flex items-center justify-center w-full text-lg px-2">{{
-          letter
-          }}</div>
-        <div class="flex items-center justify-center"></div> <!-- Esquina vacía superior derecha -->
-      </div>
-
-
-      <!-- Tablero de ajedrez con celdas invertidas -->
-      <div
-        class="grid grid-cols-8 grid-rows-8 gap-0 absolute top-[2rem] left-[2rem] w-[calc(100%-4rem)] h-[calc(100%-4rem)]">
-        @for (row of rows; track $index; let i = $index) {
-        @for (col of cols; track $index; let j = $index) {
-        <div class="w-full h-full flex items-center justify-center" [class.bg-brown-200]="(i + j) % 2 !== 0"
-          [class.bg-brown-600]="(i + j) % 2 === 0" (click)="movePiece(row, col)">
-          @for (piece of chessService.pieces; track $index) {
-          @if (piece.Position.X === row && piece.Position.Y === col) {
-          @if (!piece.Player1Piece) {
-          <span (click)="selectPiece(piece)"
-            class="text-6xl  text-black !important cursor-pointer">{{getPieceSymbol(piece.PieceType)}}
-          </span>
-          }
-          @else {
-          <span class="text-6xl text-white cursor-pointer">{{getPieceSymbol(piece.PieceType)}}
-
-          </span>
-          }
-
-          }
-          }
-
-          @if (chessService.showMovements != null) {
-            @for (movements of chessService.showMovements.Movements; track $index) {
-              @if (movements.X == row && movements.Y == col) {
-                <div class="cursor-pointer flex items-center justify-center fixed z-40" (click)="movePiece(i, j)">
-                  <div class="w-12 h-12 rounded-full bg-white opacity-75"></div>
-                </div>
+        <!-- Contenedor de ajedrez responsivo -->
+        <div class="relative w-full h-full max-w-[30vh] max-h-[30vh] sm:max-w-[35vh] sm:max-h-[35vh] md:max-w-[40vh] md:max-h-[40vh] lg:max-w-[50vh] lg:max-h-[50vh] xl:max-w-[60vh] xl:max-h-[60vh]">
+      
+          <!-- Coordenadas a la izquierda (columna) -->
+          <div class="absolute top-0 bottom-0 left-0 flex flex-col justify-between items-center bg-brown-100 text-brown-700 font-bold">
+            <div class="h-full flex items-center justify-center text-lg px-2" *ngFor="let row of numbersReverse">
+              {{ row }}
+            </div>
+          </div>
+        
+          <!-- Coordenadas en la parte superior (fila) -->
+          <div class="absolute top-0 left-0 right-0 flex justify-between bg-brown-100 text-brown-700 font-bold">
+            <div class="flex items-center justify-center w-1/12 sm:w-auto"></div> <!-- Esquina vacía superior izquierda -->
+            <div *ngFor="let letter of lettersReverse" class="flex items-center justify-center w-1/8 sm:w-auto text-lg px-2">{{ letter }}</div>
+            <div class="flex items-center justify-center w-1/12 sm:w-auto"></div> <!-- Esquina vacía superior derecha -->
+          </div>
+        
+          <!-- Tablero de ajedrez con celdas invertidas -->
+          <div class="grid grid-cols-8 grid-rows-8 gap-0 absolute top-[2rem] left-[2rem] w-[calc(100%-4rem)] h-[calc(100%-4rem)]">
+            @for (row of rows; track $index; let i = $index) {
+            @for (col of cols; track $index; let j = $index) {
+            <div class="w-full h-full flex items-center justify-center" [class.bg-brown-200]="(i + j) % 2 !== 0" [class.bg-brown-600]="(i + j) % 2 === 0" (click)="movePiece(row, col)">
+            
+              <!-- Mostrar las piezas -->
+              @for (piece of chessService.pieces; track $index) {
+                @if (piece.Position.X === row && piece.Position.Y === col) {
+                  @if (!piece.Player1Piece) {
+                    <span (click)="selectPiece(piece)" class="cursor-pointer text-xs sm:text-sm md:text-lg lg:text-2xl xl:text-3xl text-black">{{getPieceSymbol(piece.PieceType)}}</span>
+                  }
+                  @else {
+                    <span class="cursor-pointer text-xs sm:text-sm md:text-lg lg:text-2xl xl:text-3xl text-white">{{getPieceSymbol(piece.PieceType)}}</span>
+                  }
+                }
               }
+          
+              <!-- Mostrar movimientos -->
+              @if (chessService.showMovements != null) {
+                @for (movements of chessService.showMovements.Movements; track $index) {
+                  @if (movements.X == row && movements.Y == col) {
+                    <div class="cursor-pointer flex items-center justify-center fixed z-40" (click)="movePiece(i, j)">
+                      <div class="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full bg-white opacity-75"></div>
+                    </div>
+                    
+                    
+                  }
+                }
               }
-          } 
+            </div>
+            }
+            }
+          </div>
+        
+          <!-- Coordenadas a la derecha (columna) -->
+          <div class="absolute top-0 bottom-0 right-0 flex flex-col justify-between items-center bg-brown-100 text-brown-700 font-bold">
+            <div class="h-full flex items-center justify-center text-lg px-2" *ngFor="let row of numbersReverse">
+              {{ row }}
+            </div>
+          </div>
+        
+          <!-- Coordenadas en la parte inferior (fila) -->
+          <div class="absolute bottom-0 left-0 right-0 flex justify-between bg-brown-100 text-brown-700 font-bold">
+            <div class="flex items-center justify-center w-1/12 sm:w-auto"></div> <!-- Esquina vacía inferior izquierda -->
+            <div *ngFor="let letter of lettersReverse" class="flex items-center justify-center w-1/8 sm:w-auto text-lg px-2">{{ letter }}</div>
+            <div class="flex items-center justify-center w-1/12 sm:w-auto"></div> <!-- Esquina vacía inferior derecha -->
+          </div>
+      
         </div>
-        }
-
-        }
+      
       </div>
-
-      <!-- Coordenadas a la derecha (columna) -->
-      <div
-        class="absolute top-0 bottom-0 right-0 flex flex-col justify-between items-center bg-brown-100 text-brown-700 font-bold">
-        <div class="h-full flex items-center justify-center text-lg px-2" *ngFor="let row of numbersReverse">
-          {{ row }}
-        </div>
-      </div>
-
-      <!-- Coordenadas en la parte inferior (fila) -->
-      <div class="absolute bottom-0 left-0 right-0 flex justify-between bg-brown-100 text-brown-700 font-bold">
-        <div class="flex items-center justify-center"></div> <!-- Esquina vacía inferior izquierda -->
-        <div *ngFor="let letter of lettersReverse" class="flex items-center justify-center w-full text-lg px-2">{{
-          letter
-          }}</div>
-        <div class="flex items-center justify-center"></div> <!-- Esquina vacía inferior derecha -->
-      </div>
-
-    </div>
+      
+      
     }
 
     <!-- Jugador -->
-    <div class=" mt-6 flex items-center justify-between w-[80vh] ">
+    <div class="mt-6 flex items-center justify-between w-auto sm:w-[80vh] mx-auto space-x-10">
+
+      <!-- Avatar y nombre del jugador -->
       <div class="flex items-center space-x-3">
         <img [src]="baseUrl + authService.currentUser?.avatarImageUrl" alt="Player"
-          class="w-12 h-12 rounded-full border-2 border-black">
-        <p class="text-[#301e16] font-bold">{{ authService.currentUser?.userName || 'Jugador' }}</p>
+          class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-black">
+        <p class="text-[#301e16] font-bold text-sm sm:text-base">{{ authService.currentUser?.userName || 'Jugador' }}</p>
       </div>
-      <div class="bg-[#b8b5b5] text-white rounded-md p-2 text-xl font-bold">
+    
+      <!-- Temporizador del jugador -->
+      <div class="bg-[#b8b5b5] text-white rounded-md p-2 text-sm sm:text-xl font-bold">
         {{ gameService.currentPlayerTimer | pipeTimer }}
       </div>
+    
     </div>
+    
 
   </div>
-  <app-chat></app-chat>
 </div>
+<app-chat></app-chat>

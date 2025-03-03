@@ -25,8 +25,8 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         public event Action<bool> TimeExpired;
         //Tiempo en segundo de cada turno
-        public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(10);
-        public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(300);
+        public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(60);
+        public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(60);
 
         //Fecha de inicio de cada turno
         public DateTime StartTurnDateTime { get; set; }

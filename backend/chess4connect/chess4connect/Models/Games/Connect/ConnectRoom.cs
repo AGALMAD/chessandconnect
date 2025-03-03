@@ -152,7 +152,6 @@ public class ConnectRoom : BaseRoom
         };
 
         unitOfWork.PlayRepository.Add(play);
-
         await unitOfWork.SaveAsync();
 
         if(winnerId != 0)
@@ -167,18 +166,21 @@ public class ConnectRoom : BaseRoom
 
         }
 
+        int looserId = Player1Id == winnerId ? Player2Id : Player1Id;
 
-        if (Player2Id != 0)
+        if(looserId != 0)
         {
-            PlayDetail playDetailUser2 = new PlayDetail
+            PlayDetail playDetailLooser = new PlayDetail
             {
                 PlayId = play.Id,
-                UserId = Game.Board.Player1Turn ? Player2Id : Player1Id,
+                UserId = looserId,
                 GameResult = gameResult == GameResult.DRAW ? gameResult : GameResult.LOSE
             };
-            unitOfWork.PlayDetailRepository.Add(playDetailUser2);
+
+            unitOfWork.PlayDetailRepository.Add(playDetailLooser);
 
         }
+
 
         await unitOfWork.SaveAsync();
 

@@ -24,7 +24,8 @@
     <div class="flex items-center space-x-2 mt-2 p-2 border-t border-brown-500">
         <input type="text"
             class="flex-1 p-2 border border-brown-200 rounded-lg text-brown-700 bg-brown-200 placeholder-brown-500"
-            placeholder="Escribe un mensaje..." [(ngModel)]="message">
+            placeholder="Escribe un mensaje..." [(ngModel)]="message" (keydown.enter)="sendMessage()">
+
         <button (click)="sendMessage()"
             class="bg-brown-200 text-brown-700 py-2 px-4 rounded-lg hover:bg-brown-300 transition-all duration-300">
             Enviar

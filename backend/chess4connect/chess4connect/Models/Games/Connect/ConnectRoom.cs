@@ -47,8 +47,15 @@ public class ConnectRoom : BaseRoom
 
         if (Player2Handler == null)
         {
-            await Game.Board.RandomDrop();
+            int result = await Game.Board.RandomDrop();
             await SendBoard();
+
+            if(result == 1)
+            {
+                int winnerId = Game.Board.Player1Turn ? Player1Id : Player2Id;
+                await SaveGame(_serviceProvider, GameResult.WIN, winnerId);
+                await SendWinMessage(winnerId);
+            }
 
         }
 

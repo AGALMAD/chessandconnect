@@ -3,19 +3,28 @@ import { tap } from 'rxjs';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
-export const redirectionGuard: CanActivateFn = (
-  route: ActivatedRouteSnapshot, 
-  state: RouterStateSnapshot) => {
+export const redirectionGuard: CanActivateFn = async (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
 
-    // Inyectamos servicios
-    const authService = inject(AuthService);
-    const router = inject(Router);
+  // Inyectamos servicios
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-    // Opción sin observable
-    if (!authService.loged()) {
-      // Navegamos al login indicando que después redireccione a donde queríamos ir en un principio
-      router.navigate(['login'], { queryParams: { redirectTo: state.url }});
-    }
+  // Verificar si el usuario está logueado
+  if (!authService.loged()) {
+    router.navigate(['login'], { queryParams: { redirectTo: state.url } });
+    return false;
+  }
 
-    return authService.loged();
+  // Obtiene los datos del usuario y verifica si está baneado 
+  await authService.getCurrentUser();
+  
+  if (authService.currentUser?.banned) {
+    router.navigate(['banned']);
+    return false;
+  }
+
+  return true;
 };

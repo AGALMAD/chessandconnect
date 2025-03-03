@@ -6,10 +6,8 @@ namespace chess4connect.DTOs
     public class GameHistoryDto
     {
         public int Id { get; set; }
-        public User User { get; set; }
-        public User Opponent { get; set; }
-        public int Duration { get; set; }
-        public GameResult PlayState { get; set; }
-        public GameType Game { get; set; }
+
+        public int TotalPages { get; set; }
+        public List<GameHistoryDetailDto> Details { get; set; }
     }
 }

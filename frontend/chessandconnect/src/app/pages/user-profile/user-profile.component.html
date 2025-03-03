@@ -102,11 +102,11 @@
       <!-- Menú desplegable para seleccionar la cantidad de partidas -->
       <div class="mb-2 flex items-center text-sm">
         <label for="gamesPerPage" class="mr-1 text-brown-700">Mostrar</label>
-        <select id="gamesPerPage" [(ngModel)]="pageSize" class="border p-1.5 rounded text-sm">
-          <option value="5">5 partidas</option>
-          <option value="10">10 partidas</option>
-          <option value="15">15 partidas</option>
-          <option value="20">20 partidas</option>
+        <select id="gamesPerPage" [(ngModel)]="pageSize" (change)="changePageSize()" class="border p-1.5 rounded text-sm">
+          <option value="5" (click)="changePageSize()">5 partidas</option>
+          <option value="10" (click)="changePageSize()">10 partidas</option>
+          <option value="15" (click)="changePageSize()">15 partidas</option>
+          <option value="20" (click)="changePageSize()">20 partidas</option>
         </select>
         <span class="ml-1 text-brown-700">partidas</span>
       </div>
@@ -115,18 +115,22 @@
       <!-- CHESS -->
       <div *ngIf="activeTab === GameType.Chess">
         <div class="bg-brown-600 p-4 rounded-lg flex flex-col space-y-4">
-          @for (game of games; track $index) {
+          @for (game of games.details; track $index) {
           <div class="ml-4">
             <p class="text-xl font-bold text-brown-100">Chess</p>
-            <p class="text-lg font-medium text-brown-100">
-              <span class="font-semibold">{{ game.user.userName }}</span>
-              VS
-              @if(game.opponent == null){
-                <span class="font-semibold">Bot</span>
-            }@else{ 
-              <span class="font-semibold" (click)="userlistcomponent.goToProfile(game.opponent.id)">{{game.opponent.userName }}</span>
-            }
-            </p>
+<div class="flex items-center text-lg font-medium text-brown-100">
+  <img [src]="baseUrl + game.user.avatarImageUrl" alt="Avatar"
+    class="w-8 h-8 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
+  <span class="font-semibold">{{ game.user.userName }}</span>
+  <span class="mx-2">VS</span>
+  @if (game.opponent == null) {
+    <span class="font-semibold">Bot</span>
+  } @else {
+    <img [src]="baseUrl + game.opponent.avatarImageUrl" alt="Avatar"
+      class="w-8 h-8 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
+    <span class="font-semibold cursor-pointer" (click)="goToProfile(game.opponent.id)">{{ game.opponent.userName }}</span>
+  }
+          </div>
             <p class="text-lg font-medium text-brown-100">
               <span class="font-semibold">Resultado:</span> Partida {{ getResultGame(game.playState) }}
             </p>
@@ -137,26 +141,60 @@
           }
         </div>
         <div class="flex justify-between mt-4">
-          <button class="px-4 py-2 bg-brown-700 text-white rounded" (click)="prevPage(GameType.Chess)">Anterior</button>
-          <button class="px-4 py-2 bg-brown-700 text-white rounded" (click)="nextPage(GameType.Chess)">Siguiente</button>
+          <!-- Botón para ir a la página anterior -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="prevPage(GameType.Chess)" 
+            [disabled]="actualPage === 1">
+            Anterior
+          </button>
+          
+          <!-- Botón para ir a la primera página -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="goToFirstPage(GameType.Chess)" 
+            [disabled]="actualPage === 1">
+            Inicio
+          </button>
+          
+          <!-- Botón para ir a la última página -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="goToLastPage(GameType.Chess)" 
+            [disabled]="actualPage === totalPages">
+            Final
+          </button>
+          
+          <!-- Botón para ir a la página siguiente -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="nextPage(GameType.Chess)" 
+            [disabled]="actualPage === totalPages">
+            Siguiente
+          </button>
         </div>
+        
       </div>
 
       <!-- CONNECT 4 -->
       <div *ngIf="activeTab === GameType.Connect4">
         <div class="bg-brown-600 p-4 rounded-lg flex flex-col space-y-4">
-          @for (game of games; track $index) {
+          @for (game of games.details; track $index) {
           <div class="ml-4">
             <p class="text-xl font-bold text-brown-100">Connect4</p>
-            <p class="text-lg font-medium text-brown-100">
+            <div class="flex items-center text-lg font-medium text-brown-100">
+              <img [src]="baseUrl + game.user.avatarImageUrl" alt="Avatar"
+                class="w-8 h-8 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
               <span class="font-semibold">{{ game.user.userName }}</span>
-              VS
-              @if(game.opponent == null){
+              <span class="mx-2">VS</span>
+              @if (game.opponent == null) {
                 <span class="font-semibold">Bot</span>
-            }@else{ 
-              <span class="font-semibold" (click)="userlistcomponent.goToProfile(game.opponent.id)">{{game.opponent.userName }}</span>
-            }
-            </p>
+              } @else {
+                <img [src]="baseUrl + game.opponent.avatarImageUrl" alt="Avatar"
+                  class="w-8 h-8 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
+                <span class="font-semibold cursor-pointer" (click)="goToProfile(game.opponent.id)">{{ game.opponent.userName }}</span>
+              }
+            </div>
             <p class="text-lg font-medium text-brown-100">
               <span class="font-semibold">Resultado:</span> Partida {{ getResultGame(game.playState) }}
             </p>
@@ -167,8 +205,37 @@
           }
         </div>
         <div class="flex justify-between mt-4">
-          <button class="px-4 py-2 bg-brown-700 text-white rounded" (click)="prevPage(GameType.Connect4)">Anterior</button>
-          <button class="px-4 py-2 bg-brown-700 text-white rounded" (click)="nextPage(GameType.Connect4)">Siguiente</button>
+          <!-- Botón para ir a la página anterior -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="prevPage(GameType.Connect4)" 
+            [disabled]="actualPage === 1">
+            Anterior
+          </button>
+          
+          <!-- Botón para ir a la primera página -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="goToFirstPage(GameType.Connect4)" 
+            [disabled]="actualPage === 1">
+            Inicio
+          </button>
+          
+          <!-- Botón para ir a la última página -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="goToLastPage(GameType.Connect4)" 
+            [disabled]="actualPage === totalPages">
+            Final
+          </button>
+          
+          <!-- Botón para ir a la página siguiente -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="nextPage(GameType.Connect4)" 
+            [disabled]="actualPage === totalPages">
+            Siguiente
+          </button>
         </div>
       </div>
     </div>
@@ -222,10 +289,10 @@
       <div class="mb-2 flex items-center text-sm">
         <label for="gamesPerPage" class="mr-1 text-brown-700">Mostrar</label>
         <select id="gamesPerPage" [(ngModel)]="pageSize" class="border p-1.5 rounded text-sm">
-          <option value="5">5 partidas</option>
-          <option value="10">10 partidas</option>
-          <option value="15">15 partidas</option>
-          <option value="20">20 partidas</option>
+          <option value="5" (click)="changePageSize()">5 partidas</option>
+          <option value="10" (click)="changePageSize()">10 partidas</option>
+          <option value="15" (click)="changePageSize()">15 partidas</option>
+          <option value="20" (click)="loadGames(activeTab)">20 partidas</option>
         </select>
         <span class="ml-1 text-brown-700">partidas</span>
       </div>
@@ -234,18 +301,22 @@
       <!-- CHESS -->
       <div *ngIf="activeTab === GameType.Chess">
         <div class="bg-brown-600 p-4 rounded-lg flex flex-col space-y-4">
-          @for (game of games; track $index) {
+          @for (game of games.details; track $index) {
           <div class="ml-4">
             <p class="text-xl font-bold text-brown-100">Chess</p>
-            <p class="text-lg font-medium text-brown-100">
+            <div class="flex items-center text-lg font-medium text-brown-100">
+              <img [src]="baseUrl + game.user.avatarImageUrl" alt="Avatar"
+                class="w-8 h-8 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
               <span class="font-semibold">{{ game.user.userName }}</span>
-              VS
-                @if(game.opponent == null){
-                  <span class="font-semibold">Bot</span>
-              }@else{ 
-                <span class="font-semibold" (click)="userlistcomponent.goToProfile(game.opponent.id)">{{game.opponent.userName }}</span>
+              <span class="mx-2">VS</span>
+              @if (game.opponent == null) {
+                <span class="font-semibold">Bot</span>
+              } @else {
+                <img [src]="baseUrl + game.opponent.avatarImageUrl" alt="Avatar"
+                  class="w-8 h-8 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
+                <span class="font-semibold cursor-pointer" (click)="goToProfile(game.opponent.id)">{{ game.opponent.userName }}</span>
               }
-            </p>
+            </div>
             <p class="text-lg font-medium text-brown-100">
               <span class="font-semibold">Resultado:</span> Partida {{ getResultGame(game.playState) }}
             </p>
@@ -256,26 +327,59 @@
           }
         </div>
         <div class="flex justify-between mt-4">
-          <button class="px-4 py-2 bg-brown-700 text-white rounded" (click)="prevPage(GameType.Chess)">Anterior</button>
-          <button class="px-4 py-2 bg-brown-700 text-white rounded" (click)="nextPage(GameType.Chess)">Siguiente</button>
+          <!-- Botón para ir a la página anterior -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="prevPage(GameType.Chess)" 
+            [disabled]="actualPage === 1">
+            Anterior
+          </button>
+          
+          <!-- Botón para ir a la primera página -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="goToFirstPage(GameType.Chess)" 
+            [disabled]="actualPage === 1">
+            Inicio
+          </button>
+          
+          <!-- Botón para ir a la última página -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="goToLastPage(GameType.Chess)" 
+            [disabled]="actualPage === totalPages">
+            Final
+          </button>
+          
+          <!-- Botón para ir a la página siguiente -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="nextPage(GameType.Chess)" 
+            [disabled]="actualPage === totalPages">
+            Siguiente
+          </button>
         </div>
       </div>
 
       <!-- CONNECT 4 -->
       <div *ngIf="activeTab === GameType.Connect4">
         <div class="bg-brown-600 p-4 rounded-lg flex flex-col space-y-4">
-          @for (game of games; track $index) {
+          @for (game of games.details; track $index) {
           <div class="ml-4">
             <p class="text-xl font-bold text-brown-100">Connect4</p>
-            <p class="text-lg font-medium text-brown-100">
+            <div class="flex items-center text-lg font-medium text-brown-100">
+              <img [src]="baseUrl + game.user.avatarImageUrl" alt="Avatar"
+                class="w-8 h-8 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
               <span class="font-semibold">{{ game.user.userName }}</span>
-              VS
-              @if(game.opponent == null){
+              <span class="mx-2">VS</span>
+              @if (game.opponent == null) {
                 <span class="font-semibold">Bot</span>
-            }@else{ 
-              <span class="font-semibold" (click)="userlistcomponent.goToProfile(game.opponent.id)">{{game.opponent.userName }}</span>
-            }
-            </p>
+              } @else {
+                <img [src]="baseUrl + game.opponent.avatarImageUrl" alt="Avatar"
+                  class="w-8 h-8 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">
+                <span class="font-semibold cursor-pointer" (click)="goToProfile(game.opponent.id)">{{ game.opponent.userName }}</span>
+              }
+            </div>
             <p class="text-lg font-medium text-brown-100">
               <span class="font-semibold">Resultado:</span> Partida {{ getResultGame(game.playState) }}
             </p>
@@ -286,9 +390,39 @@
           }
         </div>
         <div class="flex justify-between mt-4">
-          <button class="px-4 py-2 bg-brown-700 text-white rounded" (click)="prevPage(GameType.Connect4)">Anterior</button>
-          <button class="px-4 py-2 bg-brown-700 text-white rounded" (click)="nextPage(GameType.Connect4)">Siguiente</button>
+          <!-- Botón para ir a la página anterior -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="prevPage(GameType.Chess)" 
+            [disabled]="actualPage === 1">
+            Anterior
+          </button>
+          
+          <!-- Botón para ir a la primera página -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="goToFirstPage(GameType.Chess)" 
+            [disabled]="actualPage === 1">
+            Inicio
+          </button>
+          
+          <!-- Botón para ir a la última página -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="goToLastPage(GameType.Chess)" 
+            [disabled]="actualPage === totalPages">
+            Final
+          </button>
+          
+          <!-- Botón para ir a la página siguiente -->
+          <button 
+            class="px-4 py-2 bg-brown-700 text-white rounded" 
+            (click)="nextPage(GameType.Chess)" 
+            [disabled]="actualPage === totalPages">
+            Siguiente
+          </button>
         </div>
+        
       </div>
     </div>
   </div>

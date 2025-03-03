@@ -17,6 +17,8 @@ import { PipeTimerPipe } from "../../pipes/pipe-timer.pipe";
 import { playState } from '../../enums/playState';
 import { Pagination } from '../../models/dto/pagination';
 import { UserListComponent } from '../../components/user-list/user-list.component';
+import { WebsocketService } from '../../services/websocket.service';
+import { GamesHistory } from '../../models/game-history';
 
 @Component({
   selector: 'app-user-profile',
@@ -45,27 +47,47 @@ confirmPassword: string = '';
 passwordError: string = '';
 isModalOpen = false;
 
-games: Play[] = []
+games: GamesHistory
 
 actualPage: number = 1;
 pageSize: number = 5;
+totalPages: number
 
 
 constructor(
     public authService: AuthService,
     private userService: UserService,
+    private webSocketService: WebsocketService,
     private router: Router,
     private route: ActivatedRoute,
-    private friendService: FriendsService,
-    public  userlistcomponent : UserListComponent
+    private friendService: FriendsService
 ) {}
 
-ngOnInit() {
+async ngOnInit(): Promise<void>{
+  const pagination = sessionStorage.getItem("pagination")
+if(pagination){
+  const jsonPagination: Pagination = JSON.parse(pagination)
+  this.pageSize = jsonPagination.GamesCuantity
+  this.activeTab = jsonPagination.GameType
+}
+
+  this.authService.getCurrentUser();
   this.routeQueryMap$ = this.route.queryParamMap.subscribe(queryMap => this.getQueryId(queryMap));
-  this.loadGames(GameType.Chess)
+  await this.webSocketService.connectRxjs()
+  console.log("gola")
+  this.loadGames(this.activeTab)
+}
+
+
+goToProfile(id: number) {
+  this.router.navigate(
+    ['/profile'],
+    { queryParams: { 'id': id, } }
+  );
 }
 
 async getQueryId(queryMap: ParamMap) {
+  console.log(queryMap)
   this.profileId = parseInt(queryMap.get('id'));
   this.user = (await this.userService.getUser(this.profileId)).data;
   this.checkFriendship();
@@ -118,22 +140,53 @@ nextPage(gameType: GameType) {
   }
 }
 
+goToFirstPage(gameType: GameType) {
+  if (gameType === GameType.Chess) {
+    this.actualPage = 1
+    this.loadGames(gameType);
+  } else if (gameType === GameType.Connect4) {
+    this.actualPage = 1
+    this.loadGames(gameType);
+  }
+}
+
+goToLastPage(gameType: GameType) {
+  if (gameType === GameType.Chess) {
+    this.actualPage = this.totalPages
+    this.loadGames(gameType);
+  } else if (gameType === GameType.Connect4) {
+    this.actualPage = this.totalPages
+    this.loadGames(gameType);
+  }
+}
+
 async loadGames(gameType: GameType) {
+
   const response = await this.userService.getGamesHistory(this.savePagination(gameType));
   console.log(response)
 
   if (response.success) {
     this.games = response.data;
+    this.totalPages = response.data.totalPages 
   } else {
-    this.games = [];
+    this.games = null;
+    this.totalPages = 0;
   }
-  console.log(this.games)
+  
 }
 
 changeTab(gameType: GameType) {
   this.activeTab = gameType;
   this.actualPage = 1;
   this.loadGames(gameType)
+}
+
+changePageSize(){
+  this.loadGames(this.activeTab)
+
+  setTimeout(() => {
+    window.location.reload();
+  }, 500);
 }
 
 savePagination(gameType: GameType){
@@ -143,7 +196,7 @@ savePagination(gameType: GameType){
     GamesCuantity: this.pageSize,
     ActualPage: this.actualPage,
   }
-
+console.log(pagination)
   sessionStorage.setItem("pagination", JSON.stringify(pagination))
 
   return pagination
@@ -208,6 +261,10 @@ editName(name: string) {
     };
 
     this.userService.updateUser(authData)
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
+
 }
 
 editEmail(email: string) {
@@ -219,6 +276,10 @@ editEmail(email: string) {
   };
 
   this.userService.updateUser(authData)
+  setTimeout(() => {
+    window.location.reload();
+  }, 500);
+
 }
 
 changePassword(password: string) {
@@ -232,15 +293,28 @@ changePassword(password: string) {
   if(result){
     this.authService.logout()
   }
+  setTimeout(() => {
+    window.location.reload();
+  }, 500);
+
 }
 
 changeAvatar(image: File) {
-  console.log(image)
-  this.userService.updateAvatar(image)
+  console.log(image);
+  this.userService.updateAvatar(image);
+  
+  setTimeout(() => {
+    window.location.reload();
+  }, 500);
 }
+
 
 deleteAvatar() {
   this.userService.updateAvatar(null)
+  setTimeout(() => {
+    window.location.reload();
+  }, 500);
+
 }
 
 addFriend(id: number) {

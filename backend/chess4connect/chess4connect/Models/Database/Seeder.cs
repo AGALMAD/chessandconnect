@@ -24,8 +24,6 @@ public class Seeder
         await _chessAndConnectContext.SaveChangesAsync();
         await SeedFriendshipsAsync();
         await _chessAndConnectContext.SaveChangesAsync();
-        await SeedPlayDetailsAsync();
-        await _chessAndConnectContext.SaveChangesAsync();
     }
 
     private async Task SeedUsersAsync()
@@ -101,24 +99,6 @@ public class Seeder
         await _chessAndConnectContext.Friendships.AddRangeAsync(friendships);
 
 
-    }
-
-    private async Task SeedPlayDetailsAsync()
-    {
-        var playDetails1 = new List<PlayDetail>
-        {
-                new PlayDetail { PlayId = 1, UserId = 3, GameResult = GameResult.WIN },
-                new PlayDetail { PlayId = 1, UserId = 4, GameResult = GameResult.LOSE }
-            };
-
-        var playDetails2 = new List<PlayDetail>
-        {
-                new PlayDetail { PlayId = 2, UserId = 3, GameResult = GameResult.LOSE },
-                new PlayDetail { PlayId = 2, UserId = 4, GameResult = GameResult.WIN }
-            };
-
-        await _chessAndConnectContext.PlayDetails.AddRangeAsync(playDetails1);
-        await _chessAndConnectContext.PlayDetails.AddRangeAsync(playDetails2);
     }
 
 

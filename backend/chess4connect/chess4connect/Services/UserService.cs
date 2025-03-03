@@ -79,11 +79,11 @@ public class UserService
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task<List<GameHistoryDto>> getGamesHistory(Pagination pagination)
+    public async Task<GameHistoryDto> getGamesHistory(Pagination pagination)
     {
 
-        List<GameHistoryDto> listToShow = [];
-        List<GameHistoryDto> list = [];
+        List<GameHistoryDetailDto> listTemporal = [];
+        List<GameHistoryDetailDto> list = [];
 
         User user = GetUserById(pagination.UserId).Result;
        
@@ -95,7 +95,7 @@ public class UserService
         foreach (var item in user.Plays)
         {
 
-            Play play = await _unitOfWork.PlayRepository.GetPlaybyId(item.Id);
+            Play play = await _unitOfWork.PlayRepository.GetPlaybyId(item.PlayId);
 
             int userId = 0;
             int opponentId = 0;
@@ -118,7 +118,7 @@ public class UserService
 
             if (play.Game == pagination.GameType)
             {
-                var game = new GameHistoryDto
+                var game = new GameHistoryDetailDto
                 {
                     User = GetUserById(userId).Result,
                     Opponent = GetUserById(opponentId).Result,
@@ -143,7 +143,7 @@ public class UserService
                 {
                     try
                     {
-                        listToShow.Add(list[j + (i * pagination.GamesCuantity)]);
+                        listTemporal.Add(list[j + (i * pagination.GamesCuantity)]);
                     }
                     catch
                     {
@@ -153,7 +153,13 @@ public class UserService
             }
         }
 
+        listTemporal.Reverse();
 
+        var listToShow = new GameHistoryDto
+        {
+            TotalPages = totalPages,
+            Details = listTemporal.ToList()
+        };
 
         return listToShow;
     }

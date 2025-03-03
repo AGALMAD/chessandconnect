@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { Register } from '../models/dto/register';
 import { Pagination } from '../models/dto/pagination';
 import { Play } from '../models/play';
+import { GamesHistory } from '../models/game-history';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,7 @@ export class UserService {
   }
 
   async getGamesHistory(pagination: Pagination){
-    return await this.api.post<Play[]>('User/gamesHistory', pagination)
+    return await this.api.post<GamesHistory>('User/gamesHistory', pagination)
   }
 
 

@@ -32,6 +32,8 @@ export class WebsocketService {
 
   private onError(error: any) {
     console.error('Error:', error);
+    this.disconnectRxjs()
+
     Swal.fire({
       title: '<i class="fa-solid fa-chess-board"></i> ¡Error de conexión!',
       toast: true,
@@ -48,6 +50,7 @@ export class WebsocketService {
         timerProgressBar: 'bg-[#E8D5B5]'
       }
     }).then(() => {
+      this.disconnectRxjs()
       this.onDisconnected();
     });
   }

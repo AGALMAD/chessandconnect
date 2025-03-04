@@ -45,6 +45,9 @@ export class MatchMakingChessComponent implements OnInit, OnDestroy {
   }
 
   async ngOnDestroy(): Promise<void> {
+
+    this.matchMakingService.friendOpponent = null
+
     if(this.inQueue)
       await this.api.post(`MatchMaking/cancelQueue`, this.gamemode)
   }

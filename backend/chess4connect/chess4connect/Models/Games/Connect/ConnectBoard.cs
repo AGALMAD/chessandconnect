@@ -20,8 +20,8 @@ public class ConnectBoard
     public ConnectPiece LastPiece { get; set; }
 
     // Tiempo en segundos de cada turno
-    public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(10);
-    public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(10);
+    public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(180);
+    public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(180);
 
     // Fecha de inicio de cada turno
     public DateTime StartTurnDateTime { get; set; }

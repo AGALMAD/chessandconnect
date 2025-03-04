@@ -1,6 +1,7 @@
 ﻿using chess4connect.Models.Games.Base;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Types;
+using chess4connect.Services;
 using System.Drawing;
 
 namespace chess4connect.Models.Games.Connect;
@@ -19,11 +20,49 @@ public class ConnectBoard
     public ConnectPiece LastPiece { get; set; }
 
     // Tiempo en segundos de cada turno
-    public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(180);
-    public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(180);
+    public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(10);
+    public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(10);
 
     // Fecha de inicio de cada turno
     public DateTime StartTurnDateTime { get; set; }
+
+    public GameTimer remainingTime;
+    private System.Timers.Timer _timer;
+    public event Action OnTimeExpired;
+    public event Action<bool> TimeExpired;
+
+
+
+    public ConnectBoard()
+    {
+
+        //timmer
+        _timer = new System.Timers.Timer(1000);
+        _timer.AutoReset = true;
+        _timer.Enabled = true;
+
+        remainingTime = new GameTimer();
+        remainingTime.OnTimeExpired += CheckTimeExpired; // Suscribimos el evento del Timer
+
+    }
+
+    protected virtual void OnTimeExpiredEvent()
+    {
+        OnTimeExpired?.Invoke();
+    }
+
+    public void CheckTimeExpired()
+    {
+        _timer.Stop();
+        OnTimeExpiredEvent();
+    }
+
+    private void OnTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+    {
+        CheckTimeExpired();
+    }
+
+
 
     public int DropPiece(int colum)
     {

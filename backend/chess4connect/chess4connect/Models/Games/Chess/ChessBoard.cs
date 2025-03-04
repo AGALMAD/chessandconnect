@@ -11,25 +11,27 @@ namespace chess4connect.Models.Games.Chess.Chess
     {
         public static int ROWS = 8;
         public static int COLUMNS = 8;
-        public GameTimer remainingTime;
         public List<ChessPiecesMovements> ChessPiecesMovements { get; set; }
 
         private ChessBasePiece[,] Board = new ChessBasePiece[ROWS, COLUMNS];
 
-        public event Action OnTimeExpired;
         public bool Player1Turn { get; set; } = true;
 
         public delegate void TimeExpiredEventHandler(bool isPlayer1Turn);
 
-        private System.Timers.Timer _timer;
 
-        public event Action<bool> TimeExpired;
+
         //Tiempo en segundo de cada turno
-        public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(60);
-        public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(60);
+        public TimeSpan Player1Time { get; set; } = TimeSpan.FromSeconds(10);
+        public TimeSpan Player2Time { get; set; } = TimeSpan.FromSeconds(10);
 
         //Fecha de inicio de cada turno
         public DateTime StartTurnDateTime { get; set; }
+
+        public GameTimer remainingTime;
+        private System.Timers.Timer _timer;
+        public event Action OnTimeExpired;
+        public event Action<bool> TimeExpired;
 
         protected virtual void OnTimeExpiredEvent()
         {
@@ -85,10 +87,18 @@ namespace chess4connect.Models.Games.Chess.Chess
             _timer.AutoReset = true;
             _timer.Enabled = true;
         }
+
+        public void CheckTimeExpired()
+        {
+            _timer.Stop();
+            OnTimeExpiredEvent();
+        }
+
         private void OnTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             CheckTimeExpired(); 
         }
+
 
         public void GetAllPieceMovements()
         {
@@ -101,6 +111,10 @@ namespace chess4connect.Models.Games.Chess.Chess
             {
                 remainingTime.StartTimer(Player2Time);
             }
+
+            Console.WriteLine(Player1Time);
+            Console.WriteLine(Player2Time);
+
 
 
             ChessPiecesMovements = new List<ChessPiecesMovements>();
@@ -350,11 +364,6 @@ namespace chess4connect.Models.Games.Chess.Chess
             }
         }
 
-        public void CheckTimeExpired()
-        {
-            _timer.Stop();
-            OnTimeExpiredEvent();
-        }
 
 
         public int MovePiece(ChessMoveRequest moveRequest)
@@ -439,9 +448,6 @@ namespace chess4connect.Models.Games.Chess.Chess
                 Player1Time -= timeSpent;
             else
                 Player2Time -= timeSpent;
-
-
-            StartTurnDateTime = DateTime.Now;
 
 
             // Check if the move results in checkmate

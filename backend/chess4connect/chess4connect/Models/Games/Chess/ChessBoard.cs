@@ -45,6 +45,12 @@ namespace chess4connect.Models.Games.Chess.Chess
             remainingTime.OnTimeExpired += CheckTimeExpired; // Suscribimos el evento del Timer
         }
 
+        public void UnsubscribeFromTimer()
+        {
+            remainingTime.OnTimeExpired -= CheckTimeExpired;
+
+            remainingTime.StopTimer();
+        }
 
         private void PlacePiecesInBoard()
         {
@@ -105,7 +111,6 @@ namespace chess4connect.Models.Games.Chess.Chess
             if (Player1Turn)
             {
                 remainingTime.StartTimer(Player1Time);
-                Console.WriteLine(Player1Time);
             }
             else
             {

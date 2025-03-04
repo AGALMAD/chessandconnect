@@ -62,7 +62,13 @@ public class ConnectBoard
         CheckTimeExpired();
     }
 
+    public void UnsubscribeFromTimer()
+    {
+        remainingTime.OnTimeExpired -= CheckTimeExpired;
 
+        remainingTime.StopTimer();
+
+    }
 
     public int DropPiece(int colum)
     {

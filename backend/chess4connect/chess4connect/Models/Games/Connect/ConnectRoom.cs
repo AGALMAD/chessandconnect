@@ -57,7 +57,6 @@ public class ConnectRoom : BaseRoom
         {
             int winnerId = Game.Board.Player1Turn ? Player1Id : Player2Id;
             await SaveGame(_serviceProvider, GameResult.WIN, winnerId);
-            await SendWinMessage(winnerId);
             return;
         }
 
@@ -169,6 +168,9 @@ public class ConnectRoom : BaseRoom
 
     public override async Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult, int winnerId)
     {
+        Game.Board.UnsubscribeFromTimer();
+
+
         using var scope = serviceProvider.CreateAsyncScope();
         var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
 

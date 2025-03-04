@@ -20,8 +20,13 @@ namespace chess4connect.Models.Games.Chess.Chess
         {
             Game = game;
             _serviceProvider = serviceProvider;
+            SubscribeToGameEvents(Game.Board);
         }
 
+        public void SubscribeToGameEvents(ChessBoard chessGame)
+        {
+            chessGame.OnTimeExpired += async () => await HandleTimeExpired();
+        }
 
         public async Task SendChessRoom()
         {
@@ -29,6 +34,15 @@ namespace chess4connect.Models.Games.Chess.Chess
             await SendRoom(GameType.Chess);
             await SendBoard();
             await SendMovementsMessageAsync();
+        }
+
+
+
+        private async Task HandleTimeExpired()
+        {
+            Console.WriteLine($"El juego ha terminado. {(Game.Board.Player1Turn ? "Jugador 1" : "Jugador 2")} ha perdido por tiempo.");
+
+            await SaveGame(_serviceProvider, GameResult.WIN, Game.Board.Player1Turn ? Player2Id : Player1Id);
         }
 
 
@@ -93,9 +107,7 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         }
 
-
-
-
+        
         public async Task MoveChessPiece(ChessMoveRequest moveRequest)
         {
 

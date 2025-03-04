@@ -127,7 +127,7 @@ public class Program {
                 builder.AllowAnyOrigin()
                        .AllowAnyHeader()
                        .AllowAnyMethod()
-                       .WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+                       .WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS"); 
             });
         });
 

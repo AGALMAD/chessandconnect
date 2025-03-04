@@ -76,7 +76,7 @@ export class WebsocketService {
       console.log("conectado")
 
       this.rxjsSocket = webSocket({
-        url: environment.socketUrl + "/?jwt=" + this.api.jwt,
+        url: environment.socketUrl + "?jwt=" + this.api.jwt,
 
         // Evento de apertura de conexión
         openObserver: {

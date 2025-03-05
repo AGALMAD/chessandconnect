@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { GameInvitationComponent } from '../../components/game-invitation/game-invitation.component';
 import { RequestListComponent } from '../../components/request-list/request-list.component';
 import { AuthService } from '../../services/auth.service';
+import { GameService } from '../../services/game.service';
 
 @Component({
   selector: 'app-menus',
@@ -24,13 +25,15 @@ export class MenusComponent implements OnInit{
     private api: ApiService,
     private webSocketService: WebsocketService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private gameService: GameService
 
   ) {
     
   }
 
   async ngOnInit(): Promise<void> {
+    this.gameService.opponent = null
     this.authService.getCurrentUser();
     await this.webSocketService.connectRxjs()
 

@@ -87,6 +87,7 @@ namespace chess4connect.Controllers
             return Ok("SI");
         }
 
+        [Authorize]
         [HttpPost("newGameInvitation")]
         public async Task<ActionResult> GameInvitation([FromBody] GameInvitationModel gameInvitation)
         {

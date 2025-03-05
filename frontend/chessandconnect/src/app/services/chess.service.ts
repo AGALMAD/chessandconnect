@@ -43,6 +43,8 @@ export class ChessService {
 
   private async readMessage(message: string): Promise<void> {
 
+    console.log("MENSAJE DESDE CHESS SERVICE", message)
+
     try {
       // Paso del mensaje a objeto
       const parsedMessage = JSON.parse(message);
@@ -61,16 +63,16 @@ export class ChessService {
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
 
-    console.log("BOARD:", message)
-
+    console.log("CHESS : ", message)
     switch (message.Type) {
       case SocketCommunicationType.CHESS_BOARD:
 
         const board = message.Data as ChessBoard;
-        console.log("Board", board)
 
 
         this.pieces = board.Pieces
+        console.log("Board", this.pieces)
+
         this.gameService.turn = board.Player1Turn
         this.gameService.currentPlayerTimer = this.gameService.playerColor ? board.Player1Time : board.Player2Time
         this.gameService.opponentTimer = this.gameService.playerColor ? board.Player2Time : board.Player1Time
@@ -89,7 +91,7 @@ export class ChessService {
 
         this.movements = movements
 
-        console.log("Movements", movements)
+        console.log("Movements", this.movements)
 
         break
 

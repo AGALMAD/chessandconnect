@@ -1,6 +1,7 @@
 ﻿using chess4connect.DTOs;
 using chess4connect.Models.Database.Entities;
 using chess4connect.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mail;
@@ -16,7 +17,6 @@ public class AuthController : ControllerBase
     public AuthController(AuthService authService) { 
         _authService = authService;
     }
-
 
     [HttpPost("register")]
     public async Task<ActionResult<string>> RegisterUserAsync([FromForm] UserSignUpDto receivedUser)

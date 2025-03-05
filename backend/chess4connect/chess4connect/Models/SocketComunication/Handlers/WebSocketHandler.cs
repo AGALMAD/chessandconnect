@@ -3,7 +3,7 @@ using System.Text;
 
 namespace chess4connect.Models.SocketComunication.Handlers;
 
-public class WebSocketHandler: IDisposable
+public class WebSocketHandler : IDisposable
 {
     private const int BUFFER_SIZE = 4096;
 
@@ -27,55 +27,62 @@ public class WebSocketHandler: IDisposable
 
     public async Task HandleAsync()
     {
-        // Mientras que el websocket esté conectado
-        while (IsOpen)
+        try
         {
-            // Leemos el mensaje
-            string message = await ReadAsync();
-
-            // Si hay mensaje y hay suscriptores al evento MessageReceived, gestionamos el evento
-            if (!string.IsNullOrWhiteSpace(message) && MessageReceived != null)
+            while (IsOpen)
             {
-                await MessageReceived.Invoke(this, message);
+                string message = await ReadAsync();
+
+                if (!string.IsNullOrWhiteSpace(message) && MessageReceived != null)
+                {
+                    await MessageReceived.Invoke(this, message);
+                }
             }
         }
-
-        // Si hay suscriptores al evento Disconnected, gestionamos el evento
-        if (Disconnected != null)
+        catch (Exception ex)
         {
-            await Disconnected.Invoke(this);
+            Console.WriteLine($"Error en WebSocket {Id}: {ex.Message}");
+        }
+        finally
+        {
+            await CloseSocket();
         }
     }
 
     private async Task<string> ReadAsync()
     {
-        // Creamos un MemoryStream para almacenar el contenido del mensaje
-        using MemoryStream textStream = new MemoryStream();
-        WebSocketReceiveResult receiveResult;
-
-        do
+        try
         {
-            // Recibimos el mensaje
-            receiveResult = await _webSocket.ReceiveAsync(_buffer, CancellationToken.None);
+            using MemoryStream textStream = new MemoryStream();
+            WebSocketReceiveResult receiveResult;
 
-            // Si el mensaje es de tipo texto, lo escribimos en el MemoryStream
-            if (receiveResult.MessageType == WebSocketMessageType.Text)
+            do
             {
-                textStream.Write(_buffer, 0, receiveResult.Count);
+                receiveResult = await _webSocket.ReceiveAsync(_buffer, CancellationToken.None);
+
+                if (receiveResult.MessageType == WebSocketMessageType.Text)
+                {
+                    textStream.Write(_buffer, 0, receiveResult.Count);
+                }
+                else if (receiveResult.CloseStatus.HasValue)
+                {
+                    Console.WriteLine($"Cierre detectado en WebSocket {Id}: {receiveResult.CloseStatus}");
+                    await CloseSocket();  
+                    return string.Empty;
+                }
             }
-            // Si el mensaje es de tipo Close, cerramos la conexión
-            else if (receiveResult.CloseStatus.HasValue)
-            {
-                await _webSocket.CloseAsync(receiveResult.CloseStatus.Value, receiveResult.CloseStatusDescription, CancellationToken.None);
-            }
+            while (!receiveResult.EndOfMessage);
+
+            return Encoding.UTF8.GetString(textStream.ToArray());
         }
-        while (!receiveResult.EndOfMessage);
-
-        // Decodificamos el mensaje
-        string message = Encoding.UTF8.GetString(textStream.ToArray());
-
-        return message;
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error leyendo WebSocket {Id}: {ex.Message}");
+            await CloseSocket(); 
+            return string.Empty;
+        }
     }
+
 
     public async Task SendAsync(string message)
     {
@@ -87,6 +94,29 @@ public class WebSocketHandler: IDisposable
             await _webSocket.SendAsync(bytes, WebSocketMessageType.Text, true, CancellationToken.None);
         }
     }
+
+    public async Task CloseSocket()
+    {
+        if (_webSocket.State == WebSocketState.Open || _webSocket.State == WebSocketState.Connecting)
+        {
+            try
+            {
+                await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Cierre normal", CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error cerrando WebSocket {Id}: {ex.Message}");
+            }
+        }
+
+        Dispose();  // Llama a Dispose para limpiar recursos
+
+        if (Disconnected != null)
+        {
+            await Disconnected.Invoke(this);  // Notificar la desconexión
+        }
+    }
+
 
     public void Dispose()
     {

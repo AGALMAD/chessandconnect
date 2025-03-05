@@ -43,7 +43,6 @@ export class MatchMakingService {
 
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Noe te quiere:', message);
 
     try {
       // Paso del mensaje a objeto
@@ -115,6 +114,8 @@ export class MatchMakingService {
         Player2Id: this.friendOpponent.id,
         GameType: gamemode
       }
+
+      console.log("FRIEND ROOM", room)
       await this.api.post<RoomRequest>(`MatchMaking/FriendGame`, room)
   }
 

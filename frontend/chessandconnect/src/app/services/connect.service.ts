@@ -66,14 +66,18 @@ export class ConnectService {
         const board = message.Data as ConnectBoard;
         console.log("CONNECT BOARD", board)
 
+        if (board.LastPiece != null) {
+          this.pieces.push(board.LastPiece)
+          console.log("CONNECT PIECES", this.pieces)
 
-        this.pieces.push(board.LastPiece)
-        console.log("CONNECT PIECES", this.pieces)
+        }
+
         this.gameService.turn = board.Player1Turn
         this.gameService.currentPlayerTimer = this.gameService.playerColor ? board.Player1Time : board.Player2Time
         this.gameService.opponentTimer = this.gameService.playerColor ? board.Player2Time : board.Player1Time
 
         this.gameService.startCountdown();
+
 
         break
 
@@ -88,7 +92,7 @@ export class ConnectService {
           this.gameService.opponentTimer = 180
 
           this.gameService.startCountdown()
-          
+
           this.gameService.dialog.closeAll()
 
         }

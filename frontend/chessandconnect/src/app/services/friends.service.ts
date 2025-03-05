@@ -30,8 +30,8 @@ export class FriendsService {
   public baseUrl = environment.apiUrl;
 
 
-  public connectedFriends: Friend[]
-  public disconnectedFriends: Friend[]
+  public connectedFriends: Friend[] = []
+  public disconnectedFriends: Friend[] = []
 
   public gameInvitations: GameInvitationModel[]
 
@@ -130,7 +130,6 @@ export class FriendsService {
   // RECIVE FRIENDS REQUESTS
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Noe te quiere:', message);
 
     try {
       // Paso del mensaje a objeto
@@ -237,7 +236,7 @@ export class FriendsService {
           // 🔹 Mostrar alerta para aceptar o rechazar
           Swal.fire({
             title: ` <div class="flex items-center"
-            <img src="${environment}/${friend?.avatarImageUrl}" class="w-10 h-10 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">  
+            <img src="${this.baseUrl}/${friend?.avatarImageUrl}" class="w-10 h-10 rounded-full object-cover border-2 border-brown-600 shadow-md mr-2">  
             <span>${friend?.userName}</span> 
             </div>`,
             text: `Invitación de juego.`,

@@ -93,16 +93,27 @@ namespace chess4connect.Services
                     }
                     else 
                     {
-                        await GetConnectRoomByUserId(userId).SendChatMessage(message, userId);
+                        ConnectRoom connecttRoom = GetConnectRoomByUserId(userId);
+
+                        if(connecttRoom != null)
+                            await connecttRoom.SendChatMessage(message, userId);
                     }
                     break;
 
                 case SocketCommunicationType.CHESS_MOVEMENTS:
-                    await GetChessRoomByUserId(userId).MessageHandler(message);
+                    chessRoom = GetChessRoomByUserId(userId);
+                    if (chessRoom != null)
+                    {
+                        await GetChessRoomByUserId(userId).MessageHandler(message);
+                    }
                     break;
 
                 case SocketCommunicationType.CONNECT4_MOVEMENTS:
-                    await GetConnectRoomByUserId(userId).MessageHandler(message);
+                    ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+
+                    if (connectRoom != null)
+                        await connectRoom.MessageHandler(message);
+
                     break;
 
                 //Si el compañero se desconecta, elimina la sala y envía mensaje de victoria al usuario
@@ -122,7 +133,7 @@ namespace chess4connect.Services
 
                         else
                         {
-                            ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+                            connectRoom = GetConnectRoomByUserId(userId);
 
                             if(connectRoom != null)
                             {
@@ -172,7 +183,7 @@ namespace chess4connect.Services
 
                     else
                     {
-                        ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+                        connectRoom = GetConnectRoomByUserId(userId);
 
                         if (connectRoom != null)
                         {
@@ -236,7 +247,7 @@ namespace chess4connect.Services
 
                     else
                     {
-                        ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+                        connectRoom = GetConnectRoomByUserId(userId);
 
                         if (connectRoom != null)
                         {
@@ -286,7 +297,7 @@ namespace chess4connect.Services
 
                     else
                     {
-                        ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
+                        connectRoom = GetConnectRoomByUserId(userId);
                         await connectRoom.Surrender(userId, _serviceProvider);
 
                     }
@@ -315,13 +326,17 @@ namespace chess4connect.Services
 
                     else
                     {
-                        ConnectRoom connectRoom = GetConnectRoomByUserId(userId);
-                        WebSocketHandler opponentSocket = userId == connectRoom.Player1Id ? connectRoom.Player2Handler : connectRoom.Player1Handler;
-                        
-                        if(opponentSocket != null)
-                            await opponentSocket.SendAsync(JsonSerializer.Serialize(rematchDeclinedMessage));
+                        connectRoom = GetConnectRoomByUserId(userId);
+                        if(connectRoom != null)
+                        {
+                            WebSocketHandler opponentSocket = userId == connectRoom.Player1Id ? connectRoom.Player2Handler : connectRoom.Player1Handler;
 
-                        connectRooms.Remove(connectRoom);
+                            if (opponentSocket != null)
+                                await opponentSocket.SendAsync(JsonSerializer.Serialize(rematchDeclinedMessage));
+
+                            connectRooms.Remove(connectRoom);
+                        }
+
 
                     }
 

@@ -154,6 +154,8 @@ namespace chess4connect.Models.Games.Chess.Chess
 
         public override async Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult, int winnerId)
         {
+            Game.Board.UnsubscribeFromTimer();
+
             using var scope = serviceProvider.CreateAsyncScope();
             var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
 

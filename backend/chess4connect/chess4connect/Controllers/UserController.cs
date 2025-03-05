@@ -53,7 +53,7 @@ namespace chess4connect.Controllers
 
         }
 
-
+        [Authorize]
         [HttpGet("getUserById")]
         public async Task<UserAfterLoginDto> GetUserById([FromQuery] int id)
             { 
@@ -64,7 +64,7 @@ namespace chess4connect.Controllers
         }
 
 
-
+        [Authorize]
         [HttpGet("searchUser")]
         public List<UserAfterLoginDto> getAllUsers([FromQuery] string query)
         {
@@ -75,7 +75,7 @@ namespace chess4connect.Controllers
             return _smartSearch.Search(query, userList).ToList();
         }
 
-
+        [Authorize]
         [HttpGet("friends")]
         public async Task<List<FriendModel>> GetAllFriends([FromQuery] string query)
         {
@@ -94,6 +94,7 @@ namespace chess4connect.Controllers
 
         }
 
+        [Authorize]
         [HttpPost("deleteFriend")]
         public async Task DeleteFriendFriends([FromQuery] int friendId)
         {
@@ -132,6 +133,7 @@ namespace chess4connect.Controllers
 
         }
 
+        [Authorize]
         [HttpPost("updateUser")]
         public async Task updateUser([FromBody] UserSignUpDto user)
         {
@@ -140,6 +142,7 @@ namespace chess4connect.Controllers
             await _userService.UpdateUser(user, id);
         }
 
+        [Authorize]
         [HttpPost("updateAvatar")]
         public async Task updateAvatar([FromForm] IFormFile ImagePath)
         {
@@ -148,7 +151,7 @@ namespace chess4connect.Controllers
             await _userService.UpdateAvatar(ImagePath, id);
         }
 
-
+        [Authorize]
         [HttpPost("updateUserPassword")]
         public async Task updateUserPassword([FromBody] UserSignUpDto user)
         {
@@ -157,6 +160,7 @@ namespace chess4connect.Controllers
             await _userService.UpdateUserPassword(id, user.Password);
         }
 
+        [Authorize]
         [HttpPost("gamesHistory")]
         public async Task<GameHistoryDto> getGamesHistory([FromBody] Pagination pagination)
         { 

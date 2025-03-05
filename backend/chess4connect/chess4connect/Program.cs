@@ -120,17 +120,16 @@ public class Program {
 
 
         // Permite CORS
-        builder.Services.AddCors(
-            options =>
-            options.AddDefaultPolicy(
-                builder =>
-                {
-                    builder.AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-                    ;
-                })
-            );
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyHeader()
+                       .AllowAnyMethod()
+                       .WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS"); 
+            });
+        });
 
 
         var app = builder.Build();

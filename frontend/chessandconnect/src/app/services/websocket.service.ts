@@ -27,11 +27,14 @@ export class WebsocketService {
   }
 
   private onMessageReceived(message: string) {
+    console.log("Message", message)
     this.messageReceived.next(message);
   }
 
   private onError(error: any) {
     console.error('Error:', error);
+    this.disconnectRxjs()
+
     Swal.fire({
       title: '<i class="fa-solid fa-chess-board"></i> ¡Error de conexión!',
       toast: true,
@@ -48,6 +51,7 @@ export class WebsocketService {
         timerProgressBar: 'bg-[#E8D5B5]'
       }
     }).then(() => {
+      this.disconnectRxjs()
       this.onDisconnected();
     });
   }
@@ -73,7 +77,7 @@ export class WebsocketService {
       console.log("conectado")
 
       this.rxjsSocket = webSocket({
-        url: environment.socketUrl + "/?jwt=" + this.api.jwt,
+        url: environment.socketUrl + "?jwt=" + this.api.jwt,
 
         // Evento de apertura de conexión
         openObserver: {

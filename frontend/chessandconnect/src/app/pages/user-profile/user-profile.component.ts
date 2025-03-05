@@ -74,7 +74,6 @@ if(pagination){
   this.authService.getCurrentUser();
   this.routeQueryMap$ = this.route.queryParamMap.subscribe(queryMap => this.getQueryId(queryMap));
   await this.webSocketService.connectRxjs()
-  console.log("gola")
   this.loadGames(this.activeTab)
 }
 
@@ -87,7 +86,6 @@ goToProfile(id: number) {
 }
 
 async getQueryId(queryMap: ParamMap) {
-  console.log(queryMap)
   this.profileId = parseInt(queryMap.get('id'));
   this.user = (await this.userService.getUser(this.profileId)).data;
   this.checkFriendship();
@@ -163,7 +161,6 @@ goToLastPage(gameType: GameType) {
 async loadGames(gameType: GameType) {
 
   const response = await this.userService.getGamesHistory(this.savePagination(gameType));
-  console.log(response)
 
   if (response.success) {
     this.games = response.data;

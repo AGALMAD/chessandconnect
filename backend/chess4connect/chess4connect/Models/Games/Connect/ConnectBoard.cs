@@ -1,6 +1,7 @@
 ﻿using chess4connect.Models.Games.Base;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Types;
+using chess4connect.Services;
 using System.Drawing;
 
 namespace chess4connect.Models.Games.Connect;
@@ -24,6 +25,50 @@ public class ConnectBoard
 
     // Fecha de inicio de cada turno
     public DateTime StartTurnDateTime { get; set; }
+
+    public GameTimer remainingTime;
+    private System.Timers.Timer _timer;
+    public event Action OnTimeExpired;
+    public event Action<bool> TimeExpired;
+
+
+
+    public ConnectBoard()
+    {
+
+        //timmer
+        _timer = new System.Timers.Timer(1000);
+        _timer.AutoReset = true;
+        _timer.Enabled = true;
+
+        remainingTime = new GameTimer();
+        remainingTime.OnTimeExpired += CheckTimeExpired; // Suscribimos el evento del Timer
+
+    }
+
+    protected virtual void OnTimeExpiredEvent()
+    {
+        OnTimeExpired?.Invoke();
+    }
+
+    public void CheckTimeExpired()
+    {
+        _timer.Stop();
+        OnTimeExpiredEvent();
+    }
+
+    private void OnTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+    {
+        CheckTimeExpired();
+    }
+
+    public void UnsubscribeFromTimer()
+    {
+        remainingTime.OnTimeExpired -= CheckTimeExpired;
+
+        remainingTime.StopTimer();
+
+    }
 
     public int DropPiece(int colum)
     {

@@ -22,6 +22,13 @@ public class GameTimer
         gameTimer.Start();
     }
 
+    public void StopTimer()
+    {
+        gameTimer.Stop(); 
+        gameTimer.Dispose(); 
+        Console.WriteLine("Temporizador detenido.");
+    }
+
     private void TurnTimerElapsed(object? sender, ElapsedEventArgs e)
     {
         Console.WriteLine("El tiempo ha expirado.");

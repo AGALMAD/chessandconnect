@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
 import { GameType } from '../../enums/game';
 import { FriendsService } from '../../services/friends.service';
+import { ChessService } from '../../services/chess.service';
 
 @Component({
   selector: 'app-match-making-chess',
@@ -28,10 +29,10 @@ export class MatchMakingChessComponent implements OnInit, OnDestroy {
     public menuService: MenuService,
     private api: ApiService,
     private webSocketService: WebsocketService,
-    private router: Router,
     public matchMakingService: MatchMakingService,
     public authService: AuthService,
-    public friendsService : FriendsService
+    public friendsService : FriendsService,
+    private chessService: ChessService
   ) {
     
   }
@@ -45,6 +46,9 @@ export class MatchMakingChessComponent implements OnInit, OnDestroy {
   }
 
   async ngOnDestroy(): Promise<void> {
+
+    this.matchMakingService.friendOpponent = null
+
     if(this.inQueue)
       await this.api.post(`MatchMaking/cancelQueue`, this.gamemode)
   }

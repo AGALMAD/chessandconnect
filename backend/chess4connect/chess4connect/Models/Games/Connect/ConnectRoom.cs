@@ -4,6 +4,7 @@ using chess4connect.Mappers;
 using chess4connect.Models.Database.Entities;
 using chess4connect.Models.Games.Base;
 using chess4connect.Models.Games.Chess;
+using chess4connect.Models.Games.Chess.Chess;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Base;
 using chess4connect.Models.Games.Chess.Chess.Pieces.Types;
 using chess4connect.Models.SocketComunication.Handlers;
@@ -26,8 +27,23 @@ public class ConnectRoom : BaseRoom
 
         Game = game;
         _serviceProvider = serviceProvider;
+
+        SubscribeToGameEvents(Game.Board);
+
     }
 
+
+    public void SubscribeToGameEvents(ConnectBoard connectGame)
+    {
+        connectGame.OnTimeExpired += async () => await HandleTimeExpired();
+    }
+
+    private async Task HandleTimeExpired()
+    {
+        Console.WriteLine($"El juego ha terminado. {(Game.Board.Player1Turn ? "Jugador 1" : "Jugador 2")} ha perdido por tiempo.");
+
+        await SaveGame(_serviceProvider, GameResult.WIN, Game.Board.Player1Turn ? Player2Id : Player1Id);
+    }
 
     public async Task DropConnectPiece(int column)
     {
@@ -41,7 +57,6 @@ public class ConnectRoom : BaseRoom
         {
             int winnerId = Game.Board.Player1Turn ? Player1Id : Player2Id;
             await SaveGame(_serviceProvider, GameResult.WIN, winnerId);
-            await SendWinMessage(winnerId);
             return;
         }
 
@@ -65,6 +80,17 @@ public class ConnectRoom : BaseRoom
 
     public override async Task SendBoard()
     {
+        if (Game.Board.Player1Turn)
+        {
+            Game.Board.remainingTime.StartTimer(Game.Board.Player1Time);
+        }
+        else
+        {
+            Game.Board.remainingTime.StartTimer(Game.Board.Player2Time);
+        }
+
+        Console.WriteLine(Game.Board.Player1Time);
+        Console.WriteLine(Game.Board.Player2Time);
 
         //Lista de piezas sin  los movimientos básicos
         var roomMessage = new SocketMessage<ConnectBoardDto>
@@ -88,6 +114,7 @@ public class ConnectRoom : BaseRoom
     public async Task SendConnectRoom()
     {
         await SendRoom(GameType.Connect4);
+        await SendBoard();
     }
 
 
@@ -141,6 +168,9 @@ public class ConnectRoom : BaseRoom
 
     public override async Task SaveGame(IServiceProvider serviceProvider, GameResult gameResult, int winnerId)
     {
+        Game.Board.UnsubscribeFromTimer();
+
+
         using var scope = serviceProvider.CreateAsyncScope();
         var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
 

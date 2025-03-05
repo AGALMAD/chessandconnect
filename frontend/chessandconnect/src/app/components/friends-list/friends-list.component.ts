@@ -29,7 +29,6 @@ export class FriendsListComponent implements OnInit {
 
 
   async ngOnInit(): Promise<void> {
-    console.log("obtener amigos")
     if (!this.searchQuery) {
       this.searchQuery = ""
     }

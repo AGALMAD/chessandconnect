@@ -38,33 +38,17 @@ export class ChessComponent implements OnInit,OnDestroy {
     private websocketService:WebsocketService, 
     public gameService: GameService, 
     public authService : AuthService,
-    public chessService: ChessService,
-    private router: Router
-    
+    public chessService: ChessService,    
   ) { }
 
 
   ngOnInit(): void {
-    // Si la página se recarga, redirigir al menú
-    if (sessionStorage.getItem('reloadToMenu') === 'true') {
-      sessionStorage.removeItem('reloadToMenu');
-      this.router.navigate(['/menus']);
-    }
-
-    window.addEventListener('beforeunload', this.handleBeforeUnload);
+    console.log("OPPONENT", this.gameService.opponent)
   }
 
-  handleBeforeUnload = (): void => {
-    setTimeout(() => {
-      this.gameService.leaveGame()
-      sessionStorage.setItem('reloadToMenu', 'true');
-
-    }, 3);
-  };
 
   ngOnDestroy(): void {
 
-    window.removeEventListener('beforeunload', this.handleBeforeUnload);
   }
 
 
@@ -95,9 +79,7 @@ export class ChessComponent implements OnInit,OnDestroy {
   }
 
   selectPiece(piece: ChessPiece) {
-    this.selectedPiece = piece;
-    console.log(piece)
-  
+    this.selectedPiece = piece;  
     this.chessService.showMovements = this.chessService.movements.find(m => m.Id == piece.Id) || null;
   }
   

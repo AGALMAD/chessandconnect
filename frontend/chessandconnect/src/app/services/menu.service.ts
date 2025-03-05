@@ -51,7 +51,6 @@ export class MenuService {
 
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Mensaje recibido:', message);
 
     try {
       // Paso del mensaje a objeto

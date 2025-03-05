@@ -43,7 +43,6 @@ export class ChatService {
   }
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Chat1:', message);
 
     try {
       // Paso del mensaje a objeto
@@ -62,7 +61,6 @@ export class ChatService {
 
   private async handleSocketMessage(message: SocketMessageGeneric<any>): Promise<void> {
 
-    console.log("Chat2:", message)
 
     switch (message.Type) {
       case SocketCommunicationType.CHAT:
@@ -73,8 +71,6 @@ export class ChatService {
         }
 
         this.messages.push(user_chat)
-        console.log("Chat3", this.messages)
-
         break
 
     }

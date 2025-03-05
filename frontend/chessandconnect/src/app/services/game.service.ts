@@ -45,7 +45,7 @@ export class GameService {
   }
 
   private async readMessage(message: string): Promise<void> {
-    console.log('Masage:', message);
+    console.log('Message:', message);
 
     try {
       // Paso del mensaje a objeto
@@ -168,7 +168,7 @@ export class GameService {
 
         const disconnectionModel = message.Data as ConnectionModel;
 
-        if (disconnectionModel.UserId == this.opponent.id) {
+        if (this.opponent != null && disconnectionModel.UserId == this.opponent.id) {
           Swal.fire({
             title: '<i class="fa-solid fa-chess-board"></i> ¡Desconexión de oponente!',
             text: `${this.opponent?.userName ?? "Tu oponente"} se desconectó.`,

@@ -50,6 +50,44 @@ La plataforma ofrece la posibilidad de jugar a Ajedrez y Conecta 4 en tiempo rea
 
 ### 📸 Capturas de Pantalla
 
+**Home Page**
+
+
+![Home](assets/main1.jpg)
+![Home](assets/main2.jpg)
+![Home](assets/main3.jpg)
+
+**Game menu**
+
+![Menu](assets/menu1.jpg)
+![Menu](assets/menu2.jpg)
+![Menu](assets/menu3.jpg)
+![Menu](assets/menu4.jpg)
+![Menu](assets/menu5.jpg)
+![Menu](assets/menu6.jpg)
+![Menu](assets/menu7.jpg)
+
+**Game Dashboard**
+
+![Dashboard](assets/game1.jpg)
+![Dashboard](assets/game2.jpg)
+![Dashboard](assets/game3.jpg)
+
+**Chess**
+![Chess](assets/chess1.jpg)
+![Chess](assets/chess2.jpg)
+![Chess](assets/chess3.jpg)
+![Chess](assets/chess4.jpg)
+![Chess](assets/chess5.jpg)
+![Chess](assets/chess6.jpg)
+![Chess](assets/chess7.jpg)
+![Chess](assets/chess8.jpg)
+
+**Connect 4**
+![Connect 4](assets/conectac1.jpg)
+
+
+
 ---
 
 ## 🧠 Qué Aprendimos

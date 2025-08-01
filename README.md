@@ -48,10 +48,9 @@ La plataforma ofrece la posibilidad de jugar a Ajedrez y Conecta 4 en tiempo rea
 
 
 
-### 📸 Capturas de Pantalla
+### 📸 Funcionamiento
 
 **Home Page**
-
 
 ![Home](assets/main1.jpg)
 ![Home](assets/main2.jpg)
@@ -62,10 +61,15 @@ La plataforma ofrece la posibilidad de jugar a Ajedrez y Conecta 4 en tiempo rea
 ![Menu](assets/menu1.jpg)
 ![Menu](assets/menu2.jpg)
 ![Menu](assets/menu3.jpg)
-![Menu](assets/menu4.jpg)
+
+<p float="left">
+  <img src="assets/menu4.jpg" width="30%" />
+  <img src="assets/menu7.jpg" width="30%" />
+  <img src="assets/menu6.jpg" width="30%" />
+</p>
+
 ![Menu](assets/menu5.jpg)
-![Menu](assets/menu6.jpg)
-![Menu](assets/menu7.jpg)
+
 
 **Game Dashboard**
 
@@ -79,13 +83,21 @@ La plataforma ofrece la posibilidad de jugar a Ajedrez y Conecta 4 en tiempo rea
 ![Chess](assets/chess3.jpg)
 ![Chess](assets/chess4.jpg)
 ![Chess](assets/chess5.jpg)
-![Chess](assets/chess6.jpg)
 ![Chess](assets/chess7.jpg)
-![Chess](assets/chess8.jpg)
+![Chess](assets/chess6.jpg)
+
 
 **Connect 4**
-![Connect 4](assets/conectac1.jpg)
+![Connect 4](assets/conecta1.jpg)
 
+**User Page**
+
+![User](assets/user1.jpg)
+![User](assets/user2.jpg)
+
+**Admin Page**
+![Admin](assets/admin1.jpg)
+![Admin](assets/admin2.jpg)
 
 
 ---

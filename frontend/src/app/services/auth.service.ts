@@ -132,9 +132,9 @@ export class AuthService {
     this.decodedToken = null;
     localStorage.removeItem(this.TOKEN_KEY);
     sessionStorage.removeItem(this.TOKEN_KEY);
-    this.router.navigate(['#']);
+    this.router.navigate(['/login']);
     this.currentUser = null;
-    await this.websocketService.disconnectRxjs();
+    this.websocketService.disconnectRxjs();
   }
 
   public async handleSession(token: string, remember: boolean): Promise<void> {

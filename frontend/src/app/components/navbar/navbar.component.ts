@@ -10,31 +10,19 @@ import { environment } from '../../../environments/environment';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
+  public baseUrl = environment.apiUrl;
 
-  public baseUrl = environment.apiUrl; 
-
-  constructor(
-    public authService: AuthService,
-    private router: Router
-  ) {
-  }
+  constructor(public authService: AuthService, private router: Router) {}
 
   User() {
-    return this.authService.getUser()
+    return this.authService.getUser();
   }
 
   usuarioToken() {
-    return this.authService.loged()
+    return this.authService.loged();
   }
 
-  closeSession() {
-    this.authService.logout()
-  }
-
-  goToProfile(id: number){
-    this.router.navigate(
-      ['/profile'],
-      { queryParams: { 'id': id, } }
-    );
+  goToProfile(id: number) {
+    this.router.navigate(['/profile'], { queryParams: { id: id } });
   }
 }

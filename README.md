@@ -39,66 +39,105 @@ La plataforma ofrece la posibilidad de jugar a Ajedrez y Conecta 4 en tiempo rea
 
 ---
 
-### 🌐 Comunicación en Tiempo Real
+### 📸 Funcionamiento
+
+### Menú
+
+Aquí puedes ver cómo funciona el menú principal de la aplicación. Desde esta vista, el usuario puede acceder a las diferentes secciones del sistema: elegir el modo de juego, administrar su lista de amigos, gestionar peticiones de amistad, entre otras opciones.
+
+![Menú principal](assets/menu1.jpg)
+
+Una de las funciones destacadas es la búsqueda inteligente de amigos. Utiliza una comparación de cadenas para sugerir usuarios cuyos nombres sean similares al texto ingresado.
+
+![Búsqueda de amigos](assets/menu2.jpg)
+
+De una manera similar puedes buscar usuarios manualmente y enviarles una solicitud de amistad de forma sencilla.
+
+![Enviar solicitud](assets/menu3.jpg)
+
+Además, tienes la opción de aceptar o rechazar las solicitudes de amistad recibidas.
+
+![Gestionar solicitudes](assets/menu4.jpg)
 
 
 
+## Juegos
+
+En esta vista puedes elegir el modo en el que quieres jugar. Tienes tres opciones: jugar contra un amigo, enfrentarte a un bot o unirte a la cola para emparejarte automáticamente con otro jugador en línea.
+
+> ℹ️ **Nota:** Tanto en Ajedrez como en Conecta 4, se mantienen las mismas funcionalidades: puedes jugar con un amigo, con un bot o usar el sistema de emparejamiento para encontrar un rival automáticamente.
+
+![Selección de modo de juego](assets/game1.jpg)
+![Pantalla de emparejamiento](assets/game2.jpg)
+![Esperando rival](assets/game3.jpg)
+
+### Ajedrez
+
+En la pantalla del juego verás el tablero con las piezas, orientado según el color de cada jugador. Cada jugador cuenta con un temporizador, y cuando se agota, la partida termina automáticamente.
+
+Al seleccionar una pieza, se muestran todos los movimientos posibles para ayudarte a planificar tu jugada.
+
+También tienes un chat en tiempo real para comunicarte con tu oponente durante la partida.
+
+Puedes solicitar tablas o rendirte en cualquier momento.
+
+Las notificaciones aparecerán en la esquina superior derecha para avisarte si se han solicitado tablas, si tu oponente pide revancha o si se ha desconectado.
+
+Si el oponente se desconecta, automáticamente serás declarado ganador y serás redirigido al menú principal.
+
+![Vista general del juego](assets/chess1.jpg)
+![Resultado](assets/chess2.jpg)
+![Notificación](assets/chess3.jpg)
+![Desconexión](assets/chess4.jpg)
+
+
+### Conecta 4
+
+> ℹ️ **Nota:** Conecta 4 ofrece las mismas funcionalidades que Ajedrez: puedes jugar contra un amigo, contra un bot o buscar un rival en línea. El tablero y las mecánicas están adaptadas a la lógica propia de este juego, pero la experiencia de usuario, el chat en tiempo real y las notificaciones funcionan igual.
+
+![Conecta 4](assets/connect1.jpg)
+
+
+## Vista de Usuario
+
+En esta pantalla puedes ver tu perfil o el de otros jugadores.
+
+Si es tu perfil, podrás modificar todos tus datos personales fácilmente.
+
+Si estás viendo el perfil de otro usuario, tienes la opción de enviarle una solicitud de amistad o eliminarlo de tu lista de amigos.
+
+También cuenta con un historial de partidas, ordenado desde las más recientes hasta las más antiguas.
+
+Puedes alternar entre las partidas de Ajedrez y Conecta 4 usando el botón correspondiente para cada juego.
+
+Además, la vista incluye paginación, que te permite elegir cuántas partidas quieres ver en pantalla y navegar por las páginas con los botones que están en la parte inferior.
+
+![Perfil de usuario](assets/user1.jpg)
+![Paginación](assets/user2.jpg)
+![Añadir amigo](assets/user3.jpg)
+![Eliminar amigo](assets/user4.jpg)
+
+### Administración
+
+Si tienes el rol de administrador, tendrás acceso a una lista completa de todos los usuarios registrados en la plataforma.
+
+Desde aquí puedes cambiar el rol de cualquier usuario o banearlo si es necesario.
+
+Cuando un usuario baneado intenta acceder al juego, solo podrá ver la página principal. Si intenta entrar a cualquier otra sección, se le mostrará una pantalla especial para que pueda apelar el baneo.
+
+![Panel de administración](assets/admin1.jpg)
+![Apelación](assets/admin2.jpg)
 
 ---
 
+### Página Desplegada
 
+La aplicación está desplegada y accesible en línea con la siguiente configuración:
 
-### 📸 Funcionamiento
+- **Backend:** MonsterASP.NET  
+- **Frontend:** Vercel  
 
-**Home Page**
-
-![Home](assets/main1.jpg)
-![Home](assets/main2.jpg)
-![Home](assets/main3.jpg)
-
-**Game menu**
-
-![Menu](assets/menu1.jpg)
-![Menu](assets/menu2.jpg)
-![Menu](assets/menu3.jpg)
-
-<p float="left">
-  <img src="assets/menu4.jpg" width="30%" />
-  <img src="assets/menu7.jpg" width="30%" />
-  <img src="assets/menu6.jpg" width="30%" />
-</p>
-
-![Menu](assets/menu5.jpg)
-
-
-**Game Dashboard**
-
-![Dashboard](assets/game1.jpg)
-![Dashboard](assets/game2.jpg)
-![Dashboard](assets/game3.jpg)
-
-**Chess**
-![Chess](assets/chess1.jpg)
-![Chess](assets/chess2.jpg)
-![Chess](assets/chess3.jpg)
-![Chess](assets/chess4.jpg)
-![Chess](assets/chess5.jpg)
-![Chess](assets/chess7.jpg)
-![Chess](assets/chess6.jpg)
-
-
-**Connect 4**
-![Connect 4](assets/conecta1.jpg)
-
-**User Page**
-
-![User](assets/user1.jpg)
-![User](assets/user2.jpg)
-
-**Admin Page**
-![Admin](assets/admin1.jpg)
-![Admin](assets/admin2.jpg)
-
+[Página desplegada](https://chess-connect-mejora.vercel.app/)
 
 ---
 

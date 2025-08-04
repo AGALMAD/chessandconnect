@@ -1,0 +1,39 @@
+<!-- Right Column: Friends Search -->
+<div class="w-300px bg-brown-300 p-4 rounded-lg flex flex-col">
+  <h2 class="text-brown-800 font-bold text-lg text-center mb-3">Buscar Amigos</h2>
+  <input type="text" placeholder="Escribe un nombre..." [(ngModel)]="searchQuery" (ngModelChange)="onSearch()"
+    class="p-2 rounded-lg border border-brown-400 focus:outline-none focus:ring focus:ring-brown-500 mb-4" />
+  <ul class="space-y-2 overflow-y-auto h-64">
+
+    <p>Conectados</p>
+    @for(friend of friendService.connectedFriends; track friend.id){
+    <li class="p-2 rounded-lg shadow flex items-center bg-[#301e16] text-[#E8D5B5] cursor-pointer">
+      <img (click)="goToProfile(friend.id)" [src]="baseUrl + friend.avatarImageUrl"
+        alt="Avatar de {{ friend.userName }}"
+        class="w-10 h-10 rounded-full object-cover border-2 border-gray-500 shadow-md opacity-60 hover:scale-110">
+      <span class="font-semibold ml-2">{{ friend.userName }}</span>
+
+
+      <span (click)="deleteFriend(friend.id)" class="ml-auto mr-2 hover:scale-125 ">
+        <i class="fa-solid fa-user-slash"></i>
+      </span>
+    </li>
+    }
+    <p>Desconectados</p>
+    @for(friend of friendService.disconnectedFriends; track friend.id){
+    <li class="p-2 rounded-lg shadow flex items-center bg-[#abaaaa] text-[#301e16] cursor-pointer">
+      <img (click)="goToProfile(friend.id)" [src]="baseUrl + friend.avatarImageUrl"
+        alt="Avatar de {{ friend.userName }}"
+        class="w-10 h-10 rounded-full object-cover border-2 border-gray-500 shadow-md opacity-60 hover:scale-110">
+      <span class="font-medium ml-2">{{ friend.userName }}</span>
+
+
+      <span (click)="deleteFriend(friend.id)" class="ml-auto mr-2 hover:scale-125 ">
+        <i class="fa-solid fa-user-slash"></i>
+      </span>
+    </li>
+    }
+
+
+  </ul>
+</div>

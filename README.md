@@ -1,164 +1,141 @@
 # ♟️🔴 Chess and Connect
 
-**Chess and Connect** es una aplicación web multijugador en tiempo real desarrollada como proyecto del segundo trimestre del ciclo formativo de **Desarrollo de Aplicaciones Multiplataforma (DAM)**.
+**Chess and Connect** es una aplicación web multijugador en tiempo real que permite jugar partidas de **Ajedrez** y **Conecta 4**, ya sea contra otros jugadores conectados o contra un bot inteligente.  
 
-La plataforma ofrece la posibilidad de jugar a Ajedrez y Conecta 4 en tiempo real, ya sea enfrentándote a otros jugadores conectados o compitiendo contra un bot inteligente. Utiliza tecnología WebSocket para garantizar una experiencia interactiva, fluida y sincronizada. Este proyecto fue desarrollado en equipo con el propósito de afianzar y aplicar conocimientos en desarrollo web fullstack moderno.
+Este proyecto fue desarrollado como parte del segundo trimestre del ciclo formativo de **Desarrollo de Aplicaciones Multiplataforma (DAM)**, con el objetivo de aplicar de forma práctica los conocimientos adquiridos sobre desarrollo web fullstack moderno, comunicación en tiempo real y experiencia de usuario.
 
----
-
-## 📚 Índice
-
-
+Diseñado y construido en equipo, busca ofrecer una experiencia divertida, dinámica y accesible para todos los usuarios.
 
 ---
 
-## 🚀 Tecnologías Utilizadas
+## 📦 Tecnologías Utilizadas
 
 ### 🔙 Backend
 
-| Tecnología                                 | Descripción                                                     |
-|--------------------------------------------|-----------------------------------------------------------------|
-| **ASP.NET Core 8.0**                       | Framework principal para la API REST y servicios de WebSocket   |
-| **C#**                                     | Lenguaje usado para toda la lógica del servidor                 |
-| **WebSocket nativo**                       | Comunicación en tiempo real entre jugadores                     |
-| **Entity Framework Core**                  | ORM para el cceso a base de datos con SQLite y MySQL            |
-| **JWT (Json Web Tokens)**                  | Autenticación de usuarios con tokens seguros                    |
-| **Swagger**                                | Documentación interactiva de la API                             |
-| **F23.StringSimilarity**                   | Comparación de cadenas para la búsqueda inteligente de usuarios |
+| Tecnología               | Descripción                                                                           |
+|--------------------------|---------------------------------------------------------------------------------------|
+| **ASP.NET Core 8.0**     | Framework principal del servidor, manejando API REST y WebSockets                     |
+| **C#**                   | Lenguaje de programación para toda la lógica del backend                             |
+| **WebSocket nativo**     | Comunicación bidireccional en tiempo real entre jugadores                            |
+| **Entity Framework Core**| ORM para gestionar bases de datos con **SQLite** y **MySQL**                         |
+| **JWT (Json Web Tokens)**| Autenticación segura basada en tokens                                                |
+| **Swagger**              | Documentación interactiva de la API                                                  |
+| **F23.StringSimilarity** | Comparación de cadenas para búsqueda inteligente de usuarios                         |
 
 ### 🔜 Frontend
 
-| Tecnología        | Descripción                                      |
-|-------------------|--------------------------------------------------|
-| **Angular 19**    | Framework principal para construir toda la interfaz               |
-| **TypeScript**    | Tipado estático y desarrollo escalable           |
-| **TailwindCSS**   | Estilos rápidos y responsive con clases utilitarias  |
-| **RxJS**          | Manejo de eventos y datos en tiempo real                    |
-| **SweetAlert2**    | Alertas y diálogos visuales personalizados           |
-| **Service Worker (PWA)**    | 	Permite usar la app como progresiva e instalable         |
+| Tecnología         | Descripción                                                                     |
+|--------------------|---------------------------------------------------------------------------------|
+| **Angular 19**     | Framework frontend usado para construir una SPA moderna y escalable             |
+| **TypeScript**     | Desarrollo tipado y robusto del lado del cliente                               |
+| **TailwindCSS**    | Sistema de estilos utilitarios para interfaces rápidas y responsivas           |
+| **RxJS**           | Programación reactiva y manejo eficiente de eventos en tiempo real             |
+| **SweetAlert2**    | Notificaciones y diálogos visuales personalizados                              |
+| **Service Worker** | Permite usar la app como una **PWA** (Progresiva e instalable desde el navegador) |
 
 ---
 
-### 📸 Funcionamiento
+## 🎮 Juegos Disponibles
 
-### Menú
+La plataforma ofrece dos modos de juego: **Ajedrez** y **Conecta 4**. Ambos comparten las mismas funcionalidades:
 
-Aquí puedes ver cómo funciona el menú principal de la aplicación. Desde esta vista, el usuario puede acceder a las diferentes secciones del sistema: elegir el modo de juego, administrar su lista de amigos, gestionar peticiones de amistad, entre otras opciones.
+- Jugar contra otro jugador en línea
+- Jugar contra un bot
+- Usar el sistema de emparejamiento automático
+- Comunicación por chat en tiempo real
+- Temporizador individual
+- Solicitud de tablas o rendición
+- Detección automática de desconexión
 
-![Menú principal](assets/menu1.jpg)
+### 🧠 Ajedrez
 
-Una de las funciones destacadas es la búsqueda inteligente de amigos. Utiliza una comparación de cadenas para sugerir usuarios cuyos nombres sean similares al texto ingresado.
-
-![Búsqueda de amigos](assets/menu2.jpg)
-
-De una manera similar puedes buscar usuarios manualmente y enviarles una solicitud de amistad de forma sencilla.
-
-![Enviar solicitud](assets/menu3.jpg)
-
-Además, tienes la opción de aceptar o rechazar las solicitudes de amistad recibidas.
-
-![Gestionar solicitudes](assets/menu4.jpg)
-
-
-
-## Juegos
-
-En esta vista puedes elegir el modo en el que quieres jugar. Tienes tres opciones: jugar contra un amigo, enfrentarte a un bot o unirte a la cola para emparejarte automáticamente con otro jugador en línea.
-
-> ℹ️ **Nota:** Tanto en Ajedrez como en Conecta 4, se mantienen las mismas funcionalidades: puedes jugar con un amigo, con un bot o usar el sistema de emparejamiento para encontrar un rival automáticamente.
-
-![Selección de modo de juego](assets/game1.jpg)
-![Pantalla de emparejamiento](assets/game2.jpg)
-![Esperando rival](assets/game3.jpg)
-
-### Ajedrez
-
-En la pantalla del juego verás el tablero con las piezas, orientado según el color de cada jugador. Cada jugador cuenta con un temporizador, y cuando se agota, la partida termina automáticamente.
-
-Al seleccionar una pieza, se muestran todos los movimientos posibles para ayudarte a planificar tu jugada.
-
-También tienes un chat en tiempo real para comunicarte con tu oponente durante la partida.
-
-Puedes solicitar tablas o rendirte en cualquier momento.
-
-Las notificaciones aparecerán en la esquina superior derecha para avisarte si se han solicitado tablas, si tu oponente pide revancha o si se ha desconectado.
-
-Si el oponente se desconecta, automáticamente serás declarado ganador y serás redirigido al menú principal.
+- Tablero orientado según el color del jugador
+- Movimientos válidos resaltados
+- Temporizador individual para cada jugador
+- Chat y notificaciones integradas
+- Manejo de eventos como solicitud de revancha, desconexión del rival, etc.
 
 ![Vista general del juego](assets/chess1.jpg)
 ![Resultado](assets/chess2.jpg)
-![Notificación](assets/chess3.jpg)
 ![Desconexión](assets/chess4.jpg)
 
+### 🔴 Conecta 4
 
-### Conecta 4
-
-> ℹ️ **Nota:** Conecta 4 ofrece las mismas funcionalidades que Ajedrez: puedes jugar contra un amigo, contra un bot o buscar un rival en línea. El tablero y las mecánicas están adaptadas a la lógica propia de este juego, pero la experiencia de usuario, el chat en tiempo real y las notificaciones funcionan igual.
+- Tablero clásico de 6x7
+- Mecánica adaptada con lógica de validación de victoria
+- Mismas opciones de juego, chat y notificaciones que en Ajedrez
 
 ![Conecta 4](assets/connect1.jpg)
 
+---
 
-## Vista de Usuario
+## 📋 Menú y Navegación
 
-En esta pantalla puedes ver tu perfil o el de otros jugadores.
+Desde el menú principal el usuario puede:
 
-Si es tu perfil, podrás modificar todos tus datos personales fácilmente.
+- Elegir el modo de juego
+- Gestionar su perfil y sus partidas
+- Ver y administrar su lista de amigos
+- Buscar otros jugadores mediante búsqueda inteligente
+- Enviar, aceptar o rechazar solicitudes de amistad
 
-Si estás viendo el perfil de otro usuario, tienes la opción de enviarle una solicitud de amistad o eliminarlo de tu lista de amigos.
+![Menú principal](assets/menu1.jpg)
+![Búsqueda de amigos](assets/menu2.jpg)
+![Enviar solicitud](assets/menu3.jpg)
+![Gestionar solicitudes](assets/menu4.jpg)
 
-También cuenta con un historial de partidas, ordenado desde las más recientes hasta las más antiguas.
+---
 
-Puedes alternar entre las partidas de Ajedrez y Conecta 4 usando el botón correspondiente para cada juego.
+## 👤 Vista de Usuario
 
-Además, la vista incluye paginación, que te permite elegir cuántas partidas quieres ver en pantalla y navegar por las páginas con los botones que están en la parte inferior.
+- Visualización de perfil propio y de otros jugadores
+- Edición de datos personales (solo en tu perfil)
+- Envío y eliminación de amistades
+- Historial de partidas con paginación
+- Filtro entre partidas de Ajedrez y Conecta 4
 
 ![Perfil de usuario](assets/user1.jpg)
 ![Paginación](assets/user2.jpg)
 ![Añadir amigo](assets/user3.jpg)
 ![Eliminar amigo](assets/user4.jpg)
 
-### Administración
+---
 
-Si tienes el rol de administrador, tendrás acceso a una lista completa de todos los usuarios registrados en la plataforma.
+## 🛠️ Panel de Administración
 
-Desde aquí puedes cambiar el rol de cualquier usuario o banearlo si es necesario.
+Para los usuarios con rol de **administrador**, existe un panel especial desde donde pueden:
 
-Cuando un usuario baneado intenta acceder al juego, solo podrá ver la página principal. Si intenta entrar a cualquier otra sección, se le mostrará una pantalla especial para que pueda apelar el baneo.
+- Ver a todos los usuarios registrados
+- Cambiar roles (usuario/admin)
+- Banear usuarios de la plataforma
+
+Los usuarios baneados solo tendrán acceso a la pantalla principal y se les mostrará un mensaje con opción para apelar su caso.
 
 ![Panel de administración](assets/admin1.jpg)
 ![Apelación](assets/admin2.jpg)
 
 ---
 
-### Página Desplegada
+## 🌐 Demo en Línea
 
-La aplicación está desplegada y accesible en línea con la siguiente configuración:
+El proyecto se encuentra desplegado en la web:
 
-- **Backend:** MonsterASP.NET  
-- **Frontend:** Vercel  
+🔗 **[Ver demo](https://chess-connect-mejora.vercel.app/)**
 
-[Página desplegada](https://chess-connect-mejora.vercel.app/)
+- **Frontend**: Vercel  
+- **Backend**: MonsterASP.NET
 
 ---
 
-## 🧠 Qué Aprendimos
+## 💡 Principales Funcionalidades
 
-Durante el desarrollo de *Chess and Connect* hemos reforzado conocimientos esenciales como:
-
-- Creación de APIs RESTful seguras con autenticación JWT
-- Gestión de WebSockets con ASP.NET Core y comunicación síncrona eficiente
-- Diseño y consumo de servicios desde Angular usando RxJS
-- Trabajo en equipo con control de versiones y metodologías ágiles
-- Implementación de una Progressive Web App (PWA)
-
-## 🔧 Funcionalidades Clave
-
-- 🎮 Juegos de Ajedrez y Conecta 4 en tiempo real
-- 👥 Registro, login y gestión de usuarios con JWT
-- 🤖 Opción de jugar contra bot (IA básica)
-- 💬 Comunicación entre jugadores con sockets
-- 📱 Diseño responsive y experiencia fluida en todos los dispositivos
-- 🧠 Lógica validada para detección de movimientos y victorias
-
+- 🎮 Partidas en tiempo real de Ajedrez y Conecta 4
+- 👥 Registro y login con JWT
+- 💬 Chat en tiempo real con WebSockets
+- 🧩 Sistema de emparejamiento automático
+- 📱 Interfaz responsive para móviles y escritorio
+- 🧠 Lógica validada de movimiento, reglas y victoria
+- 👨‍💼 Panel administrativo completo
+- 🔍 Búsqueda inteligente de usuarios por similitud
 
 
